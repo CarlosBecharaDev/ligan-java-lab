@@ -164,5 +164,3 @@ Proyecto educativo de código abierto. Todos los derechos reservados © **Carlos
 ## 👤 Autor
 
 **Carlos Bechara** — [@CarlosBecharaDev](https://github.com/CarlosBecharaDev)
-
-Desarrollador y educador apasionado por la enseñanza de Java y las tecnologías backend.
