@@ -1,20 +1,37 @@
 ---
+import '@styles/global.css';
+import '@styles/animations.css';
+import '@styles/desktop.css';
 import Desktop from '../components/desktop/Desktop.astro';
 import Taskbar from '../components/desktop/Taskbar.astro';
+import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
 
 export interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description } = Astro.props;
+const siteTitle = `${title} — Ligan Java Lab`;
 ---
 
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" data-lang="es">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{title}</title>
+    <meta name="description" content={description ?? 'Aprende Java 21 LTS desde cero — en español latino.'} />
+    <meta name="author" content="Carlos Bechara" />
+    <meta name="theme-color" content="#1A0D2E" />
+    <meta property="og:title" content={siteTitle} />
+    <meta property="og:description" content={description ?? 'Plataforma educativa interactiva para aprender Java.'} />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Ligan Java Lab" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <title>{siteTitle}</title>
   </head>
   <body>
     <div class="app-container" style="padding-bottom: 48px; height: 100vh; display: flex; flex-direction: column;">
@@ -23,5 +40,6 @@ const { title } = Astro.props;
       </Desktop>
       <Taskbar />
     </div>
+    <script is:inline set:html={I18N_CLIENT_SCRIPT} />
   </body>
 </html>

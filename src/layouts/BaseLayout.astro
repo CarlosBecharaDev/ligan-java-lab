@@ -38,7 +38,40 @@ const siteTitle = `${title} — Ligan Java Lab`;
     <title>{siteTitle}</title>
   </head>
   <body>
+    <a href="/" class="btn-home" aria-label="Volver al inicio" title="Volver al escritorio principal">
+      <span>☕</span>
+      <span>Inicio</span>
+    </a>
     <slot />
     <script is:inline set:html={I18N_CLIENT_SCRIPT} />
   </body>
+  <style>
+    .btn-home {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: #1A0D2E;
+      border: 2px solid #DAA520;
+      color: #FFD700;
+      font-family: var(--font-pixel, 'Press Start 2P', monospace);
+      font-size: 10px;
+      text-decoration: none;
+      box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+      transition: transform 0.1s, box-shadow 0.1s;
+      cursor: pointer;
+    }
+    .btn-home:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+    }
+    .btn-home:active {
+      transform: translate(0, 0);
+      box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    }
+  </style>
 </html>
