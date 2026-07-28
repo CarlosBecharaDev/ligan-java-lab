@@ -32,23 +32,30 @@ const { slug, lessonTitle, quizzes } = Astro.props;
 ---
 
 <ContentLayout title={`Quiz: ${lessonTitle}`} description="Pon a prueba tus conocimientos">
-  <div style="max-width:var(--content-width);margin:0 auto">
-    <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:var(--space-sm)">🧠 Quiz: {lessonTitle}</h1>
-    <p style="color:var(--win-muted);margin-bottom:var(--space-lg)" data-i18n="quiz.intro">
-      Responde todas las preguntas para evaluar tu comprensión del tema.
-    </p>
+  <div style="max-width:var(--content-width);margin:0 auto;color:var(--win-text)">
+    <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-sm)">
+      <span style="font-size:1.5rem">🧠</span>
+      <div>
+        <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin:0">Quiz: {lessonTitle}</h1>
+        <p style="color:var(--win-muted);margin:var(--space-xs) 0 0 0;font-size:var(--text-sm)" data-i18n="quiz.intro">
+          Responde todas las preguntas para evaluar tu comprensión del tema.
+        </p>
+      </div>
+    </div>
 
     {quizzes.length > 0 ? (
-      quizzes.map((quiz) => (
-        <QuizCard quiz={quiz} />
-      ))
+      <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+        {quizzes.map((quiz) => (
+          <QuizCard quiz={quiz} />
+        ))}
+      </div>
     ) : (
       <div style="text-align:center;padding:var(--space-2xl);background:rgba(0,0,0,0.05);border:2px solid var(--win-border)">
         <p style="color:var(--win-muted);font-size:var(--text-lg)" data-i18n="quiz.empty">📝 Próximamente habrá quizzes para esta lección.</p>
       </div>
     )}
 
-    <div style="margin-top:var(--space-xl);text-align:center">
+    <div style="margin-top:var(--space-xl);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--space-md)">
       <button
         id="mark-quiz-complete-btn"
         data-slug={slug}
@@ -57,10 +64,8 @@ const { slug, lessonTitle, quizzes } = Astro.props;
       >
         ✅ Marcar quiz como completado
       </button>
-      <span id="quiz-complete-status" style="display:none;margin-left:var(--space-sm);color:var(--success);font-weight:600;font-family:var(--font-ui)" data-i18n="quiz.completed">✓ Completado</span>
-    </div>
-    <div style="margin-top:var(--space-md);text-align:center">
-      <a href={`/tema/${slug}`} style="color:var(--win-link);text-decoration:none;font-family:var(--font-ui)" data-i18n="quiz.back">← Volver a la lección</a>
+      <span id="quiz-complete-status" style="display:none;padding:var(--space-sm) var(--space-lg);background:rgba(40,200,64,0.1);border:1px solid var(--success);color:var(--success);font-weight:600;font-family:var(--font-ui)" data-i18n="quiz.completed">✓ Completado</span>
+      <a href={`/tema/${slug}`} style="color:var(--win-link);text-decoration:none;font-family:var(--font-ui);padding:var(--space-sm) var(--space-lg);border:1px solid var(--win-link);transition:background 0.1s" onmouseover="this.style.background='rgba(43,91,168,0.1)'" onmouseout="this.style.background='transparent'" data-i18n="quiz.back">← Volver a la lección</a>
     </div>
   </div>
 </ContentLayout>
