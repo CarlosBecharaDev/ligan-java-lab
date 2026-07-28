@@ -4,6 +4,7 @@ import '@styles/animations.css';
 import '@styles/desktop.css';
 import Desktop from '../components/desktop/Desktop.astro';
 import Taskbar from '../components/desktop/Taskbar.astro';
+import RetroChars from '@components/desktop/RetroChars.astro';
 import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
 
 export interface Props {
@@ -40,6 +41,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
       </Desktop>
       <Taskbar />
     </div>
+    <RetroChars />
     <script is:inline set:html={I18N_CLIENT_SCRIPT} />
   </body>
 </html>

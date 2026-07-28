@@ -1,0 +1,301 @@
+<div id="retro-chars" class="retro-chars" aria-hidden="true"></div>
+
+<style>
+  .retro-chars {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100px;
+    z-index: 45;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .rc-char {
+    position: absolute;
+    bottom: 0;
+    pointer-events: none;
+    animation: rc-patrol linear infinite;
+  }
+
+  .rc-sprite {
+    width: 48px;
+    height: 64px;
+    position: relative;
+    animation: rc-walk 0.4s ease-in-out infinite alternate;
+  }
+
+  .rc-head {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2;
+    box-shadow: 0 0 0 2px rgba(0,0,0,0.3);
+  }
+
+  .rc-hat {
+    position: absolute;
+    top: -4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 10px;
+    border-radius: 2px;
+    z-index: 3;
+  }
+
+  .rc-body {
+    width: 30px;
+    height: 24px;
+    position: absolute;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 4px 4px 0 0;
+    z-index: 1;
+  }
+
+  .rc-legs {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 2px;
+  }
+
+  .rc-leg {
+    width: 10px;
+    height: 14px;
+    border-radius: 0 0 3px 3px;
+    animation: rc-leg-move 0.4s ease-in-out infinite alternate;
+  }
+
+  .rc-leg:nth-child(2) {
+    animation-delay: 0.2s;
+  }
+
+  .rc-bubble {
+    position: absolute;
+    bottom: 78px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #fff;
+    color: #1a1a1a;
+    padding: 6px 12px;
+    border-radius: 12px;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
+    border: 2px solid #333;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 5;
+    max-width: 160px;
+    text-align: center;
+  }
+
+  .rc-bubble::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid #fff;
+    filter: drop-shadow(0 2px 0 #333);
+  }
+
+  .rc-bubble--visible {
+    opacity: 1;
+  }
+
+  @keyframes rc-patrol {
+    0% { transform: translateX(0); }
+    25% { transform: translateX(calc(100vw - 80px)); }
+    50% { transform: translateX(calc(100vw - 80px)); }
+    75% { transform: translateX(0); }
+    100% { transform: translateX(0); }
+  }
+
+  @keyframes rc-walk {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-3px); }
+  }
+
+  @keyframes rc-leg-move {
+    0% { transform: rotate(-8deg); }
+    100% { transform: rotate(8deg); }
+  }
+</style>
+
+<script>
+  (function() {
+    const MOTIVATIONAL_MESSAGES = [
+      '¡Sigue así! 🚀',
+      'Tú puedes 💪',
+      'Java te espera ☕',
+      'Nunca pares ✨',
+      'Cada línea cuenta 📝',
+      'El éxito es constancia 🎯',
+      'Código tras código 💻',
+      'Eres un crack 🔥',
+      'Masteriza Java 🏆',
+      'Sigue programando ⚡',
+      'Más fuerte que nunca 💥',
+      'Tú eres el mejor 🌟',
+      'No te rindas 🙌',
+      'A darle con todo 🤘',
+      'Programa sueños 🚀',
+    ];
+
+    const CHAR_TEMPLATES = [
+      {
+        name: 'Mario',
+        headColor: '#FDBF60',
+        hatColor: '#E52521',
+        hat: true,
+        bodyColor: '#1565C0',
+        legColor: '#8D6E63',
+        speed: 18,
+      },
+      {
+        name: 'Scorpion',
+        headColor: '#FDD835',
+        hatColor: '#333',
+        hat: true,
+        bodyColor: '#222',
+        legColor: '#555',
+        speed: 22,
+      },
+      {
+        name: 'Pac-Man',
+        headColor: '#FFD700',
+        hatColor: '#FFD700',
+        hat: false,
+        bodyColor: '#FFD700',
+        legColor: '#FFD700',
+        speed: 15,
+      },
+      {
+        name: 'Sonic',
+        headColor: '#1565C0',
+        hatColor: '#0D47A1',
+        hat: true,
+        bodyColor: '#0D47A1',
+        legColor: '#E53935',
+        speed: 20,
+      },
+      {
+        name: 'Megaman',
+        headColor: '#FF8A65',
+        hatColor: '#1565C0',
+        hat: true,
+        bodyColor: '#1565C0',
+        legColor: '#0D47A1',
+        speed: 25,
+      },
+    ];
+
+    const container = document.getElementById('retro-chars');
+    if (!container) return;
+
+    const chars = [];
+    const BUBBLE_INTERVAL = 4000;
+    const ACTIVE_BUBBLES = 3;
+
+    CHAR_TEMPLATES.forEach((tpl, i) => {
+      const el = document.createElement('div');
+      el.className = 'rc-char';
+      el.style.animationDuration = tpl.speed + 's';
+      el.style.left = Math.random() * 60 + '%';
+      el.style.zIndex = String(40 + i);
+
+      const flip = Math.random() > 0.5;
+      if (flip) el.style.animationDirection = 'reverse';
+
+      const sprite = document.createElement('div');
+      sprite.className = 'rc-sprite';
+
+      const head = document.createElement('div');
+      head.className = 'rc-head';
+      head.style.background = tpl.headColor;
+
+      if (tpl.hat) {
+        const hat = document.createElement('div');
+        hat.className = 'rc-hat';
+        hat.style.background = tpl.hatColor;
+        head.appendChild(hat);
+      }
+
+      const body = document.createElement('div');
+      body.className = 'rc-body';
+      body.style.background = tpl.bodyColor;
+
+      const legs = document.createElement('div');
+      legs.className = 'rc-legs';
+
+      for (let j = 0; j < 2; j++) {
+        const leg = document.createElement('div');
+        leg.className = 'rc-leg';
+        leg.style.background = tpl.legColor;
+        legs.appendChild(leg);
+      }
+
+      const bubble = document.createElement('div');
+      bubble.className = 'rc-bubble';
+      bubble.textContent = MOTIVATIONAL_MESSAGES[i % MOTIVATIONAL_MESSAGES.length];
+
+      sprite.appendChild(head);
+      sprite.appendChild(body);
+      sprite.appendChild(legs);
+      el.appendChild(sprite);
+      el.appendChild(bubble);
+
+      container.appendChild(el);
+
+      chars.push({
+        el,
+        bubble,
+        sprite,
+        name: tpl.name,
+        index: i,
+        hasBubble: false,
+        currentMsg: i % MOTIVATIONAL_MESSAGES.length,
+      });
+    });
+
+    function pickActiveChars() {
+      const shuffled = [...chars].sort(() => Math.random() - 0.5);
+      return shuffled.slice(0, ACTIVE_BUBBLES);
+    }
+
+    function updateBubbles() {
+      chars.forEach(c => {
+        c.bubble.classList.remove('rc-bubble--visible');
+        c.hasBubble = false;
+      });
+
+      const active = pickActiveChars();
+      active.forEach(c => {
+        c.currentMsg = (c.currentMsg + 1) % MOTIVATIONAL_MESSAGES.length;
+        c.bubble.textContent = MOTIVATIONAL_MESSAGES[c.currentMsg];
+        c.bubble.classList.add('rc-bubble--visible');
+        c.hasBubble = true;
+      });
+    }
+
+    updateBubbles();
+    setInterval(updateBubbles, BUBBLE_INTERVAL);
+  })();
+</script>

@@ -5,6 +5,7 @@ import '@styles/desktop.css';
 import '@styles/lesson.css';
 import '@styles/code.css';
 import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
+import RetroChars from '@components/desktop/RetroChars.astro';
 
 export interface Props {
   title: string;
@@ -43,6 +44,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
       <span>Inicio</span>
     </a>
     <slot />
+    <RetroChars />
     <script is:inline set:html={I18N_CLIENT_SCRIPT} />
   </body>
   <style>
