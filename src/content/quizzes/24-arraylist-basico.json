@@ -1,0 +1,92 @@
+{
+  "id": "quiz-24-arraylist-basico",
+  "lessonSlug": "arraylist",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es ArrayList?",
+      "options": [
+        "Una coleccion dinamica que crece automaticamente",
+        "Un arreglo con tamaño fijo",
+        "Una estructura de datos para grafos",
+        "Un tipo primitivo de Java"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. ArrayList es una coleccion dinamica que crece automaticamente segun la cantidad de elementos que se agreguen.",
+        "No. Los arreglos (arrays) son los que tienen tamaño fijo, no ArrayList.",
+        "No. ArrayList es una estructura lineal, no esta diseñada para grafos.",
+        "No. ArrayList es una clase de la libreria estandar, no un tipo primitivo."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se agrega un elemento a un ArrayList?",
+      "options": [
+        "add()",
+        "insert()",
+        "append()",
+        "put()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo add() agrega un elemento al final del ArrayList.",
+        "No. No existe el metodo insert() en ArrayList.",
+        "No. append() es un metodo de StringBuilder, no de ArrayList.",
+        "No. put() se utiliza en Map como HashMap, no en ArrayList."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se obtiene un elemento de un ArrayList?",
+      "options": [
+        "get(index)",
+        "at(index)",
+        "fetch(index)",
+        "element(index)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo get(index) retorna el elemento en la posicion especificada.",
+        "No. No existe el metodo at() en ArrayList.",
+        "No. No existe el metodo fetch() en ArrayList.",
+        "No. No existe el metodo element() en ArrayList."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se elimina un elemento de un ArrayList?",
+      "options": [
+        "remove(index) o remove(objeto)",
+        "delete(index)",
+        "drop(index)",
+        "erase(index)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Puedes usar remove(index) para eliminar por posicion o remove(objeto) para eliminar una instancia especifica.",
+        "No. No existe el metodo delete() en ArrayList.",
+        "No. No existe el metodo drop() en ArrayList.",
+        "No. No existe el metodo erase() en ArrayList."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo se obtiene el tamaño de un ArrayList?",
+      "options": [
+        "size()",
+        "length()",
+        "count()",
+        "getLength()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo size() retorna la cantidad de elementos en el ArrayList.",
+        "No. length() es un metodo de String, no de ArrayList.",
+        "No. count() no es un metodo de ArrayList.",
+        "No. No existe el metodo getLength() en ArrayList."
+      ]
+    }
+  ]
+}

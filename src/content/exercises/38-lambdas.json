@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-lambdas-facil",
+    "title": "Ordenar lista",
+    "difficulty": "facil",
+    "description": "Dada una lista de Strings, usa un lambda con Comparator para ordenarlos por longitud (de menor a mayor). Imprime la lista ordenada.",
+    "template": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<String> palabras = Arrays.asList(\"Java\", \"Lamda\", \"Hi\", \"Programacion\", \"Web\");\n\n        // TODO: Usar Collections.sort con un lambda Comparator que ordene por longitud\n        // Comparator.comparingInt(String::length) es una forma\n        // Tambien puedes usar: (a, b) -> a.length() - b.length()\n\n        System.out.println(palabras);\n    }\n}",
+    "hints": [
+      "Comparator es una interfaz funcional: puedes usar un lambda como (a, b) -> a.length() - b.length()",
+      "Tambien puedes usar Comparator.comparingInt(String::length) con method reference",
+      "Collections.sort(lista, comparator) modifica la lista in-place"
+    ],
+    "solution": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<String> palabras = Arrays.asList(\"Java\", \"Lamda\", \"Hi\", \"Programacion\", \"Web\");\n\n        Collections.sort(palabras, (a, b) -> a.length() - b.length());\n\n        System.out.println(palabras);\n    }\n}",
+    "solutionExplanation": "El lambda (a, b) -> a.length() - b.length() crea un Comparator que compara por longitud. Si el resultado es negativo, a va antes que b.",
+    "expectedOutput": "[Hi, Web, Java, Lamda, Programacion]",
+    "lessonSlug": "lambdas"
+  },
+  {
+    "id": "ex-lambdas-normal",
+    "title": "Filtrar y transformar",
+    "difficulty": "normal",
+    "description": "Dada una lista de numeros enteros, usa un Predicate con lambda para filtrar solo los numeros pares, y luego usa un Function con lambda para duplicar cada valor. Imprime los resultados de cada paso.",
+    "template": "import java.util.*;\nimport java.util.function.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);\n\n        // TODO: Crear un Predicate<Integer> con lambda que retorne true si el numero es par\n        Predicate<Integer> esPar = null; // lambda aqui\n\n        // TODO: Filtrar la lista usando el Predicate (puedes usar removeIf o stream)\n        List<Integer> pares = null;\n\n        // TODO: Crear un Function<Integer, Integer> con lambda que duplique el valor\n        Function<Integer, Integer> duplicar = null; // lambda aqui\n\n        // TODO: Transformar cada elemento de la lista de pares usando la Function\n        List<Integer> duplicados = null;\n\n        System.out.println(\"Pares: \" + pares);\n        System.out.println(\"Duplicados: \" + duplicados);\n    }\n}",
+    "hints": [
+      "Predicate<Integer> esPar = n -> n % 2 == 0;",
+      "Puedes usar numeros.stream().filter(esPar).collect(Collectors.toList()) para filtrar",
+      "Function<Integer, Integer> duplicar = n -> n * 2;",
+      "Usa stream().map(duplicar).collect(Collectors.toList()) para transformar"
+    ],
+    "solution": "import java.util.*;\nimport java.util.function.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> numeros = Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10);\n\n        Predicate<Integer> esPar = n -> n % 2 == 0;\n\n        List<Integer> pares = numeros.stream()\n            .filter(esPar)\n            .collect(Collectors.toList());\n\n        Function<Integer, Integer> duplicar = n -> n * 2;\n\n        List<Integer> duplicados = pares.stream()\n            .map(duplicar)\n            .collect(Collectors.toList());\n\n        System.out.println(\"Pares: \" + pares);\n        System.out.println(\"Duplicados: \" + duplicados);\n    }\n}",
+    "solutionExplanation": "Predicate con lambda n -> n % 2 == 0 filtra numeros pares. Function con lambda n -> n * 2 duplica cada valor. Se combinan con stream().filter() y stream().map().",
+    "expectedOutput": "Pares: [2, 4, 6, 8, 10]\nDuplicados: [4, 8, 12, 16, 20]",
+    "lessonSlug": "lambdas"
+  },
+  {
+    "id": "ex-lambdas-dificil",
+    "title": "Operacion personalizada",
+    "difficulty": "dificil",
+    "description": "Crea una interfaz funcional propia llamada OperacionNumerica con un metodo int operar(int a, int b). Luego crea un metodo estatico aplicarOperacion que reciba dos enteros y una OperacionNumerica, y retorne el resultado. Usa lambdas para probar con suma, resta y multiplicacion.",
+    "template": "// TODO: Crear interfaz funcional @FunctionalInterface OperacionNumerica\n// con metodo int operar(int a, int b)\n\npublic class Main {\n\n    // TODO: Crear metodo estatico aplicarOperacion(int a, int b, OperacionNumerica op)\n    // que retorne op.operar(a, b)\n\n    public static void main(String[] args) {\n        // TODO: Crear lambdas para:\n        OperacionNumerica suma = null;     // a + b\n        OperacionNumerica resta = null;    // a - b\n        OperacionNumerica multiplicar = null; // a * b\n\n        System.out.println(\"Suma: \" + aplicarOperacion(10, 3, suma));\n        System.out.println(\"Resta: \" + aplicarOperacion(10, 3, resta));\n        System.out.println(\"Multiplicar: \" + aplicarOperacion(10, 3, multiplicar));\n    }\n}",
+    "hints": [
+      "@FunctionalInterface valida que la interfaz tenga exactamente un metodo abstracto",
+      "La interfaz OperacionNumerica tiene solo: int operar(int a, int b);",
+      "Los lambdas son: (a, b) -> a + b, (a, b) -> a - b, (a, b) -> a * b"
+    ],
+    "solution": "@FunctionalInterface\ninterface OperacionNumerica {\n    int operar(int a, int b);\n}\n\npublic class Main {\n\n    static int aplicarOperacion(int a, int b, OperacionNumerica op) {\n        return op.operar(a, b);\n    }\n\n    public static void main(String[] args) {\n        OperacionNumerica suma = (a, b) -> a + b;\n        OperacionNumerica resta = (a, b) -> a - b;\n        OperacionNumerica multiplicar = (a, b) -> a * b;\n\n        System.out.println(\"Suma: \" + aplicarOperacion(10, 3, suma));\n        System.out.println(\"Resta: \" + aplicarOperacion(10, 3, resta));\n        System.out.println(\"Multiplicar: \" + aplicarOperacion(10, 3, multiplicar));\n    }\n}",
+    "solutionExplanation": "OperacionNumerica es una interfaz funcional con un solo metodo, lo que permite usar lambdas. El metodo aplicarOperacion actua como higher-order function: recibe una funcion como parametro y la aplica.",
+    "expectedOutput": "Suma: 13\nResta: 7\nMultiplicar: 30",
+    "lessonSlug": "lambdas"
+  }
+]

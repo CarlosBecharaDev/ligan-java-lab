@@ -1,0 +1,109 @@
+{
+  "id": "quiz-18-constructores-basico",
+  "lessonSlug": "constructores",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué hace un constructor?",
+      "options": [
+        "Retorna un valor",
+        "Inicializa el objeto al crearlo",
+        "Destruye el objeto",
+        "Imprime datos por pantalla"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los constructores no tienen retorno.",
+        "Correcto. El constructor se ejecuta al crear el objeto con new.",
+        "Los constructores no destruyen objetos.",
+        "Imprimir es trabajo de un método normal."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué palabra clave se usa para referenciar al objeto actual?",
+      "options": [
+        "self",
+        "this",
+        "current",
+        "object"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "self no existe en Java.",
+        "Correcto. this referencia al objeto actual.",
+        "current no es una palabra clave.",
+        "object no es una palabra clave."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué sucede si no defines ningún constructor?",
+      "options": [
+        "Error de compilación",
+        "Java crea un constructor vacío automáticamente",
+        "El objeto no se puede crear",
+        "Java asigna valores null a todo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No hay error si no defines constructores.",
+        "Correcto. Java crea un constructor sin parámetros implícitamente.",
+        "Sí se puede crear.",
+        "Los atributos reciben valores por defecto, no null todos."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo llamas a otro constructor dentro de un constructor?",
+      "options": [
+        "super()",
+        "this()",
+        "new()",
+        "constructor()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "super() llama al constructor de la superclase.",
+        "Correcto. this() llama a otro constructor de la misma clase.",
+        "new() no se usa así.",
+        "constructor() no es válido."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es la sobrecarga de constructores?",
+      "options": [
+        "Un constructor muy largo",
+        "Múltiples constructores con diferentes parámetros",
+        "Un constructor que hereda de otro",
+        "Un constructor estático"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La longitud no tiene relación.",
+        "Correcto. Sobrecarga = múltiples firmas en la misma clase.",
+        "Los constructores no heredan.",
+        "Los constructores no pueden ser static."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Qué resultado?\nPersona p = new Persona();\nSystem.out.println(p.nombre);",
+      "options": [
+        "Ana",
+        "null",
+        "0",
+        "Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No se asignó nombre.",
+        "Correcto. String es un tipo objeto, su valor por defecto es null.",
+        "0 es para int.",
+        "Compila sin problema."
+      ]
+    }
+  ]
+}

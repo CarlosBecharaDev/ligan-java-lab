@@ -1,0 +1,323 @@
+---
+title: "Sobrecarga de Métodos"
+slug: "sobrecarga"
+module: "03-metodos-y-arrays"
+level: "Intermedio"
+objectives:
+  - "Entender qué es la sobrecarga de métodos (overloading)"
+  - "Crear múltiples versiones de un mismo método con diferentes parámetros"
+  - "Distinguir sobrecarga de sobreescritura (overriding)"
+  - "Entender las reglas de resolución de métodos sobrecargados"
+  - "Usar sobrecarga para crear interfaces más flexibles"
+prerequisites:
+  - "Haber completado Lección 12: Definición y Llamada de Métodos"
+  - "Conocer tipos de datos primitivos y sus conversiones"
+history:
+  introducedIn: "Sobrecarga desde Java 1.0"
+  context: "La sobrecarga de métodos (method overloading) existe desde Java 1.0 y es una forma de polimorfismo compile-time. Permite definir múltiples métodos con el mismo nombre pero diferentes parámetros. El compilador elige cuál ejecutar según los tipos y cantidad de argumentos en la llamada. Esto es distinto de la sobreescritura (overriding) que es polimorfismo run-time con herencia."
+  evolution: "Java siempre ha permitido sobrecarga. Java 5 introdujo genéricos que interactúan con la sobrecarga. El compilador Java realiza resolución de sobrecarga (overload resolution) como parte de la compilación, eligiendo el método más específico. La sobrecarga con varargs añade complejidad porque el compilador debe desambiguar entre métodos con parámetros fijos y variables."
+realWorldExamples:
+  - domain: "E-commerce — múltiples versiones de precio"
+    description: "Una tienda online tiene métodos llamados precioFinal sobrecargados: uno recibe monto y descuento, otro monto descuento e impuesto, y otro recibe un código de cupón que se resuelve internamente."
+    code: |
+      public class PrecioFinal {
+          static double precioFinal(double monto, double descuento) {
+              return monto - (monto * descuento / 100);
+          }
+
+          static double precioFinal(
+                  double monto, double descuento, double impuesto) {
+              double base = monto - (monto * descuento / 100);
+              return base + (base * impuesto / 100);
+          }
+
+          static double precioFinal(
+                  double monto, String codigoCupon) {
+              double desc = switch (codigoCupon.toUpperCase()) {
+                  case "BLACK" -> 25.0;
+                  case "VIERNES" -> 15.0;
+                  default -> 0.0;
+              };
+              return precioFinal(monto, desc);
+          }
+
+          public static void main(String[] args) {
+              System.out.printf("Sin impuesto: $%.2f%n",
+                  precioFinal(1000, 10));
+              System.out.printf("Con impuesto: $%.2f%n",
+                  precioFinal(1000, 10, 16));
+              System.out.printf("Cupón BLACK: $%.2f%n",
+                  precioFinal(1000, "BLACK"));
+          }
+      }
+    result: |
+      Sin impuesto: $900.00
+      Con impuesto: $1044.00
+      Cupón BLACK: $750.00
+
+  - domain: "Salud — calcularBMI sobrecargado"
+    description: "Un sistema de salud calcula el BMI (índice de masa corporal) con distintos niveles de precisión: uno recibe peso y altura, otro añade la edad, otro recibe los datos en libras y pulgadas."
+    code: |
+      public class BMI {
+          static String calcular(double pesoKg, double alturaM) {
+              double bmi = pesoKg / (alturaM * alturaM);
+              return String.format("BMI: %.1f", bmi);
+          }
+
+          static String calcular(
+                  double pesoKg, double alturaM, int edad) {
+              double bmi = pesoKg / (alturaM * alturaM);
+              String rango = bmi < 25 ? "Normal" : "Sobrepeso";
+              return String.format("BMI: %.1f (%s, %d años)",
+                  bmi, rango, edad);
+          }
+
+          static String calcularLibrasPulgadas(
+                  double libras, double pulgadas) {
+              double kg = libras * 0.453592;
+              double m = pulgadas * 0.0254;
+              double bmi = kg / (m * m);
+              return String.format("BMI: %.1f", bmi);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(calcular(70, 1.75));
+              System.out.println(calcular(70, 1.75, 30));
+              System.out.println(calcularLibrasPulgadas(154, 69));
+          }
+      }
+    result: |
+      BMI: 22.9
+      BMI: 22.9 (Normal, 30 años)
+      BMI: 22.7
+hasInteractive: false
+comparisons:
+  - title: "Sobrecarga (overloading) vs Sobreescritura (overriding)"
+    items:
+      - name: "Sobrecarga (overloading)"
+        features:
+          relacion: "Misma clase (o clase padre)"
+          nombre: "Mismo nombre del método"
+          parametros: "Diferentes tipos o cantidad de parámetros"
+          polyType: "Compile-time (estático)"
+      - name: "Sobreescritura (overriding)"
+        features:
+          relacion: "Clase hija redefine método de padre"
+          nombre: "Mismo nombre y mismos parámetros"
+          parametros: "Mismos tipos y cantidad de parámetros"
+          polyType: "Run-time (dinámico)"
+    recommendation: "Sobrecarga crea variaciones de un mismo método para diferentes tipos de entrada (útil ahora). Sobreescritura permite que una clase hija cambie el comportamiento de un método del padre (lo veremos en POO)."
+videos:
+  - url: ""
+    title: "Sobrecarga de métodos en Java"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Cuáles son las reglas para sobrecargar un método?"
+    answer: "Los parámetros deben ser diferentes:数量 distinta, tipos diferentes, o ambos. No puedes sobrecargar cambiando solo el tipo de retorno ni solo los modificadores (static, etc.). El compilador elige el método cuyos parámetros coinciden mejor con los argumentos."
+  - question: "¿Por qué la sobrecarga se llama polimorfismo compile-time?"
+    answer: "Porque el compilador determina en tiempo de compilación qué versión del método ejecutar, basándose en los tipos de los argumentos. Esto es diferente al polimorfismo run-time (sobreescritura) donde la JVM decide en tiempo de ejecución según el tipo real del objeto."
+  - question: "¿Qué pasa si hay ambigüedad entre dos métodos sobrecargados?"
+    answer: "El compilador lanza un error 'reference to X is ambiguous'. Por ejemplo, si tienes sumar(int, double) y sumar(double, int), y llamas sumar(5, 5), el compilador no sabe cuál elegir porque ambos requieren una conversión. Solución: hacer los tipos más explícitos."
+sources:
+  - title: "Java 21 Language Specification — Overloading"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4.9"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Summary of Parameters"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es la sobrecarga?
+
+La sobrecarga (overloading) permite tener **varios métodos con el mismo nombre** pero diferentes parámetros. El compilador elige cuál ejecutar según los argumentos que pases.
+
+<CodeBlock lang="java" title="Métodos sobrecargados — sumar distintos tipos">
+{`public class SumaSobrecargada {
+    static int sumar(int a, int b) {
+        return a + b;
+    }
+
+    static double sumar(double a, double b) {
+        return a + b;
+    }
+
+    static int sumar(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("enteros: " + sumar(3, 5));
+        System.out.println("decimales: " + sumar(2.5, 3.7));
+        System.out.println("tres: " + sumar(1, 2, 3));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+enteros: 8
+decimales: 6.2
+tres: 6
+```
+
+Todos los métodos se llaman `sumar`, pero el compilador elige el correcto según los tipos y cantidad de argumentos.
+
+## Reglas de la sobrecarga
+
+Para que dos métodos sean sobrecargados, **deben diferir en los parámetros**:
+
+```
+✅ Diferente cantidad de parámetros:
+   sumar(int, int) vs sumar(int, int, int)
+
+✅ Diferente tipo de parámetros:
+   sumar(int, int) vs sumar(double, double)
+
+✅ Ambos:
+   sumar(int) vs sumar(int, double)
+
+❌ NO es sobrecarga — mismo nombre y mismos parámetros:
+   int sumar(int a, int b)
+   double sumar(int a, int b)  // ERROR: solo cambia el retorno
+```
+
+La clave: **el tipo de retorno NO cuenta** para la sobrecarga. Dos métodos con el mismo nombre, mismos parámetros y distinto retorno dan error de compilación.
+
+## El compilador resuelve la ambigüedad
+
+Cuando llamas un método sobrecargado, el compilador busca la versión cuyos parámetros coinciden mejor:
+
+<CodeBlock lang="java" title="Resolución de sobrecarga">
+{`public class Resolucion {
+    static void mostrar(String texto) {
+        System.out.println("String: " + texto);
+    }
+
+    static void mostrar(int numero) {
+        System.out.println("int: " + numero);
+    }
+
+    static void mostrar(double valor) {
+        System.out.println("double: " + valor);
+    }
+
+    public static void main(String[] args) {
+        mostrar("Hola");     // llama a mostrar(String)
+        mostrar(42);         // llama a mostrar(int)
+        mostrar(3.14);       // llama a mostrar(double)
+        mostrar('A');        // llama a mostrar(int) — char se promueve a int
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+String: Hola
+int: 42
+double: 3.14
+int: 65
+```
+
+**Nota:** `char` se convierte implícitamente a `int` (promoción), por lo que `mostrar('A')` llama a `mostrar(int)`, no a `mostrar(String)`.
+
+## Sobrecarga con tipos compatibles
+
+La jerarquía de conversión de tipos afecta qué versión se elige:
+
+```
+byte → short → int → long → float → double
+         char ↗
+```
+
+El compilador elige la conversión **más pequeña** posible:
+
+<CodeBlock lang="java" title="Promoción de tipos en sobrecarga">
+{`public class Promocion {
+    static void procesar(int n) {
+        System.out.println("int: " + n);
+    }
+
+    static void procesar(double d) {
+        System.out.println("double: " + d);
+    }
+
+    public static void main(String[] args) {
+        byte b = 10;
+        procesar(b);    // int — byte se promueve a int
+
+        float f = 5.5f;
+        procesar(f);    // double — float se promueve a double
+
+        short s = 20;
+        procesar(s);    // int — short se promueve a int
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+int: 10
+double: 5.5
+int: 20
+```
+
+## Sobrecarga útil en la práctica
+
+Un patrón común es ofrecer una versión simple y otra completa:
+
+<CodeBlock lang="java" title="Sobrecarga práctica — formatear texto">
+{`public class Formatear {
+    static String formatear(String texto) {
+        return texto.trim().toUpperCase();
+    }
+
+    static String formatear(String texto, int longitud) {
+        String resultado = texto.trim().toUpperCase();
+        if (resultado.length() > longitud) {
+            return resultado.substring(0, longitud) + "...";
+        }
+        return resultado;
+    }
+
+    static String formatear(String texto, int longitud,
+            char relleno) {
+        String resultado = texto.trim().toUpperCase();
+        while (resultado.length() < longitud) {
+            resultado = relleno + resultado + relleno;
+        }
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(formatear("  hola mundo  "));
+        System.out.println(formatear("  hola mundo  ", 8));
+        System.out.println(formatear("  hola  ", 12, '*'));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+HOLA MUNDO
+HOLA MU...
+***HOLA*****
+```
+
+Las tres versiones de `formatear` hacen cosas similares pero con diferentes niveles de personalización.
+
+

@@ -1,0 +1,11 @@
+{
+  "id": "mod-06",
+  "slug": "06-errores",
+  "number": 6,
+  "title": "Errores y Depuración",
+  "description": "Domina el manejo de errores con excepciones y aprende a depurar código.",
+  "icon": "AlertTriangle",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["excepciones-tipos", "try-catch-finally", "throw-throws", "excepciones-personalizadas", "depuracion-testing"]
+}

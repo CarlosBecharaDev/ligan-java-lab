@@ -1,0 +1,70 @@
+{
+  "id": "quiz-36-serializacion-basico",
+  "lessonSlug": "serializacion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es la serialización en Java?",
+      "options": [
+        "Convertir un String en un número",
+        "Convertir un objeto a bytes para guardarlo o transmitirlo",
+        "Comprimir un archivo ZIP",
+        "Encriptar datos sensibles"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Serialización no tiene relación con conversión de Strings a números.",
+        "Correcto. La serialización convierte el estado de un objeto en una secuencia de bytes que puede guardarse en disco o enviarse por la red.",
+        "Comprimir archivos es una tarea de archivos ZIP, no de serialización de objetos.",
+        "Encriptar es un proceso de seguridad, diferente a serializar."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué interfaz debe implementar un objeto para poder serializarse?",
+      "options": ["Cloneable", "Serializable", "Comparable", "Externalizable"],
+      "correctIndex": 1,
+      "explanations": [
+        "Cloneable se usa para clonar objetos con clone(), no para serialización.",
+        "Correcto. Serializable es una interfaz de marcador (marker interface) que indica que un objeto puede ser serializado.",
+        "Comparable se usa para definir el orden natural de los objetos.",
+        "Externalizable permite control total de la serialización, pero no es lo más común."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es serialVersionUID?",
+      "options": [
+        "La fecha de creación de la clase",
+        "Un identificador de versión de la clase serializada que asegura compatibilidad",
+        "El número de veces que se ha serializado la clase",
+        "Un hash del contenido del archivo serializado"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No tiene relación con la fecha de creación de la clase.",
+        "Correcto. serialVersionUID es un identificador único que se usa para verificar la compatibilidad entre la versión de la clase serializada y la que intenta deserializar.",
+        "No cuenta las veces que se serializa.",
+        "No es un hash del contenido del archivo."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué clase se usa para convertir un objeto en bytes durante la serialización?",
+      "options": [
+        "ObjectReader",
+        "ObjectOutputStream",
+        "ObjectSerializer",
+        "ObjectConverter"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "ObjectReader no es una clase estándar de serialización.",
+        "Correcto. ObjectOutputStream escribe objetos en un stream de salida, convirtiéndolos en bytes para su serialización.",
+        "ObjectSerializer no existe en el API estándar de Java.",
+        "ObjectConverter no existe en el API estándar de Java."
+      ]
+    }
+  ]
+}

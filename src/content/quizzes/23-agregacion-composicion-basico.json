@@ -1,0 +1,109 @@
+{
+  "id": "quiz-23-agregacion-composicion-basico",
+  "lessonSlug": "agregacion-composicion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es agregación en POO?",
+      "options": [
+        "Un objeto contiene a otro y ambos pueden existir independientemente",
+        "Un objeto destruye al otro",
+        "Una clase hereda de otra",
+        "Un método retorna un objeto"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Agregación = relación débil, objetos independientes.",
+        "No destruyen.",
+        "No es herencia.",
+        "No es retorna."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es composición?",
+      "options": [
+        "Objetos independientes que se relacionan",
+        "Un objeto contiene a otro y el hijo no puede existir sin el padre",
+        "Múltiples constructores",
+        "Métodos estáticos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Eso es agregación.",
+        "Correcto. Composición = relación fuerte, ciclo de vida dependiente.",
+        "No es constructores.",
+        "No es static."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Si un Pedido tiene Productos, ¿qué tipo de relación es?",
+      "options": [
+        "Herencia",
+        "Agregación",
+        "Composición",
+        "Dependencia"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No es herencia.",
+        "Correcto. Pedido tiene Productos, pero los productos existen sin el pedido.",
+        "No es composición porque el producto puede existir solo.",
+        "Dependencia es uso temporal."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Si un Auto tiene un Motor, ¿qué relación es?",
+      "options": [
+        "Agregación",
+        "Composición",
+        "Herencia",
+        "Polimorfismo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Agregación es relación débil.",
+        "Correcto. El Motor no puede existir sin el Auto (composición).",
+        "No es herencia.",
+        "No es polimorfismo."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo pasa un objeto como parámetro a un método?",
+      "options": [
+        "Por valor (copia completa)",
+        "Por referencia (la dirección del objeto)",
+        "Por nombre",
+        "Por defecto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No copia el objeto completo.",
+        "Correcto. Java pasa la referencia del objeto, no una copia.",
+        "No es por nombre.",
+        "No es por defecto."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Qué suena cuando un auto se destruye y su motor también?",
+      "options": [
+        "Agregación",
+        "Composición",
+        "Herencia",
+        "Polimorfismo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Agregación: objetos independientes.",
+        "Correcto. Composición: ciclo de vida dependiente.",
+        "No es herencia.",
+        "No es polimorfismo."
+      ]
+    }
+  ]
+}

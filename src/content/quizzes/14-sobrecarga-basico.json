@@ -1,0 +1,58 @@
+{
+  "id": "quiz-14-sobrecarga-basico",
+  "lessonSlug": "sobrecarga",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime?\nstatic void f(int x) { System.out.print(\"A\"); }\nstatic void f(double x) { System.out.print(\"B\"); }\nf(5); f(5.0);",
+      "options": [
+        "AB",
+        "BA",
+        "AA",
+        "BB"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. f(5) llama a f(int) porque 5 es int; f(5.0) llama a f(double) porque 5.0 es double.",
+        "El orden depende de los tipos, no de la definición.",
+        "5.0 es double, no int.",
+        "5 es int, no double."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Es válida esta sobrecarga?\nstatic int sumar(int a, int b)\nstatic double sumar(int a, int b)",
+      "options": [
+        "Sí, porque retornan tipos diferentes",
+        "No, porque los parámetros son idénticos",
+        "Sí, pero solo con static",
+        "Depende de la versión de Java"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El tipo de retorno no determina la sobrecarga.",
+        "Correcto. No puedes sobrecargar cambiando solo el tipo de retorno.",
+        "Static no afecta la validez de la sobrecarga.",
+        "Esta regla es igual en todas las versiones."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué llama procesar(3.14f) si existen procesar(int) y procesar(double)?",
+      "options": [
+        "procesar(int)",
+        "procesar(double)",
+        "Error de compilación",
+        "procesar(float)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "float no se convierte a int directamente.",
+        "Correcto. float se promueve a double (conversión más cercana en la jerarquía).",
+        "No hay error; hay una conversión válida.",
+        "No hay método float, pero double acepta la promoción."
+      ]
+    }
+  ]
+}

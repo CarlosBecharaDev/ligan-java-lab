@@ -1,0 +1,28 @@
+---
+import CodeBlock from './CodeBlock.astro';
+import type { RealWorldExample } from '@lib/lesson';
+
+export interface Props {
+  examples: RealWorldExample[];
+}
+
+const { examples } = Astro.props;
+---
+
+<div class="real-world">
+  <h2>
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:8px"><circle cx="12" cy="12" r="10" /><path d="M2 12h20" /><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z" /></svg>
+    Ejemplos del mundo real
+  </h2>
+  {examples.map((ex) => (
+    <div class="real-world-example">
+      <p class="real-world-example__domain">{ex.domain}</p>
+      <p class="real-world-example__description">{ex.description}</p>
+      <CodeBlock code={ex.code} title={ex.domain} />
+      <div class="real-world-example__result">
+        <strong>Resultado:</strong>
+        <pre>{ex.result}</pre>
+      </div>
+    </div>
+  ))}
+</div>

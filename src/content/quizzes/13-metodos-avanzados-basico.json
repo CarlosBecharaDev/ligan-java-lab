@@ -1,0 +1,58 @@
+{
+  "id": "quiz-13-metodos-avanzados-basico",
+  "lessonSlug": "metodos-avanzados",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué necesitas en todo método recursivo para evitar un bucle infinito?",
+      "options": [
+        "Un bucle while como respaldo",
+        "Un caso base (condición de parada)",
+        "Una variable estática",
+        "Un try-catch"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La recursión no usa bucles while.",
+        "Correcto. El caso base es la condición que detiene la recursión. Sin él, el método se llama a sí mismo indefinidamente.",
+        "Las variables estáticas no tienen relación con la parada de recursión.",
+        "El try-catch maneja excepciones, no controla la recursión."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué son varargs (double... nums)?",
+      "options": [
+        "Una variable de tipo double",
+        "Un número fijo de 2 argumentos",
+        "Un array que recibe 0 o más argumentos del mismo tipo",
+        "Un error de sintaxis"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "No es una variable simple.",
+        "No tiene un límite fijo.",
+        "Correcto. double... nums se trata internamente como un double[] que contiene todos los argumentos.",
+        "Es sintaxis válida desde Java 5."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es el problema de la recursión de Fibonacci simple?",
+      "options": [
+        "No calcula bien los números",
+        "Recalcula los mismos valores muchas veces",
+        "No funciona en Java",
+        "Solo funciona con números negativos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Fibonacci recursivo calcula correctamente.",
+        "Correcto. fibonacci(5) llama a fibonacci(4) y fibonacci(3), que a su vez llaman a otros, recalculando los mismos valores múltiples veces.",
+        "Funciona perfectamente en Java.",
+        "Los números negativos se manejan con el caso base."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "quiz-20-herencia-avanzado",
+  "lessonSlug": "herencia",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Que sucede si una clase hija no llama a super() en su constructor?",
+      "options": [
+        "Error de compilacion si el padre no tiene constructor vacio",
+        "Java siempre llama a super() automaticamente",
+        "El padre no se inicializa",
+        "El objeto no se crea"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Java inserta super() vacio, pero si el padre no tiene constructor sin parametros, falla.",
+        "Java lo hace solo si no escribes ningun super, pero no siempre funciona.",
+        "El padre si se inicializa via super() implicito.",
+        "El objeto si se crea."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "En una jerarquia Persona -> Doctor -> Cirujano, que constructor se ejecuta PRIMERO al crear un Cirujano?",
+      "options": [
+        "Cirujano",
+        "Doctor",
+        "Persona",
+        "Se ejecutan en paralelo"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "No es el primero.",
+        "Doctor se ejecuta despues de Persona.",
+        "Correcto. La cadena de super() va desde el hijo hasta el padre: Cirujano -> Doctor -> Persona.",
+        "Java es secuencial, no paralelo."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Por que se recomienda usar herencia solo para relaciones es-uno-de?",
+      "options": [
+        "Por rendimiento",
+        "Porque la herencia crea acoplamiento fuerte y jerarquias rigidas",
+        "Porque Java lo exige",
+        "Porque no hay alternativa"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No es cuestion de rendimiento.",
+        "Correcto. La herencia crea dependencia fuerte. Composicion es mas flexible para relaciones tiene-uno.",
+        "Java no lo exige, es una recomendacion de diseno.",
+        "Siempre hay alternativas como composicion e interfaces."
+      ]
+    }
+  ]
+}

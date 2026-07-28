@@ -1,0 +1,87 @@
+{
+  "id": "quiz-37-date-time-api-basico",
+  "lessonSlug": "date-time-api",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué paquete de Java contiene la API moderna para manejo de fechas y horas?",
+      "options": ["java.util.date", "java.time", "java.calendar", "java.datetime"],
+      "correctIndex": 1,
+      "explanations": [
+        "java.util.date contiene la clase Date antigua, no la API moderna.",
+        "Correcto. java.time es el paquete introducido en Java 8 que ofrece LocalDate, LocalDateTime, LocalTime y muchas más clases inmutables.",
+        "java.calendar no existe como paquete estándar.",
+        "java.datetime no existe como paquete estándar."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se obtiene la fecha actual del sistema?",
+      "options": [
+        "new Date()",
+        "LocalDate.now()",
+        "Date.today()",
+        "LocalDate.getCurrent()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "new Date() usa la API antigua, no java.time.",
+        "Correcto. LocalDate.now() retorna la fecha actual basada en el reloj del sistema, sin hora ni zona horaria.",
+        "Date.today() no existe como método.",
+        "LocalDate.getCurrent() no es un método válido."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se suman días a una fecha en java.time?",
+      "options": [
+        "fecha.addDays(5)",
+        "fecha.plusDays(5)",
+        "fecha + 5",
+        "fecha.increment(5)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "addDays() no existe en las clases de java.time.",
+        "Correcto. plusDays(n) retorna una nueva fecha con n días sumados, ya que las clases de java.time son inmutables.",
+        "No se puede usar el operador + directamente con fechas en Java.",
+        "increment() no es un método de java.time."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se compara si una fecha es anterior a otra en java.time?",
+      "options": [
+        "fecha1 < fecha2",
+        "fecha1.isBefore(fecha2)",
+        "fecha1.compareTo(fecha2) < 0",
+        "Ambas opciones B y C son correctas"
+      ],
+      "correctIndex": 3,
+      "explanations": [
+        "No se pueden comparar fechas con el operador < en Java.",
+        "isBefore() es la forma más legible de comparar fechas.",
+        "compareTo() también funciona porque LocalDate implementa Comparable.",
+        "Correcto. Ambas isBefore() y compareTo() < 0 son formas válidas de verificar si una fecha es anterior a otra."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué clase se usa para formatear y parsear fechas en java.time?",
+      "options": [
+        "DateFormat",
+        "SimpleDateFormat",
+        "DateTimeFormatter",
+        "DateFormatter"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "DateFormat es de java.util, la API antigua.",
+        "SimpleDateFormat también es de la API antigua y no es thread-safe.",
+        "Correcto. DateTimeFormatter es la clase moderna de java.time para formatear y parsear fechas de forma thread-safe.",
+        "DateFormatter no existe en el API estándar de Java."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "quiz-21-polimorfismo-avanzado",
+  "lessonSlug": "polimorfismo",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Que sucede si haces downcast a un tipo incorrecto sin verificar con instanceof?",
+      "options": [
+        "Compila pero da valor null",
+        "ClassCastException en tiempo de ejecucion",
+        "Error de compilacion",
+        "El objeto se convierte al tipo correcto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No retorna null.",
+        "Correcto. Sin instanceof, el cast falla en runtime con ClassCastException.",
+        "No falla en compilacion.",
+        "No se convierte automaticamente."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Si Animal a = new Perro(), que metodos puede llamar 'a' SIN downcast?",
+      "options": [
+        "Solo los de Perro",
+        "Solo los de Animal",
+        "Todos los de Animal y Perro",
+        "Ninguno"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No puede llamar metodos exclusivos de Perro sin cast.",
+        "Correcto. Solo puede acceder a metodos definidos en Animal (el tipo de la referencia).",
+        "No sin downcast.",
+        "Si puede llamar metodos de Animal."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Una clase abstracta puede tener constructores?",
+      "options": [
+        "No, nunca",
+        "Si, para que las subclases llamen a super()",
+        "Solo si es static",
+        "Solo si tiene metodos concretos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Si puede tener constructores.",
+        "Correcto. Aunque no se instancie directamente, sus constructores se usan via super() en subclases.",
+        "Los constructores no pueden ser static.",
+        "Puede tener constructores independientemente de si tiene metodos concretos."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-streams-facil",
+    "title": "Sumar y filtrar",
+    "difficulty": "facil",
+    "description": "Dada una lista de enteros, usa un Stream para filtrar solo los mayores a 10 y sumarlos. Imprime el resultado de la suma.",
+    "template": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> numeros = Arrays.asList(5, 12, 8, 15, 3, 20, 7, 25, 11);\n\n        // TODO: Usar stream para:\n        // 1. Filtrar numeros mayores a 10\n        // 2. Sumarlos con .sum() o .reduce()\n        int suma = 0; // reemplazar con stream\n\n        System.out.println(\"Suma de mayores a 10: \" + suma);\n    }\n}",
+    "hints": [
+      "numeros.stream() crea el stream desde la lista",
+      ".filter(n -> n > 10) filtra los elementos que cumplen la condicion",
+      ".mapToInt(Integer::intValue).sum() convierte a IntStream y suma"
+    ],
+    "solution": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Integer> numeros = Arrays.asList(5, 12, 8, 15, 3, 20, 7, 25, 11);\n\n        int suma = numeros.stream()\n            .filter(n -> n > 10)\n            .mapToInt(Integer::intValue)\n            .sum();\n\n        System.out.println(\"Suma de mayores a 10: \" + suma);\n    }\n}",
+    "solutionExplanation": "El stream filtra numeros mayores a 10 (12, 15, 20, 25, 11 = 83). mapToInt convierte Integer a int primitivo para usar sum().",
+    "expectedOutput": "Suma de mayores a 10: 83",
+    "lessonSlug": "streams"
+  },
+  {
+    "id": "ex-streams-normal",
+    "title": "Procesar texto",
+    "difficulty": "normal",
+    "description": "Dada una lista de lineas de codigo Java, usa un Stream para filtrar las lineas que contienen la palabra \"Java\" (sin importar mayusculas/minusculas), convertirlas a mayusculas e imprimir cada una. Al final imprime cuantas lineas se encontraron.",
+    "template": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<String> lineas = Arrays.asList(\n            \"public class Main\",\n            \"System.out.println(\\\"Java es genial\\\");\",\n            \"int x = 5;\",\n            \"// Esto es Java\",\n            \"return true;\",\n            \"import java.util.*;\",\n            \"String java = \\\"lenguaje\\\";\",\n            \"for (int i = 0; i < 10; i++)\"\n        );\n\n        // TODO: Filtrar lineas que contengan \"Java\" (ignore case)\n        // TODO: Convertir cada linea a mayusculas con .toUpperCase()\n        // TODO: Imprimir cada linea con .forEach\n        // TODO: Contar cuantas lineas se encontraron con .count()\n\n        long cantidad = 0;\n        System.out.println(\"Lineas que mencionan Java: \" + cantidad);\n    }\n}",
+    "hints": [
+      "linea.toLowerCase().contains(\"java\") filtra ignorando mayusculas/minusculas",
+      ".map(String::toUpperCase) convierte cada elemento a mayusculas",
+      ".forEach(System.out::println) imprime cada elemento del stream",
+      ".count() retorna la cantidad de elementos que pasaron el filtro"
+    ],
+    "solution": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<String> lineas = Arrays.asList(\n            \"public class Main\",\n            \"System.out.println(\\\"Java es genial\\\");\",\n            \"int x = 5;\",\n            \"// Esto es Java\",\n            \"return true;\",\n            \"import java.util.*;\",\n            \"String java = \\\"lenguaje\\\";\",\n            \"for (int i = 0; i < 10; i++)\"\n        );\n\n        long cantidad = lineas.stream()\n            .filter(l -> l.toLowerCase().contains(\"java\"))\n            .peek(l -> System.out.println(l.toUpperCase()))\n            .count();\n\n        System.out.println(\"Lineas que mencionan Java: \" + cantidad);\n    }\n}",
+    "solutionExplanation": "filter con lambda verifica si la linea contiene \"java\" (case insensitive). peek permite ejecutar una accion (imprimir en mayusculas) sin alterar el stream. count() retorna la cantidad final.",
+    "expectedOutput": "SYSTEM.OUT.PRINTLN(\"JAVA ES GENIAL\");\n// ESTO ES JAVA\nIMPORT JAVA.UTIL.*;\nSTRING JAVA = \"LENGUAJE\";\nLineas que mencionan Java: 4",
+    "lessonSlug": "streams"
+  },
+  {
+    "id": "ex-streams-dificil",
+    "title": "Agrupar y reducir",
+    "difficulty": "dificil",
+    "description": "Dada una lista de personas (nombre, edad, ciudad), usa Streams para: 1) Agrupar por ciudad usando Collectors.groupingBy, 2) Para cada grupo, calcular la edad promedio, 3) Imprimir cada ciudad con su promedio de edad.",
+    "template": "import java.util.*;\nimport java.util.stream.*;\n\nrecord Persona(String nombre, int edad, String ciudad) {}\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Persona> personas = Arrays.asList(\n            new Persona(\"Ana\", 25, \"Lima\"),\n            new Persona(\"Luis\", 30, \"Lima\"),\n            new Persona(\"Maria\", 22, \"Cusco\"),\n            new Persona(\"Pedro\", 35, \"Cusco\"),\n            new Persona(\"Sofia\", 28, \"Lima\"),\n            new Persona(\"Carlos\", 40, \"Arequipa\"),\n            new Persona(\"Elena\", 32, \"Cusco\"),\n            new Persona(\"Miguel\", 27, \"Arequipa\")\n        );\n\n        // TODO: Usar streams para agrupar personas por ciudad\n        // Collectors.groupingBy(Persona::ciudad, Collectors.toList())\n        // Luego para cada grupo calcular edad promedio\n        // Imprimir: \"Ciudad: promedio\"\n\n    }\n}",
+    "hints": [
+      "Collectors.groupingBy(Persona::ciudad) agrupa por ciudad en un Map<String, List<Persona>>",
+      "Para el promedio: stream().mapToInt(Persona::edad).average() retorna OptionalDouble",
+      "Usa .ifPresentOrElse() o .orElse(0.0) para manejar el OptionalDouble"
+    ],
+    "solution": "import java.util.*;\nimport java.util.stream.*;\n\nrecord Persona(String nombre, int edad, String ciudad) {}\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Persona> personas = Arrays.asList(\n            new Persona(\"Ana\", 25, \"Lima\"),\n            new Persona(\"Luis\", 30, \"Lima\"),\n            new Persona(\"Maria\", 22, \"Cusco\"),\n            new Persona(\"Pedro\", 35, \"Cusco\"),\n            new Persona(\"Sofia\", 28, \"Lima\"),\n            new Persona(\"Carlos\", 40, \"Arequipa\"),\n            new Persona(\"Elena\", 32, \"Cusco\"),\n            new Persona(\"Miguel\", 27, \"Arequipa\")\n        );\n\n        Map<String, Double> promedios = personas.stream()\n            .collect(Collectors.groupingBy(\n                Persona::ciudad,\n                Collectors.averagingInt(Persona::edad)\n            ));\n\n        promedios.forEach((ciudad, promedio) ->\n            System.out.println(ciudad + \": \" + promedio)\n        );\n    }\n}",
+    "solutionExplanation": "Collectors.groupingBy agrupa las personas por ciudad. Collectors.averagingInt calcula el promedio de edad automaticamente para cada grupo. El resultado es un Map<String, Double> que se imprime con forEach.",
+    "expectedOutput": "Lima: 27.666666666666668\nCusco: 29.666666666666668\nArequipa: 33.5",
+    "lessonSlug": "streams"
+  }
+]

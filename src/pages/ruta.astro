@@ -1,0 +1,69 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/ContentLayout.astro';
+import ProgressBar from '@components/ui/ProgressBar.astro';
+
+const lessons = await getCollection('lessons');
+const modules = await getCollection('modules');
+modules.sort((a, b) => a.data.number - b.data.number);
+---
+
+<ContentLayout title="Ruta de aprendizaje" description="Mapa de módulos con progreso">
+  <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui)">
+    <h1 data-i18n="path.title" style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md);color:var(--win-text)">🗺️ Ruta de aprendizaje</h1>
+    <p data-i18n="path.description" style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:18px">
+      Sigue esta ruta guiada para dominar Java desde cero. Cada módulo se construye sobre el anterior.
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+      {modules.map((mod) => {
+        // Find first lesson for this module
+        const firstSlug = mod.data.lessons.length > 0
+          ? lessons.find((l) => l.data.slug === mod.data.lessons[0])?.data.slug
+          : null;
+        const firstLessonSlug = firstSlug ?? 'variables-y-tipos';
+        return (
+          <div style="display:flex;gap:var(--space-lg);padding:var(--space-lg);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5);cursor:pointer;transition:transform 0.1s;align-items:center"
+               onclick={`window.location.href='/tema/${firstLessonSlug}'`}
+               role="button"
+               tabindex="0"
+               aria-label={`Módulo ${mod.data.number}: ${mod.data.title}`}
+               onmouseover="this.style.transform='translate(-2px, -2px)';this.style.boxShadow='4px 4px 0 rgba(0,0,0,0.5)'"
+               onmouseout="this.style.transform='none';this.style.boxShadow='2px 2px 0 rgba(0,0,0,0.5)'">
+            <div style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;background:#E8D8B0;border:2px solid var(--win-border);flex-shrink:0;color:var(--win-text)">
+              <span style="font-family:var(--font-pixel);font-size:20px;margin-top:4px">{mod.data.number}</span>
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-xs);flex-wrap:wrap">
+                <h2 style="font-family:var(--font-pixel);font-size:14px;margin:0;color:var(--win-text)">{mod.data.title}</h2>
+                {mod.data.status === 'disponible' && <span data-i18n="path.available" style="font-size:10px;padding:4px 6px;background:#28C840;color:black;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">Disponible</span>}
+                {mod.data.status === 'en-progreso' && <span data-i18n="path.in-progress" style="font-size:10px;padding:4px 6px;background:var(--taskbar-active);color:black;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">En progreso</span>}
+                {mod.data.status === 'proximamente' && <span data-i18n="path.coming-soon" style="font-size:10px;padding:4px 6px;background:#A09070;color:white;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">Próximamente</span>}
+              </div>
+              <p style="color:var(--win-muted);margin:0;font-size:18px;margin-top:8px">{mod.data.description}</p>
+            </div>
+            {mod.data.status !== 'proximamente' && (
+              <div style="min-width:150px">
+                <div style="border:2px solid black;background:white;height:16px;width:100%;position:relative;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.2)">
+                  <div style="height:100%;width:0%;background:var(--win-link);border-right:2px solid black"></div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    <div style="margin-top:var(--space-2xl);padding:var(--space-lg);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5);text-align:center">
+      <h3 data-i18n="path.general-progress" style="font-family:var(--font-pixel);font-size:16px;margin-bottom:var(--space-md);color:var(--win-text)">📊 Tu progreso general</h3>
+      <p data-i18n="path.keep-learning" style="color:var(--win-muted);margin-bottom:var(--space-lg);font-size:18px">La práctica hace al maestro. ¡Sigue aprendiendo!</p>
+      
+      <div style="border:2px solid black;background:white;height:24px;width:100%;position:relative;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.2)">
+        <div style="height:100%;width:5%;background:var(--win-link);border-right:2px solid black"></div>
+        <span style="position:absolute;top:0;left:50%;transform:translateX(-50%);font-family:var(--font-pixel);font-size:10px;line-height:24px;color:black">
+          <span data-i18n="path.completed">5% Completado</span>
+        </span>
+      </div>
+    </div>
+  </div>
+</ContentLayout>

@@ -1,0 +1,75 @@
+{
+  "id": "quiz-26-linkedlist-avanzado",
+  "lessonSlug": "linkedlist",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Por qué LinkedList implementa la interfaz Deque?",
+      "options": [
+        "Para funcionar como cola (Queue) y pila (Stack)",
+        "Para tener acceso rapido por indice",
+        "Para ordenar elementos automaticamente",
+        "Para almacenar solo elementos unicos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Deque (Double Ended Queue) permite usar LinkedList como cola y pila, agregando metodos como offer(), poll(), push(), pop().",
+        "No. El acceso rapido por indice es mejor en ArrayList.",
+        "No. LinkedList no ordena elementos automaticamente.",
+        "No. LinkedList permite duplicados, no es para elementos unicos."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la desventaja principal de LinkedList?",
+      "options": [
+        "Acceso aleatorio lento O(n)",
+        "No permite duplicados",
+        "No soporta generics",
+        "No permite nulos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. LinkedList tiene acceso aleatorio O(n) porque debe recorrer la lista desde un extremo hasta la posicion deseada.",
+        "No. LinkedList permite duplicados.",
+        "No. LinkedList soporta generics igual que ArrayList.",
+        "No. LinkedList permite valores nulos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es un nodo en una LinkedList?",
+      "options": [
+        "Elemento con referencia al anterior y siguiente",
+        "Elemento con indice numerico",
+        "Elemento con valor hash",
+        "Elemento con puntero a memoria"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Cada nodo contiene el dato y dos referencias: una al nodo anterior y otra al nodo siguiente.",
+        "No. No usa indices numericos, usa referencias a nodos.",
+        "No. No usa hash, usa referencias directas a otros nodos.",
+        "No. Aunque usa referencias, no son punteros a memoria directa sino referencias a objetos."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cuándo es preferible usar LinkedList sobre ArrayList?",
+      "options": [
+        "Cuando hay muchas inserciones/eliminaciones y pocas busquedas",
+        "Cuando se necesita acceso rapido por indice",
+        "Cuando se necesita almacenar muchos elementos",
+        "Cuando se necesita un orden alfabetico"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. LinkedList es mejor cuando las operaciones principales son inserciones y eliminaciones en los extremos.",
+        "No. Para acceso rapido por indice es mejor ArrayList.",
+        "No. Ambos pueden almacenar muchos elementos, pero ArrayList es mas eficiente en memoria.",
+        "No. Ninguno de los dos ordena automaticamente."
+      ]
+    }
+  ]
+}

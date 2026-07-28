@@ -1,0 +1,109 @@
+{
+  "id": "quiz-17-clases-objetos-avanzado",
+  "lessonSlug": "clases-objetos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime?\nPersona a = new Persona();\na.nombre = \"Ana\";\nPersona b = a;\nb.nombre = \"Luis\";\nSystem.out.println(a.nombre);",
+      "options": [
+        "Ana",
+        "Luis",
+        "null",
+        "Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "a.nombre ya no es 'Ana' después del cambio.",
+        "Correcto. a y b apuntan al mismo objeto, cambiar b cambia a.",
+        "No es null.",
+        "Es código válido."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia principal entre static e instance?",
+      "options": [
+        "static es más rápido",
+        "static se comparte entre todos los objetos, instance es propia de cada uno",
+        "static no puede tener valores",
+        "instance es solo para métodos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La velocidad no es la diferencia clave.",
+        "Correcto. static = compartido, instance = único por objeto.",
+        "static puede tener valores.",
+        "instance es para atributos y métodos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué error comete este código?\nPersona p = new Persona();\np = null;\np.saludar();",
+      "options": [
+        "Error de compilación",
+        "NullPointerException en runtime",
+        "Compila pero no imprime nada",
+        "Compila e imprime null"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Compila porque Java no sabe en tiempo de compilación.",
+        "Correcto. p apunta a null, no puede ejecutar métodos.",
+        "No imprime nada, lanza excepción.",
+        "No imprime null, lanza excepción."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es correcto sobre el operador new?",
+      "options": [
+        "Asigna memoria en el stack",
+        "Retorna una copia del objeto",
+        "Reserva memoria en el heap y retorna una referencia",
+        "Inicializa atributos con valores aleatorios"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "El heap almacena objetos, el stack guarda referencias.",
+        "No retorna copia, retorna referencia.",
+        "Correcto. new + heap + referencia.",
+        "Inicializa con valores por defecto, no aleatorios."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué valor tiene totalMascotas después?\nContador.totalMascotas = 0;\nnew Contador(\"Max\");\nnew Contador(\"Luna\");",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "0 era el valor inicial.",
+        "Solo un constructor no justifica 1.",
+        "Correcto. Cada new incrementa en 1.",
+        "Tres sería si hubiera un tercer objeto."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Cuándo es apropiado usar un atributo static?",
+      "options": [
+        "Para el nombre de cada objeto",
+        "Para un contador compartido entre todos los objetos",
+        "Para un método que solo usa un objeto",
+        "Para un boolean que cambia por objeto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El nombre es propio de cada objeto (instance).",
+        "Correcto. Contadores compartidos son el caso típico de static.",
+        "Los métodos static no dependen de un objeto.",
+        "Los booleanes que cambian por objeto son instance."
+      ]
+    }
+  ]
+}

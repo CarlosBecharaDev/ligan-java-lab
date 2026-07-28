@@ -1,0 +1,58 @@
+{
+  "id": "quiz-12-metodos-basico",
+  "lessonSlug": "metodos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\nstatic int duplicar(int n) { return n * 2; }\npublic static void main(String[] args) {\n    int x = 5;\n    int y = duplicar(x);\n    System.out.println(y);\n}",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "Error de compilación"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "duplicar retorna n*2, que es 10, no 5.",
+        "Correcto. duplicar(5) retorna 5*2 = 10, que se almacena en y.",
+        "No hay suma, es multiplicación por 2.",
+        "El código compila correctamente."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre parámetro y argumento?",
+      "options": [
+        "No hay diferencia",
+        "El parámetro es el valor, el argumento es la variable",
+        "El parámetro va en la definición, el argumento va en la llamada",
+        "El argumento es para métodos void, el parámetro para return"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Son conceptos distintos que se confunden fácilmente.",
+        "Es al revés: el argumento es el valor.",
+        "Correcto. Parámetros se declaran en la firma del método; argumentos son los valores reales que pasas al llamarlo.",
+        "Ambos tipos de método usan parámetros y argumentos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué retorna un método declarado como void?",
+      "options": [
+        "null",
+        "0",
+        "No retorna ningún valor",
+        "Un valor vacío por defecto"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "void no retorna null; simplemente no retorna nada.",
+        "void no retorna un número.",
+        "Correcto. void significa que el método no tiene valor de retorno. Puede usar return sin valor para salir antes.",
+        "No existe 'valor vacío' en Java."
+      ]
+    }
+  ]
+}

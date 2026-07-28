@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-herencia-facil",
+    "title": "Jerarquia de Figuras",
+    "difficulty": "facil",
+    "description": "Crea una clase Figura con nombre y un metodo calcularArea() que retorne 0. Luego crea Circulo extends Figura con radio y Rectangulo extends Figura con base y altura, ambos sobreescribiendo calcularArea().",
+    "template": "public class Figura {\n    String nombre;\n\n    Figura(String nombre) {\n        this.nombre = nombre;\n    }\n\n    // TODO: Metodo calcularArea() que retorne 0.0\n\n    void describir() {\n        System.out.println(nombre + \" area: \" + calcularArea());\n    }\n}\n\n// TODO: Crear Circulo extends Figura con atributo radio\n// Constructor: Circulo(double radio) usando super(\"Circulo\")\n// Override calcularArea(): Math.PI * radio * radio\n\n// TODO: Crear Rectangulo extends Figura con base y altura\n// Constructor: Rectangulo(double base, double altura) usando super(\"Rectangulo\")\n// Override calcularArea(): base * altura\n\npublic class Main {\n    public static void main(String[] args) {\n        Figura c = new Circulo(5);\n        Figura r = new Rectangulo(4, 6);\n        c.describir();\n        r.describir();\n    }\n}",
+    "hints": [
+      "Figura es la clase padre, Circulo y Rectangulo son hijas",
+      "Usa super(\"nombre\") en los constructores hijos",
+      "Override con la misma firma: double calcularArea()"
+    ],
+    "solution": "public class Figura {\n    String nombre;\n    Figura(String nombre) { this.nombre = nombre; }\n    double calcularArea() { return 0; }\n    void describir() { System.out.println(nombre + \" area: \" + calcularArea()); }\n}\n\npublic class Circulo extends Figura {\n    double radio;\n    Circulo(double radio) { super(\"Circulo\"); this.radio = radio; }\n    @Override\n    double calcularArea() { return Math.PI * radio * radio; }\n}\n\npublic class Rectangulo extends Figura {\n    double base, altura;\n    Rectangulo(double base, double altura) { super(\"Rectangulo\"); this.base = base; this.altura = altura; }\n    @Override\n    double calcularArea() { return base * altura; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Figura c = new Circulo(5);\n        Figura r = new Rectangulo(4, 6);\n        c.describir();\n        r.describir();\n    }\n}",
+    "solutionExplanation": "La herencia permite que Figura describa cualquier forma. Cada hijo calcula su area con override.",
+    "expectedOutput": "Circulo area: 78.53981633974483\nRectangulo area: 24.0",
+    "lessonSlug": "herencia"
+  },
+  {
+    "id": "ex-herencia-normal",
+    "title": "Empleado y Gerente",
+    "difficulty": "normal",
+    "description": "Crea una clase Empleado con nombre, salario basico y metodo calcularSalario() que retorne el salario basico. Luego crea Gerente extends Empleado con bono y sobreescribir calcularSalario() sumando el bono.",
+    "template": "public class Empleado {\n    String nombre;\n    double salarioBasico;\n\n    // TODO: Constructor con nombre y salarioBasico\n\n    // TODO: Metodo calcularSalario() que retorne salarioBasico\n\n    void mostrar() {\n        System.out.println(nombre + \" - Salario: $\" + calcularSalario());\n    }\n}\n\n// TODO: Crear Gerente extends Empleado\n// Atributo adicional: double bono\n// Constructor: Gerente(String nombre, double salarioBasico, double bono)\n// Override calcularSalario(): salarioBasico + bono\n\npublic class Main {\n    public static void main(String[] args) {\n        Empleado e1 = new Empleado(\"Ana\", 2000);\n        Empleado e2 = new Gerente(\"Luis\", 3000, 500);\n        e1.mostrar();\n        e2.mostrar();\n    }\n}",
+    "hints": [
+      "El constructor de Gerente debe llamar super(nombre, salarioBasico) primero",
+      "El override de calcularSalario() suma salarioBasico + bono",
+      "Puedes asignar Gerente a una variable tipo Empleado (upcasting)"
+    ],
+    "solution": "public class Empleado {\n    String nombre;\n    double salarioBasico;\n\n    Empleado(String nombre, double salarioBasico) {\n        this.nombre = nombre;\n        this.salarioBasico = salarioBasico;\n    }\n\n    double calcularSalario() { return salarioBasico; }\n\n    void mostrar() { System.out.println(nombre + \" - Salario: $\" + calcularSalario()); }\n}\n\npublic class Gerente extends Empleado {\n    double bono;\n\n    Gerente(String nombre, double salarioBasico, double bono) {\n        super(nombre, salarioBasico);\n        this.bono = bono;\n    }\n\n    @Override\n    double calcularSalario() { return salarioBasico + bono; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Empleado e1 = new Empleado(\"Ana\", 2000);\n        Empleado e2 = new Gerente(\"Luis\", 3000, 500);\n        e1.mostrar();\n        e2.mostrar();\n    }\n}",
+    "solutionExplanation": "Gerente hereda de Empleado y agrega bono. El override suma el bono al salario base.",
+    "expectedOutput": "Ana - Salario: $2000.0\nLuis - Salario: $3500.0",
+    "lessonSlug": "herencia"
+  },
+  {
+    "id": "ex-herencia-dificil",
+    "title": "Jerarquia de Vehiculos",
+    "difficulty": "dificil",
+    "description": "Crea una jerarquia completa de vehiculos: Vehiculo (marca, anio), Auto extends Vehiculo (puertas, combustible) y Camioneta extends Vehiculo (cargaMax, traccion). Ambas subclases sobreescriben mostrarInfo() usando super.mostrarInfo() y agregan info propia. Crea un array de Vehiculo con ambos tipos y recorrelo mostrando info.",
+    "template": "public class Vehiculo {\n    String marca;\n    int anio;\n\n    Vehiculo(String marca, int anio) {\n        this.marca = marca;\n        this.anio = anio;\n    }\n\n    // TODO: Metodo mostrarInfo() que imprima marca y anio\n\n    String getTipo() {\n        return \"Vehiculo base\";\n    }\n}\n\n// TODO: Crear Auto extends Vehiculo\n// Atributos: int puertas, String combustible\n// Constructor: Auto(String marca, int anio, int puertas, String combustible)\n// Usar super(marca, anio)\n// Override mostrarInfo(): llamar super.mostrarInfo() y mostrar puertas y combustible\n// Override getTipo(): retornar \"Auto\"\n\n// TODO: Crear Camioneta extends Vehiculo\n// Atributos: double cargaMax, String traccion\n// Constructor: Camioneta(String marca, int anio, double cargaMax, String traccion)\n// Usar super(marca, anio)\n// Override mostrarInfo(): llamar super.mostrarInfo() y mostrar cargaMax y traccion\n// Override getTipo(): retornar \"Camioneta\"\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Crear array Vehiculo[] con: Auto(\"Toyota\", 2023, 4, \"Gasolina\")\n        // y Camioneta(\"Ford\", 2022, 1500.0, \"4x4\")\n        // TODO: Recorrer el array e imprimir tipo y mostrarInfo() de cada uno\n    }\n}",
+    "hints": [
+      "Usa super.mostrarInfo() en cada subclase para no duplicar codigo",
+      "El array de Vehiculo permite polimorfismo con Auto y Camioneta",
+      "Override getTipo() para identificar cada subclase"
+    ],
+    "solution": "public class Vehiculo {\n    String marca;\n    int anio;\n\n    Vehiculo(String marca, int anio) {\n        this.marca = marca;\n        this.anio = anio;\n    }\n\n    void mostrarInfo() {\n        System.out.println(marca + \" | Anio: \" + anio);\n    }\n\n    String getTipo() {\n        return \"Vehiculo base\";\n    }\n}\n\npublic class Auto extends Vehiculo {\n    int puertas;\n    String combustible;\n\n    Auto(String marca, int anio, int puertas, String combustible) {\n        super(marca, anio);\n        this.puertas = puertas;\n        this.combustible = combustible;\n    }\n\n    @Override\n    void mostrarInfo() {\n        super.mostrarInfo();\n        System.out.println(\"Puertas: \" + puertas + \" | Combustible: \" + combustible);\n    }\n\n    @Override\n    String getTipo() { return \"Auto\"; }\n}\n\npublic class Camioneta extends Vehiculo {\n    double cargaMax;\n    String traccion;\n\n    Camioneta(String marca, int anio, double cargaMax, String traccion) {\n        super(marca, anio);\n        this.cargaMax = cargaMax;\n        this.traccion = traccion;\n    }\n\n    @Override\n    void mostrarInfo() {\n        super.mostrarInfo();\n        System.out.println(\"Carga max: \" + cargaMax + \" kg | Traccion: \" + traccion);\n    }\n\n    @Override\n    String getTipo() { return \"Camioneta\"; }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Vehiculo[] vehiculos = {\n            new Auto(\"Toyota\", 2023, 4, \"Gasolina\"),\n            new Camioneta(\"Ford\", 2022, 1500.0, \"4x4\")\n        };\n        for (Vehiculo v : vehiculos) {\n            System.out.println(\"Tipo: \" + v.getTipo());\n            v.mostrarInfo();\n            System.out.println();\n        }\n    }\n}",
+    "solutionExplanation": "La herencia con super.mostrarInfo() reutiliza codigo del padre. El array de Vehiculo demuestra polimorfismo: cada tipo muestra su info especifica.",
+    "expectedOutput": "Tipo: Auto\nToyota | Anio: 2023\nPuertas: 4 | Combustible: Gasolina\n\nTipo: Camioneta\nFord | Anio: 2022\nCarga max: 1500.0 kg | Traccion: 4x4",
+    "lessonSlug": "herencia"
+  }
+]

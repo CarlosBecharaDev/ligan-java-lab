@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-hashmap-facil",
+    "title": "Diccionario simple",
+    "difficulty": "facil",
+    "description": "Crea un HashMap<String,String> con 5 palabras en español y su traducción al inglés. Permite al usuario buscar una palabra y muestra su traducción.",
+    "template": "import java.util.HashMap;\nimport java.util.Scanner;\n\npublic class Diccionario {\n    public static void main(String[] args) {\n        HashMap<String, String> diccionario = new HashMap<>();\n        // TODO: Agrega 5 pares español-inglés con put()\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Buscar palabra: \");\n        String palabra = sc.nextLine();\n        // TODO: Busca y muestra la traducción con get()\n        sc.close();\n    }\n}",
+    "hints": [
+      "Usa diccionario.put(\"gato\", \"cat\") para cada par de palabras",
+      "Usa diccionario.get(palabra) para buscar la traducción",
+      "Verifica con containsKey() si la palabra existe antes de mostrar"
+    ],
+    "solution": "import java.util.HashMap;\nimport java.util.Scanner;\n\npublic class Diccionario {\n    public static void main(String[] args) {\n        HashMap<String, String> diccionario = new HashMap<>();\n        diccionario.put(\"gato\", \"cat\");\n        diccionario.put(\"perro\", \"dog\");\n        diccionario.put(\"casa\", \"house\");\n        diccionario.put(\"libro\", \"book\");\n        diccionario.put(\"agua\", \"water\");\n        Scanner sc = new Scanner(System.in);\n        System.out.print(\"Buscar palabra: \");\n        String palabra = sc.nextLine();\n        if (diccionario.containsKey(palabra)) {\n            System.out.println(palabra + \" = \" + diccionario.get(palabra));\n        } else {\n            System.out.println(\"Palabra no encontrada\");\n        }\n        sc.close();\n    }\n}",
+    "solutionExplanation": "Se crea un HashMap y se agregan 5 pares clave-valor con put(). Para buscar, se usa containsKey() para verificar si la palabra existe y get() para obtener su traducción.",
+    "expectedOutput": "Buscar palabra: gato\ngato = cat",
+    "lessonSlug": "hashmap"
+  },
+  {
+    "id": "ex-hashmap-normal",
+    "title": "Contador de frecuencia",
+    "difficulty": "normal",
+    "description": "Cuenta la frecuencia de cada letra en un texto usando un HashMap<Character, Integer>. Muestra el resultado ordenado por frecuencia descendente.",
+    "template": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class ContadorFrecuencia {\n    public static void main(String[] args) {\n        String texto = \"java es genial\";\n        HashMap<Character, Integer> frecuencias = new HashMap<>();\n        // TODO: Recorre cada carácter del texto\n        // Si la letra ya está en el mapa, incrementa su valor\n        // Si no está, agrega con valor 1\n        for (Map.Entry<Character, Integer> entry : frecuencias.entrySet()) {\n            System.out.println(entry.getKey() + \" = \" + entry.getValue());\n        }\n    }\n}",
+    "hints": [
+      "Usa texto.charAt(i) para acceder a cada carácter",
+      "Usa containsKey() para verificar si la letra ya está registrada",
+      "Con getOrDefault(letra, 0) + 1 puedes simplificar el incremento"
+    ],
+    "solution": "import java.util.HashMap;\nimport java.util.Map;\n\npublic class ContadorFrecuencia {\n    public static void main(String[] args) {\n        String texto = \"java es genial\";\n        HashMap<Character, Integer> frecuencias = new HashMap<>();\n        for (int i = 0; i < texto.length(); i++) {\n            char letra = texto.charAt(i);\n            if (letra != ' ') {\n                frecuencias.put(letra, frecuencias.getOrDefault(letra, 0) + 1);\n            }\n        }\n        for (Map.Entry<Character, Integer> entry : frecuencias.entrySet()) {\n            System.out.println(entry.getKey() + \" = \" + entry.getValue());\n        }\n    }\n}",
+    "solutionExplanation": "Se recorre cada carácter del String. Si es un espacio se ignora. Para cada letra se usa getOrDefault() para obtener la frecuencia actual (0 si no existe) y se incrementa en 1 con put(). Luego se itera sobre el mapa con entrySet() para mostrar los resultados.",
+    "expectedOutput": "a = 3\nv = 1\ne = 1\ng = 1\ni = 2\nj = 1\nl = 1\nn = 1\ns = 1",
+    "lessonSlug": "hashmap"
+  },
+  {
+    "id": "ex-hashmap-dificil",
+    "title": "Agrupar por categoría",
+    "difficulty": "dificil",
+    "description": "Dado un HashMap<String, String> de productos y sus categorías, agrupa los productos por categoría usando un HashMap<String, ArrayList<String>> y muestra el resultado.",
+    "template": "import java.util.ArrayList;\nimport java.util.HashMap;\n\npublic class AgruparPorCategoria {\n    public static void main(String[] args) {\n        HashMap<String, String> productos = new HashMap<>();\n        productos.put(\"Laptop\", \"Electrónica\");\n        productos.put(\"Camisa\", \"Ropa\");\n        productos.put(\"Mouse\", \"Electrónica\");\n        productos.put(\"Pantalón\", \"Ropa\");\n        productos.put(\"Auriculares\", \"Electrónica\");\n        productos.put(\"Zapatillas\", \"Calzado\");\n        productos.put(\"Sneakers\", \"Calzado\");\n\n        HashMap<String, ArrayList<String>> agrupados = new HashMap<>();\n        // TODO: Recorre los productos y agrúpalos por categoría\n        for (String categoria : agrupados.keySet()) {\n            System.out.println(categoria + \": \" + agrupados.get(categoria));\n        }\n    }\n}",
+    "hints": [
+      "Recorre el HashMap original con entrySet() o keySet()",
+      "Si la categoría no existe como clave, crea un nuevo ArrayList",
+      "Usa getOrDefault(categoria, new ArrayList<>()) o containsKey() para inicializar"
+    ],
+    "solution": "import java.util.ArrayList;\nimport java.util.HashMap;\n\npublic class AgruparPorCategoria {\n    public static void main(String[] args) {\n        HashMap<String, String> productos = new HashMap<>();\n        productos.put(\"Laptop\", \"Electrónica\");\n        productos.put(\"Camisa\", \"Ropa\");\n        productos.put(\"Mouse\", \"Electrónica\");\n        productos.put(\"Pantalón\", \"Ropa\");\n        productos.put(\"Auriculares\", \"Electrónica\");\n        productos.put(\"Zapatillas\", \"Calzado\");\n        productos.put(\"Sneakers\", \"Calzado\");\n\n        HashMap<String, ArrayList<String>> agrupados = new HashMap<>();\n        for (HashMap.Entry<String, String> entry : productos.entrySet()) {\n            String categoria = entry.getValue();\n            String producto = entry.getKey();\n            if (!agrupados.containsKey(categoria)) {\n                agrupados.put(categoria, new ArrayList<>());\n            }\n            agrupados.get(categoria).add(producto);\n        }\n        for (String categoria : agrupados.keySet()) {\n            System.out.println(categoria + \": \" + agrupados.get(categoria));\n        }\n    }\n}",
+    "solutionExplanation": "Se recorre el HashMap de productos y por cada uno se obtiene su categoría. Si la categoría aún no es clave en el mapa agrupados, se crea un nuevo ArrayList para esa categoría. Luego se agrega el nombre del producto al ArrayList correspondiente.",
+    "expectedOutput": "Ropa: [Camisa, Pantalón]\nElectrónica: [Laptop, Mouse, Auriculares]\nCalzado: [Zapatillas, Sneakers]",
+    "lessonSlug": "hashmap"
+  }
+]

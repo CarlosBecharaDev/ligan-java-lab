@@ -1,0 +1,92 @@
+{
+  "id": "quiz-34-file-io-avanzado",
+  "lessonSlug": "file-io",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la diferencia principal entre FileReader y FileInputStream?",
+      "options": [
+        "FileReader es más rápido que FileInputStream",
+        "FileReader lee caracteres, FileInputStream lee bytes",
+        "FileReader es de java.nio, FileInputStream de java.io",
+        "No hay diferencia, ambos son intercambiables"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La velocidad depende del contexto, no de la clase en sí.",
+        "Correcto. FileReader trabaja con caracteres (hereda de Reader), mientras que FileInputStream trabaja con bytes crudos (hereda de InputStream).",
+        "Ambas clases pertenecen a java.io.",
+        "Son diferentes: una lee texto y la otra bytes."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se lee el contenido completo de un archivo como String en Java 11+?",
+      "options": [
+        "new String(new FileInputStream(path))",
+        "Files.readString(Path)",
+        "new BufferedReader(path).readAll()",
+        "File.read(path).toString()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "FileInputStream no se puede convertir directamente a String con el constructor de String.",
+        "Correcto. Files.readString(Path) es un método de java.nio.file.Files disponible desde Java 11 que lee todo el archivo como String.",
+        "readAll() no existe en BufferedReader.",
+        "File no tiene un método estático read() que retorne contenido."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es NIO (java.nio) en Java?",
+      "options": [
+        "Un framework para bases de datos",
+        "Un nuevo API de E/S más moderno y eficiente que java.io",
+        "Una librería para networking asíncrono",
+        "Un sistema de caché para archivos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "NIO no tiene relación directa con bases de datos.",
+        "Correcto. java.nio (New I/O) ofrece un API más moderno y eficiente con soporte para buffers, canales y el sistema de archivos.",
+        "NIO sí incluye networking (channels), pero su propósito principal es E/S de archivos y buffers.",
+        "NIO no es un sistema de caché, sino un API de entrada/salida."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se pueden listar todos los archivos de un directorio en Java?",
+      "options": [
+        "file.readDir()",
+        "file.listFiles() o Files.list()",
+        "Directory.getFiles()",
+        "file.listAll()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "readDir() no es un método de la clase File.",
+        "Correcto. file.listFiles() retorna un array de File, y Files.list() retorna un Stream<Path> con los elementos del directorio.",
+        "Directory no es una clase estándar del API de Java para este propósito.",
+        "listAll() no existe en la clase File."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es el beneficio principal de usar try-with-resources para archivos?",
+      "options": [
+        "Permite leer el archivo más rápido",
+        "El BufferedReader se cierra automáticamente al salir del bloque",
+        "Evita que se lance cualquier excepción",
+        "Crea una copia de respaldo del archivo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "try-with-resources no afecta la velocidad de lectura.",
+        "Correcto. try-with-resources declara el recurso en la apertura y se encarga de cerrarlo automáticamente, incluso si ocurre una excepción.",
+        "No evita excepciones; simplemente gestiona el cierre seguro de recursos.",
+        "No crea copias de seguridad; solo gestiona el ciclo de vida del recurso."
+      ]
+    }
+  ]
+}

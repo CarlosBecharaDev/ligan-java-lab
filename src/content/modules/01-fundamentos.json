@@ -1,0 +1,18 @@
+{
+  "id": "mod-01",
+  "slug": "01-fundamentos",
+  "number": 1,
+  "title": "Fundamentos de Java",
+  "description": "El punto de partida. Entiende qué es Java, cómo funciona y escribe tu primer programa.",
+  "icon": "Terminal",
+  "status": "disponible",
+  "lessonCount": 6,
+  "lessons": [
+    "variables-y-tipos",
+    "operadores",
+    "strings",
+    "entrada-datos-scanner",
+    "casting",
+    "constantes-enums"
+  ]
+}

@@ -1,0 +1,92 @@
+{
+  "id": "quiz-29-excepciones-tipos-basico",
+  "lessonSlug": "excepciones-tipos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es una excepción en Java?",
+      "options": [
+        "Un error de compilación que impide generar el bytecode",
+        "Un error en tiempo de ejecución que interrumpe el flujo normal del programa",
+        "Una advertencia que el compilador muestra al encontrar código sospechoso",
+        "Un tipo de variable especial para manejar errores"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los errores de compilación no son excepciones; son detectados antes de ejecutar el programa.",
+        "Correcto. Una excepción es un evento que ocurre en tiempo de ejecución y altera el flujo normal del programa.",
+        "Las advertencias del compilador no son excepciones, son solo notificaciones.",
+        "Las excepciones no son variables, son objetos que representan errores."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es una checked exception?",
+      "options": [
+        "Una excepción que se verifica en tiempo de ejecución automáticamente",
+        "Una excepción verificada por el compilador que debe ser manejada o declarada",
+        "Una excepción que solo ocurre con tipos de datos primitivos",
+        "Una excepción que se lanza cuando se verifica un valor nulo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Las checked exceptions se verifican en compilación, no en ejecución.",
+        "Correcto. Una checked exception es verificada por el compilador, y el código debe usar try-catch o declararla con throws.",
+        "Las checked exceptions no tienen relación con tipos primitivos.",
+        "El chequeo de valores nulo no define las checked exceptions."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es una unchecked exception?",
+      "options": [
+        "Una excepción que el compilador no obliga a manejar, hereda de RuntimeException",
+        "Una excepción que siempre debe ser capturada con try-catch",
+        "Una excepción que solo ocurre durante la compilación",
+        "Una excepción que requiere usar la palabra clave throws en toda función"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Las unchecked exceptions (como NullPointerException) heredan de RuntimeException y no requieren try-catch explícito.",
+        "Las unchecked exceptions no obligan a usar try-catch; es opcional.",
+        "Las excepciones ocurren en runtime, no durante la compilación.",
+        "Las unchecked exceptions no requieren la palabra clave throws en la firma del método."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué representa la clase Error en Java?",
+      "options": [
+        "Un error menor que se puede ignorar en el código",
+        "Un error grave del sistema que generalmente no se debe intentar capturar",
+        "Una forma alternativa de escribir excepcioneschecked",
+        "Un tipo de excepción personalizada que crea el desarrollador"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los Error no son errores menores; representan fallos graves del sistema.",
+        "Correcto. Error representa problemas graves del sistema JVM como OutOfMemoryError o StackOverflowError, que no se deben intentar manejar normalmente.",
+        "Error no es una alternativa a las checked exceptions; es una categoría diferente.",
+        "Error es una clase del API de Java, no una excepción personalizada."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es la jerarquía principal de manejo de errores en Java?",
+      "options": [
+        "Error → Exception → RuntimeException",
+        "Exception → Error → Throwable",
+        "Throwable → Exception / Error",
+        "RuntimeException → Exception → Throwable"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "El orden está invertido. Throwable es la clase padre.",
+        "Exception no es padre de Error. Ambas son hijas de Throwable.",
+        "Correcto. Throwable es la clase raíz, y tiene dos hijas principales: Exception (excepciones) y Error (errores del sistema).",
+        "RuntimeException es hija de Exception, no al revés."
+      ]
+    }
+  ]
+}

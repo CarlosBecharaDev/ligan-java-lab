@@ -1,0 +1,369 @@
+---
+title: "El Bucle For y For-Each"
+slug: "for"
+module: "02-control-de-flujo"
+level: "Inicial"
+objectives:
+  - "Escribir bucles for clásicos con inicialización, condición y actualización"
+  - "Entender el orden de ejecución de las tres partes del for"
+  - "Usar el bucle for-each (enhanced for) para iterar arrays y colecciones"
+  - "Anidar bucles for para procesar estructuras bidimensionales"
+  - "Elegir entre for, while y for-each según el problema"
+prerequisites:
+  - "Haber completado Lección 09: While y Do-While"
+  - "Conocer operadores de incremento (++, +=)"
+  - "Entender los arrays y su índice base 0"
+history:
+  introducedIn: "for desde Java 1.0; for-each desde Java 5"
+  context: "El bucle for clásico existe desde Java 1.0, heredado de C. Agrupa en una sola línea la inicialización, la condición de continuación y la actualización del contador, lo que lo hace ideal cuando se conoce de antemano el número de iteraciones. Es el bucle más usado para recorrer arrays con índice."
+  evolution: "Java 5 (2004) introdujo el bucle for-each (enhanced for), una sintaxis simplificada que oculta el índice y el iterador, reduciendo errores off-by-one y NullPointerException. Funciona con arrays y cualquier objeto Iterable. Java 8 añadióStreams que ofrecen un enfoque funcional alternativo para procesar colecciones, pero for y for-each siguen siendo fundamentales por su claridad en iteraciones simples."
+realWorldExamples:
+  - domain: "Procesamiento de Array de notas"
+    description: "Un sistema académico calcula el promedio, la nota máxima y la mínima de una clase iterando un array de calificaciones con un bucle for-each."
+    code: |
+      public class ProcesadorNotas {
+          public static void main(String[] args) {
+              double[] notas = {8.5, 9.2, 7.8, 6.5, 9.8, 8.0, 7.2};
+              double suma = 0;
+              double maxima = notas[0];
+              double minima = notas[0];
+
+              for (double nota : notas) {
+                  suma += nota;
+                  if (nota > maxima) maxima = nota;
+                  if (nota < minima) minima = nota;
+              }
+
+              double promedio = suma / notas.length;
+              System.out.printf("Notas: %d%n", notas.length);
+              System.out.printf("Promedio: %.2f%n", promedio);
+              System.out.printf("Máxima: %.1f%n", maxima);
+              System.out.printf("Mínima: %.1f%n", minima);
+          }
+      }
+    result: |
+      Notas: 7
+      Promedio: 8.14
+      Máxima: 9.8
+      Mínima: 6.5
+  - domain: "Matriz bidimensional de ventas trimestrales"
+    description: "Una empresa almacena las ventas de 3 productos en 4 trimestres usando una matriz bidimensional, y usa bucles for anidados para calcular totales por producto."
+    code: |
+      public class VentasTrimestrales {
+          public static void main(String[] args) {
+              double[][] ventas = {
+                  {120.5, 135.0, 110.2, 150.8},  // Producto A
+                  {85.0, 92.5, 78.3, 95.0},       // Producto B
+                  {210.0, 198.5, 225.0, 240.5}    // Producto C
+              };
+              String[] productos = {"Producto A", "Producto B", "Producto C"};
+
+              for (int i = 0; i < ventas.length; i++) {
+                  double totalProducto = 0;
+                  for (int j = 0; j < ventas[i].length; j++) {
+                      totalProducto += ventas[i][j];
+                  }
+                  System.out.printf("%s: $%.1f%n", productos[i], totalProducto);
+              }
+          }
+      }
+    result: |
+      Producto A: $516.5
+      Producto B: $350.8
+      Producto C: $874.0
+hasInteractive: false
+comparisons:
+  - title: "for clásico vs for-each"
+    items:
+      - name: "for clásico"
+        features:
+          indice: "Acceso al índice (i)"
+          modificacion: "Permite modificar el array"
+          control: "Control total del paso (saltar, invertir)"
+          sintaxis: "for (int i = 0; i < arr.length; i++)"
+      - name: "for-each"
+        features:
+          indice: "Sin acceso al índice directamente"
+          modificacion: "No permite modificar el array base"
+          control: "Recorre secuencial, sin control del paso"
+          sintaxis: "for (Tipo elem : coleccion)"
+    recommendation: "Usa for-each por defecto para recorrer toda una colección o array: es más legible y evita errores de índice. Usa el for clásico cuando necesites el índice, modificar elementos, recorrer en orden inverso o con un paso distinto de 1."
+videos:
+  - url: ""
+    title: "Bucles for y for-each en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Cuál es el orden de ejecución de las partes del for?"
+    answer: "Primero se ejecuta la inicialización (una vez), luego se evalúa la condición. Si es true, se ejecuta el cuerpo; después se ejecuta la actualización; y se vuelve a evaluar la condición. El bucle termina cuando la condición es false. La inicialización ocurre solo una vez al inicio."
+  - question: "¿Puedo omitir partes del for?"
+    answer: "Sí, las tres partes son opcionales. `for (;;) {}` es un bucle infinito equivalente a `while (true)`. Puedes omitir la inicialización si ya declaraste la variable, o la actualización si la modificas dentro del cuerpo. Sin embargo, omitirlas reduce la legibilidad."
+  - question: "¿Cuál es la diferencia entre for-each y un iterador manual?"
+    answer: "El for-each usa un iterador internamente y oculta el manejo de hasNext()/next(), reduciendo errores. No puedes eliminar elementos durante un for-each (lanza ConcurrentModificationException); para eso necesitas un iterador explícito con remove(), o filtrar a una colección nueva."
+sources:
+  - title: "Java 21 Language Specification — The for Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.14"
+    date: "2026-07-27"
+  - title: "Java Tutorials — The for Statement"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/for.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Bucles determinados
+
+El bucle `for` es **determinado**: se usa cuando conoces de antemano cuántas veces se repetirá el cuerpo (por ejemplo, recorrer un array de longitud conocida). Agrupa en una sola línea las tres piezas que controlan el bucle.
+
+## La sintaxis del for clásico
+
+```java
+for (inicialización; condición; actualización) {
+    // cuerpo
+}
+```
+
+- **Inicialización**: se ejecuta una sola vez, al empezar (ej: `int i = 0`)
+- **Condición**: se evalúa antes de cada iteración; si es `false`, el bucle termina
+- **Actualización**: se ejecuta después del cuerpo, en cada iteración (ej: `i++`)
+
+<CodeBlock lang="java" title="for — imprimir números del 0 al 4">
+{`public class ForBasico {
+    public static void main(String[] args) {
+        for (int i = 0; i < 5; i++) {
+            System.out.println("Iteración " + i);
+        }
+        System.out.println("Bucle terminado");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Iteración 0
+Iteración 1
+Iteración 2
+Iteración 3
+Iteración 4
+Bucle terminado
+```
+
+## Orden de ejecución paso a paso
+
+Para entender el for, veamos el orden exacto:
+
+```
+1. inicialización:   int i = 0        (una vez)
+2. condición:        i < 5  → true    (¿entro al cuerpo?)
+3. cuerpo:          System.out.println(...)
+4. actualización:    i++              (i pasa a 1)
+5. condición:        i < 5  → true
+6. cuerpo
+7. actualización:    i++              (i pasa a 2)
+... (repite) ...
+N. condición:        i < 5  → false    (termina)
+```
+
+> 🔑 La **condición** se evalúa **antes** del cuerpo (pre-test, como while). La **actualización** ocurre **después** del cuerpo.
+
+## Recorrer un array con for
+
+El patrón más común: iterar un array usando el índice:
+
+<CodeBlock lang="java" title="Recorrer array con índice">
+{`public class RecorrerArray {
+    public static void main(String[] args) {
+        String[] frutas = {"Manzana", "Pera", "Uva", "Mango"};
+
+        for (int i = 0; i < frutas.length; i++) {
+            System.out.println((i + 1) + ". " + frutas[i]);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+1. Manzana
+2. Pera
+3. Uva
+4. Mango
+```
+
+> ⚠️ Los arrays en Java empiezan en el índice **0**. Usa `<` (no `<=`) con `length` para evitar `ArrayIndexOutOfBoundsException`.
+
+## El bucle for-each (enhanced for)
+
+Introducido en Java 5, el for-each simplifica el recorrido cuando **no necesitas el índice**:
+
+```java
+for (Tipo elemento : coleccion) {
+    // usa 'elemento'
+}
+```
+
+<CodeBlock lang="java" title="for-each — sumar elementos">
+{`public class SumaForEach {
+    public static void main(String[] args) {
+        int[] numeros = {2, 4, 6, 8, 10};
+        int suma = 0;
+
+        for (int n : numeros) {
+            suma += n;
+        }
+
+        System.out.println("Suma: " + suma);
+        System.out.println("Cantidad: " + numeros.length);
+        System.out.println("Promedio: " + (suma / numeros.length));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Suma: 30
+Cantidad: 5
+Promedio: 6
+```
+
+### Ventajas y límites del for-each
+
+| Ventaja | Límite |
+|---------|--------|
+| ✅ Sin errores de índice | ❌ No accedes al índice directamente |
+| ✅ Más legible y conciso | ❌ No puedes modificar el array base |
+| ✅ Funciona con arrays y colecciones (Iterable) | ❌ Recorre solo en orden ascendente |
+| ✅ Evita NullPointerException de iterador | ❌ No permite eliminar elementos |
+
+## Bucles for anidados
+
+Para estructuras bidimensionales como matrices, anidas un for dentro de otro:
+
+<CodeBlock lang="java" title="for anidado — matriz 3x3">
+{`public class MatrizFor {
+    public static void main(String[] args) {
+        int[][] matriz = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                System.out.print(matriz[i][j] + " ");
+            }
+            System.out.println();  // nueva línea por fila
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+1 2 3 
+4 5 6 
+7 8 9 
+```
+
+> 💡 El bucle externo recorre las **filas** (`i`), el interno las **columnas** (`j`). El interno completa todas sus iteraciones por cada iteración del externo.
+
+## Variaciones del for clásico
+
+### Contar hacia atrás
+
+```java
+for (int i = 10; i > 0; i--) {
+    System.out.println(i);
+}
+```
+
+### Con paso distinto de 1
+
+```java
+// Números pares del 0 al 10
+for (int i = 0; i <= 10; i += 2) {
+    System.out.println(i);
+}
+```
+
+### Múltiples variables
+
+<CodeBlock lang="java" title="for con dos variables">
+{`public class ForDosVariables {
+    public static void main(String[] args) {
+        for (int i = 0, j = 10; i < j; i++, j--) {
+            System.out.println("i=" + i + " j=" + j);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+i=0 j=10
+i=1 j=9
+i=2 j=8
+i=3 j=7
+i=4 j=6
+```
+
+## El error off-by-one
+
+El error más común con for es confundir el límite:
+
+```java
+int[] arr = {10, 20, 30};  // length = 3, índices 0,1,2
+
+// ❌ Usar <= provoca ArrayIndexOutOfBoundsException
+for (int i = 0; i <= arr.length; i++) {
+    System.out.println(arr[i]);  // falla cuando i == 3
+}
+
+// ✅ Usar < es correcto
+for (int i = 0; i < arr.length; i++) {
+    System.out.println(arr[i]);  // índices 0, 1, 2
+}
+```
+
+## ¿Cuándo for, while, o for-each?
+
+| Caso | Bucle recomendado |
+|------|-------------------|
+| Número de iteraciones conocido | ✅ **for** clásico |
+| Recorrer array/collection completo sin índice | ✅ **for-each** |
+| Necesitas el índice para modificar el array | ✅ **for** clásico |
+| Número de iteraciones desconocido | ✅ **while** / **do-while** |
+| Matriz bidimensional | ✅ **for anidado** |
+| Validar entrada de usuario | ✅ **do-while** |
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

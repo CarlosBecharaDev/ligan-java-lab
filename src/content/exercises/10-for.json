@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-for-facil",
+    "lessonSlug": "for",
+    "title": "Suma de los primeros N números",
+    "difficulty": "facil",
+    "description": "Calcula la suma de los números del 1 al 100 usando un bucle for.",
+    "template": "public class Suma1a100 {\n    public static void main(String[] args) {\n        int suma = 0;\n\n        // TODO: Usa for para sumar los números del 1 al 100\n        // Inicializa i = 1, condición i <= 100, actualización i++\n        // Acumula en suma:  suma += i;\n\n    }\n}",
+    "hints": [
+      "Inicializa i = 1 (no 0) porque quieres sumar del 1 al 100",
+      "La condición es i <= 100 para incluir el 100"
+    ],
+    "solution": "public class Suma1a100 {\n    public static void main(String[] args) {\n        int suma = 0;\n\n        for (int i = 1; i <= 100; i++) {\n            suma += i;\n        }\n\n        System.out.println(\"La suma de 1 a 100 es: \" + suma);\n    }\n}",
+    "solutionExplanation": "El for arranca en i = 1 y llega hasta 100 inclusive (i <= 100). En cada iteración acumulamos el valor de i en suma. La fórmula n*(n+1)/2 da 5050, confirmando el resultado.",
+    "expectedOutput": "La suma de 1 a 100 es: 5050"
+  },
+  {
+    "id": "ex-for-normal",
+    "lessonSlug": "for",
+    "title": "Triángulo de asteriscos con for anidado",
+    "difficulty": "normal",
+    "description": "Dibuja un triángulo de 5 filas usando bucles for anidados: 1 asterisco en la fila 1, 2 en la fila 2, hasta 5 en la fila 5.",
+    "template": "public class TrianguloAsteriscos {\n    public static void main(String[] args) {\n        int filas = 5;\n\n        // TODO: Usa dos bucles for anidados\n        // El externo controla la fila (1 a 5)\n        // El interno imprime los asteriscos de cada fila\n        //      (fila actual cantidad de *)\n        // Salto de línea después de cada fila\n\n    }\n}",
+    "hints": [
+      "El bucle externo: for (int f = 1; f <= filas; f++)",
+      "El bucle interno imprime f asteriscos: for (int a = 0; a < f; a++)",
+      "Imprime System.out.println() al final de cada fila externa"
+    ],
+    "solution": "public class TrianguloAsteriscos {\n    public static void main(String[] args) {\n        int filas = 5;\n\n        for (int f = 1; f <= filas; f++) {\n            for (int a = 0; a < f; a++) {\n                System.out.print(\"*\");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "solutionExplanation": "El for externo recorre cada fila de 1 a 5. El for interno imprime tantos asteriscos como el número de fila indica. Sin espacios (print en vez de println) y un salto de línea al terminar cada fila.",
+    "expectedOutput": "*\n**\n***\n****\n*****"
+  },
+  {
+    "id": "ex-for-dificil",
+    "lessonSlug": "for",
+    "title": "Detector de números primos con for optimizado",
+    "difficulty": "dificil",
+    "description": "Determina si un número es primo usando un for que solo comprueba divisores hasta la raíz cuadrada del número. Muestra todos los primos del 2 al 50.",
+    "template": "public class NumerosPrimos {\n    public static void main(String[] args) {\n\n        // TODO: Usa for-each recorriendo los números del 2 al 50\n        // Para cada número, comprueba si es primo:\n        //   for (int d = 2; d <= Math.sqrt(n); d++)\n        //   si n % d == 0 → no es primo\n        // Imprime los primos separados por espacio\n\n    }\n}",
+    "hints": [
+      "Un número es primo si solo es divisible por 1 y por sí mismo",
+      "Comprobar divisores solo hasta Math.sqrt(n) es suficiente y más rápido",
+      "Mantén un contador de divisores encontrados o usa un booleano"
+    ],
+    "solution": "public class NumerosPrimos {\n    public static void main(String[] args) {\n        System.out.println(\"Números primos del 2 al 50:\");\n\n        for (int n = 2; n <= 50; n++) {\n            boolean esPrimo = true;\n\n            for (int d = 2; d <= Math.sqrt(n); d++) {\n                if (n % d == 0) {\n                    esPrimo = false;\n                    break;\n                }\n            }\n\n            if (esPrimo) {\n                System.out.print(n + \" \");\n            }\n        }\n        System.out.println();\n    }\n}",
+    "solutionExplanation": "El for externo recorre cada candidato del 2 al 50. El for interno comprueba divisores desde 2 hasta la raíz cuadrada de n: si encuentra un divisor, no es primo y salimos con break. La optimización de la raíz reduce drásticamente las comparaciones.",
+    "expectedOutput": "Números primos del 2 al 50:\n2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 "
+  }
+]

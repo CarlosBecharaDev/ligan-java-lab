@@ -1,0 +1,75 @@
+{
+  "id": "quiz-31-throw-throws-basico",
+  "lessonSlug": "throw-throws",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué hace la palabra clave `throw` en Java?",
+      "options": [
+        "Declara que un método puede lanzar una excepción",
+        "Lanza una excepción explícitamente en el código",
+        "Captura una excepción que ya fue lanzada",
+        "Ignora una excepción y continúa la ejecución"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Declarar excepciones es la función de throws, no de throw.",
+        "Correcto. La palabra clave throw se usa para lanzar (instanciar y enviar) una excepción explícitamente en el código.",
+        "Capturar excepciones es la función del bloque catch, no de throw.",
+        "throw no ignora excepciones; las lanza activamente."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué indica la palabra clave `throws` en la firma de un método?",
+      "options": [
+        "Que el método siempre lanza una excepción",
+        "Que el método puede lanzar esa excepción y el caller debe manejarla",
+        "Que el método captura automáticamente todas las excepciones",
+        "Que el método no puede lanzar excepciones de ningún tipo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throws no significa que siempre lance excepciones; indica que es posible.",
+        "Correcto. throws declara en la firma del método que este puede lanzar una excepción específica, y el código que llama al método debe manejarla o propagarla.",
+        "throws no captura excepciones; las declara.",
+        "throws indica la posibilidad de excepciones, no lo contrario."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuándo es apropiado usar throw en el código?",
+      "options": [
+        "En todo método que use variables de tipo String",
+        "Cuando se detecta una condición inválida o un estado incorrecto en el programa",
+        "Solo cuando se trabaja con archivos de texto",
+        "Siempre al inicio de cada método para prevenir errores"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throw no tiene relación específica con variables String.",
+        "Correcto. Se debe usar throw cuando se detecta una condición que no es válida (argumento nulo, valor fuera de rango, estado inconsistente), indicando que el programa no puede continuar normalmente.",
+        "throw no está limitado a operaciones con archivos.",
+        "Usar throw al inicio de cada método sin razón es una mala práctica."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Es obligatorio usar `throws` en la firma de un método?",
+      "options": [
+        "No, nunca es necesario usar throws",
+        "Sí, siempre que el método pueda lanzar una checked exception",
+        "Solo si el método tiene más de 3 parámetros",
+        "Solo cuando se trabaja con clases abstractas"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throws es obligatorio en ciertos casos, no nunca.",
+        "Correcto. Para checked exceptions es obligatorio declararlas con throws en la firma del método si no se manejan con try-catch dentro del método.",
+        "El número de parámetros no determina si se necesita throws.",
+        "throws no tiene relación con clases abstractas."
+      ]
+    }
+  ]
+}

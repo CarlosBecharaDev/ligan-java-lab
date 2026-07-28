@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-expresiones-regulares-facil",
+    "title": "Validar teléfono",
+    "difficulty": "facil",
+    "description": "Verifica si un String tiene el formato de teléfono XXX-XXX-XXXX (3 dígitos, guión, 3 dígitos, guión, 4 dígitos) usando expresiones regulares.",
+    "template": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ValidarTelefono {\n    public static void main(String[] args) {\n        String telefono1 = \"123-456-7890\";\n        String telefono2 = \"1234567890\";\n        String telefono3 = \"12-456-7890\";\n\n        // TODO: Define el patrón regex para XXX-XXX-XXXX\n        // TODO: Usa Pattern y Matcher para validar cada teléfono\n        System.out.println(telefono1 + \" => \" + isValido1);\n        System.out.println(telefono2 + \" => \" + isValido2);\n        System.out.println(telefono3 + \" => \" + isValido3);\n    }\n}",
+    "hints": [
+      "Usa \\\\d para representar un dígito",
+      "El patrón completo es: \\\\d{3}-\\\\d{3}-\\\\d{4}",
+      "Usa pattern.matcher(texto).matches() para verificar coincidencia exacta"
+    ],
+    "solution": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ValidarTelefono {\n    public static void main(String[] args) {\n        String telefono1 = \"123-456-7890\";\n        String telefono2 = \"1234567890\";\n        String telefono3 = \"12-456-7890\";\n\n        Pattern patron = Pattern.compile(\"\\\\d{3}-\\\\d{3}-\\\\d{4}\");\n        boolean isValido1 = patron.matcher(telefono1).matches();\n        boolean isValido2 = patron.matcher(telefono2).matches();\n        boolean isValido3 = patron.matcher(telefono3).matches();\n        System.out.println(telefono1 + \" => \" + isValido1);\n        System.out.println(telefono2 + \" => \" + isValido2);\n        System.out.println(telefono3 + \" => \" + isValido3);\n    }\n}",
+    "solutionExplanation": "Se define el patrón \\\\d{3}-\\\\d{3}-\\\\d{4} que busca exactamente 3 dígitos, un guión, 3 dígitos, otro guión y 4 dígitos. El método matches() verifica que toda la cadena coincida con el patrón.",
+    "expectedOutput": "123-456-7890 => true\n1234567890 => false\n12-456-7890 => false",
+    "lessonSlug": "expresiones-regulares"
+  },
+  {
+    "id": "ex-expresiones-regulares-normal",
+    "title": "Extraer emails",
+    "difficulty": "normal",
+    "description": "Busca y extrae todas las direcciones de correo electrónico en un texto usando Pattern y Matcher con expresiones regulares.",
+    "template": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ExtraerEmails {\n    public static void main(String[] args) {\n        String texto = \"Contacta a ana@gmail.com o a carlos@empresa.com.ar. \" +\n                       \"También puedes escribir a info@mitienda.org\";\n\n        // TODO: Define un patrón regex para emails\n        // TODO: Usa Pattern.compile() y matcher() para buscar todos\n        // TODO: Imprime cada email encontrado con group()\n    }\n}",
+    "hints": [
+      "Un email tiene: caracteres + @ + caracteres + . + caracteres",
+      "El patrón básico es: [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}",
+      "Usa matcher.find() en un bucle para encontrar todas las coincidencias"
+    ],
+    "solution": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ExtraerEmails {\n    public static void main(String[] args) {\n        String texto = \"Contacta a ana@gmail.com o a carlos@empresa.com.ar. \" +\n                       \"También puedes escribir a info@mitienda.org\";\n\n        Pattern patron = Pattern.compile(\"[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}\");\n        Matcher matcher = patron.matcher(texto);\n\n        int contador = 0;\n        while (matcher.find()) {\n            contador++;\n            System.out.println(\"Email \" + contador + \": \" + matcher.group());\n        }\n        System.out.println(\"Total de emails: \" + contador);\n    }\n}",
+    "solutionExplanation": "El patrón [a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,} busca la parte local del email (antes de @), seguida de @, el dominio, un punto y la extensión de al menos 2 letras. Se usa find() en un bucle para encontrar todas las ocurrencias en el texto.",
+    "expectedOutput": "Email 1: ana@gmail.com\nEmail 2: carlos@empresa.com.ar\nEmail 3: info@mitienda.org\nTotal de emails: 3",
+    "lessonSlug": "expresiones-regulares"
+  },
+  {
+    "id": "ex-expresiones-regulares-dificil",
+    "title": "Validar URL",
+    "difficulty": "dificil",
+    "description": "Verifica si un String es una URL válida con formato completo: protocolo (http o https), dominio y path opcional. Ejemplo válido: https://www.ejemplo.com/pagina",
+    "template": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ValidarURL {\n    public static void main(String[] args) {\n        String[] urls = {\n            \"https://www.google.com\",\n            \"http://ejemplo.com/pagina\",\n            \"ftp://invalido.com\",\n            \"https://\",\n            \"https://www.ejemplo.com.co/ruta/sub\"\n        };\n\n        // TODO: Define un patrón regex para URLs válidas\n        // TODO: Valida cada URL y muestra el resultado\n    }\n}",
+    "hints": [
+      "El protocolo debe ser http o https: https?://",
+      "El dominio debe tener al menos un punto: [a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}",
+      "El path es opcional: (/[a-zA-Z0-9._-]*)*"
+    ],
+    "solution": "import java.util.regex.Pattern;\nimport java.util.regex.Matcher;\n\npublic class ValidarURL {\n    public static void main(String[] args) {\n        String[] urls = {\n            \"https://www.google.com\",\n            \"http://ejemplo.com/pagina\",\n            \"ftp://invalido.com\",\n            \"https://\",\n            \"https://www.ejemplo.com.co/ruta/sub\"\n        };\n\n        Pattern patron = Pattern.compile(\"https?://[a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,}(/.*)*\");\n\n        for (String url : urls) {\n            Matcher matcher = patron.matcher(url);\n            System.out.println(url + \" => \" + matcher.matches());\n        }\n    }\n}",
+    "solutionExplanation": "El patrón https?:// valida http o https. Luego [a-zA-Z0-9.-]+\\\\.[a-zA-Z]{2,} valida un dominio con al menos un punto y extensión de 2+ letras. Finalmente (/.*)* permite un path opcional que puede contener letras, números, puntos y guiones. Se usa matches() para verificar coincidencia completa.",
+    "expectedOutput": "https://www.google.com => true\nhttp://ejemplo.com/pagina => true\nftp://invalido.com => false\nhttps:// => false\nhttps://www.ejemplo.com.co/ruta/sub => true",
+    "lessonSlug": "expresiones-regulares"
+  }
+]

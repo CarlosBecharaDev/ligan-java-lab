@@ -1,0 +1,92 @@
+{
+  "id": "quiz-38-lambdas-avanzado",
+  "lessonSlug": "lambdas",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es el target typing de lambdas?",
+      "options": [
+        "El compilador infiere el tipo del parámetro de la lambda",
+        "El programador debe especificar siempre el tipo explícitamente",
+        "Es un error de compilación obligatorio",
+        "Es una técnica para crear clases anónimas"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El target typing permite que el compilador infiera el tipo de los parámetros de la lambda según el contexto.",
+        "No siempre se debe especificar; el compilador puede inferirlo.",
+        "No es un error.",
+        "No está relacionado con clases anónimas."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es Method Reference?",
+      "options": [
+        "Clase::metodo — shorthand de una lambda que llama a un método existente",
+        "Una referencia a una variable estática",
+        "Un tipo de inheritancia",
+        "Una forma de declarar un método abstracto"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un method reference (Clase::metodo) es una forma abreviada de escribir una lambda que simplemente invoca un método existente.",
+        "No es solo para variables estáticas.",
+        "No tiene relación con herencia.",
+        "No es para declarar métodos abstractos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué tipos de method references existen?",
+      "options": [
+        "Static, bound, unbound y constructor",
+        "Solo static y dynamic",
+        "Solo de instancia y de clase",
+        "Solo constructor y destructor"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Hay cuatro tipos: static (Clase::metodoEstatico), bound (objeto::metodo), unbound (Clase::metodo) y constructor (Clase::new).",
+        "No existen los conceptos de static/dynamic como tipos de method references.",
+        "Hay más tipos que solo instancia y clase.",
+        "No existe el concepto de destructor en Java."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Se pueden anidar lambdas en Java?",
+      "options": [
+        "Sí, pero reduce la legibilidad del código",
+        "No, Java no lo permite",
+        "Solo si se usa var",
+        "Solo con funciones recursivas"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Java permite anidar lambdas, pero hacerlo reduce la legibilidad y se recomienda evitarlo.",
+        "Java sí lo permite.",
+        "No depende de var.",
+        "No está limitado a funciones recursivas."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es una variable effectively final?",
+      "options": [
+        "Una variable local no modificada que puede usarse dentro de una lambda",
+        "Una variable declarada con la palabra clave final",
+        "Una variable static",
+        "Una variable de instancia"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Una variable effectively final es una variable local que no se modifica después de su inicialización, y puede capturarse en lambdas sin necesidad de declararla como final.",
+        "No necesita la palabra clave final, aunque comparte la restricción de no modificarse.",
+        "No es por ser static.",
+        "Las variables de instancia no necesitan ser effectively final para usarse en lambdas."
+      ]
+    }
+  ]
+}

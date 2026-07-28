@@ -1,0 +1,742 @@
+---
+title: "Polimorfismo"
+slug: "polimorfismo"
+description: "Domina el polimorfismo: sobrescritura, despacho dinámico, upcasting, downcasting y instanceof."
+module: "04-poo"
+level: "Avanzado"
+order: 21
+estimatedMinutes: 35
+objectives:
+  - "Entender el polimorfismo como polymorphic behavior en tiempo de ejecución"
+  - "Distinguir entre sobrecarga (overloading) y sobrescritura (overriding)"
+  - "Usar upcasting y downcasting con instanceof"
+  - "Aplicar métodos abstractos en jerarquías polimórficas"
+prerequisites:
+  - "herencia"
+realWorldExamples:
+  - domain: "Salud  Diferentes Tratamientos"
+    description: "Ejemplo practico de Salud  Diferentes Tratamientos"
+    code: "public abstract class Tratamiento {\n    protected String nombre;\n    protected double costo;\n\n    Tratamiento(String nombre, double costo) {\n        this.nombre = nombre;\n        this.costo = costo;\n    }\n\n    abstract void aplicar(String paciente);\n    abstract String getTipoTratamiento();\n\n    double calcularCosto() {\n        return costo;\n    }\n\n    void mostrarResumen(String paciente) {\n        System.out.println(\"Tratamiento: \" + nombre + \" para \" + paciente);\n        System.out.println(\"Ti..."
+    result: "Costo base + costo por hora de internación ($200/hora)"
+  - domain: "Ecommerce  Mtodos de Pago"
+    description: "Ejemplo practico de Ecommerce  Mtodos de Pago"
+    code: "public abstract class MetodoPago {\n    protected String nombre;\n    protected String numeroCuenta;\n\n    MetodoPago(String nombre, String numeroCuenta) {\n        this.nombre = nombre;\n        this.numeroCuenta = numeroCuenta;\n    }\n\n    abstract boolean procesar(double monto);\n    abstract double calcularRecargo(double monto);\n    abstract String getTipo();\n\n    void mostrarPago(double monto) {\n        System.out.println(\"[\" + nombre + \"] Monto: $\" + monto);\n        System.out.println(\"  Recargo:..."
+    result: "Tasa mensual (ej: 0.035 = 3.5%)"
+hasInteractive: false
+comparisons:
+  - title: "Sobrecarga (compile-time) vs Sobrescritura (runtime)"
+    items:
+      - name: "Sobrecarga (overloading)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso izquierdo"
+      - name: "Sobrescritura (overriding)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso izquierdo"
+    recommendation: "Usa la opcion que mejor se adapte a tu caso especifico"
+videos: []
+faqs:
+  - question: "¿Qué diferencia hay entre sobrecarga y sobrescritura?"
+    answer: "La **sobrecarga** (overloading) es tener métodos con el mismo nombre pero diferentes parámetros en la misma clase. La **sobrescritura** (overriding) es cuando una subclase redefine un método con la misma firma del padre. La sobrecarga se resuelve en compilación, la sobrescritura en ejecución."
+  - question: "¿Cuándo debo hacer downcasting?"
+    answer: "Solo cuando necesitas acceder a un método que existe solo en la subclase y no en el padre. Siempre verifica antes con `instanceof` para evitar `ClassCastException`."
+  - question: "¿Puedo instanciar una clase abstracta?"
+    answer: "No. Las clases abstractas no se pueden instanciar directamente. Solo se pueden crear objetos de sus subclases concretas."
+  - question: "¿Qué pasa si una subclase no sobrescribe un método abstracto?"
+    answer: "La subclase también se convierte en abstracta y no se puede instanciar. Solo las subclases que implementen todos los métodos abstractos se pueden crear."
+sources:
+  - title: "Oracle - Polymorphism in Java"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/IandI/polymorphism.html"
+    date: "2025-07-27"
+  - title: "Oracle - Abstract Methods and Classes"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    date: "2025-07-27"
+  - title: "Oracle - Using the instanceof Operator"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/instanceof.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Java Polymorphism"
+    url: "https://www.baeldung.com/java-polymorphism"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Polymorphism in Java"
+    url: "https://www.geeksforgeeks.org/polymorphism-in-java/"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Objetivos de Aprendizaje
+
+Al finalizar esta lección, podrás:
+- Entender el polimorfismo como polymorphic behavior en tiempo de ejecución
+- Distinguir entre sobrecarga (overloading) y sobrescritura (overriding)
+- Usar upcasting y downcasting con `instanceof`
+- Aplicar métodos abstractos en jerarquías polimórficas
+
+---
+
+## ¿Qué es el Polimorfismo?
+
+**Polimorfismo** (del griego "muchas formas") significa que un mismo tipo de referencia puede comportarse de diferentes maneras dependiendo del objeto real que contenga. Es uno de los pilares fundamentales de la POO.
+
+```java
+public class Animal {
+    String nombre;
+
+    Animal(String nombre) {
+        this.nombre = nombre;
+    }
+
+    String hacerSonido() {
+        return "...";
+    }
+}
+
+public class Gato extends Animal {
+    Gato(String nombre) { super(nombre); }
+
+    @Override
+    String hacerSonido() {
+        return "Miau!";
+    }
+}
+
+public class Perro extends Animal {
+    Perro(String nombre) { super(nombre); }
+
+    @Override
+    String hacerSonido() {
+        return "Guau!";
+    }
+}
+```
+
+**La magia del polimorfismo:**
+
+```java
+// Un array de Animal puede contener Gatos, Perros, o cualquier subclase
+Animal[] animales = { new Gato("Michi"), new Perro("Rex"), new Gato("Nube") };
+
+for (Animal a : animales) {
+    System.out.println(a.nombre + ": " + a.hacerSonido());
+}
+// Michi: Miau!
+// Rex: Guau!
+// Nube: Miau!
+```
+
+Java determina en **tiempo de ejecución** qué método ejecutar basándose en el tipo real del objeto.
+
+---
+
+## Sobrescritura (Override)
+
+La **sobrescritura** ocurre cuando una subclase redefine un método de su superclase. Java ejecuta la versión del método según el tipo real del objeto:
+
+<CodeBlock
+  title="Polimorfismo con sobrescritura"
+  lang="java"
+  code={`public class Figura {
+    String nombre;
+
+    Figura(String nombre) {
+        this.nombre = nombre;
+    }
+
+    double calcularArea() {
+        return 0;  // Versión base
+    }
+
+    void describir() {
+        System.out.println(nombre + " tiene área: " + calcularArea());
+    }
+}
+
+public class Circulo extends Figura {
+    double radio;
+
+    Circulo(double radio) {
+        super("Círculo");
+        this.radio = radio;
+    }
+
+    @Override
+    double calcularArea() {
+        return Math.PI * radio * radio;
+    }
+}
+
+public class Rectangulo extends Figura {
+    double base, altura;
+
+    Rectangulo(double base, double altura) {
+        super("Rectángulo");
+        this.base = base;
+        this.altura = altura;
+    }
+
+    @Override
+    double calcularArea() {
+        return base * altura;
+    }
+}
+
+public class Triangulo extends Figura {
+    double base, altura;
+
+    Triangulo(double base, double altura) {
+        super("Triángulo");
+        this.base = base;
+        this.altura = altura;
+    }
+
+    @Override
+    double calcularArea() {
+        return (base * altura) / 2;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Figura[] figuras = {
+            new Circulo(5),
+            new Rectangulo(4, 6),
+            new Triangulo(3, 8)
+        };
+
+        for (Figura f : figuras) {
+            f.describir();  // Cada figura calcula su propio área
+        }
+        // Círculo tiene área: 78.53981633974483
+        // Rectángulo tiene área: 24.0
+        // Triángulo tiene área: 12.0
+    }
+}`}
+/>
+
+---
+
+## Upcasting y Downcasting
+
+**Upcasting** es tratar un objeto hijo como su tipo padre. **Downcasting** es lo contrario: convertir un padre a hijo específico.
+
+<CodeBlock
+  title="Upcasting y Downcasting"
+  lang="java"
+  code={`public class Animal {
+    String nombre;
+    Animal(String nombre) { this.nombre = nombre; }
+    String hacerSonido() { return "..."; }
+}
+
+public class Perro extends Animal {
+    Perro(String nombre) { super(nombre); }
+    @Override
+    String hacerSonido() { return "Guau!"; }
+
+    void buscar() {
+        System.out.println(nombre + " busca la pelota");
+    }
+}
+
+public class Gato extends Animal {
+    Gato(String nombre) { super(nombre); }
+    @Override
+    String hacerSonido() { return "Miau!"; }
+
+    void trepar() {
+        System.out.println(nombre + " trepa un árbol");
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // UPCASTING: Hijo -> Padre (automático, siempre seguro)
+        Animal a1 = new Perro("Rex");   // Perro tratado como Animal
+        Animal a2 = new Gato("Michi");  // Gato tratado como Animal
+
+        System.out.println(a1.hacerSonido());  // Guau! (polimorfismo funciona)
+        System.out.println(a2.hacerSonido());  // Miau!
+
+        // a1.buscar();  // Error: Animal no tiene buscar()
+
+        // DOWNCASTING: Padre -> Hijo (manual, requiere verificación)
+        if (a1 instanceof Perro) {
+            Perro p = (Perro) a1;  // Cast manual a Perro
+            p.buscar();            // Rex busca la pelota
+        }
+
+        if (a2 instanceof Gato) {
+            Gato g = (Gato) a2;   // Cast manual a Gato
+            g.trepar();            // Michi trepa un árbol
+        }
+    }
+}`}
+/>
+
+**Resumen de casting:**
+- **Upcasting**: `Animal a = new Perro("Rex")` -- Automático y seguro
+- **Downcasting**: `Perro p = (Perro) a` -- Manual y puede fallar
+- `instanceof` verifica el tipo real antes de hacer downcasting
+
+---
+
+## El operador `instanceof`
+
+`instanceof` verifica si un objeto es de un tipo específico. Es esencial para el downcasting seguro:
+
+<CodeBlock
+  title="Uso de instanceof"
+  lang="java"
+  code={`public class Main {
+    static void identificarAnimal(Animal a) {
+        if (a instanceof Perro) {
+            System.out.println(a.nombre + " es un Perro");
+            Perro p = (Perro) a;
+            p.buscar();
+        } else if (a instanceof Gato) {
+            System.out.println(a.nombre + " es un Gato");
+            Gato g = (Gato) a;
+            g.trepar();
+        } else {
+            System.out.println(a.nombre + " es un Animal genérico");
+        }
+    }
+
+    public static void main(String[] args) {
+        identificarAnimal(new Perro("Rex"));   // Rex es un Perro → busca
+        identificarAnimal(new Gato("Michi"));  // Michi es un Gato → trepa
+        identificarAnimal(new Animal("PeZ"));  // PeZ es un Animal genérico
+    }
+}`}
+/>
+
+---
+
+## Métodos Abstractos
+
+Un **método abstracto** es un método sin implementación que las subclases deben obligatoriamente sobrescribir. Las clases que contienen métodos abstractos son **clases abstractas**:
+
+<CodeBlock
+  title="Clase abstracta con método abstracto"
+  lang="java"
+  code={`// No se puede crear instancias de una clase abstracta
+public abstract class FormaPago {
+    String nombre;
+
+    FormaPago(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Método abstracto: cada subclase DEBE implementarlo
+    abstract double procesarPago(double monto);
+
+    // Método concreto: se hereda sin cambios
+    void mostrarRecibo(double monto) {
+        System.out.println("Pago de $" + monto + " con " + nombre);
+        System.out.println("Total procesado: $" + procesarPago(monto));
+    }
+}
+
+public class PagoTarjeta extends FormaPago {
+    double comision;
+
+    PagoTarjeta(double comision) {
+        super("Tarjeta de crédito");
+        this.comision = comision;
+    }
+
+    @Override
+    double procesarPago(double monto) {
+        double total = monto + (monto * comision);
+        System.out.println("  Comisión: " + (comision * 100) + "%");
+        return total;
+    }
+}
+
+public class PagoEfectivo extends FormaPago {
+    PagoEfectivo() {
+        super("Efectivo");
+    }
+
+    @Override
+    double procesarPago(double monto) {
+        System.out.println("  Sin comisión");
+        return monto;  // Sin recargo
+    }
+}
+
+public class PagoTransferencia extends FormaPago {
+    double comisionFija;
+
+    PagoTransferencia(double comisionFija) {
+        super("Transferencia bancaria");
+        this.comisionFija = comisionFija;
+    }
+
+    @Override
+    double procesarPago(double monto) {
+        double total = monto + comisionFija;
+        System.out.println("  Comisión fija: $" + comisionFija);
+        return total;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        FormaPago[] pagos = {
+            new PagoTarjeta(0.03),       // 3% comisión
+            new PagoEfectivo(),
+            new PagoTransferencia(2.50)  // $2.50 fijos
+        };
+
+        double monto = 100.00;
+
+        for (FormaPago pago : pagos) {
+            pago.mostrarRecibo(monto);
+            System.out.println();
+        }
+        // Pago de $100.0 con Tarjeta de crédito
+        //   Comisión: 3.0%
+        // Total procesado: $103.0
+        //
+        // Pago de $100.0 con Efectivo
+        //   Sin comisión
+        // Total procesado: $100.0
+        //
+        // Pago de $100.0 con Transferencia bancaria
+        //   Comisión fija: $2.5
+        // Total procesado: $102.5
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: Salud - Diferentes Tratamientos
+
+<CodeBlock
+  title="Sistema de tratamientos médicos"
+  lang="java"
+  code={`public abstract class Tratamiento {
+    protected String nombre;
+    protected double costo;
+
+    Tratamiento(String nombre, double costo) {
+        this.nombre = nombre;
+        this.costo = costo;
+    }
+
+    abstract void aplicar(String paciente);
+    abstract String getTipoTratamiento();
+
+    double calcularCosto() {
+        return costo;
+    }
+
+    void mostrarResumen(String paciente) {
+        System.out.println("Tratamiento: " + nombre + " para " + paciente);
+        System.out.println("Tipo: " + getTipoTratamiento());
+        System.out.println("Costo: $" + calcularCosto());
+    }
+}
+
+public class ConsultaGeneral extends Tratamiento {
+    ConsultaGeneral() {
+        super("Consulta General", 50.0);
+    }
+
+    @Override
+    void aplicar(String paciente) {
+        System.out.println("Dr. examina a " + paciente);
+        System.out.println("  → Diagnóstico y recomendaciones emitidas");
+    }
+
+    @Override
+    String getTipoTratamiento() {
+        return "Consulta ambulatoria";
+    }
+}
+
+public class Cirugia extends Tratamiento {
+    private int horasInternacion;
+
+    Cirugia(String nombre, double costo, int horasInternacion) {
+        super(nombre, costo);
+        this.horasInternacion = horasInternacion;
+    }
+
+    @Override
+    void aplicar(String paciente) {
+        System.out.println("Preparando cirugía: " + nombre + " para " + paciente);
+        System.out.println("  → Internación estimada: " + horasInternacion + " horas");
+    }
+
+    @Override
+    double calcularCosto() {
+        // Costo base + costo por hora de internación ($200/hora)
+        return costo + (horasInternacion * 200);
+    }
+
+    @Override
+    String getTipoTratamiento() {
+        return "Cirugía (" + horasInternacion + "h internación)";
+    }
+}
+
+public class Terapia extends Tratamiento {
+    private int sesiones;
+
+    Terapia(int sesiones) {
+        super("Terapia física", 30.0);
+        this.sesiones = sesiones;
+    }
+
+    @Override
+    void aplicar(String paciente) {
+        System.out.println("Iniciando terapia para " + paciente);
+        System.out.println("  → Programa de " + sesiones + " sesiones");
+    }
+
+    @Override
+    double calcularCosto() {
+        return costo * sesiones;  // Costo por sesión * número de sesiones
+    }
+
+    @Override
+    String getTipoTratamiento() {
+        return "Terapia (" + sesiones + " sesiones)";
+    }
+}
+
+public class SistemaSalud {
+    static void procesarTratamiento(Tratamiento t, String paciente) {
+        t.mostrarResumen(paciente);
+        t.aplicar(paciente);
+        System.out.println("---");
+    }
+
+    public static void main(String[] args) {
+        Tratamiento[] tratamientos = {
+            new ConsultaGeneral(),
+            new Cirugía("Apendicectomía", 5000, 48),
+            new Terapia(10)
+        };
+
+        String paciente = "Carlos López";
+
+        for (Tratamiento t : tratamientos) {
+            procesarTratamiento(t, paciente);
+        }
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: E-commerce - Métodos de Pago
+
+<CodeBlock
+  title="Sistema de pagos polimórfico"
+  lang="java"
+  code={`public abstract class MetodoPago {
+    protected String nombre;
+    protected String numeroCuenta;
+
+    MetodoPago(String nombre, String numeroCuenta) {
+        this.nombre = nombre;
+        this.numeroCuenta = numeroCuenta;
+    }
+
+    abstract boolean procesar(double monto);
+    abstract double calcularRecargo(double monto);
+    abstract String getTipo();
+
+    void mostrarPago(double monto) {
+        System.out.println("[" + nombre + "] Monto: $" + monto);
+        System.out.println("  Recargo: $" + calcularRecargo(monto));
+        System.out.println("  Total: $" + (monto + calcularRecargo(monto)));
+    }
+}
+
+public class TarjetaCredito extends MetodoPago {
+    private double tasa;  // Tasa mensual (ej: 0.035 = 3.5%)
+
+    TarjetaCredito(String numero, double tasa) {
+        super("Tarjeta de Crédito", numero);
+        this.tasa = tasa;
+    }
+
+    @Override
+    boolean procesar(double monto) {
+        double total = monto + calcularRecargo(monto);
+        System.out.println("  ✓ Pago aprobado con tarjeta ****" +
+                           numeroCuenta.substring(numeroCuenta.length() - 4));
+        return true;
+    }
+
+    @Override
+    double calcularRecargo(double monto) {
+        return monto * tasa;
+    }
+
+    @Override
+    String getTipo() {
+        return "Crédito (tasa " + (tasa * 100) + "%)";
+    }
+}
+
+public class PSE extends MetodoPago {
+    private String banco;
+
+    PSE(String cuenta, String banco) {
+        super("PSE", cuenta);
+        this.banco = banco;
+    }
+
+    @Override
+    boolean procesar(double monto) {
+        System.out.println("  ✓ Transferencia PSE desde " + banco);
+        return true;
+    }
+
+    @Override
+    double calcularRecargo(double monto) {
+        return 0;  // Sin recargo
+    }
+
+    @Override
+    String getTipo() {
+        return "Transferencia bancaria (" + banco + ")";
+    }
+}
+
+public class EfectivoContraEntrega extends MetodoPago {
+    EfectivoContraEntrega() {
+        super("Efectivo", "N/A");
+    }
+
+    @Override
+    boolean procesar(double monto) {
+        System.out.println("  ✓ Pago en efectivo al recibir");
+        return true;
+    }
+
+    @Override
+    double calcularRecargo(double monto) {
+        return 0;
+    }
+
+    @Override
+    String getTipo() {
+        return "Contra entrega";
+    }
+}
+
+public class TiendaOnline {
+    public static void main(String[] args) {
+        MetodoPago[] metodos = {
+            new TarjetaCredito("4532015112830366", 0.035),
+            new PSE("1234567890", "Banco Nacional"),
+            new EfectivoContraEntrega()
+        };
+
+        double[] montos = { 250.00, 150.00, 89.99 };
+
+        for (int i = 0; i < metodos.length; i++) {
+            MetodoPago mp = metodos[i];
+            System.out.println("=== Pedido #" + (i + 1) + " ===");
+            mp.mostrarPago(montos[i]);
+            mp.procesar(montos[i]);
+            System.out.println();
+        }
+    }
+}`}
+/>
+
+---
+
+## Sobrecarga vs Sobrescritura
+
+Es importante no confundir estos dos conceptos:
+
+| Característica | Sobrecarga (Overloading) | Sobrescritura (Overriding) |
+|----------------|--------------------------|---------------------------|
+| **Nombre del método** | Igual | Igual |
+| **Parámetros** | Diferentes | Iguales |
+| **Retorno** | Puede cambiar | Debe ser compatible |
+| **Clase** | Misma clase | Subclase |
+| **Resolución** | Compile-time | Runtime |
+| **Anotación** | No necesita | `@Override` recomendado |
+
+```java
+// SOBRECARGA (misma clase, diferentes parámetros)
+public class Calculadora {
+    int sumar(int a, int b) { return a + b; }
+    double sumar(double a, double b) { return a + b; }
+    int sumar(int a, int b, int c) { return a + b + c; }
+}
+
+// SOBRESCRITURA (subclase, misma firma)
+public class Animal {
+    String hacerSonido() { return "..."; }
+}
+
+public class Perro extends Animal {
+    @Override
+    String hacerSonido() { return "Guau!"; }
+}
+```
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Polimorfismo** | Un mismo tipo de referencia, múltiples comportamientos |
+| **Sobrescritura** | Subclase redefine un método del padre |
+| **@Override** | Anotación que indica sobrescritura intencional |
+| **Upcasting** | Hijo tratado como padre (automático, seguro) |
+| **Downcasting** | Padre convertido a hijo (manual, requiere `instanceof`) |
+| **instanceof** | Verifica el tipo real de un objeto |
+| **Método abstracto** | Sin implementación, obliga a la subclase a definirlo |
+| **Clase abstracta** | No se instancia, solo se hereda |
+
+---
+
+## Preguntas Frecuentes
+
+<details>
+<summary>¿Qué diferencia hay entre sobrecarga y sobrescritura?</summary>
+La **sobrecarga** (overloading) es tener métodos con el mismo nombre pero diferentes parámetros en la misma clase. La **sobrescritura** (overriding) es cuando una subclase redefine un método con la misma firma del padre. La sobrecarga se resuelve en compilación, la sobrescritura en ejecución.
+</details>
+
+<details>
+<summary>¿Cuándo debo hacer downcasting?</summary>
+Solo cuando necesitas acceder a un método que existe solo en la subclase y no en el padre. Siempre verifica antes con `instanceof` para evitar `ClassCastException`.
+</details>
+
+<details>
+<summary>¿Puedo instanciar una clase abstracta?</summary>
+No. Las clases abstractas no se pueden instanciar directamente. Solo se pueden crear objetos de sus subclases concretas.
+</details>
+
+<details>
+<summary>¿Qué pasa si una subclase no sobrescribe un método abstracto?</summary>
+La subclase también se convierte en abstracta y no se puede instanciar. Solo las subclases que implementen todos los métodos abstractos se pueden crear.
+</details>
+
+---
+
+## Fuentes y Referencias
+
+- [Oracle - Polymorphism in Java](https://docs.oracle.com/javase/tutorial/java/javaOO/IandI/polymorphism.html)
+- [Oracle - Abstract Methods and Classes](https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html)
+- [Oracle - Using the instanceof Operator](https://docs.oracle.com/javase/tutorial/java/javaOO/instanceof.html)
+- [Baeldung - Java Polymorphism](https://www.baeldung.com/java-polymorphism)
+- [GeeksforGeeks - Polymorphism in Java](https://www.geeksforgeeks.org/polymorphism-in-java/)

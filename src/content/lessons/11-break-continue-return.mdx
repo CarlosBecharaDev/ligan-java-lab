@@ -1,0 +1,456 @@
+---
+title: "Break, Continue y Return"
+slug: "break-continue-return"
+module: "02-control-de-flujo"
+level: "Intermedio"
+objectives:
+  - "Usar break para salir de un bucle o switch antes de que termine naturalmente"
+  - "Usar continue para saltar al inicio de la siguiente iteración"
+  - "Usar return para salir de un método, con o sin valor de retorno"
+  - "Comprender break y continue etiquetados para bucles anidados"
+  - "Elegir la sentencia de control adecuada según el escenario"
+prerequisites:
+  - "Haber completado Lección 10: El Bucle For y For-Each"
+  - "Entender bucles while, do-while y for"
+  - "Conocer la sentencia switch"
+history:
+  introducedIn: "break, continue y return desde Java 1.0"
+  context: "Las sentencias break, continue y return heredadas de C permiten alterar el flujo normal de ejecución de bucles y métodos. Desde Java 1.0, son fundamentales para controlar la ejecución de manera precisa: salir anticipadamente de un bucle cuando se encuentra lo que se busca, saltar iteraciones innecesarias, o devolver un valor desde un método."
+  evolution: "En Java 1.0, break y continue solo funcionaban con el bucle más interno. Las versiones posteriores añadieron las etiquetas (labels) para controlar bucles anidados. Java 14 introdujo switch expressions que usan yield en lugar de break para devolver valores. Aunque estructuras como Stream API y lambdas ofrecen alternativas funcionales, break y continue siguen siendo esenciales en bucles tradicionales donde se necesita un control fino del flujo."
+realWorldExamples:
+  - domain: "Escape en laberinto — búsqueda con break"
+    description: "Un sistema de navegación busca una posición en un laberinto representado como matriz. Al encontrar el objetivo, usa break para salir inmediatamente del bucle anidado, evitando seguir recorriendo celdas innecesarias."
+    code: |
+      public class Laberinto {
+          public static void main(String[] args) {
+              int[][] laberinto = {
+                  {0, 0, 1, 0},
+                  {1, 0, 1, 0},
+                  {0, 0, 0, 0},
+                  {0, 1, 1, 0}
+              };
+              int objetivo = 9; // valor que buscamos
+              boolean encontrado = false;
+              int filaEncontrada = -1;
+              int colEncontrada = -1;
+
+              for (int i = 0; i < laberinto.length && !encontrado; i++) {
+                  for (int j = 0; j < laberinto[i].length; j++) {
+                      if (laberinto[i][j] == objetivo) {
+                          filaEncontrada = i;
+                          colEncontrada = j;
+                          encontrado = true;
+                          break; // sale del bucle interno
+                      }
+                  }
+              }
+
+              if (encontrado) {
+                  System.out.printf("Encontrado en [%d][%d]%n",
+                      filaEncontrada, colEncontrada);
+              } else {
+                  System.out.println("Objetivo no encontrado en el laberinto");
+              }
+          }
+      }
+    result: |
+      Objetivo no encontrado en el laberinto
+
+  - domain: "Filtrado de datos con continue — procesamiento de ventas"
+    description: "Un sistema de reportes procesa ventas de distintos meses, usando continue para saltar meses sin datos (valor 0 o negativo), procesando solo las ventas válidas y calculando el promedio."
+    code: |
+      public class FiltradoVentas {
+          public static void main(String[] args) {
+              double[] ventasMensuales = {
+                  15000.0, 0.0, 23000.0, -500.0, 18000.0, 27000.0
+              };
+              String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun"};
+              double suma = 0;
+              int validos = 0;
+
+              for (int i = 0; i < ventasMensuales.length; i++) {
+                  if (ventasMensuales[i] <= 0) {
+                      System.out.printf("  %s: sin datos válidos — saltando%n",
+                          meses[i]);
+                      continue; // salta al siguiente mes
+                  }
+                  suma += ventasMensuales[i];
+                  validos++;
+                  System.out.printf("  %s: $%.2f%n",
+                      meses[i], ventasMensuales[i]);
+              }
+
+              if (validos > 0) {
+                  System.out.printf("Promedio de ventas válidas: $%.2f%n",
+                      suma / validos);
+              }
+          }
+      }
+    result: |
+      Ene: $15000.00
+        Feb: sin datos válidos — saltando
+      Mar: $23000.00
+        Abr: sin datos válidos — saltando
+      May: $18000.00
+      Jun: $27000.00
+      Promedio de ventas válidas: $20750.00
+hasInteractive: false
+comparisons:
+  - title: "break vs continue vs return"
+    items:
+      - name: "break"
+        features:
+          accion: "Terminar el bucle o switch completamente"
+          efecto: "La ejecución continúa después del bucle/switch"
+          uso: "Cuando encontraste lo que buscas o necesitas salir"
+          ejemplo: "Encontrar un elemento en un array"
+      - name: "continue"
+        features:
+          accion: "Saltar al inicio de la siguiente iteración"
+          efecto: "El bucle continúa con la siguiente vuelta"
+          uso: "Cuando quieres omitir un caso sin detener el bucle"
+          ejemplo: "Filtrar elementos que no cumplen una condición"
+      - name: "return"
+        features:
+          accion: "Salir del método actual completamente"
+          efecto: "Devuelve control al método que llamó"
+          uso: "Cuando el método ha terminado su trabajo"
+          ejemplo: "Devolver un resultado o salir antes por validación"
+    recommendation: "Usa break cuando necesites salir de un bucle al encontrar algo específico. Usa continue cuando quieras omitir una iteración pero seguir procesando. Usa return cuando el método ya tiene el resultado que debe devolver. Evita usar break dentro de un switch si puedes reorganizar la lógica con un if-else."
+videos:
+  - url: ""
+    title: "Break, Continue y Return en Java"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Qué diferencia hay entre break en un switch y break en un bucle?"
+    answer: "En un switch, break evita el fall-through (ejecutar los siguientes case sin condición). En un bucle, break termina el bucle completamente y la ejecución continúa con la primera sentencia después del bucle. Ambos usan la misma palabra clave, pero su contexto determina el efecto."
+  - question: "¿Puedo usar return dentro de un bucle?"
+    answer: "Sí, return termina el método completo, no solo el bucle. Es útil cuando ya tienes el resultado que necesitas devolver y no hay razón para seguir iterando. Sin embargo, usar return dentro de bucles anidados puede dificultar la lectura del código; break con condición de salida suele ser más claro."
+  - question: "¿Cuándo usar break etiquetado vs break simple?"
+    answer: "Un break simple solo sale del bucle más interno. Un break etiquetado (con un label antes del for externo) sale de todos los bucles anidados hasta la etiqueta. Úsalo cuando necesites salir de múltiples niveles de anidación de una vez, como al buscar un elemento en una matriz bidimensional. Para un solo nivel de bucle, break simple es suficiente y más legible."
+sources:
+  - title: "Java 21 Language Specification — The break Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.15"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The continue Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.16"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The return Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.22"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Branching Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branching.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Sentencias de control del flujo
+
+Hasta ahora hemos visto bucles que se ejecutan hasta que su condición se vuelve `false`. Pero a veces necesitas **salir antes**, **saltar una iteración**, o **terminar un método** de inmediato. Las tres sentencias de control que permiten esto son `break`, `continue` y `return`.
+
+## La sentencia break
+
+`break` **termina inmediatamente** el bucle o switch más interno en el que se encuentra. La ejecución continúa con la primera sentencia después de ese bucle o switch.
+
+<CodeBlock lang="java" title="break — salir al encontrar un número">
+{`public class BuscarNumero {
+    public static void main(String[] args) {
+        int[] numeros = {5, 12, 8, 23, 1, 17};
+        int objetivo = 23;
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (numeros[i] == objetivo) {
+                System.out.println("Encontrado " + objetivo
+                    + " en el índice " + i);
+                break; // no seguir buscando
+            }
+        }
+        System.out.println("Búsqueda terminada");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Encontrado 23 en el índice 3
+Búsqueda terminada
+```
+
+Sin `break`, el bucle seguiría revisando los elementos 1 y 17 innecesariamente. Con `break`, el bucle termina en cuanto encuentra el objetivo.
+
+## La sentencia continue
+
+`continue` **salta al inicio de la siguiente iteración** del bucle, omitiendo el resto del cuerpo para la iteración actual. El bucle no termina; simplemente ignora lo que queda en el cuerpo y avanza a la siguiente vuelta.
+
+<CodeBlock lang="java" title="continue — imprimir solo números impares">
+{`public class SoloImpares {
+    public static void main(String[] args) {
+        int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8};
+
+        for (int n : numeros) {
+            if (n % 2 == 0) {
+                continue; // saltar pares
+            }
+            System.out.println("Impar: " + n);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Impar: 1
+Impar: 3
+Impar: 5
+Impar: 7
+```
+
+Cuando `n` es par (2, 4, 6, 8), `continue` salta directamente a la siguiente iteración sin ejecutar `System.out.println`.
+
+## Diferencia clave: break vs continue
+
+```
+break:     [1] [2] [3] ← sale aquí ──→ después del bucle
+continue:  [1] [2] [3] ← salta esta ──→ [5] [6] (sigue el bucle)
+```
+
+- `break` **detiene** el bucle por completo.
+- `continue` **omite** solo la iteración actual y sigue.
+
+## La sentencia return
+
+`return` **sale del método actual** inmediatamente, devolviendo el control al método que lo llamó. Si el método tiene tipo de retorno, `return` debe ir seguido del valor a devolver.
+
+<CodeBlock lang="java" title="return — salir temprano de un método">
+{`public class ValidadorEdad {
+    public static String clasificarEdad(int edad) {
+        if (edad < 0) {
+            return "Edad no válida";
+        }
+        if (edad < 13) {
+            return "Niño";
+        }
+        if (edad < 18) {
+            return "Adolescente";
+        }
+        return "Adulto";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(clasificarEdad(5));
+        System.out.println(clasificarEdad(16));
+        System.out.println(clasificarEdad(25));
+        System.out.println(clasificarEdad(-1));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Niño
+Adolescente
+Adulto
+Edad no válida
+```
+
+Cada `return` termina el método de inmediato: una vez que se ejecuta `return "Niño"`, el resto del método no se ejecuta. Esto se conoce como **salida temprana** (early return) y es un patrón muy común para evitar anidar condicionales.
+
+## return en void — salir sin valor
+
+Cuando un método no devuelve nada (`void`), puedes usar `return` sin un valor para salir antes:
+
+<CodeBlock lang="java" title="return void — salir sin devolver nada">
+{`public class BuscarEnMatriz {
+    public static void imprimirPrimeraOcurrencia(
+            int[][] matriz, int objetivo) {
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == objetivo) {
+                    System.out.println("Encontrado en ["
+                        + i + "][" + j + "]");
+                    return; // salir del método completo
+                }
+            }
+        }
+        System.out.println("No encontrado");
+    }
+
+    public static void main(String[] args) {
+        int[][] datos = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        imprimirPrimeraOcurrencia(datos, 5);
+        imprimirPrimeraOcurrencia(datos, 10);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Encontrado en [1][1]
+No encontrado
+```
+
+## Break y continue etiquetados
+
+En bucles anidados, `break` y `continue` por defecto solo afectan al bucle **más interno**. Con una **etiqueta** (label), puedes controlar bucles externos.
+
+<CodeBlock lang="java" title="Break etiquetado — salir de dos bucles a la vez">
+{`public class BusquedaMatriz {
+    public static void main(String[] args) {
+        int[][] matriz = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        int objetivo = 5;
+        boolean encontrado = false;
+
+        busqueda:
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == objetivo) {
+                    System.out.println("Encontrado en ["
+                        + i + "][" + j + "]");
+                    encontrado = true;
+                    break busqueda; // sale de AMBOS bucles
+                }
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("No encontrado");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Encontrado en [1][1]
+```
+
+Sin `break busqueda`, solo saldría del bucle interno y seguiría recorriendo la fila siguiente. La etiqueta `busqueda:` se coloca antes del `for` externo, y `break busqueda` sale de ese bucle y todos los internos.
+
+## Continue etiquetado
+
+Lo mismo aplica para `continue`: con una etiqueta puedes saltar a la siguiente iteración del bucle **externo** en lugar del interno.
+
+<CodeBlock lang="java" title="Continue etiquetado — saltar fila completa">
+{`public class SaltarFila {
+    public static void main(String[] args) {
+        int[][] datos = {
+            {1, -1, 3},
+            {-1, -1, 6},
+            {7, 8, 9}
+        };
+
+        for (int i = 0; i < datos.length; i++) {
+            System.out.println("Procesando fila " + i + ":");
+            for (int j = 0; j < datos[i].length; j++) {
+                if (datos[i][j] < 0) {
+                    System.out.println("  Dato negativo"
+                        + " — saltando fila completa");
+                    continue; // solo salta la columna
+                }
+                // Sin etiqueta, continue solo salta la columna.
+                // Con etiqueta: continue fila; saltaría a la
+                // siguiente fila completa.
+                System.out.println("  Valor: " + datos[i][j]);
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Procesando fila 0:
+  Dato negativo — saltando fila completa
+  Valor: 3
+Procesando fila 1:
+  Dato negativo — saltando fila completa
+  Dato negativo — saltando fila completa
+Procesando fila 2:
+  Valor: 7
+  Valor: 8
+  Valor: 9
+```
+
+En este caso, `continue` sin etiqueta solo omite la columna actual. Si quisiéramos saltar la fila completa cuando encontramos un negativo, usaríamos una etiqueta: `continue fila;` (donde `fila:` es la etiqueta del bucle externo).
+
+## Patrón común: Early return
+
+El patrón de **salida temprana** (early return) usa `return` al inicio de un método para manejar casos especiales sin anidar condicionales:
+
+<CodeBlock lang="java" title="Early return — validar y salir antes">
+{`public class ProcesarPedido {
+    public static String procesarPedido(
+            double monto, boolean tieneCupon) {
+
+        // Casos especiales: salir antes
+        if (monto <= 0) {
+            return "Error: monto inválido";
+        }
+        if (monto > 100000) {
+            return "Error: monto excede el límite";
+        }
+
+        // Lógica principal
+        double total = monto;
+        if (tieneCupon) {
+            total *= 0.9; // 10% descuento
+        }
+        if (total >= 500) {
+            total *= 0.95; // 5% adicional por compra alta
+        }
+
+        return "Total a pagar: $" + total;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(procesarPedido(100, true));
+        System.out.println(procesarPedido(600, false));
+        System.out.println(procesarPedido(-50, false));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Total a pagar: $90.0
+Total a pagar: $570.0
+Error: monto inválido
+```
+
+Sin early return, el código necesitaría múltiples niveles de `if` anidados, dificultando la lectura.
+
+## Cuándo usar cada sentencia
+
+| Situación | Sentencia | Ejemplo |
+|-----------|-----------|---------|
+| Encontraste lo que buscas en un bucle | `break` | Buscar un archivo en una lista |
+| Quieres omitir elementos que no cumplen una condición | `continue` | Filtrar valores nulos o negativos |
+| El método ya tiene el resultado que debe devolver | `return` | Calcular y devolver un promedio |
+| Necesitas salir de bucles anidados | `break` con etiqueta | Buscar en una matriz bidimensional |
+| Necesitas saltar a la siguiente fila de una matriz | `continue` con etiqueta | Procesar filas con datos incompletos |
+| Validar algo al inicio de un método | `return` temprano | Rechazar entrada inválida antes de procesar |
+
+

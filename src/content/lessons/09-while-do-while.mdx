@@ -1,0 +1,402 @@
+---
+title: "Bucles While y Do-While"
+slug: "while-do-while"
+module: "02-control-de-flujo"
+level: "Inicial"
+objectives:
+  - "Escribir bucles while con condición de entrada verificada"
+  - "Diferenciar while de do-while respecto al momento de la verificación"
+  - "Evitar bucles infinitos controlando la condición y el contador"
+  - "Usar bucles while para entrada validada y procesamiento de datos"
+  - "Reconocer cuándo while es más apropiado que for"
+prerequisites:
+  - "Haber completado Lección 07: if-else"
+  - "Conocer operadores de comparación y lógicos"
+  - "Entender el concepto de variable contador y acumulador"
+history:
+  introducedIn: "while y do-while desde Java 1.0"
+  context: "Los bucles while y do-while existen desde la primera versión de Java, heredados de C y C++. El bucle while verifica la condición ANTES de ejecutar el cuerpo, mientras que do-while la verifica DESPUÉS, garantizando al menos una ejecución. Ambos son bucles indeterminados: se repiten un número desconocido de veces hasta cumplir una condición."
+  evolution: "La sintaxis de while y do-while no ha cambiado desde Java 1.0 por su simplicidad y claridad. Java 5 introdujo el bucle for-each (enhanced for) que cubre el caso común de iterar colecciones, reemplazando muchos usos de while con iteradores. Sin embargo, while sigue siendo esencial para bucles con condición compleja o número de iteraciones desconocido."
+realWorldExamples:
+  - domain: "Validación de entrada de usuario"
+    description: "Un sistema de login usa do-while para pedir la contraseña y repetir mientras sea incorrecta, garantizando al menos un intento y limitando a 3 el máximo."
+    code: |
+      import java.util.Scanner;
+
+      public class LoginIntentos {
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+              String claveCorrecta = "Java2026";
+              int intentos = 0;
+              boolean acceso = false;
+
+              do {
+                  System.out.print("Introduce la contraseña (intento "
+                      + (intentos + 1) + "/3): ");
+                  String intento = sc.nextLine();
+                  intentos++;
+
+                  if (intento.equals(claveCorrecta)) {
+                      acceso = true;
+                      System.out.println("✅ Acceso concedido");
+                      break;
+                  } else {
+                      System.out.println("❌ Contraseña incorrecta");
+                  }
+              } while (!acceso && intentos < 3);
+
+              if (!acceso) {
+                  System.out.println("🚫 Cuenta bloqueada tras 3 intentos");
+              }
+              sc.close();
+          }
+      }
+    result: |
+      Introduce la contraseña (intento 1/3): 1234
+      ❌ Contraseña incorrecta
+      Introduce la contraseña (intento 2/3): Java2026
+      ✅ Acceso concedido
+  - domain: "Cálculo de interés compuesto"
+    description: "Un simulador financiero usa while para calcular cuántos años necesita una inversión para duplicar su valor con interés compuesto, un caso donde el número de iteraciones es desconocido."
+    code: |
+      public class InteresCompuesto {
+          public static void main(String[] args) {
+              double capital = 1000.0;
+              double tasa = 0.05; // 5% anual
+              double objetivo = capital * 2; // duplicar
+              int anios = 0;
+
+              while (capital < objetivo) {
+                  capital = capital + (capital * tasa);
+                  anios++;
+                  System.out.printf("Año %d: $%.2f%n", anios, capital);
+              }
+
+              System.out.println("----");
+              System.out.printf("Se duplicó en %d años%n", anios);
+          }
+      }
+    result: |
+      Año 1: $1050.00
+      Año 2: $1102.50
+      ...
+      Año 15: $2078.93
+      ----
+      Se duplicó en 15 años
+hasInteractive: false
+comparisons:
+  - title: "while vs do-while"
+    items:
+      - name: "while"
+        features:
+          verificacion: "Antes de cada iteración (pre-test)"
+          ejecucion_minima: "0 veces si la condición es false al inicio"
+          uso: "Cuando puedes saltarte el bucle por completo"
+          sintaxis: "while (cond) { ... }"
+      - name: "do-while"
+        features:
+          verificacion: "Después de cada iteración (post-test)"
+          ejecucion_minima: "1 vez siempre, sin importar la condición"
+          uso: "Cuando el cuerpo debe ejecutarse al menos una vez"
+          sintaxis: "do { ... } while (cond);"
+    recommendation: "Usa while cuando la condición puede ser false desde el inicio (bucle de procesamiento opcional). Usa do-while cuando el cuerpo debe ejecutarse al menos una vez (menús, validación de entrada, pedir confirmación). Recuerda el punto y coma final en do-while."
+videos:
+  - url: ""
+    title: "Bucles while y do-while en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Por qué el do-while lleva punto y coma al final?"
+    answer: "A diferencia de while (cuyo cuerpo va entre llaves y no termina con ;), la estructura do-while termina con `while (condición);`. El punto y coma es obligatorio porque cierra la sentencia completa. Olvidarlo provoca error de compilación."
+  - question: "¿Cómo evito un bucle infinito con while?"
+    answer: "Asegúrate de que algo dentro del cuerpo modifique la variable que evalúa la condición (un contador que se incrementa, o una variable de control que cambia). Si la condición nunca se vuelve false, el bucle se ejecuta para siempre. Usa un contador y pon un límite de seguridad."
+  - question: "¿Cuándo uso while en vez de for?"
+    answer: "Usa for cuando conoces de antemano el número de iteraciones (recorrer un array de longitud fija). Usa while cuando el número de iteraciones es desconocido o depende de una condición dinámica (leer hasta fin de archivo, validar entrada, esperar un evento)."
+sources:
+  - title: "Java 21 Language Specification — The while Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.12"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The do Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.13"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Bucles indeterminados
+
+Los bucles while y do-while son **indeterminados**: se repiten un número *desconocido* de veces hasta que una condición se vuelve false. A diferencia del bucle for (donde conoces de antemano cuántas veces repetirás), estos bucles son ideales para casos como:
+
+- Leer datos hasta fin de archivo
+- Pedir entrada hasta que sea válida
+- Esperar hasta que se cumpla una condición
+
+## El bucle while
+
+`while` verifica la condición **antes** de cada iteración (pre-test). Si la condición es false desde el inicio, el cuerpo **no se ejecuta nunca**:
+
+```java
+while (condicion) {
+    // cuerpo que se repite mientras condicion sea true
+    // debe modificar algo para que la condición eventualmente sea false
+}
+```
+
+<CodeBlock lang="java" title="while — cuenta regresiva">
+{`public class CuentaRegresiva {
+    public static void main(String[] args) {
+        int contador = 5;
+
+        while (contador > 0) {
+            System.out.println("Cuenta: " + contador);
+            contador--;  // importante: modifica la condición
+        }
+
+        System.out.println("¡Despegue! 🚀");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Cuenta: 5
+Cuenta: 4
+Cuenta: 3
+Cuenta: 2
+Cuenta: 1
+¡Despegue! 🚀
+```
+
+### while con condición false desde el inicio
+
+Si la condición es false al empezar, el bucle no se ejecuta:
+
+```java
+int x = 10;
+while (x < 5) {
+    System.out.println("Esto nunca se imprime");
+}
+System.out.println("Fin");  // imprime "Fin"
+```
+
+## El bucle do-while
+
+`do-while` verifica la condición **después** de cada iteración (post-test). El cuerpo **se ejecuta al menos una vez**, sin importar la condición:
+
+```java
+do {
+    // cuerpo (se ejecuta mínimo 1 vez)
+} while (condicion);  // nota el punto y coma final
+```
+
+<CodeBlock lang="java" title="do-while — menú interactivo">
+{`public class MenuInteractivo {
+    public static void main(String[] args) {
+        int opcion = 0;
+
+        do {
+            System.out.println("\\n--- MENÚ ---");
+            System.out.println("1. Ver perfil");
+            System.out.println("2. Configuración");
+            System.out.println("3. Salir");
+            // Simulamos que el usuario elige 3 en la primera iteración
+            opcion = 3;
+            System.out.println("Opción elegida: " + opcion);
+        } while (opcion != 3);
+
+        System.out.println("Saliendo del menú...");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+--- MENÚ ---
+1. Ver perfil
+2. Configuración
+3. Salir
+Opción elegida: 3
+Saliendo del menú...
+```
+
+> 💡 El menú se muestra **al menos una vez** aunque el usuario elija "Salir" inmediatamente. Ese es el propósito de do-while.
+
+## Diferencia clave: while vs do-while
+
+| Característica | while | do-while |
+|----------------|-------|----------|
+| Verificación | Antes del cuerpo | Después del cuerpo |
+| Mínimo de ejecuciones | 0 | 1 |
+| Punto y coma final | No | Sí |
+| Uso típico | Procesamiento condicional | Menús, validación |
+
+<CodeBlock lang="java" title="Mismo valor, diferente verificación">
+{`public class ComparacionBucles {
+    public static void main(String[] args) {
+        int n = 10;
+
+        // while: NO se ejecuta porque 10 < 5 es false al inicio
+        System.out.println("--- while ---");
+        while (n < 5) {
+            System.out.println("dentro del while");
+        }
+        System.out.println("while terminado sin imprimir");
+
+        // do-while: se ejecuta UNA vez aunque la condición sea false
+        System.out.println("--- do-while ---");
+        do {
+            System.out.println("dentro del do-while");
+        } while (n < 5);
+        System.out.println("do-while terminado");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+--- while ---
+while terminado sin imprimir
+--- do-while ---
+dentro del do-while
+do-while terminado
+```
+
+## Acumuladores y contadores
+
+Un patrón común: usar while con un **acumulador** (suma valores) y un **contador** (cuenta iteraciones):
+
+<CodeBlock lang="java" title="while — suma de números hasta cero (centinela)">
+{`public class SumaSentinela {
+    public static void main(String[] args) {
+        int[] datos = {5, 8, 3, 0};  // 0 es el valor centinela
+        int i = 0;
+        int suma = 0;
+        int cuenta = 0;
+
+        while (i < datos.length && datos[i] != 0) {
+            suma += datos[i];
+            cuenta++;
+            i++;
+        }
+
+        System.out.println("Números sumados: " + cuenta);
+        System.out.println("Total: " + suma);
+        System.out.println("Promedio: " + (cuenta > 0 ? (double) suma / cuenta : 0));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Números sumados: 3
+Total: 16
+Promedio: 5.333333333333333
+```
+
+## El peligro del bucle infinito
+
+El error más común con while es olvidar modificar la variable de condición:
+
+```java
+// ❌ Bucle infinito: contador nunca cambia
+int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    // falta i++ → i siempre es 0 → bucle eterno
+}
+
+// ✅ Correcto: el contador se incrementa
+int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    i++;
+}
+```
+
+<CodeBlock lang="java" title="Cuidado: si el cuerpo no cambia la condición, es infinito">
+{`public class CuentaRegresivaBug {
+    public static void main(String[] args) {
+        int x = 5;
+
+        while (x > 0) {
+            System.out.println("x = " + x);
+            x--;  // sin esta línea sería infinito
+        }
+        System.out.println("Fin");
+    }
+}`}
+</CodeBlock>
+
+## Patrón: entrada validada con do-while
+
+El uso más clásico de do-while es pedir entrada hasta que sea válida:
+
+<CodeBlock lang="java" title="Validación de nota con do-while">
+{`public class NotaValida {
+    public static void main(String[] args) {
+        // Simulamos entradas del usuario
+        int[] entradas = {150, -5, 85};
+        int idx = 0;
+        int nota;
+
+        do {
+            nota = entradas[idx++];  // lee siguiente entrada
+            if (nota < 0 || nota > 100) {
+                System.out.println("Nota " + nota + " inválida. Debe ser 0-100.");
+            }
+        } while (nota < 0 || nota > 100);
+
+        System.out.println("Nota aceptada: " + nota);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Nota 150 inválida. Debe ser 0-100.
+Nota -5 inválida. Debe ser 0-100.
+Nota aceptada: 85
+```
+
+## ¿Cuándo while y cuándo for?
+
+| Situación | Bucle recomendado |
+|-----------|-------------------|
+| Número de iteraciones conocido | ✅ **for** |
+| Iterar hasta fin de archivo o condición externa | ✅ **while** |
+| Menú que se muestra al menos una vez | ✅ **do-while** |
+| Validar entrada hasta que sea correcta | ✅ **do-while** |
+| Procesar hasta encontrar un valor centinela | ✅ **while** |
+| Recorrer un array completo | ✅ **for** (o **for-each**) |
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

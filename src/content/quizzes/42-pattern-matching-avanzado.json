@@ -1,0 +1,92 @@
+{
+  "id": "quiz-42-pattern-matching-avanzado",
+  "lessonSlug": "pattern-matching",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es un pattern guard en Java?",
+      "options": [
+        "case Pattern p when condicion: agrega una condición extra al patrón",
+        "Un tipo de patrón que protege contra NullPointerException",
+        "Una cláusula que protege contra errores de compilación",
+        "Un modificador de acceso para patrones"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un pattern guard usa la palabra clave when para agregar una condición adicional al patrón: case Pattern p when p.esValido().",
+        "No es específicamente para NPE.",
+        "No es una cláusula de protección de compilación.",
+        "No es un modificador de acceso."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es un record pattern?",
+      "options": [
+        "case Persona(String n, int e): descompone un record en sus componentes",
+        "Un patrón que solo funciona con clases abstractas",
+        "Un patrón para crear records",
+        "Una forma de serializar un record"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un record pattern descompone un record en sus componentes directamente en el case: case Persona(String nombre, int edad).",
+        "Funciona con records, no con clases abstractas.",
+        "No es para crear records.",
+        "No está relacionado con serialización."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es la exhaustividad en switch con pattern matching?",
+      "options": [
+        "El compilador verifica que todos los casos posibles estén cubiertos",
+        "Un error que se produce al usar demasiados case",
+        "Una advertencia del compilador sobre código muerto",
+        "Una restricción que limita el número de patrones"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Con tipos sealed o enums, el compilador puede verificar que todos los casos estén cubiertos y reportar si falta alguno.",
+        "No es por cantidad de cases.",
+        "No es una advertencia sobre código muerto.",
+        "No hay límite en el número de patrones."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es una sealed interface?",
+      "options": [
+        "Una interface que solo puede implementarse por un conjunto de clases permitidas",
+        "Una interface con métodos privados",
+        "Una interface que no puede tener métodos default",
+        "Una interface con todos los métodos estáticos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Una sealed interface restringe qué clases pueden implementarla mediante la cláusula permits.",
+        "No tiene que ver con métodos privados.",
+        "Sí puede tener métodos default.",
+        "No tiene que ver con métodos estáticos."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué son los permits en una sealed class?",
+      "options": [
+        "La lista de clases que pueden extender o implementar la sealed class/interface",
+        "Los permisos de acceso de los métodos",
+        "Las excepciones que puede lanzar la clase",
+        "Los campos que puede tener la clase"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. La cláusula permits define las clases (o interfaces) específicas que tienen permiso de extender/implementar la sealed class.",
+        "No tienen relación con permisos de acceso.",
+        "No tienen relación con excepciones.",
+        "No tienen relación con campos."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,339 @@
+---
+title: "Arreglos Multidimensionales y Algoritmos"
+slug: "arrays-avanzados"
+module: "03-metodos-y-arrays"
+level: "Intermedio"
+objectives:
+  - "Crear y recorrer arreglos bidimensionales (matrices)"
+  - "Implementar algoritmos de búsqueda lineal"
+  - "Implementar ordenamiento burbuja (bubble sort)"
+  - "Usar arreglos para resolver problemas comunes"
+  - "Comprender la complejidad básica de algoritmos (O(n), O(n²))"
+prerequisites:
+  - "Haber completado Lección 15: Arreglos"
+  - "Entender bucles for anidados"
+history:
+  introducedIn: "Arrays multidimensionales y algoritmos clásicos desde Java 1.0"
+  context: "Los arrays multidimensionales en Java son arrays de arrays (no matrices contiguas como en C). Cada fila puede tener diferente longitud, lo que los hace flexibles. Los algoritmos de búsqueda y ordenamiento son fundamentales en ciencia de la computación y existen desde los orígenes del campo, mucho antes de Java."
+  evolution: "Java 1.0 introdujo arrays multidimensionales como arrays de arrays. Los algoritmos de búsqueda y ordenamiento clásicos (lineal, burbuja, selección, inserción) son universales. Java 8+ añadió métodos como Arrays.sort() y Arrays.binarySearch() para uso en producción, pero entender los algoritmos manuales es fundamental para aprender."
+realWorldExamples:
+  - domain: "E-commerce — matriz de ventas por región y mes"
+    description: "Una empresa tiene ventas trimestrales en 4 regiones. Una matriz almacena los datos y un algoritmo calcula la región con mayor venta total."
+    code: |
+      public class VentasRegion {
+          public static void main(String[] args) {
+              double[][] ventas = {
+                  {120.5, 135.0, 110.2, 150.8},  // Norte
+                  {85.0, 92.5, 78.3, 95.0},       // Sur
+                  {210.0, 198.5, 225.0, 240.5},   // Este
+                  {95.0, 102.0, 88.5, 110.0}      // Oeste
+              };
+              String[] regiones = {"Norte", "Sur", "Este", "Oeste"};
+
+              double maxTotal = 0;
+              int mejorRegion = 0;
+
+              for (int i = 0; i < ventas.length; i++) {
+                  double total = 0;
+                  for (int j = 0; j < ventas[i].length; j++) {
+                      total += ventas[i][j];
+                  }
+                  System.out.printf("%s: $%.1f%n",
+                      regiones[i], total);
+                  if (total > maxTotal) {
+                      maxTotal = total;
+                      mejorRegion = i;
+                  }
+              }
+
+              System.out.printf("Mejor región: %s ($%.1f)%n",
+                  regiones[mejorRegion], maxTotal);
+          }
+      }
+    result: |
+      Norte: $516.5
+      Sur: $350.8
+      Este: $874.0
+      Oeste: $395.5
+      Mejor región: Este ($874.0)
+
+  - domain: "Salud — búsqueda de paciente en base de datos"
+    description: "Un hospital busca un paciente por ID en una lista usando búsqueda lineal, y luego por nombre usando búsqueda binaria en lista ordenada."
+    code: |
+      public class BuscarPaciente {
+          static int busquedaLineal(String[] nombres, String busqueda) {
+              for (int i = 0; i < nombres.length; i++) {
+                  if (nombres[i].equalsIgnoreCase(busqueda)) {
+                      return i;
+                  }
+              }
+              return -1;
+          }
+
+          public static void main(String[] args) {
+              String[] pacientes = {
+                  "Ana García", "Carlos López", "María Santos",
+                  "Pedro Ruiz", "Laura Díaz"
+              };
+
+              String buscar = "María Santos";
+              int idx = busquedaLineal(pacientes, buscar);
+
+              if (idx >= 0) {
+                  System.out.printf("Paciente %d: %s%n",
+                      idx + 1, pacientes[idx]);
+              } else {
+                  System.out.println("No encontrado");
+              }
+          }
+      }
+    result: |
+      Paciente 3: María Santos
+hasInteractive: false
+comparisons:
+  - title: "Búsqueda lineal vs Búsqueda binaria"
+    items:
+      - name: "Búsqueda lineal"
+        features:
+          precondicion: "Ninguna — funciona con array desordenado"
+          complejidad: "O(n) — revisa cada elemento"
+          implementacion: "Un solo bucle for simple"
+          idealPara: "Arrays pequeños o no ordenados"
+      - name: "Búsqueda binaria"
+        features:
+          precondicion: "Array debe estar ordenado"
+          complejidad: "O(log n) — divide el espacio a la mitad"
+          implementacion: "Recursion o bucle con bajo/medio/alto"
+          idealPara: "Arrays grandes y ordenados"
+    recommendation: "Búsqueda lineal para arrays pequeños (<50 elementos) o desordenados. Búsqueda binaria para arrays grandes ordenados. Si buscas frecuentemente en el mismo array, ordénalo una vez y usa binaria."
+videos:
+  - url: ""
+    title: "Arrays multidimensionales y algoritmos"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Cómo funciona una matriz (array bidimensional)?"
+    answer: "Una matriz es un array de arrays. La primera dimensión son las filas, la segunda las columnas. Para acceder a un elemento: matriz[fila][columna]. Las filas pueden tener diferente longitud (array jagged). Se recorre con dos bucles for anidados."
+  - question: "¿Qué es la complejidad temporal O(n)?"
+    answer: "Describe cómo crece el tiempo de ejecución con la cantidad de datos. O(n) significa que si duplicas los datos, el tiempo se duplica. O(n²) significa que si duplicas los datos, el tiempo se cuadruplica. Buscar en un array no ordenado es O(n); el ordenamiento burbuja es O(n²)."
+  - question: "¿Cuándo usar Arrays.sort() vs implementar mi propio ordenamiento?"
+    answer: "En producción, siempre usa Arrays.sort() — está optimizado (TimSort, O(n log n)). Implementa algoritmos manuales solo para aprender conceptos. Entender burbuja y selección te ayuda a comprender por qué sort() es eficiente."
+sources:
+  - title: "Java 21 API — Arrays.sort()"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Multi-Dimensional Arrays"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/multidimensional.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Arrays bidimensionales
+
+Un array bidimensional es un **array de arrays**: cada elemento es otro array. Se usa para representar tablas, matrices y cuadrículas.
+
+<CodeBlock lang="java" title="Matriz 3x4 — declarar y acceder">
+{`public class MatrizBasica {
+    public static void main(String[] args) {
+        // Declarar una matriz 3 filas x 4 columnas
+        int[][] matriz = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12}
+        };
+
+        // Acceder a un elemento: [fila][columna]
+        System.out.println("matriz[1][2] = " + matriz[1][2]); // 7
+
+        // Filas y columnas
+        System.out.println("Filas: " + matriz.length);        // 3
+        System.out.println("Columnas: " + matriz[0].length);  // 4
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+matriz[1][2] = 7
+Filas: 3
+Columnas: 4
+```
+
+**Importante:** `matriz.length` da el número de filas. `matriz[0].length` da las columnas de la primera fila.
+
+## Recorrer una matriz
+
+Se usan **dos bucles for anidados**: el externo recorre filas, el interno columnas:
+
+<CodeBlock lang="java" title="Recorrer matriz completa">
+{`public class RecorrerMatriz {
+    public static void main(String[] args) {
+        int[][] notas = {
+            {85, 92, 78},  // Estudiante 1
+            {90, 88, 95},  // Estudiante 2
+            {72, 80, 85}   // Estudiante 3
+        };
+        String[] materias = {"Mate", "Español", "Ciencias"};
+
+        // Encabezado
+        System.out.printf("%-10s", "");
+        for (String m : materias) System.out.printf("%-8s", m);
+        System.out.println("Promedio");
+
+        // Datos
+        for (int i = 0; i < notas.length; i++) {
+            System.out.printf("Estud. %d  ", (i + 1));
+            double suma = 0;
+            for (int j = 0; j < notas[i].length; j++) {
+                System.out.printf("%-8d", notas[i][j]);
+                suma += notas[i][j];
+            }
+            System.out.printf("%.1f%n", suma / notas[i].length);
+        }
+    }
+}`}
+</CodeBlock>
+
+## Matrices irregulares (jagged)
+
+Cada fila puede tener **diferente longitud**:
+
+<CodeBlock lang="java" title="Matriz jagged — filas de diferente tamaño">
+{`public class MatrizJagged {
+    public static void main(String[] args) {
+        int[][] piramide = {
+            {1},
+            {1, 2},
+            {1, 2, 3},
+            {1, 2, 3, 4},
+            {1, 2, 3, 4, 5}
+        };
+
+        for (int i = 0; i < piramide.length; i++) {
+            for (int j = 0; j < piramide[i].length; j++) {
+                System.out.print(piramide[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+1
+1 2
+1 2 3
+1 2 3 4
+1 2 3 4 5
+```
+
+## Búsqueda lineal
+
+La búsqueda más simple: revisa **cada elemento** hasta encontrar el objetivo o llegar al final.
+
+<CodeBlock lang="java" title="Búsqueda lineal">
+{`public class BusquedaLineal {
+    static int buscar(int[] arr, int objetivo) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == objetivo) {
+                return i;  // encontrado
+            }
+        }
+        return -1;  // no encontrado
+    }
+
+    public static void main(String[] args) {
+        int[] datos = {34, 12, 45, 7, 89, 23, 56};
+        int idx = buscar(datos, 89);
+        System.out.println("89 en índice: " + idx);
+
+        int noExiste = buscar(datos, 100);
+        System.out.println("100 en índice: " + noExiste);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+89 en índice: 4
+100 en índice: -1
+```
+
+**Complejidad:** O(n) — en el peor caso recorre todo el array.
+
+## Ordenamiento burbuja (Bubble Sort)
+
+El algoritmo de ordenamiento más simple: compara **elementos adyacentes** y los intercambia si están en orden incorrecto, repitiendo hasta que todo esté ordenado.
+
+<CodeBlock lang="java" title="Bubble Sort — ordenar de menor a mayor">
+{`public class BubbleSort {
+    static void burbuja(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Intercambiar
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    static void imprimir(int[] arr) {
+        for (int n : arr) System.out.print(n + " ");
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int[] datos = {64, 34, 25, 12, 22, 11, 90};
+        System.out.print("Original: ");
+        imprimir(datos);
+
+        burbuja(datos);
+        System.out.print("Ordenado: ");
+        imprimir(datos);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Original: 64 34 25 12 22 11 90
+Ordenado: 11 12 22 25 34 64 90
+```
+
+**Cómo funciona:**
+```
+Pasada 1: [64 34 25 12 22 11 90] → 34 25 12 22 11 64 90  (64 "burbujea" a la derecha)
+Pasada 2: [34 25 12 22 11 64 90] → 25 12 22 11 34 64 90
+... hasta ordenar completamente.
+```
+
+**Complejidad:** O(n²) — doble bucle anidado. No es eficiente para arrays grandes, pero es fácil de entender y implementar.
+
+## Complejidad temporal — resumen
+
+| Algoritmo | Complejidad | Ejemplo: 1000 elementos |
+|-----------|-------------|------------------------|
+| Búsqueda lineal | O(n) | ~1000 pasos |
+| Búsqueda binaria | O(log n) | ~10 pasos |
+| Bubble Sort | O(n²) | ~1,000,000 pasos |
+| Arrays.sort() | O(n log n) | ~10,000 pasos |
+
+

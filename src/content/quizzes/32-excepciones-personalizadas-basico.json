@@ -1,0 +1,75 @@
+{
+  "id": "quiz-32-excepciones-personalizadas-basico",
+  "lessonSlug": "excepciones-personalizadas",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cómo se crea una excepción personalizada en Java?",
+      "options": [
+        "Usando la palabra clave `new Exception` directamente en el código",
+        "Extendiendo la clase Exception o RuntimeException",
+        "Implementando la interfaz Exception",
+        "Declarándola como una constante static final"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "new Exception solo crea una instancia, no define un tipo nuevo.",
+        "Correcto. Para crear una excepción personalizada se define una clase que herede de Exception (checked) o RuntimeException (unchecked).",
+        "Exception es una clase, no una interfaz; no se puede implementar.",
+        "Las constantes no definen nuevos tipos de excepciones."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Por qué es útil crear excepciones personalizadas?",
+      "options": [
+        "Para hacer el código más rápido en tiempo de ejecución",
+        "Para representar errores específicos del dominio de la aplicación",
+        "Para evitar usar try-catch en el código",
+        "Para reemplazar las excepciones estándar de Java"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Las excepciones personalizadas no mejoran el rendimiento del código.",
+        "Correcto. Las excepciones personalizadas permiten representar errores que son específicos del contexto de la aplicación (ej. SaldoInsuficienteException, UsuarioNoEncontradoException), haciendo el código más expresivo y mantenible.",
+        "Las excepciones personalizadas siguen requiriendo try-catch.",
+        "No reemplazan las excepciones estándar; las complementan."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué constructores debe tener típicamente una excepción personalizada?",
+      "options": [
+        "Solo un constructor vacío sin parámetros",
+        "Un constructor con mensaje de error y opcionalmente una causa (cause)",
+        "Un constructor con 10 parámetros obligatorios",
+        "Un constructor que reciba un objeto de tipo Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Un constructor vacío es útil, pero no suficiente para una excepción personalizada completa.",
+        "Correcto. Lo típico es tener un constructor que acepte un mensaje de error (String message) y opcionalmente una causa (Throwable cause) para exception chaining.",
+        "No es necesario tener 10 parámetros; los constructores comunes son message y cause.",
+        "El constructor no recibe un objeto Error; hereda de Exception."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cuándo es mejor crear una checked exception vs una unchecked exception personalizada?",
+      "options": [
+        "Siempre usar checked exceptions para todo tipo de errores",
+        "Checked si el caller puede recuperarse del error; unchecked si es un error de programación",
+        "Siempre usar unchecked exceptions porque son más fáciles de usar",
+        "Depende del tamaño del archivo donde se define la excepción"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No todo tipo de errores debe ser checked; depende del contexto.",
+        "Correcto. Se usa checked exception cuando el error es recuperable y el caller debe manejarlo (ej. archivo no encontrado). Se usa unchecked cuando es un error de programación que debería corregirse (ej. argumento nulo).",
+        "Unchecked no es siempre la mejor opción; debe evaluarse el contexto.",
+        "El tamaño del archivo no determina el tipo de excepción."
+      ]
+    }
+  ]
+}

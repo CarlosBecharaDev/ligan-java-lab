@@ -1,0 +1,236 @@
+---
+import SolutionReveal from './SolutionReveal.astro';
+
+export interface Props {
+  exercise: {
+    id: string;
+    title: string;
+    difficulty: string;
+    description: string;
+    template: string;
+    hints: string[];
+    solution: string;
+    solutionExplanation: string;
+    expectedOutput: string;
+  };
+}
+
+const { exercise } = Astro.props;
+const diffLabel = exercise.difficulty === 'facil' ? '🟢 Fácil' : exercise.difficulty === 'normal' ? '🟡 Normal' : '🔴 Difícil';
+const exId = `ex-${exercise.id}-${Math.random().toString(36).slice(2, 6)}`;
+const hintCount = exercise.hints.length;
+---
+
+<div class="exercise-card" role="region" aria-label={`Ejercicio: ${exercise.title}`} data-ex-id={exId}>
+  <div class="exercise-card__header">
+    <h3 class="exercise-card__title">{exercise.title}</h3>
+    <span class="exercise-card__difficulty" data-difficulty={exercise.difficulty}>
+      {diffLabel}
+    </span>
+  </div>
+
+  <p class="exercise-card__description">{exercise.description}</p>
+
+  <div class="exercise-card__editor">
+    <div class="exercise-card__editor-header">
+      <span class="exercise-card__editor-lang">Java</span>
+      <div class="exercise-card__editor-actions">
+        <button class="code-block__btn" data-copy-template={exId} aria-label="Copiar plantilla">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
+          Copiar
+        </button>
+        <button class="code-block__btn" data-download-template={exId} aria-label="Descargar .java">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+          Descargar
+        </button>
+      </div>
+    </div>
+    <pre class="exercise-card__code"><code data-template-source={exId}>{exercise.template}</code></pre>
+  </div>
+
+  {hintCount > 0 && (
+    <button class="exercise-card__hint-btn" data-hint-toggle={exId} aria-label="Mostrar pista">
+      💡 Mostrar pista ({hintCount} disponible{hintCount > 1 ? 's' : ''})
+    </button>
+  )}
+
+  {hintCount > 0 && (
+    <div class="exercise-card__hints" data-hints={exId} hidden>
+      <ul>
+        {exercise.hints.map((hint) => (
+          <li class="exercise-card__hint">{hint}</li>
+        ))}
+      </ul>
+    </div>
+  )}
+
+  <SolutionReveal
+    title="Ver solución"
+    solution={exercise.solution}
+    explanation={exercise.solutionExplanation}
+    expectedOutput={exercise.expectedOutput}
+  />
+</div>
+
+<style>
+  .exercise-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .exercise-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__title {
+    font-size: var(--text-lg);
+    margin: 0;
+  }
+
+  .exercise-card__difficulty {
+    font-size: var(--text-sm);
+    font-weight: 600;
+    padding: var(--space-xs) var(--space-sm);
+    border-radius: var(--radius-sm);
+  }
+
+  .exercise-card__description {
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+  }
+
+  .exercise-card__editor {
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__editor-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-raised);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .exercise-card__editor-lang {
+    font-size: var(--text-xs);
+    color: var(--muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+  }
+
+  .exercise-card__editor-actions {
+    display: flex;
+    gap: var(--space-xs);
+  }
+
+  .exercise-card__code {
+    margin: 0;
+    border: none;
+    border-radius: 0;
+    background: var(--bg);
+  }
+
+  .exercise-card__hint-btn {
+    width: 100%;
+    padding: var(--space-sm);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--muted);
+    transition: color var(--transition), border-color var(--transition);
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__hint-btn:hover {
+    color: var(--text);
+    border-color: var(--sky);
+  }
+
+  .exercise-card__hints {
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: var(--space-md);
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__hints ul {
+    list-style: disc;
+    padding-left: var(--space-lg);
+  }
+
+  .exercise-card__hint {
+    color: var(--muted);
+    margin-bottom: var(--space-xs);
+  }
+</style>
+
+<script>
+  // Los scripts de Astro son module-scoped; buscamos por data attributes
+  document.querySelectorAll('.exercise-card').forEach((exContainer) => {
+    const exId = exContainer.getAttribute('data-ex-id')!;
+    const copyBtn = exContainer.querySelector(`[data-copy-template]`);
+    const downloadBtn = exContainer.querySelector(`[data-download-template]`);
+    const hintBtn = exContainer.querySelector(`[data-hint-toggle]`);
+    const hintsEl = exContainer.querySelector(`[data-hints]`);
+    const codeEl = exContainer.querySelector(`[data-template-source]`);
+
+    copyBtn?.addEventListener('click', async () => {
+      const template = codeEl?.textContent ?? '';
+      const ok = await copiarTexto(template);
+      if (ok) {
+        const orig = copyBtn.innerHTML;
+        copyBtn.innerHTML = '✅ Copiado';
+        setTimeout(() => { copyBtn.innerHTML = orig; }, 2000);
+      }
+    });
+
+    downloadBtn?.addEventListener('click', () => {
+      const template = codeEl?.textContent ?? '';
+      const title = exContainer.querySelector('.exercise-card__title')?.textContent ?? 'Ejercicio';
+      const nombreClase = title.replace(/[^a-zA-Z]/g, '');
+      descargarJava(template, nombreClase);
+    });
+
+    hintBtn?.addEventListener('click', () => {
+      if (hintsEl) {
+        const hidden = hintsEl.hasAttribute('hidden');
+        hintsEl.toggleAttribute('hidden');
+        hintBtn.textContent = hidden ? '🙈 Ocultar pistas' : '💡 Mostrar pistas';
+      }
+    });
+  });
+
+  // Funciones auxiliares (inline para evitar imports server-side)
+  async function copiarTexto(texto: string): Promise<boolean> {
+    try {
+      await navigator.clipboard.writeText(texto);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  function descargarJava(codigo: string, nombre: string) {
+    const blob = new Blob([codigo], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = nombre.endsWith('.java') ? nombre : `${nombre}.java`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+</script>

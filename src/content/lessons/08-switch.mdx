@@ -1,0 +1,446 @@
+---
+title: "Sentencia Switch y Switch Expressions"
+slug: "switch"
+module: "02-control-de-flujo"
+level: "Inicial"
+objectives:
+  - "Escribir sentencias switch con case y break correctamente"
+  - "Entender el comportamiento de fall-through y el rol del break"
+  - "Usar default para manejar casos imprevistos"
+  - "Aplicar switch expressions con sintaxis de flecha (Java 14+)"
+  - "Usar switch con enums, Strings y tipos primitivos"
+prerequisites:
+  - "Haber completado Lección 07: if-else"
+  - "Conocer operadores de comparación y tipos primitivos"
+  - "Haber visto enums en Lección 06"
+history:
+  introducedIn: "switch desde Java 1.0; switch expression desde Java 14"
+  context: "La sentencia switch existe desde Java 1.0, heredada de C. Originalmente solo funcionaba con int y tipos convertibles a int. Java 5 añadió soporte para enums. Java 7 añadió Strings. Sin embargo, el switch clásico sufría de dos problemas: el fall-through olvido de break (un error frecuente) y code verbose para simplemente asignar un valor según un caso."
+  evolution: "Java 12 introdujo switch expressions en preview. Java 14 las estandarizó con la sintaxis de flecha (->) que elimina el fall-through y permite devolver un valor directamente. Java 17 añadió pattern matching para switch en preview, estable en Java 21, permitiendo hacer switch sobre el tipo del objeto."
+realWorldExamples:
+  - domain: "Menú de cafetería"
+    description: "Una cafetería digital usa switch para mostrar el precio según el producto seleccionado, con un case por cada bebida."
+    code: |
+      public class MenuCafeteria {
+          public static void main(String[] args) {
+              String bebida = "Capuchino";
+
+              switch (bebida) {
+                  case "Espresso":
+                      System.out.println("Espresso - $1.50");
+                      break;
+                  case "Capuchino":
+                      System.out.println("Capuchino - $2.50");
+                      break;
+                  case "Latte":
+                      System.out.println("Latte - $3.00");
+                      break;
+                  case "Mocha":
+                      System.out.println("Mocha - $3.50");
+                      break;
+                  default:
+                      System.out.println("Bebida no disponible");
+              }
+          }
+      }
+    result: |
+      Capuchino - $2.50
+  - domain: "Semáforo con switch expression"
+    description: "Un sistema de tráfico usa una switch expression (Java 14+) para devolver la acción a realizar según el color del semáforo, de forma concisa y sin fall-through."
+    code: |
+      public class Semaforo {
+          enum Color { ROJO, AMARILLO, VERDE }
+
+          public static void main(String[] args) {
+              Color color = Color.AMARILLO;
+
+              String accion = switch (color) {
+                  case ROJO -> "Detener";
+                  case AMARILLO -> "Precaución";
+                  case VERDE -> "Avanzar";
+              };
+
+              System.out.println("Color: " + color + " → " + accion);
+          }
+      }
+    result: |
+      Color: AMARILLO → Precaución
+hasInteractive: false
+comparisons:
+  - title: "switch clásico vs switch expression"
+    items:
+      - name: "switch clásico (Java 1.0)"
+        features:
+          sintaxis: "case X: ... break;"
+          fall_through: "Sí — olvidar break provoca caída"
+          retorno: "No devuelve valor, usa variables"
+          default: "Opcional pero recomendado"
+      - name: "switch expression (Java 14+)"
+        features:
+          sintaxis: "case X -> resultado;"
+          fall_through: "No — cada rama es independiente"
+          retorno: "Sí — devuelve un valor directamente"
+          default: "Obligatorio si no cubre todos los casos"
+    recommendation: "Prefiere switch expression (Java 14+) cuando necesites asignar un valor según un caso: es más seguro, conciso y no sufre fall-through. Usa el switch clásico solo cuando tengas varias instrucciones por caso o efectos secundarios."
+videos:
+  - url: ""
+    title: "Switch y Switch Expressions en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Por qué se necesita break en el switch clásico?"
+    answer: "Sin break, Java ejecuta el código del case coincidente y después continúa ejecutando los case siguientes sin verificar sus etiquetas — esto se llama fall-through. Es un error muy frecuente. La sintaxis de flecha (->) en switch expressions elimina este problema."
+  - question: "¿Puedo hacer switch sobre un String?"
+    answer: "Sí, desde Java 7. El switch compara con equals(), así que distingue mayúsculas y minúsculas. Es más legible que una cadena larga de else-if al comparar cadenas."
+  - question: "¿Qué tipos acepta un switch?"
+    answer: "Tipos primitivos byte, short, char, int (no long ni boolean), sus wrappers (Byte, Short, Character, Integer), String (Java 7+) y enums (Java 5+). Java 21 añade pattern matching para tipos arbitrarios."
+sources:
+  - title: "Java 21 Language Specification — The switch Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.11"
+    date: "2026-07-27"
+  - title: "JEP 361: Switch Expressions (Standard)"
+    url: "https://openjdk.org/jeps/361"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es switch?
+
+La sentencia `switch` evalúa una expresión y salta al `case` cuyo valor coincide. Es una alternativa más ordenada al encadenamiento de `else-if` cuando comparas **una sola variable contra múltiples valores constantes**.
+
+```java
+switch (variable) {
+    case valor1:
+        // código
+        break;
+    case valor2:
+        // código
+        break;
+    default:
+        // código si ningún case coincide
+}
+```
+
+> ⚠️ El switch solo compara **igualdad exacta**. No puede evaluar rangos (`> 10`) ni condiciones complejas — para eso usa `if-else`.
+
+## Switch clásico con break
+
+El `break` termina el switch. **Omitirlo provoca fall-through**: se ejecutan los case siguientes sin verificar sus etiquetas.
+
+<CodeBlock lang="java" title="Switch clásico — días de la semana">
+{`public class DiaSemana {
+    public static void main(String[] args) {
+        int dia = 3;
+
+        switch (dia) {
+            case 1:
+                System.out.println("Lunes");
+                break;
+            case 2:
+                System.out.println("Martes");
+                break;
+            case 3:
+                System.out.println("Miércoles");
+                break;
+            case 4:
+                System.out.println("Jueves");
+                break;
+            case 5:
+                System.out.println("Viernes");
+                break;
+            default:
+                System.out.println("Fin de semana");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Miércoles
+```
+
+## El peligro del fall-through
+
+Olvidar `break` es uno de los errores más comunes:
+
+```java
+// ❌ Sin break: se imprime todo lo que sigue
+switch (dia) {
+    case 1:
+        System.out.println("Lunes");
+    case 2:
+        System.out.println("Martes");
+    case 3:
+        System.out.println("Miércoles");
+}
+// Si dia == 1, imprime "Lunes", "Martes" y "Miércoles"
+```
+
+<CodeBlock lang="java" title="Agrupar cases (uso intencional del fall-through)">
+{`public class TipoDia {
+    public static void main(String[] args) {
+        int dia = 6;
+
+        switch (dia) {
+            case 1: case 2: case 3:
+            case 4: case 5:
+                System.out.println("Día laboral");
+                break;
+            case 6: case 7:
+                System.out.println("Fin de semana");
+                break;
+            default:
+                System.out.println("Día inválido");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Fin de semana
+```
+
+## El bloque default
+
+`default` se ejecuta cuando ningún `case` coincide. Es **opcional pero muy recomendado** para manejar valores inesperados:
+
+```java
+switch (opcion) {
+    case 1: /* ... */ break;
+    case 2: /* ... */ break;
+    default:
+        System.out.println("Opción inválida");
+}
+```
+
+## Switch con String (Java 7+)
+
+Desde Java 7, switch acepta `String`. La comparación distingue mayúsculas y minúsculas:
+
+<CodeBlock lang="java" title="Switch sobre String">
+{`public class ComandoConsola {
+    public static void main(String[] args) {
+        String comando = "guardar";
+
+        switch (comando) {
+            case "abrir":
+                System.out.println("Abriendo archivo...");
+                break;
+            case "guardar":
+                System.out.println("Guardando...");
+                break;
+            case "cerrar":
+                System.out.println("Cerrando...");
+                break;
+            default:
+                System.out.println("Comando desconocido: " + comando);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Guardando...
+```
+
+## Switch con enums (Java 5+)
+
+Los enums funcionan naturalmente con switch. No necesitas cualificar el nombre del enum dentro de los cases:
+
+<CodeBlock lang="java" title="Switch sobre enum">
+{`public class NivelLog {
+    enum Nivel { DEBUG, INFO, WARN, ERROR }
+
+    public static void main(String[] args) {
+        Nivel nivel = Nivel.WARN;
+
+        switch (nivel) {
+            case DEBUG:
+                System.out.println("[DEBUG] Mensaje detallado");
+                break;
+            case INFO:
+                System.out.println("[INFO] Operación normal");
+                break;
+            case WARN:
+                System.out.println("[WARN] Posible problema");
+                break;
+            case ERROR:
+                System.out.println("[ERROR] Fallo detectado");
+                break;
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+[WARN] Posible problema
+```
+
+## Switch Expressions (Java 14+)
+
+La **switch expression** devuelve un valor y usa la sintaxis de flecha `->`. **No hay fall-through** — cada rama es independiente:
+
+<CodeBlock lang="java" title="Switch expression con flecha">
+{`public class TamañoTexto {
+    public static void main(String[] args) {
+        int codigo = 2;
+
+        String tamaño = switch (codigo) {
+            case 1 -> "Pequeño";
+            case 2 -> "Mediano";
+            case 3 -> "Grande";
+            default -> "Desconocido";
+        };
+
+        System.out.println("Tamaño seleccionado: " + tamaño);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Tamaño seleccionado: Mediano
+```
+
+### Múltiples valores con coma
+
+En switch expressions puedes agrupar valores con coma:
+
+```java
+String tipo = switch (número) {
+    case 1, 2, 3 -> "Bajo";
+    case 4, 5, 6 -> "Medio";
+    case 7, 8, 9 -> "Alto";
+    default -> "Inválido";
+};
+```
+
+### Bloques con yield
+
+Si una rama necesita varias instrucciones, usa un bloque y `yield` para devolver el valor:
+
+<CodeBlock lang="java" title="Switch expression con yield">
+{`public class CalculadoraBasica {
+    public static void main(String[] args) {
+        String operacion = "sumar";
+        int a = 10, b = 5;
+
+        int resultado = switch (operacion) {
+            case "sumar" -> a + b;
+            case "restar" -> a - b;
+            case "multiplicar" -> a * b;
+            case "dividir" -> {
+                if (b == 0) {
+                    System.out.println("Error: división por cero");
+                    yield 0;
+                }
+                yield a / b;
+            }
+            default -> 0;
+        };
+
+        System.out.println("Resultado: " + resultado);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Resultado: 15
+```
+
+## ¿Cuándo switch y cuándo if-else?
+
+| Situación | Recomendación |
+|-----------|---------------|
+| Comparar una variable contra muchos valores constantes | ✅ **switch** |
+| Evaluar rangos (`x > 10 && x < 20`) | ✅ **if-else** |
+| Condiciones complejas con `&&`, `\|\|` | ✅ **if-else** |
+| Asignar un valor según un caso | ✅ **switch expression** |
+| Comparar Strings con varios valores | ✅ **switch** (más legible que else-if) |
+
+## Errores frecuentes
+
+### Error 1: Olvidar el break (fall-through)
+```java
+// ❌ Sin break, cae al siguiente case
+switch (x) {
+    case 1:
+        System.out.println("uno");
+    case 2:
+        System.out.println("dos");  // se imprime si x == 1
+}
+
+// ✅ Con break o usando sintaxis de flecha
+switch (x) {
+    case 1 -> System.out.println("uno");
+    case 2 -> System.out.println("dos");
+}
+```
+
+### Error 2: Comparar rangos (no soportado)
+```java
+// ❌ No compila — switch no evalúa expresiones booleanas
+switch (edad) {
+    case edad > 18:  // error
+}
+
+// ✅ Usa if-else para rangos
+if (edad > 18) { /* ... */ }
+```
+
+### Error 3: Switch expression sin default y sin cubrir todos los casos
+```java
+// ❌ Error: si no cubres todos los valores de un enum necesitas default
+String desc = switch (color) {
+    case ROJO -> "rojo";
+    case VERDE -> "verde";
+    // falta AMARILLO y no hay default → error de compilación
+};
+
+// ✅ Cubre todos o añade default
+String desc = switch (color) {
+    case ROJO -> "rojo";
+    case VERDE -> "verde";
+    case AMARILLO -> "amarillo";
+};
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

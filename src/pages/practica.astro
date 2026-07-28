@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/ContentLayout.astro';
+
+const exercises = await getCollection('exercises');
+const lessons = await getCollection('lessons');
+
+// Flatten exercises (they come as arrays of exercise objects)
+const allExercises = exercises.flatMap((ex) => ex.data);
+
+// Group by lessonSlug with lesson info
+const exerciseMap = new Map<string, { title: string; slug: string; exercises: typeof allExercises }>();
+for (const ex of allExercises) {
+  const slug = ex.lessonSlug;
+  if (!exerciseMap.has(slug)) {
+    const lesson = lessons.find((l) => l.data.slug === slug);
+    exerciseMap.set(slug, {
+      title: lesson?.data.title ?? slug,
+      slug,
+      exercises: [],
+    });
+  }
+  exerciseMap.get(slug)!.exercises.push(ex);
+}
+
+// Sort by lesson slug order (01, 02, etc.)
+const sorted = Array.from(exerciseMap.entries()).sort(([a], [b]) => a.localeCompare(b));
+---
+
+<ContentLayout title="Code Lab" description="Editor de Java interactivo con simulación de consola">
+  <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui)">
+    <h1 data-i18n="practice.title" style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md);color:var(--win-text)">Code Lab</h1>
+    <p data-i18n="practice.description" style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:18px">
+      Practica con ejercicios de todas las lecciones. Escribe código Java, descárgalo y verifica tu comprensión.
+    </p>
+
+    {sorted.length > 0 ? (
+      <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+        {sorted.map(([, entry]) => {
+          const counts = { facil: 0, normal: 0, dificil: 0 };
+          entry.exercises.forEach((e) => { counts[e.difficulty as keyof typeof counts]++; });
+          return (
+            <a href={`/tema/${entry.slug}`} style="display:flex;align-items:center;gap:var(--space-sm);padding:var(--space-md);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5);text-decoration:none;transition:transform 0.1s;color:var(--win-text)" onmouseover="this.style.transform='translate(-2px, -2px)';this.style.boxShadow='4px 4px 0 rgba(0,0,0,0.5)'" onmouseout="this.style.transform='none';this.style.boxShadow='2px 2px 0 rgba(0,0,0,0.5)'">
+              <div style="flex:1">
+                <strong style="font-family:var(--font-pixel);font-size:12px;color:var(--win-text)"><span data-i18n="practice.exercises-of">Ejercicios de</span> {entry.title}</strong>
+                <p style="color:var(--win-muted);margin:0;font-size:16px;margin-top:8px">
+                  {'🟢'.repeat(counts.facil)} Fácil · {'🟡'.repeat(counts.normal)} Normal · {'🔴'.repeat(counts.dificil)} Difícil
+                </p>
+              </div>
+              <span style="color:var(--win-link);font-family:var(--font-pixel);font-size:10px">{entry.exercises.length} <span data-i18n="practice.exercises-link">ejercicios</span> →</span>
+            </a>
+          );
+        })}
+      </div>
+    ) : (
+      <div style="text-align:center;padding:var(--space-2xl);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <p data-i18n="practice.empty" style="color:var(--win-muted);font-size:18px">Próximamente habrá ejercicios disponibles.</p>
+      </div>
+    )}
+  </div>
+</ContentLayout>

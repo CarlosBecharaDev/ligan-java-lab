@@ -1,0 +1,415 @@
+---
+title: "Entrada de Datos con Scanner"
+slug: "entrada-datos-scanner"
+module: "01-fundamentos"
+level: "Inicial"
+objectives:
+  - "Importar y crear instancias de la clase Scanner"
+  - "Leer diferentes tipos de datos desde la consola"
+  - "Manejar la entrada de texto con nextLine() y la trampa del buffer"
+  - "Validar entrada del usuario con manejo de errores básicos"
+  - "Crear programas interactivos que respondan a datos del usuario"
+prerequisites:
+  - "Haber completado Lección 01: Variables y Tipos de Datos"
+  - "Haber completado Lección 02: Operadores"
+history:
+  introducedIn: "Java 1.5 (JDK 5.0)"
+  context: "Antes de Java 1.5, la entrada de datos se manejaba con BufferedReader y InputStreamReader, una combinación verbosa y propensa a errores. La introducción de Scanner en JDK 5 (2004) simplificó enormemente la lectura de datos desde diversas fuentes: consola, archivos y strings."
+  evolution: "Java 7 introdujo Console como alternativa a Scanner para consola. Java 8 agregó métodos como Scanner.findAll() con expresiones regulares. Aunque Console es más seguro para contraseñas, Scanner sigue siendo la forma más común de entrada en programas educativos."
+realWorldExamples:
+  - domain: "Formulario de registro"
+    description: "Un sistema de registro pide al usuario nombre, email y edad. Scanner lee cada dato y el programa valida que sean correctos antes de procesarlos."
+    code: |
+      import java.util.Scanner;
+
+      public class RegistroUsuario {
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+
+              System.out.print("Nombre: ");
+              String nombre = sc.nextLine();
+
+              System.out.print("Email: ");
+              String email = sc.nextLine();
+
+              System.out.print("Edad: ");
+              int edad = sc.nextInt();
+
+              System.out.println("\n--- Registro completado ---");
+              System.out.println("Nombre: " + nombre);
+              System.out.println("Email: " + email);
+              System.out.println("Edad: " + edad + " años");
+
+              sc.close();
+          }
+      }
+    result: |
+      Nombre: Carlos
+      Email: carlos@ejemplo.com
+      Edad: 25
+
+      --- Registro completado ---
+      Nombre: Carlos
+      Email: carlos@ejemplo.com
+      Edad: 25 años
+  - domain: "Calculadora interactiva"
+    description: "Una calculadora que pide dos números y una operación al usuario, calcula el resultado y lo muestra formateado."
+    code: |
+      import java.util.Scanner;
+
+      public class Calculadora {
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+
+              System.out.print("Primer número: ");
+              double a = sc.nextDouble();
+
+              System.out.print("Segundo número: ");
+              double b = sc.nextDouble();
+
+              System.out.println("Suma: " + (a + b));
+              System.out.println("Resta: " + (a - b));
+              System.out.println("Multiplicación: " + (a * b));
+
+              if (b != 0) {
+                  System.out.printf("División: %.2f%n", a / b);
+              } else {
+                  System.out.println("No se puede dividir por cero");
+              }
+
+              sc.close();
+          }
+      }
+    result: |
+      Primer número: 10
+      Segundo número: 3
+      Suma: 13.0
+      Resta: 7.0
+      Multiplicación: 30.0
+      División: 3.33
+hasInteractive: false
+comparisons:
+  - title: "Scanner vs BufferedReader"
+    items:
+      - name: "Scanner"
+        features:
+          facilidad: "Métodos directos para cada tipo"
+          rendimiento: "Lento (parsed internamente)"
+          formato: "Parsea automáticamente enteros, doubles, etc."
+          uso: "Programas educativos, entrada simple"
+      - name: "BufferedReader"
+        features:
+          facilidad: "Solo lee strings, requiere parsing manual"
+          rendimiento: "Rápido (buffer interno grande)"
+          formato: "Lee todo como String, conversión manual"
+          uso: "Producción, alta performance"
+    recommendation: "Para aprendizaje y prototipos, usa Scanner. Para producción con alto volumen de entrada, considera BufferedReader."
+videos:
+  - url: ""
+    title: "Entrada de datos con Scanner en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Por qué debo cerrar Scanner con `sc.close()`?"
+    answer: "Cerrar Scanner libera el recurso del System.in subyacente. En programas simples no causa problemas si no lo haces, pero es buena práctica para evitar fugas de recursos. En producción, usa try-with-resources para garantizar el cierre automático."
+  - question: "¿Qué es la trampa del buffer en Scanner?"
+    answer: "Cuando usas nextInt() o nextDouble(), Scanner lee el número pero deja el salto de línea (Enter) en el buffer. Si luego llamas nextLine(), consume ese salto pendiente y parece que 'salta' la entrada. Solución: añade un nextLine() vacío después de cada nextInt/nextDouble para limpiar el buffer."
+  - question: "¿Puedo leer datos de un archivo con Scanner?"
+    answer: "Sí. En vez de System.in, pasa un objeto File al constructor: `new Scanner(new File(\"datos.txt\"))`. Scanner puede leer de consola, archivos, strings e incluso URLs, lo que lo hace muy versátil."
+sources:
+  - title: "Java 21 API — java.util.Scanner"
+    url: "https://docs.oracle.com/javase/8/docs/api/java/util/Scanner.html"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Scanner"
+    url: "https://docs.oracle.com/javase/tutorial/essential/io/scanning.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es Scanner?
+
+`Scanner` es una clase del paquete `java.util` que permite leer datos desde diversas fuentes: la consola (System.in), archivos, strings, etc. Es la forma más común de obtener entrada del usuario en programas Java.
+
+Para usar Scanner, primero debes importarlo:
+
+```java
+import java.util.Scanner;
+```
+
+La línea de import debe ir **antes** de la definición de cualquier clase.
+
+## Crear un Scanner
+
+Para leer datos de la consola:
+
+```java
+Scanner sc = new Scanner(System.in);
+```
+
+- `Scanner` es el tipo de la variable
+- `new Scanner(System.in)` crea un nuevo objeto que lee de la entrada estándar (teclado)
+
+Siempre indica al usuario qué esperas **antes** de llamar a un método de lectura:
+
+```java
+System.out.print("¿Cuál es tu nombre? ");
+String nombre = sc.nextLine();  // se detiene aquí hasta que el usuario presione Enter
+```
+
+## Métodos principales de lectura
+
+| Método | Lee | Tipo de retorno |
+|--------|-----|-----------------|
+| `nextLine()` | Una línea completa (hasta Enter) | `String` |
+| `next()` | Una palabra (hasta espacio) | `String` |
+| `nextInt()` | Un entero | `int` |
+| `nextDouble()` | Un decimal | `double` |
+| `nextBoolean()` | true o false | `boolean` |
+
+<CodeBlock lang="java" title="Lectura de diferentes tipos">
+{`import java.util.Scanner;
+
+public class TiposDeEntrada {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Tu nombre: ");
+        String nombre = sc.nextLine();
+
+        System.out.print("Tu edad: ");
+        int edad = sc.nextInt();
+
+        System.out.print("Tu altura (m): ");
+        double altura = sc.nextDouble();
+
+        System.out.print("¿Estás estudiando? (true/false): ");
+        boolean estudiando = sc.nextBoolean();
+
+        System.out.println("\\n--- Tu perfil ---");
+        System.out.println("Nombre: " + nombre);
+        System.out.println("Edad: " + edad);
+        System.out.println("Altura: " + altura + "m");
+        System.out.println("Estudiando: " + estudiando);
+
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+**Salida de ejemplo:**
+```
+Tu nombre: Ana López
+Tu edad: 22
+Tu altura (m): 1.65
+¿Estás estudiando? (true/false): true
+
+--- Tu perfil ---
+Nombre: Ana López
+Edad: 22
+Altura: 1.65m
+Estudiando: true
+```
+
+## La trampa del buffer: el error más común
+
+Cuando usas `nextInt()` o `nextDouble()`, Scanner lee el número pero **deja el salto de línea** (Enter) en el buffer. Si luego llamas `nextLine()`, consume ese salto pendiente y parece que "salta" la entrada:
+
+<CodeBlock lang="java" title="El problema del buffer">
+{`import java.util.Scanner;
+
+public class TrampaBuffer {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Edad: ");
+        int edad = sc.nextInt();
+
+        // ❌ PROBLEMA: nextLine() consume el Enter pendiente
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();  // ¡Se salta! No espera entrada
+
+        System.out.println("Edad: " + edad);
+        System.out.println("Nombre: '" + nombre + "'");  // nombre está vacío
+
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+**La solución:** Añade un `nextLine()` vacío después de cada `nextInt()` o `nextDouble()` para limpiar el buffer:
+
+<CodeBlock lang="java" title="Solución al problema del buffer">
+{`import java.util.Scanner;
+
+public class SolucionBuffer {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Edad: ");
+        int edad = sc.nextInt();
+        sc.nextLine();  // Limpia el buffer — ¡clave!
+
+        System.out.print("Nombre: ");
+        String nombre = sc.nextLine();  // Ahora funciona correctamente
+
+        System.out.println("Edad: " + edad);
+        System.out.println("Nombre: " + nombre);
+
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+**Salida de ejemplo:**
+```
+Edad: 25
+Nombre: Carlos Bechara
+Edad: 25
+Nombre: Carlos Bechara
+```
+
+## Lectura de líneas completas vs. palabras
+
+<CodeBlock lang="java" title="nextLine vs next">
+{`import java.util.Scanner;
+
+public class LineaVsPalabra {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // next() lee solo hasta el primer espacio
+        System.out.print("Escribe algo (una palabra): ");
+        String palabra = sc.next();
+        System.out.println("Leído con next(): '" + palabra + "'");
+
+        sc.nextLine();  // limpiar buffer
+
+        // nextLine() lee toda la línea
+        System.out.print("Escribe algo (una línea completa): ");
+        String linea = sc.nextLine();
+        System.out.println("Leído con nextLine(): '" + linea + "'");
+
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+**Salida de ejemplo:**
+```
+Escribe algo (una palabra): Hola Mundo
+Leído con next(): 'Hola'
+Escribe algo (una línea completa): Hola Mundo
+Leído con nextLine(): 'Hola Mundo'
+```
+
+## Manejo de errores con hasNext
+
+Para evitar que tu programa crashee si el usuario ingresa un tipo incorrecto, usa `hasNextInt()`, `hasNextDouble()`, etc.:
+
+<CodeBlock lang="java" title="Validación con hasNext">
+{`import java.util.Scanner;
+
+public class EntradaSegura {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Leer entero de forma segura
+        int numero = 0;
+        boolean valido = false;
+
+        while (!valido) {
+            System.out.print("Ingresa un número entero: ");
+            if (sc.hasNextInt()) {
+                numero = sc.nextInt();
+                valido = true;
+            } else {
+                System.out.println("❌ Eso no es un número entero. Intenta de nuevo.");
+                sc.next();  // descarta la entrada incorrecta
+            }
+        }
+
+        System.out.println("✅ Ingresaste: " + numero);
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+**Salida de ejemplo:**
+```
+Ingresa un número entero: abc
+❌ Eso no es un número entero. Intenta de nuevo.
+Ingresa un número entero: 42
+✅ Ingresaste: 42
+```
+
+## Errores frecuentes
+
+### Error 1: Olvidar importar Scanner
+```java
+// ❌ Error: Scanner cannot be resolved to a type
+Scanner sc = new Scanner(System.in);
+
+// ✅ Agregar el import al inicio
+import java.util.Scanner;
+```
+
+### Error 2: No limpiar el buffer después de nextInt
+```java
+// ❌ El Enter pendiente se consume con nextLine()
+int edad = sc.nextInt();
+String nombre = sc.nextLine();  // nombre queda vacío
+
+// ✅ Limpiar el buffer
+int edad = sc.nextInt();
+sc.nextLine();  // consume el Enter pendiente
+String nombre = sc.nextLine();
+```
+
+### Error 3: No cerrar Scanner
+```java
+// ❌ Fuga de recursos
+Scanner sc = new Scanner(System.in);
+// ... usa sc
+// olvidaste sc.close()
+
+// ✅ Siempre cerrar
+Scanner sc = new Scanner(System.in);
+// ... usa sc
+sc.close();
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

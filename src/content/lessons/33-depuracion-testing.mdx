@@ -1,0 +1,280 @@
+---
+title: "Técnicas de Depuración y Testing"
+slug: "depuracion-testing"
+module: "06-errores"
+level: "Intermedio"
+objectives:
+  - "Usar aserciones y System.out.println para depuración básica"
+  - "Leer y analizar eficientemente los stack traces de errores"
+  - "Escribir pruebas unitarias simples con JUnit"
+  - "Usar breakpoints y el depurador paso a paso"
+  - "Aplicar la técnica de divide y vencerás para encontrar bugs"
+prerequisites:
+  - "Haber completado Lección 29: Excepciones Checked y Unchecked"
+  - "Conocer bucles, arrays y métodos"
+history:
+  introducedIn: "Assertions desde Java 1.4, JUnit popular desde ~2002"
+  context: "La depuración (debugging) es una habilidad fundamental del programador. Antes de los depuradores modernos, los programadores usaban prints y la técnica del 'comentario de código'. JUnit revolucionó las pruebas unitarias con su framework simple y elegante."
+  evolution: "Java 1.0: System.out.println. Java 1.4: assert keyword. Años 2000: JUnit 3 y 4. Java 8: JUnit 5 (Jupiter). Hoy hay herramientas avanzadas como IntelliJ Debugger, VisualVM, y frameworks de testing modernos como JUnit 5, Mockito, y AssertJ."
+realWorldExamples:
+  - domain: "E-commerce — depurar cálculo de impuestos"
+    description: "Un sistema de e-commerce calcula el impuesto de productos. Algo sale mal con el porcentaje. Usamos aserciones y prints para encontrar el error."
+    code: |
+      public class CalcularImpuesto {
+          static double calcImpuesto(double precio, String pais) {
+              double tasa = switch (pais.toLowerCase()) {
+                  case "colombia" -> 0.19;
+                  case "mexico" -> 0.16;
+                  case "argentina" -> 0.21;
+                  default -> 0.0;
+              };
+              double impuesto = precio * tasa;
+              // Assertion para depuración en desarrollo
+              assert impuesto >= 0 : "Impuesto negativo: " + impuesto;
+              return impuesto;
+          }
+
+          public static void main(String[] args) {
+              double[] precios = {100, 200, 150};
+              String pais = "colombia";
+
+              for (double p : precios) {
+                  double imp = calcImpuesto(p, pais);
+                  System.out.printf("Precio $%.0f → Impuesto $%.2f%n", p, imp);
+              }
+          }
+      }
+    result: |
+      Precio $100 → Impuesto $19.00
+      Precio $200 → Impuesto $38.00
+      Precio $150 → Impuesto $28.50
+
+  - domain: "Salud — validar promedio de temperatura"
+    description: "Un sistema registra temperaturas y debe calcular el promedio. El resultado no coincide con lo esperado. Escribimos una prueba simple para verificar."
+    code: |
+      public class AnalisisTemperatura {
+          static double promedio(double[] temperaturas) {
+              if (temperaturas == null || temperaturas.length == 0) {
+                  throw new IllegalArgumentException("Array vacío o null");
+              }
+              double suma = 0;
+              for (double t : temperaturas) {
+                  suma += t;
+              }
+              return suma / temperaturas.length;  // potencial bug: división por entero
+          }
+
+          public static void main(String[] args) {
+              double[] temps = {36.5, 37.0, 38.2, 37.5, 36.8};
+              double prom = promedio(temps);
+              System.out.printf("Promedio: %.2f°C%n", prom);
+
+              // Prueba simple inline
+              double esperado = 37.2;
+              if (Math.abs(prom - esperado) > 0.01) {
+                  System.out.println("ERROR: Promedio esperado " + esperado +
+                      ", obtenido " + prom);
+              } else {
+                  System.out.println("OK: Promedio correcto");
+              }
+          }
+      }
+    result: |
+      Promedio: 37.20°C
+      OK: Promedio correcto
+
+hasInteractive: false
+comparisons:
+  - title: "Depuración con prints vs depurador"
+    items:
+      - name: "Print Depuration (println)"
+        features:
+          simplicidad: "Fácil — solo agregas una línea de código"
+          acceso: "Funciona en cualquier entorno"
+          info: "Solo muestra lo que decides imprimir"
+          velocidad: "Requiere recompilar y redeploy"
+      - name: "Depurador (breakpoints, step-through)"
+        features:
+          simplicidad: "Requiere interfaz gráfica o comandos"
+          acceso: "Necesitas IDE que soporte depuración"
+          info: "Muestra TODO el estado en cada punto"
+          velocidad: "Sin recompilar, puedes cambiar valores en vivo"
+    recommendation: "Usa println para depuración rápida y simple. Usa el depurador del IDE para problemas complejos donde necesitas ver el estado completo en cada paso. Las aserciones (assert) son ideales para documentar precondiciones en desarrollo."
+videos:
+  - url: ""
+    title: "Técnicas de depuración en Java"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Qué diferencia hay entre assert y una excepción?"
+    answer: "assert (Java 1.4) es para verificar condiciones en desarrollo y testing. Se desactivan en producción por defecto. Las excepciones son para manejo de errores obligatorio tanto en desarrollo como en producción. Usa assert para precondiciones de métodos en tu código interno."
+  - question: "¿Qué son los tests unitarios y por qué son importantes?"
+    answer: "Los tests unitarios prueban la unidad de código más pequeña (un método) de forma aislada. Permiten detectar bugs temprano, documentar el comportamiento esperado, y refactorizar con confianza. JUnit es el framework más popular."
+  - question: "¿Cómo depuro un código que no tiene IDE?"
+    answer: "Usa System.out.println en puntos estratégicos. También puedes usar java.util.logging o System.err.println. La técnica del 'comentario de código' (eliminar partes hasta encontrar el bug) también funciona sin IDE."
+sources:
+  - title: "Java 21 — Programmer's Guide: Debugging"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jdb.html"
+    date: "2026-07-27"
+  - title: "JUnit 5 User Guide"
+    url: "https://junit.org/junit5/docs/current/user-guide/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Depuración con println
+
+La técnica más básica y universal: imprimir valores en puntos estratégicos:
+
+<CodeBlock lang="java" title="Depuración con println">
+{`public class DebugPrintln {
+    static int factorial(int n) {
+        System.out.println("factorial(" + n + ")");
+        if (n == 0) return 1;
+        int resultado = n * factorial(n - 1);
+        System.out.println("  → factorial(" + n + ") = " + resultado);
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Resultado: " + factorial(4));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+factorial(4)
+factorial(3)
+factorial(2)
+factorial(1)
+factorial(0)
+  → factorial(1) = 1
+  → factorial(2) = 2
+  → factorial(3) = 6
+  → factorial(4) = 24
+Resultado: 24
+```
+
+## Aserciones (assert)
+
+`assert` verifica condiciones en tiempo de desarrollo. Se activan con la flag `-ea`:
+
+```bash
+java -ea MiPrograma
+```
+
+<CodeBlock lang="java" title="Aserciones para depuración">
+{`public class Aserciones {
+    static double raizCuadrada(double n) {
+        assert n >= 0 : "No se puede raíz de número negativo: " + n;
+        return Math.sqrt(n);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(raizCuadrada(25));  // 5.0
+        System.out.println(raizCuadrada(-1));  // lanza AssertionError con -ea
+    }
+}`}
+</CodeBlock>
+
+## Técnica de "divide y vencerás"
+
+Para encontrar un bug, ve eliminando partes del código hasta aislar el error:
+
+1. **Comenta la mitad del código** y prueba si el error persiste
+2. Si persiste → el bug está en la mitad no comentada
+3. Si desaparece → el bug está en la comentada
+4. **Repite** hasta aislar el bug
+
+## Escribir pruebas unitarias con JUnit 5
+
+```java
+// Calculadora.java
+public class Calculadora {
+    static int sumar(int a, int b) { return a + b; }
+    static int restar(int a, int b) { return a - b; }
+    static int multiplicar(int a, int b) { return a * b; }
+    static int dividir(int a, int b) { return a / b; }
+}
+```
+
+```java
+// CalculadoraTest.java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CalculadoraTest {
+    @Test
+    void testSumar() {
+        assertEquals(5, Calculadora.sumar(2, 3));
+        assertEquals(-1, Calculadora.sumar(-2, 1));
+        assertEquals(0, Calculadora.sumar(0, 0));
+    }
+
+    @Test
+    void testDividir() {
+        assertEquals(2, Calculadora.dividir(10, 5));
+        assertThrows(ArithmeticException.class,
+            () -> Calculadora.dividir(5, 0));
+    }
+}
+```
+
+## Leer un stack trace como un experto
+
+```
+Exception in thread "main" java.lang.NullPointerException
+    └──────────────────────────────────────↕──┘
+     Tipo de excepción                      Mensaje
+
+    at com.app.Paciente.nombre.toUpperCase(Paciente.java:42)
+    └───────────────────┘
+     Qué se intentó hacer (nombre.toUpperCase en un nombre null)
+
+    at com.app.Main.registrar(Main.java:15)
+    at com.app.Main.main(Main.java:5)
+    └── Pila de quién llamó a quién
+```
+
+**Pasos:**
+1. Identifica el **tipo** de excepción (`NullPointerException`)
+2. Lee el **mensaje** (null)
+3. Ve a la **primera línea 'at'** que es TU código (`Paciente.java:42`)
+4. Abre el archivo en la línea indicada y busca qué es `null`
+
+## La técnica del "rubber duck"
+
+Explica tu código línea por línea a un objeto inanimado (un pato de goma). Al verbalizar lo que hace cada línea, a menudo encuentras el error tú mismo sin que el pato diga nada.
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

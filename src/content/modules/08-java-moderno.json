@@ -1,0 +1,11 @@
+{
+  "id": "mod-08",
+  "slug": "08-java-moderno",
+  "number": 8,
+  "title": "Java Moderno",
+  "description": "Las características modernas que hacen a Java elegante y expresivo (Java 8-21).",
+  "icon": "Zap",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["lambdas", "streams", "optional", "records", "pattern-matching"]
+}

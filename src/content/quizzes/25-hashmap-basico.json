@@ -1,0 +1,92 @@
+{
+  "id": "quiz-25-hashmap-basico",
+  "lessonSlug": "hashmap",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es un HashMap?",
+      "options": [
+        "Coleccion de pares clave-valor",
+        "Una lista ordenada de elementos",
+        "Un tipo de arreglo asociativo",
+        "Una estructura LIFO"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. HashMap es una coleccion que almacena pares clave-valor, permitiendo busquedas rapidas por clave.",
+        "No. HashMap no garantiza ningun orden de sus elementos.",
+        "No. Aunque almacena asociaciones, no es un arreglo. Es una implementacion de la interfaz Map.",
+        "No. HashMap no es una estructura LIFO (Last In First Out)."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se inserta un par clave-valor en un HashMap?",
+      "options": [
+        "put(clave, valor)",
+        "add(clave, valor)",
+        "insert(clave, valor)",
+        "set(clave, valor)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo put(clave, valor) inserta un nuevo par clave-valor en el HashMap.",
+        "No. El metodo add() es para colecciones como ArrayList.",
+        "No. No existe el metodo insert() en HashMap.",
+        "No. El metodo set() es para List, no para Map."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se busca un valor por clave en un HashMap?",
+      "options": [
+        "get(clave)",
+        "find(clave)",
+        "search(clave)",
+        "lookup(clave)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo get(clave) retorna el valor asociado a la clave, o null si no existe.",
+        "No. No existe el metodo find() en HashMap.",
+        "No. No existe el metodo search() en HashMap.",
+        "No. No existe el metodo lookup() en HashMap."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué pasa si se usa put() con una clave que ya existe?",
+      "options": [
+        "Sobrescribe el valor anterior",
+        "Lanza una excepcion",
+        "No hace nada",
+        "Crea una segunda entrada con la misma clave"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Si la clave ya existe, put() sobrescribe el valor anterior con el nuevo valor.",
+        "No. No lanza excepcion, simplemente actualiza el valor.",
+        "No. Si modifica el valor existente.",
+        "No. HashMap no permite claves duplicadas."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo se verifica si existe una clave en un HashMap?",
+      "options": [
+        "containsKey()",
+        "hasKey()",
+        "existsKey()",
+        "keyExists()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El metodo containsKey() retorna true si la clave existe en el HashMap.",
+        "No. No existe el metodo hasKey() en HashMap.",
+        "No. No existe el metodo existsKey() en HashMap.",
+        "No. No existe el metodo keyExists() en HashMap."
+      ]
+    }
+  ]
+}

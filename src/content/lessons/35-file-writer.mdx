@@ -1,0 +1,275 @@
+---
+title: "Escritura de Archivos — FileWriter y PrintWriter"
+slug: "file-writer"
+module: "07-archivos"
+level: "Intermedio"
+objectives:
+  - "Escribir texto en archivos con FileWriter y PrintWriter"
+  - "Usar FileWriter en modo append para agregar al final"
+  - "Aplicar try-with-resources para cierre automático"
+  - "Usar Files.writeString() y Files.write() para escritura rápida"
+  - "Crear directorios y archivos con Files.createDirectory y Files.createFile"
+prerequisites:
+  - "Haber completado Lección 34: File I/O básico"
+  - "Entender excepciones IOException"
+history:
+  introducedIn: "java.io.FileWriter desde Java 1.0, Files.writeString desde Java 11"
+  context: "FileWriter es la clase más básica para escribir texto en archivos en Java, disponible desde Java 1.0. PrintWriter ofrece métodos como println y printf que facilitan el formateo. Java 11 agregó Files.writeString() para escritura simple."
+  evolution: "Java 1.0: FileWriter, PrintWriter. Java 7: Files.newBufferedWriter. Java 8: Files.write() con List<String>. Java 11: Files.writeString() para escribir Strings directamente. La tendencia es hacia APIs más simples en java.nio.file."
+realWorldExamples:
+  - domain: "E-commerce — generar reporte de ventas"
+    description: "Un sistema genera un reporte CSV con las ventas del día, usando PrintWriter para formatear columnas alineadas."
+    code: |
+      import java.io.*;
+
+      public class ReporteVentas {
+          static void generarReporte(String ruta) {
+              try (PrintWriter pw = new PrintWriter(new FileWriter(ruta))) {
+                  pw.println("Producto,Cantidad,Precio,Total");
+                  pw.printf("Laptop,2,2500.00,%.2f%n", 2 * 2500.00);
+                  pw.printf("Monitor,5,320.00,%.2f%n", 5 * 320.00);
+                  pw.printf("Teclado,10,45.00,%.2f%n", 10 * 45.00);
+                  pw.println("---");
+                  pw.printf("Total,,,%.2f%n",
+                      2*2500.00 + 5*320.00 + 10*45.00);
+                  System.out.println("Reporte generado: " + ruta);
+              } catch (IOException e) {
+                  System.out.println("Error al generar reporte: " + e.getMessage());
+              }
+          }
+
+          public static void main(String[] args) {
+              generarReporte("reporte_ventas.csv");
+          }
+      }
+    result: |
+      Reporte generado: reporte_ventas.csv
+
+  - domain: "Salud — bitácora de pacientes"
+    description: "Un hospital agrega entradas a una bitácora de pacientes. Cada entrada tiene timestamp y se agrega al final del archivo (append)."
+    code: |
+      import java.io.*;
+
+      public class Bitacora {
+          static void registrar(String paciente, String evento) {
+              String ruta = "bitacora.txt";
+              try (FileWriter fw = new FileWriter(ruta, true);
+                   PrintWriter pw = new PrintWriter(fw)) {
+                  String entrada = String.format(
+                      "[%tF %tT] %s: %s",
+                      System.currentTimeMillis(),
+                      System.currentTimeMillis(),
+                      paciente, evento);
+                  pw.println(entrada);
+                  System.out.println("Registrado: " + entrada);
+              } catch (IOException e) {
+                  System.out.println("Error al registrar: " + e.getMessage());
+              }
+          }
+
+          public static void main(String[] args) {
+              registrar("Ana García", "Ingreso a urgencias");
+              registrar("Carlos López", "Alta médica");
+          }
+      }
+    result: |
+      Registrado: [2026-07-27 12:00:00] Ana García: Ingreso a urgencias
+      Registrado: [2026-07-27 12:00:00] Carlos López: Alta médica
+
+hasInteractive: false
+comparisons:
+  - title: "FileWriter vs BufferedWriter vs PrintWriter"
+    items:
+      - name: "FileWriter"
+        features:
+          api: "Clase básica para escribir caracteres"
+          metodos: "write(), append() — sin formato"
+          salto_linea: "write('\\n') manual o append(System.lineSeparator())"
+          eficiencia: "Escribe directamente, sin buffer"
+      - name: "PrintWriter"
+        features:
+          api: "Envoltura con métodos de formato"
+          metodos: "println(), printf(), format()"
+          salto_linea: "println() agrega salto de línea automáticamente"
+          eficiencia: "Puede envolver FileWriter para tener buffer"
+    recommendation: "Usa PrintWriter para la mayoría de casos: sus métodos println y printf facilitan escribir texto formateado. Envuelve un FileWriter o BufferedWriter para mejor rendimiento con archivos grandes."
+videos:
+  - url: ""
+    title: "Escritura de archivos en Java"
+    channel: "MoureDev"
+    summary: "Java moderno explicado por Brais Moure — código limpio y buenas prácticas"
+faqs:
+  - question: "¿Cómo sobrescribo vs agrego a un archivo?"
+    answer: "FileWriter(ruta) sobrescribe. FileWriter(ruta, true) agrega al final (append mode). Si el archivo no existe, se crea automáticamente."
+  - question: "¿Qué pasa si el directorio no existe?"
+    answer: "FileWriter lanza FileNotFoundException si el directorio no existe. Primero debes crear los directorios con Files.createDirectories(path)."
+  - question: "¿Cómo escribo datos binarios (imágenes, audio)?"
+    answer: "Usa FileOutputStream para datos binarios. FileOutputStream(ruta) escribe bytes, no caracteres. Para objetos completos usa ObjectOutputStream (serialización)."
+sources:
+  - title: "Java 21 API — FileWriter"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/FileWriter.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Writing Files"
+    url: "https://docs.oracle.com/javase/tutorial/essential/io/file.html#write"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Escribir en un archivo
+
+<CodeBlock lang="java" title="Escribir con FileWriter y PrintWriter">
+{`import java.io.*;
+
+public class EscribirArchivo {
+    public static void main(String[] args) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter("salida.txt"))) {
+            pw.println("Primera línea");
+            pw.println("Segunda línea");
+            pw.printf("Número: %d%n", 42);
+            System.out.println("Archivo escrito exitosamente");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+**PrintWriter** ofrece métodos familiares:
+- `println(texto)` — escribe línea + salto de línea
+- `printf(formato, args...)` — escribe formateado
+- `print(texto)` — escribe sin salto de línea
+
+## Modo Append (agregar al final)
+
+<CodeBlock lang="java" title="Agregar al final con FileWriter(ruta, true)">
+{`import java.io.*;
+
+public class AppendArchivo {
+    public static void main(String[] args) {
+        // El segundo parámetro 'true' activa append
+        try (FileWriter fw = new FileWriter("bitacora.txt", true);
+             PrintWriter pw = new PrintWriter(fw)) {
+            pw.println("Nueva entrada en la bitácora");
+            System.out.println("Entrada agregada");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Escribir con Files.writeString() (Java 11+)
+
+<CodeBlock lang="java" title="Escribir String directamente con NIO.2">
+{`import java.nio.file.*;
+
+public class WriteString {
+    public static void main(String[] args) throws Exception {
+        Path ruta = Path.of("nota.txt");
+
+        // Escribir todo el texto
+        Files.writeString(ruta, "Hola Mundo\\nJava NIO.2\\n");
+        System.out.println("Escrito!");
+
+        // Leerlo de vuelta
+        String contenido = Files.readString(ruta);
+        System.out.println("Contenido: " + contenido);
+    }
+}`}
+</CodeBlock>
+
+## Crear directorios y archivos
+
+<CodeBlock lang="java" title="Crear estructura de directorios">
+{`import java.nio.file.*;
+
+public class CrearDirectorios {
+    public static void main(String[] args) throws Exception {
+        // Crear directorio (falla si ya existe)
+        Path dir = Path.of("reportes/ventas");
+        Files.createDirectories(dir);
+        System.out.println("Directorio creado: " + dir);
+
+        // Crear archivo
+        Path archivo = dir.resolve("ventas.txt");
+        Files.createFile(archivo);
+        System.out.println("Archivo creado: " + archivo);
+
+        // Crear y escribir en un solo paso
+        Files.writeString(archivo, "Datos de ventas aquí");
+        System.out.println("Datos escritos");
+
+        // Verificar
+        System.out.println("Existe: " + Files.exists(archivo));
+        System.out.println("Tamaño: " + Files.size(archivo) + " bytes");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Directorio creado: reportes/ventas
+Archivo creado: reportes/ventas/ventas.txt
+Datos escritos
+Existe: true
+Tamaño: 18 bytes
+```
+
+## Escribir una lista de líneas
+
+<CodeBlock lang="java" title="Escribir varias líneas con Files.write()">
+{`import java.nio.file.*;
+import java.util.List;
+
+public class EscribirLista {
+    public static void main(String[] args) throws Exception {
+        List<String> lineas = List.of(
+            "Nombre,Edad,Ciudad",
+            "Ana,25,Bogotá",
+            "Luis,30,Medellín"
+        );
+
+        Path archivo = Path.of("personas.csv");
+        Files.write(archivo, lineas);
+        System.out.println("CSV creado con " + lineas.size() + " líneas");
+
+        // Leer de vuelta
+        List<String> leidas = Files.readAllLines(archivo);
+        for (String linea : leidas) {
+            System.out.println("  " + linea);
+        }
+    }
+}`}
+</CodeBlock>
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

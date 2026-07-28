@@ -1,0 +1,11 @@
+{
+  "id": "mod-03",
+  "slug": "03-metodos-y-arrays",
+  "number": 3,
+  "title": "Métodos y Arreglos",
+  "description": "Organiza tu código con métodos y maneja colecciones de datos con arreglos.",
+  "icon": "Layers",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["metodos", "metodos-avanzados", "sobrecarga", "arrays", "arrays-avanzados"]
+}

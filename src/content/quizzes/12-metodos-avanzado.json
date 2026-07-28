@@ -1,0 +1,58 @@
+{
+  "id": "quiz-12-metodos-avanzado",
+  "lessonSlug": "metodos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\nstatic void modificar(int x) { x = 100; }\npublic static void main(String[] args) {\n    int valor = 5;\n    modificar(valor);\n    System.out.println(valor);\n}",
+      "options": [
+        "100",
+        "5",
+        "0",
+        "Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java pasa primitivos por valor, no por referencia.",
+        "Correcto. El método recibe una copia de 'valor'. Modificar x dentro del método no afecta la variable original.",
+        "El valor no se pone en 0.",
+        "El código compila y ejecuta sin errores."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la mejor razón para usar métodos?",
+      "options": [
+        "Para hacer el código más corto en líneas",
+        "Para reutilizar código y separar responsabilidades",
+        "Para que el compilador optimice mejor",
+        "Para evitar usar variables"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Un método puede hacer el código más largo en total, pero más organizado.",
+        "Correcto. Los métodos permiten reutilizar lógica (escribes una vez, usas muchas veces) y separar responsabilidades (cada método hace una cosa específica).",
+        "El compilador optimiza independientemente de uses métodos o no.",
+        "Los métodos trabajan con variables, no las reemplazan."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué retorna este método?\nstatic String verificar(int nota) {\n    if (nota >= 6) return \"Aprobado\";\n    return \"Reprobado\";\n}",
+      "options": [
+        "\"Aprobado\" siempre",
+        "\"Reprobado\" siempre",
+        "\"Aprobado\" si nota >= 6, \"Reprobado\" si no",
+        "Depende del valor de retorno de main"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Solo retorna \"Aprobado\" si la condición se cumple.",
+        "Solo retorna \"Reprobado\" cuando la primera condición falla.",
+        "Correcto. El primer return se ejecuta solo si nota >= 6; el segundo return cubre todos los demás casos.",
+        "El valor de retorno no depende de main; depende de la lógica interna del método."
+      ]
+    }
+  ]
+}

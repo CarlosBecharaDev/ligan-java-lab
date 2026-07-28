@@ -1,0 +1,47 @@
+---
+import { ICONOS_PRINCIPALES } from '@features/desktop/desktopState';
+---
+
+<footer class="taskbar" role="toolbar" aria-label="Barra de tareas" data-i18n-aria="taskbar.aria">
+  <div class="taskbar__left">
+    <a href="/" class="taskbar__logo" aria-label="Ligan Java Lab - Inicio" data-i18n-aria="taskbar.logo-aria">
+      <span>☕</span>
+      <span>Ligan Java Lab</span>
+    </a>
+  </div>
+  <div class="taskbar__center">
+    {ICONOS_PRINCIPALES.slice(0, 7).map((icono) => (
+      <a
+        href={icono.route ?? '/ruta'}
+        class="taskbar__window-btn"
+        aria-label={icono.label}
+      >
+        {icono.label}
+      </a>
+    ))}
+  </div>
+  <div class="taskbar__right">
+    <div class="taskbar__lang">
+      <button class="taskbar__lang-btn" data-lang-btn="en" onclick="window.__i18n && window.__i18n.setLang('en')">EN</button>
+      <button class="taskbar__lang-btn" data-lang-btn="es" onclick="window.__i18n && window.__i18n.setLang('es')">ES</button>
+    </div>
+    <span class="taskbar__apps" data-i18n="nav.apps">Apps (1)</span>
+    <span class="taskbar__clock" id="taskbar-clock" aria-label="Reloj" data-i18n-aria="taskbar.clock-aria">
+      {new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+    </span>
+  </div>
+</footer>
+
+<script>
+  function actualizarReloj() {
+    const reloj = document.getElementById('taskbar-clock');
+    if (reloj) {
+      reloj.textContent = new Date().toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  }
+  setInterval(actualizarReloj, 60000);
+  actualizarReloj();
+</script>

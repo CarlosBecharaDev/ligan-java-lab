@@ -1,0 +1,298 @@
+---
+title: "LinkedList — Lista Enlazada"
+slug: "linkedlist"
+module: "05-colecciones"
+level: "Intermedio"
+objectives:
+  - "Crear y manipular LinkedList con add, remove, get y set"
+  - "Usar métodos específicos: addFirst, addLast, peek, poll"
+  - "Entender las diferencias de rendimiento vs ArrayList"
+  - "Implementar una cola (queue) y una pila (stack) con LinkedList"
+  - "Conocer cuándo elegir LinkedList sobre ArrayList"
+prerequisites:
+  - "Haber completado Lección 24: ArrayList"
+  - "Entender el concepto de nodos y enlaces"
+history:
+  introducedIn: "LinkedList desde Java 1.2 (Collections Framework)"
+  context: "LinkedList es una implementación de lista doblemente enlazada. Cada elemento (nodo) contiene el dato y referencias al nodo anterior y siguiente. Permite inserciones y eliminaciones eficientes en cualquier posición, pero acceso aleatorio lento."
+  evolution: "Java 1.2 introdujo LinkedList como parte del Collections Framework. Implementa tanto List como Deque, permitiendo usarla como lista, cola o pila. Aunque es menos usada que ArrayList, es fundamental para entender estructuras de datos y es útil en casos específicos."
+realWorldExamples:
+  - domain: "E-commerce — cola de pedidos"
+    description: "Un sistema de pedidos en línea usa LinkedList como cola FIFO: los pedidos entran por el final y se procesan por el frente."
+    code: |
+      import java.util.LinkedList;
+
+      public class ColaPedidos {
+          public static void main(String[] args) {
+              LinkedList<String> cola = new LinkedList<>();
+
+              // Agregar pedidos al final
+              cola.addLast("Pedido #101");
+              cola.addLast("Pedido #102");
+              cola.addLast("Pedido #103");
+              System.out.println("Cola: " + cola);
+
+              // Procesar siguiente (FIFO)
+              String procesando = cola.removeFirst();
+              System.out.println("Procesando: " + procesando);
+
+              // Ver siguiente sin eliminar
+              String siguiente = cola.peekFirst();
+              System.out.println("Siguiente: " + siguiente);
+
+              System.out.println("Cola restante: " + cola);
+              System.out.println("Pendientes: " + cola.size());
+          }
+      }
+    result: |
+      Cola: [Pedido #101, Pedido #102, Pedido #103]
+      Procesando: Pedido #101
+      Siguiente: Pedido #102
+      Cola restante: [Pedido #102, Pedido #103]
+      Pendientes: 2
+
+  - domain: "Salud — historial de acciones (undo/redo)"
+    description: "Un sistema médico registra acciones en un historial. LinkedList permite deshacer (removeLast) y rehacer (addLast) acciones rápidamente."
+    code: |
+      import java.util.LinkedList;
+
+      public class HistorialAcciones {
+          public static void main(String[] args) {
+              LinkedList<String> historial = new LinkedList<>();
+              LinkedList<String> deshechas = new LinkedList<>();
+
+              historial.addLast("Abrir expediente");
+              historial.addLast("Agregar diagnóstico");
+              historial.addLast("Recetar medicamento");
+              System.out.println("Historial: " + historial);
+
+              // Deshacer última acción
+              deshechas.addLast(historial.removeLast());
+              System.out.println("Deshacer: " + historial);
+              System.out.println("Deshechas: " + deshechas);
+
+              // Rehacer
+              historial.addLast(deshechas.removeLast());
+              System.out.println("Rehacer: " + historial);
+          }
+      }
+    result: |
+      Historial: [Abrir expediente, Agregar diagnóstico, Recetar medicamento]
+      Deshacer: [Abrir expediente, Agregar diagnóstico]
+      Deshechas: [Recetar medicamento]
+      Rehacer: [Abrir expediente, Agregar diagnóstico, Recetar medicamento]
+
+hasInteractive: false
+comparisons:
+  - title: "ArrayList vs LinkedList"
+    items:
+      - name: "ArrayList"
+        features:
+          acceso: "O(1) acceso aleatorio por índice"
+          insercion: "O(n) al inicio o en medio (desplaza elementos)"
+          eliminacion: "O(n) al inicio o en medio (desplaza elementos)"
+          memoria: "Menos memoria — array contiguo"
+      - name: "LinkedList"
+        features:
+          acceso: "O(n) acceso aleatorio (recorre nodos)"
+          insercion: "O(1) al inicio o final (sin desplazamiento)"
+          eliminacion: "O(1) si ya tienes la referencia al nodo"
+          memoria: "Más memoria — cada nodo tiene 2 referencias extra"
+    recommendation: "Usa ArrayList para acceso aleatorio frecuente (lectura por índice). Usa LinkedList para inserciones/eliminaciones frecuentes al inicio o final. En la práctica, ArrayList es más rápido en la mayoría de casos por la localidad de caché."
+videos:
+  - url: ""
+    title: "LinkedList en Java"
+    channel: "Código Facilito"
+    summary: "Lección práctica de Java — explicación paso a paso con ejercicios"
+faqs:
+  - question: "¿Cuándo debo usar LinkedList en vez de ArrayList?"
+    answer: "LinkedList es mejor cuando haces muchas inserciones y eliminaciones al inicio o final de la lista (como una cola o pila). Para la mayoría de otros casos, ArrayList es más rápido debido a la localidad de caché del array contiguo."
+  - question: "¿LinkedList es lo mismo que una lista enlazada de la teoría?"
+    answer: "Sí. LinkedList es una implementación de lista doblemente enlazada: cada nodo tiene referencia al anterior y al siguiente. Permite traversar en ambas direcciones, lo que la hace más flexible que una lista simplemente enlazada."
+  - question: "¿Puedo usar LinkedList como cola (queue)?"
+    answer: "Sí. LinkedList implementa la interfaz Queue. Usa add()/remove()/peek() para operaciones de cola, o addFirst()/removeFirst()/peekFirst() para acceso explícito al inicio."
+sources:
+  - title: "Java 21 API — LinkedList"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/LinkedList.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Implementations"
+    url: "https://docs.oracle.com/javase/tutorial/collections/implementations.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es un LinkedList?
+
+Un **LinkedList** es una lista doblemente enlazada: cada elemento (nodo) contiene el dato y referencias al nodo anterior y siguiente. A diferencia de ArrayList (basado en array), LinkedList permite inserciones y eliminaciones eficientes en cualquier posición.
+
+```java
+import java.util.LinkedList;
+
+LinkedList<String> lista = new LinkedList<>();
+lista.add("Primero");
+lista.add("Segundo");
+lista.add("Tercero");
+```
+
+## Crear y usar un LinkedList
+
+<CodeBlock lang="java" title="Crear LinkedList y operaciones básicas">
+{`import java.util.LinkedList;
+
+public class CrearLinkedList {
+    public static void main(String[] args) {
+        LinkedList<String> ciudades = new LinkedList<>();
+
+        // Agregar elementos
+        ciudades.add("Bogotá");
+        ciudades.add("Medellín");
+        ciudades.add("Cali");
+        System.out.println("Lista: " + ciudades);
+
+        // Agregar al inicio y final
+        ciudades.addFirst("Barranquilla");
+        ciudades.addLast("Cartagena");
+        System.out.println("Con extremos: " + ciudades);
+
+        // Acceder
+        System.out.println("Primero: " + ciudades.getFirst());
+        System.out.println("Último: " + ciudades.getLast());
+        System.out.println("Índice 2: " + ciudades.get(2));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Lista: [Bogotá, Medellín, Cali]
+Con extremos: [Barranquilla, Bogotá, Medellín, Cali, Cartagena]
+Primero: Barranquilla
+Último: Cartagena
+Índice 2: Medellín
+```
+
+## Métodos de extremos
+
+| Método | Descripción | Excepción si vacía |
+|--------|-------------|-------------------|
+| `addFirst(e)` / `addLast(e)` | Agrega al inicio/final | No lanza excepción |
+| `getFirst()` / `getLast()` | Obtiene sin eliminar | `NoSuchElementException` |
+| `removeFirst()` / `removeLast()` | Obtiene y elimina | `NoSuchElementException` |
+| `peekFirst()` / `peekLast()` | Obtiene sin eliminar | `null` si vacío |
+| `pollFirst()` / `pollLast()` | Obtiene y elimina | `null` si vacío |
+
+## LinkedList como cola (Queue)
+
+<CodeBlock lang="java" title="Cola FIFO con LinkedList">
+{`import java.util.LinkedList;
+
+public class ColaFIFO {
+    public static void main(String[] args) {
+        LinkedList<String> cola = new LinkedList<>();
+
+        // Encolar (agregar al final)
+        cola.offer("Cliente 1");
+        cola.offer("Cliente 2");
+        cola.offer("Cliente 3");
+        System.out.println("Cola: " + cola);
+
+        // Desencolar (sacar del frente)
+        while (!cola.isEmpty()) {
+            String cliente = cola.poll();
+            System.out.println("Atendiendo: " + cliente);
+        }
+        System.out.println("Cola vacía: " + cola.isEmpty());
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Cola: [Cliente 1, Cliente 2, Cliente 3]
+Atendiendo: Cliente 1
+Atendiendo: Cliente 2
+Atendiendo: Cliente 3
+Cola vacía: true
+```
+
+## LinkedList como pila (Stack)
+
+<CodeBlock lang="java" title="Pila LIFO con LinkedList">
+{`import java.util.LinkedList;
+
+public class PilaLIFO {
+    public static void main(String[] args) {
+        LinkedList<String> pila = new LinkedList<>();
+
+        // Push (agregar al frente)
+        pila.push("Primero");
+        pila.push("Segundo");
+        pila.push("Tercero");
+        System.out.println("Pila: " + pila);
+
+        // Pop (sacar del frente)
+        while (!pila.isEmpty()) {
+            System.out.println("Desapilando: " + pila.pop());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Pila: [Tercero, Segundo, Primero]
+Desapilando: Tercero
+Desapilando: Segundo
+Desapilando: Primero
+```
+
+## Iterar sobre un LinkedList
+
+```java
+LinkedList<String> lista = new LinkedList<>();
+// ... agregar elementos
+
+// for clásico (lento en LinkedList)
+for (int i = 0; i < lista.size(); i++) {
+    System.out.println(lista.get(i));  // O(n) por cada get
+}
+
+// for-each (recomendado)
+for (String elemento : lista) {
+    System.out.println(elemento);  // O(1) por iterador
+}
+```
+
+**Importante:** En LinkedList, usar `get(i)` en un bucle for es O(n²) porque cada acceso recorre la lista desde el inicio. Usa for-each o Iterator para recorrer LinkedList eficientemente.
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-excepciones-tipos-facil",
+    "title": "División segura",
+    "difficulty": "facil",
+    "description": "Crea un método llamado dividir que reciba dos enteros (dividendo y divisor) y devuelva el resultado de la división entera. Si el divisor es 0, debe lanzar una ArithmeticException con el mensaje 'No se puede dividir por cero'.",
+    "template": "public class DivisionSegura {\n    // TODO: Crea el método dividir que lance ArithmeticException si divisor es 0\n\n    public static void main(String[] args) {\n        // TODO: Usa try-catch para probar divisiones normales y una por cero\n        // System.out.println(\"10 / 2 = \" + dividir(10, 2));\n    }\n}",
+    "hints": [
+      "Usa una sentencia if para verificar si divisor es igual a 0",
+      "Para lanzar una excepción usa: throw new ArithmeticException(\"mensaje\")",
+      "Si divisor no es 0, simplemente retorna dividendo / divisor"
+    ],
+    "solution": "public class DivisionSegura {\n    public static int dividir(int dividendo, int divisor) {\n        if (divisor == 0) {\n            throw new ArithmeticException(\"No se puede dividir por cero\");\n        }\n        return dividendo / divisor;\n    }\n\n    public static void main(String[] args) {\n        try {\n            System.out.println(\"10 / 2 = \" + dividir(10, 2));\n            System.out.println(\"15 / 3 = \" + dividir(15, 3));\n            System.out.println(\"10 / 0 = \" + dividir(10, 0));\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "El método verifica con un if si el divisor es 0. Si lo es, lanza ArithmeticException con el mensaje descriptivo. Si no es 0, retorna el resultado de la división. En el main se usa try-catch para capturar la excepción cuando se intenta dividir por cero.",
+    "expectedOutput": "10 / 2 = 5\n15 / 3 = 5\nError: No se puede dividir por cero",
+    "lessonSlug": "excepciones-tipos"
+  },
+  {
+    "id": "ex-excepciones-tipos-normal",
+    "title": "Parser de edades",
+    "difficulty": "normal",
+    "description": "Crea un método parsearEdad que reciba un String y devuelva un int con la edad parseada. Si el String no es un número válido, debe lanzar NumberFormatException con el mensaje 'Entrada no válida: ' seguido del valor recibido. Si el número es negativo, lanza IllegalArgumentException con el mensaje 'La edad no puede ser negativa'.",
+    "template": "public class ParserEdades {\n    // TODO: Crea parsearEdad que lance NumberFormatException o IllegalArgumentException\n\n    public static void main(String[] args) {\n        String[] entradas = {\"25\", \"abc\", \"-5\", \"30\"};\n        for (String entrada : entradas) {\n            // TODO: llama parsearEdad con try-catch para cada entrada\n        }\n    }\n}",
+    "hints": [
+      "Usa Integer.parseInt(input) dentro de un try para convertir el String a entero",
+      "Si NumberFormatException se produce, relánzalo con el mensaje personalizado incluyendo el input",
+      "Después de parsear exitosamente, verifica si el número es negativo antes de retornarlo"
+    ],
+    "solution": "public class ParserEdades {\n    public static int parsearEdad(String input) {\n        int edad;\n        try {\n            edad = Integer.parseInt(input);\n        } catch (NumberFormatException e) {\n            throw new NumberFormatException(\"Entrada no válida: \" + input);\n        }\n        if (edad < 0) {\n            throw new IllegalArgumentException(\"La edad no puede ser negativa\");\n        }\n        return edad;\n    }\n\n    public static void main(String[] args) {\n        String[] entradas = {\"25\", \"abc\", \"-5\", \"30\"};\n        for (String entrada : entradas) {\n            try {\n                int edad = parsearEdad(entrada);\n                System.out.println(\"Edad: \" + edad);\n            } catch (Exception e) {\n                System.out.println(\"Error: \" + e.getMessage());\n            }\n        }\n    }\n}",
+    "solutionExplanation": "El método intenta parsear el String con Integer.parseInt dentro de un try-catch. Si falla, relanza NumberFormatException con un mensaje descriptivo. Si el parseo es exitoso pero el número es negativo, lanza IllegalArgumentException. En el main se recorre un arreglo de entradas y se manejan ambos tipos de excepción.",
+    "expectedOutput": "Edad: 25\nError: Entrada no válida: abc\nError: La edad no puede ser negativa\nEdad: 30",
+    "lessonSlug": "excepciones-tipos"
+  },
+  {
+    "id": "ex-excepciones-tipos-dificil",
+    "title": "Validador de datos",
+    "difficulty": "dificil",
+    "description": "Crea una clase Validar con tres métodos estáticos: validarNombre(String nombre) que lance IllegalArgumentException si es null o vacío, validarEdad(int edad) que lance IndexOutOfBoundsException si la edad no está entre 0 y 150, y validarEmail(String email) que lance NullPointerException si es null o ArithmeticException si no contiene '@'. Crea también un método validarTodo que llame a los tres y atrape cada excepción mostrando el tipo de error.",
+    "template": "public class Validar {\n    // TODO: Crear validarNombre - lanza IllegalArgumentException si null o vacío\n\n    // TODO: Crear validarEdad - lanza IndexOutOfBoundsException si fuera de rango [0, 150]\n\n    // TODO: Crear validarEmail - lanza NullPointerException si null, ArithmeticException si no contiene '@'\n\n    // TODO: Crear validarTodo que llame a los tres y maneje excepciones por separado\n\n    public static void main(String[] args) {\n        validarTodo(\"\", 200, \"test\");\n        System.out.println(\"---\");\n        validarTodo(\"Ana\", 25, \"ana@mail.com\");\n    }\n}",
+    "hints": [
+      "Para validarNombre, verifica si nombre es null o nombre.isEmpty() y lanza IllegalArgumentException",
+      "Para validarEdad, verifica si edad < 0 o edad > 150 y lanza IndexOutOfBoundsException",
+      "Para validarEmail, lanza NullPointerException si es null, y ArithmeticException si no contiene '@'",
+      "En validarTodo, envuelve cada llamada en su propio bloque try-catch para reportar todos los errores"
+    ],
+    "solution": "public class Validar {\n    public static void validarNombre(String nombre) {\n        if (nombre == null || nombre.isEmpty()) {\n            throw new IllegalArgumentException(\"El nombre no puede ser null o vacío\");\n        }\n    }\n\n    public static void validarEdad(int edad) {\n        if (edad < 0 || edad > 150) {\n            throw new IndexOutOfBoundsException(\"La edad debe estar entre 0 y 150\");\n        }\n    }\n\n    public static void validarEmail(String email) {\n        if (email == null) {\n            throw new NullPointerException(\"El email no puede ser null\");\n        }\n        if (!email.contains(\"@\")) {\n            throw new ArithmeticException(\"El email debe contener '@'\");\n        }\n    }\n\n    public static void validarTodo(String nombre, int edad, String email) {\n        try {\n            validarNombre(nombre);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error de nombre: \" + e.getMessage());\n        }\n        try {\n            validarEdad(edad);\n        } catch (IndexOutOfBoundsException e) {\n            System.out.println(\"Error de edad: \" + e.getMessage());\n        }\n        try {\n            validarEmail(email);\n        } catch (NullPointerException e) {\n            System.out.println(\"Error de email: \" + e.getMessage());\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error de email: \" + e.getMessage());\n        }\n    }\n\n    public static void main(String[] args) {\n        validarTodo(\"\", 200, \"test\");\n        System.out.println(\"---\");\n        validarTodo(\"Ana\", 25, \"ana@mail.com\");\n    }\n}",
+    "solutionExplanation": "Cada método de validación verifica una condición específica y lanza la excepción correspondiente: IllegalArgumentException para nombre inválido, IndexOutOfBoundsException para edad fuera de rango, NullPointerException para email null, y ArithmeticException para email sin '@'. El método validarTodo ejecuta cada validación en su propio try-catch para reportar todos los errores posibles en una sola llamada.",
+    "expectedOutput": "Error de nombre: El nombre no puede ser null o vacío\nError de edad: La edad debe estar entre 0 y 150\nError de email: El email debe contener '@'\n---",
+    "lessonSlug": "excepciones-tipos"
+  }
+]

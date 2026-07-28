@@ -1,0 +1,47 @@
+[
+  {
+    "id": "ex-ifelse-facil",
+    "lessonSlug": "if-else",
+    "title": "Clasificador de números",
+    "difficulty": "facil",
+    "description": "Crea un programa que determine si un número es positivo, negativo o cero usando if-else.",
+    "template": "public class ClasificadorNumeros {\n    public static void main(String[] args) {\n        int numero = -7;\n\n        // TODO: Usa if-else para determinar si el número es\n        // positivo, negativo o cero\n        // Imprime: \"El número X es positivo/negativo/cero\"\n\n    }\n}",
+    "hints": [
+      "Usa if (numero > 0), else if (numero < 0), else para cero",
+      "Puedes cambiar el valor de la variable para probar"
+    ],
+    "solution": "public class ClasificadorNumeros {\n    public static void main(String[] args) {\n        int numero = -7;\n\n        if (numero > 0) {\n            System.out.println(\"El número \" + numero + \" es positivo\");\n        } else if (numero < 0) {\n            System.out.println(\"El número \" + numero + \" es negativo\");\n        } else {\n            System.out.println(\"El número es cero\");\n        }\n    }\n}",
+    "solutionExplanation": "Usamos if para positivo (>0), else if para negativo (<0) y else para el caso restante (cero). Solo una rama se ejecuta.",
+    "expectedOutput": "El número -7 es negativo"
+  },
+  {
+    "id": "ex-ifelse-normal",
+    "lessonSlug": "if-else",
+    "title": "Calculadora de índice de masa corporal",
+    "difficulty": "normal",
+    "description": "Calcula el IMC a partir del peso y altura, y muestra la categoría: bajo peso (<18.5), normal (18.5-24.9), sobrepeso (25-29.9), obesidad (>=30).",
+    "template": "public class CalculadoraIMC {\n    public static void main(String[] args) {\n        double peso = 72.0;\n        double altura = 1.75;\n\n        // TODO: Calcula el IMC = peso / (altura * altura)\n        // Clasifica con if-else\n        // IMC < 18.5 → \"Bajo peso\"\n        // IMC < 25 → \"Normal\"\n        // IMC < 30 → \"Sobrepeso\"\n        // IMC >= 30 → \"Obesidad\"\n\n    }\n}",
+    "hints": [
+      "Usa printf para 2 decimales",
+      "El orden de los if importa: primero los rangos más bajos"
+    ],
+    "solution": "public class CalculadoraIMC {\n    public static void main(String[] args) {\n        double peso = 72.0;\n        double altura = 1.75;\n\n        double imc = peso / (altura * altura);\n        String categoria;\n\n        if (imc < 18.5) {\n            categoria = \"Bajo peso\";\n        } else if (imc < 25) {\n            categoria = \"Normal\";\n        } else if (imc < 30) {\n            categoria = \"Sobrepeso\";\n        } else {\n            categoria = \"Obesidad\";\n        }\n\n        System.out.printf(\"Peso: %.1f kg, Altura: %.2f m%n\", peso, altura);\n        System.out.printf(\"IMC: %.1f - %s%n\", imc, categoria);\n    }\n}",
+    "solutionExplanation": "IMC = peso / altura². Las condiciones if-else encadenadas clasifican el resultado en rangos. Como son mutuamente excluyentes, el orden importa.",
+    "expectedOutput": "Peso: 72.0 kg, Altura: 1.75 m\nIMC: 23.5 - Normal"
+  },
+  {
+    "id": "ex-ifelse-dificil",
+    "lessonSlug": "if-else",
+    "title": "Validador de contraseña con múltiples reglas",
+    "difficulty": "dificil",
+    "description": "Valida una contraseña contra 4 reglas: longitud >= 8, contiene mayúscula, contiene número, contiene carácter especial (@#$). Muestra feedback según cuántas reglas cumple.",
+    "template": "public class ValidadorPassword {\n    public static void main(String[] args) {\n        String password = \"Java1234@\";\n\n        // TODO: Verifica cada regla con boolean\n        // Regla 1: longitud >= 8\n        // Regla 2: contiene mayúscula (Character.isUpperCase)\n        // Regla 3: contiene dígito (Character.isDigit)\n        // Regla 4: contiene @, # o $\n        // Cuenta y clasifica con if-else\n\n    }\n}",
+    "hints": [
+      "Itera con password.toCharArray()",
+      "Usa Character.isUpperCase() y Character.isDigit()"
+    ],
+    "solution": "public class ValidadorPassword {\n    public static void main(String[] args) {\n        String password = \"Java1234@\";\n        int reglasCumplidas = 0;\n\n        if (password.length() >= 8) reglasCumplidas++;\n\n        boolean tieneMayuscula = false;\n        boolean tieneNumero = false;\n        boolean tieneEspecial = false;\n\n        for (char c : password.toCharArray()) {\n            if (Character.isUpperCase(c)) tieneMayuscula = true;\n            if (Character.isDigit(c)) tieneNumero = true;\n            if (c == '@' || c == '#' || c == '$') tieneEspecial = true;\n        }\n\n        if (tieneMayuscula) reglasCumplidas++;\n        if (tieneNumero) reglasCumplidas++;\n        if (tieneEspecial) reglasCumplidas++;\n\n        String feedback;\n        if (reglasCumplidas == 4) {\n            feedback = \"Contraseña segura ✅\";\n        } else if (reglasCumplidas == 3) {\n            feedback = \"Contraseña moderada ⚠️\";\n        } else if (reglasCumplidas >= 1) {\n            feedback = \"Contraseña débil ❌\";\n        } else {\n            feedback = \"Contraseña inválida 🚫\";\n        }\n\n        System.out.println(\"Reglas cumplidas: \" + reglasCumplidas + \"/4\");\n        System.out.println(\"Resultado: \" + feedback);\n    }\n}",
+    "solutionExplanation": "Evaluamos cada regla por separado con if y acumulamos en un contador. Clasificamos con else-if según el número de reglas cumplidas. El bucle for-each itera cada carácter.",
+    "expectedOutput": "Reglas cumplidas: 4/4\nResultado: Contraseña segura ✅"
+  }
+]

@@ -1,0 +1,375 @@
+---
+title: "HashMap — Mapas Clave-Valor"
+slug: "hashmap"
+module: "05-colecciones"
+level: "Inicial"
+objectives:
+  - "Crear y manipular HashMap con put, get, remove y containsKey"
+  - "Iterar sobre un HashMap con entrySet, keySet y values"
+  - "Usar getOrDefault, putIfAbsent y computeIfAbsent"
+  - "Entender que HashMap no mantiene orden de inserción"
+  - "Conocer LinkedHashMap y TreeMap para ordenamiento"
+prerequisites:
+  - "Haber completado Lección 24: ArrayList"
+  - "Entender el concepto de pares clave-valor"
+history:
+  introducedIn: "HashMap desde Java 1.2 (Collections Framework)"
+  context: "HashMap implementa la interfaz Map y almacena pares clave-valor. Usa una tabla hash interna para acceso casi instantáneo O(1) a cualquier elemento. Es la implementación de Map más usada en Java."
+  evolution: "Java 1.2 introdujo HashMap. Java 8 optimizó el rendimiento usando listas enlazadas dentro de las baldes (buckets) cuando hay muchas colisiones. Java 9 introdujo Map.of() para crear mapas inmutables. Java 10+ permite var para inferencia de tipo. Aunque HashMap es el más rápido, no garantiza orden — para eso usa LinkedHashMap o TreeMap."
+realWorldExamples:
+  - domain: "E-commerce — precios de productos"
+    description: "Una tienda online almacena precios en un HashMap donde la clave es el ID del producto. Esto permite buscar el precio de cualquier producto en O(1)."
+    code: |
+      import java.util.HashMap;
+
+      public class PreciosTienda {
+          public static void main(String[] args) {
+              HashMap<String, Double> precios = new HashMap<>();
+
+              precios.put("LAP001", 2500.00);
+              precios.put("MOU002", 45.00);
+              precios.put("TEL003", 899.99);
+              precios.put("MON004", 320.00);
+
+              System.out.println("Precios: " + precios);
+
+              // Buscar precio
+              double precioLaptop = precios.get("LAP001");
+              System.out.printf("Laptop: $%.2f%n", precioLaptop);
+
+              // Verificar si existe
+              if (precios.containsKey("TEL003")) {
+                  System.out.println("Teléfono registrado");
+              }
+
+              // Actualizar precio
+              precios.put("MOU002", 39.99);
+              System.out.println("Mouse actualizado: " + precios.get("MOU002"));
+          }
+      }
+    result: |
+      Precios: {LAP001=2500.0, MOU002=45.0, TEL003=899.99, MON004=320.0}
+      Laptop: $2500.00
+      Teléfono registrado
+      Mouse actualizado: 39.99
+
+  - domain: "Salud — historial médico por paciente"
+    description: "Un hospital usa un HashMap donde la clave es el ID del paciente y el valor es una lista de diagnósticos. Permite acceder al historial de cualquier paciente rápidamente."
+    code: |
+      import java.util.HashMap;
+      import java.util.ArrayList;
+
+      public class HistorialPaciente {
+          public static void main(String[] args) {
+              HashMap<String, ArrayList<String>> historial = new HashMap<>();
+
+              ArrayList<String> diags1 = new ArrayList<>();
+              diags1.add("Gripe");
+              diags1.add("Hipertensión");
+              historial.put("P001", diags1);
+
+              ArrayList<String> diags2 = new ArrayList<>();
+              diags2.add("Diabetes tipo 2");
+              historial.put("P002", diags2);
+
+              // Buscar diagnósticos de un paciente
+              String paciente = "P001";
+              if (historial.containsKey(paciente)) {
+                  System.out.println("Diagnósticos de " + paciente + ":");
+                  for (String d : historial.get(paciente)) {
+                      System.out.println("  - " + d);
+                  }
+              }
+
+              // Total de pacientes
+              System.out.println("Pacientes: " + historial.size());
+          }
+      }
+    result: |
+      Diagnósticos de P001:
+        - Gripe
+        - Hipertensión
+      Pacientes: 2
+
+hasInteractive: false
+comparisons:
+  - title: "HashMap vs LinkedHashMap vs TreeMap"
+    items:
+      - name: "HashMap"
+        features:
+          orden: "Ninguno — no garantiza orden"
+          rendimiento: "O(1) acceso promedio"
+          uso: "Cuando no importa el orden, solo velocidad"
+          implementacion: "Tabla hash interna"
+      - name: "LinkedHashMap"
+        features:
+          orden: "Orden de inserción"
+          rendimiento: "O(1) acceso promedio"
+          uso: "Cuando necesitas mantener el orden de inserción"
+          implementacion: "Tabla hash + lista enlazada"
+      - name: "TreeMap"
+        features:
+          orden: "Orden natural o por Comparator"
+          rendimiento: "O(log n) acceso"
+          uso: "Cuando necesitas claves ordenadas"
+          implementacion: "Árbol rojo-negro"
+    recommendation: "Usa HashMap por defecto (más rápido). Usa LinkedHashMap cuando necesitas que las claves mantengan el orden de inserción. Usa TreeMap cuando necesitas claves ordenadas alfabéticamente o por un criterio personalizado."
+videos:
+  - url: ""
+    title: "HashMap en Java"
+    channel: "Código Facilito"
+    summary: "Lección práctica de Java — explicación paso a paso con ejercicios"
+faqs:
+  - question: "¿Puedo usar un mismo valor para diferentes claves?"
+    answer: "Sí. Los valores pueden repetirse, pero las claves son únicas. Si haces put() con una clave que ya existe, el valor anterior se sobrescribe silenciosamente. Para evitarlo, usa putIfAbsent()."
+  - question: "¿Qué pasa si busco una clave que no existe con get()?"
+    answer: "Retorna null. Por eso es buena práctica usar containsKey() antes de get(), o usar getOrDefault() que retorna un valor por defecto si la clave no existe."
+  - question: "¿Puedo guardar null como clave?"
+    answer: "HashMap permite una clave null. Solo una. Pero TreeMap no permite claves null (lanza NullPointerException). LinkedHashMap sí permite una clave null igual que HashMap."
+sources:
+  - title: "Java 21 API — HashMap"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Map Interface"
+    url: "https://docs.oracle.com/javase/tutorial/collections/interfaces/map.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es un HashMap?
+
+Un **HashMap** almacena pares de **clave-valor**. Cada clave es única y permite acceder a su valor en tiempo casi constante O(1). Es como un diccionario: buscas por palabra (clave) y obtienes la definición (valor).
+
+```java
+import java.util.HashMap;
+
+HashMap<String, Integer> edades = new HashMap<>();
+edades.put("Ana", 25);
+edades.put("Luis", 30);
+System.out.println(edades.get("Ana"));  // 25
+```
+
+## Crear y usar un HashMap
+
+<CodeBlock lang="java" title="Crear HashMap y operaciones básicas">
+{`import java.util.HashMap;
+
+public class CrearHashMap {
+    public static void main(String[] args) {
+        HashMap<String, Double> calificaciones = new HashMap<>();
+
+        // put: agregar o actualizar
+        calificaciones.put("Mate", 9.5);
+        calificaciones.put("Español", 8.0);
+        calificaciones.put("Ciencias", 9.2);
+        System.out.println("Calificaciones: " + calificaciones);
+
+        // get: obtener valor por clave
+        double notaMate = calificaciones.get("Mate");
+        System.out.println("Nota Mate: " + notaMate);
+
+        // Actualizar valor
+        calificaciones.put("Español", 8.5);
+        System.out.println("Español actualizado: " + calificaciones.get("Español"));
+
+        // size: cantidad de pares
+        System.out.println("Total materias: " + calificaciones.size());
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Calificaciones: {Mate=9.5, Español=8.0, Ciencias=9.2}
+Nota Mate: 9.5
+Español actualizado: 8.5
+Total materias: 3
+```
+
+## Métodos importantes
+
+| Método | Descripción | Retorno |
+|--------|-------------|---------|
+| `put(clave, valor)` | Agrega o actualiza | valor anterior (o null) |
+| `get(clave)` | Obtiene valor | valor o null |
+| `getOrDefault(clave, defecto)` | Obtiene o usa defecto | valor o defecto |
+| `remove(clave)` | Elimina par | valor eliminado |
+| `containsKey(clave)` | ¿Existe la clave? | boolean |
+| `containsValue(valor)` | ¿Existe el valor? | boolean |
+| `size()` | Cantidad de pares | int |
+
+<CodeBlock lang="java" title="Métodos útiles de HashMap">
+{`import java.util.HashMap;
+
+public class MetodosHashMap {
+    public static void main(String[] args) {
+        HashMap<String, Integer> inventario = new HashMap<>();
+        inventario.put("Manzanas", 50);
+        inventario.put("Peras", 30);
+
+        // getOrDefault: si no existe, retorna valor por defecto
+        int uvas = inventario.getOrDefault("Uvas", 0);
+        System.out.println("Uvas: " + uvas);  // 0
+
+        // putIfAbsent: solo agrega si no existe
+        inventario.putIfAbsent("Manzanas", 100);  // no cambia
+        inventario.putIfAbsent("Uvas", 25);        // agrega
+        System.out.println("Después de putIfAbsent: " + inventario);
+
+        // containsKey / containsValue
+        System.out.println("¿Tiene Peras?: " + inventario.containsKey("Peras"));
+        System.out.println("¿Tiene 50?: " + inventario.containsValue(50));
+
+        // remove
+        inventario.remove("Peras");
+        System.out.println("Sin Peras: " + inventario);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Uvas: 0
+Después de putIfAbsent: {Manzanas=50, Uvas=25}
+¿Tiene Peras?: true
+¿Tiene 50?: true
+Sin Peras: {Manzanas=50, Uvas=25}
+```
+
+## Iterar sobre un HashMap
+
+<CodeBlock lang="java" title="Tres formas de recorrer un HashMap">
+{`import java.util.HashMap;
+import java.util.Map;
+
+public class IterarHashMap {
+    public static void main(String[] args) {
+        HashMap<String, String> capitales = new HashMap<>();
+        capitales.put("Colombia", "Bogotá");
+        capitales.put("México", "Ciudad de México");
+        capitales.put("Argentina", "Buenos Aires");
+
+        // Forma 1: entrySet (clave + valor)
+        System.out.println("--- entrySet ---");
+        for (Map.Entry<String, String> entry : capitales.entrySet()) {
+            System.out.println(entry.getKey() + " → " + entry.getValue());
+        }
+
+        // Forma 2: keySet (solo claves)
+        System.out.println("--- keySet ---");
+        for (String pais : capitales.keySet()) {
+            System.out.println(pais);
+        }
+
+        // Forma 3: values (solo valores)
+        System.out.println("--- values ---");
+        for (String capital : capitales.values()) {
+            System.out.println(capital);
+        }
+
+        // Forma 4: forEach con lambda (Java 8+)
+        System.out.println("--- forEach ---");
+        capitales.forEach((pais, capital) ->
+            System.out.println(pais + " → " + capital));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+--- entrySet ---
+Colombia → Bogotá
+México → Ciudad de México
+Argentina → Buenos Aires
+--- keySet ---
+Colombia
+México
+Argentina
+--- values ---
+Bogotá
+Ciudad de México
+Buenos Aires
+--- forEach ---
+Colombia → Bogotá
+México → Ciudad de México
+Argentina → Buenos Aires
+```
+
+## HashMap con objetos como valores
+
+<CodeBlock lang="java" title="HashMap con valores complejos">
+{`import java.util.HashMap;
+
+public class HashMapObjetos {
+    public static void main(String[] args) {
+        HashMap<String, double[]> notas = new HashMap<>();
+
+        notas.put("Ana", new double[]{9.0, 8.5, 9.2});
+        notas.put("Luis", new double[]{7.5, 8.0, 7.8});
+        notas.put("María", new double[]{9.5, 9.0, 9.8});
+
+        for (String nombre : notas.keySet()) {
+            double[] exámenes = notas.get(nombre);
+            double promedio = 0;
+            for (double nota : exámenes) promedio += nota;
+            promedio /= exámenes.length;
+            System.out.printf("%s: promedio %.1f%n",
+                nombre, promedio);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Ana: promedio 8.9
+Luis: promedio 7.8
+María: promedio 9.4
+```
+
+## Crear mapas con Java 9+
+
+```java
+// Mapa inmutable de un solo par
+Map<String, Integer> uno = Map.of("clave", 1);
+
+// Mapa inmutable de varios pares
+Map<String, Integer> varios = Map.of(
+    "A", 1, "B", 2, "C", 3
+);
+
+// Mapa que permite null
+Map<String, Integer> mutable = new HashMap<>(varios);
+```
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

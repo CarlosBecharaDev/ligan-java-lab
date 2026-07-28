@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-ifelse",
+  "lessonSlug": "if-else",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\n```java\nint x = 5;\nif (x = 5) {\n    System.out.println(\"Igual\");\n} else {\n    System.out.println(\"Diferente\");\n}\n```",
+      "options": ["Igual", "Diferente", "Error de compilación", "Nada"],
+      "correctIndex": 2,
+      "explanations": [
+        "No imprime Igual porque hay error de compilación.",
+        "No llega al else porque hay error.",
+        "Correcto. x = 5 es asignación, no expresión booleana. Java no convierte int a boolean.",
+        "No compila, no ejecuta nada."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es el 'dangling else'?",
+      "options": [
+        "Un error donde el else se asocia al if incorrecto",
+        "Un bucle infinito",
+        "Una sentencia if sin condición",
+        "Un método de depuración"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Java asocia el else con el if más cercano sin else. Las llaves lo resuelven.",
+        "No tiene relación con bucles.",
+        "El if siempre necesita una condición.",
+        "No es un método de depuración."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuándo es apropiado usar el ternario en vez de if-else?",
+      "options": [
+        "Siempre, es más corto",
+        "Para asignaciones simples de dos opciones",
+        "Nunca, if-else es siempre mejor",
+        "Solo para condiciones con más de 3 ramas"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No siempre. Para lógica compleja, if-else es más legible.",
+        "Correcto. El ternario es ideal para asignaciones inline simples con solo dos opciones.",
+        "Sí tiene casos de uso válidos.",
+        "El ternario solo tiene dos ramas."
+      ]
+    }
+  ]
+}

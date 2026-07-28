@@ -1,0 +1,132 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import { getCollection } from 'astro:content';
+
+const lessons = await getCollection('lessons');
+const quizzes = await getCollection('quizzes');
+const exercisesColl = await getCollection('exercises');
+const modules = await getCollection('modules');
+
+const totalLessons = lessons.length;
+const totalQuizzes = quizzes.length;
+const totalExercises = exercisesColl.reduce((sum, ex) => sum + ex.data.length, 0);
+const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
+---
+
+<ContentLayout title="Mi progreso" description="Estadísticas de aprendizaje desde tu navegador">
+  <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui)">
+    <h1 data-i18n="progress.title" style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md)">📈 Mi progreso</h1>
+    <p data-i18n="progress.description" style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:18px">
+      Tu progreso se guarda automáticamente en este navegador. Si cambias de dispositivo o limpias los datos, se reiniciará.
+    </p>
+
+    <div id="progress-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <h3 id="lessons-count" style="font-family:var(--font-pixel);font-size:24px;color:var(--win-link);margin-bottom:var(--space-sm)">0</h3>
+        <p style="color:var(--win-muted);margin:0"><span data-i18n="progress.lessons-completed">Lecciones completadas de</span> {totalLessons}</p>
+      </div>
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <h3 id="quizzes-count" style="font-family:var(--font-pixel);font-size:24px;color:#28C840;margin-bottom:var(--space-sm)">0</h3>
+        <p style="color:var(--win-muted);margin:0"><span data-i18n="progress.quizzes-passed">Quizzes aprobados de</span> {totalQuizzes}</p>
+      </div>
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <h3 id="exercises-count" style="font-family:var(--font-pixel);font-size:24px;color:#FFBD2E;margin-bottom:var(--space-sm)">0</h3>
+        <p style="color:var(--win-muted);margin:0"><span data-i18n="progress.exercises-solved">Ejercicios resueltos de</span> {totalExercises}</p>
+      </div>
+    </div>
+
+    <div id="progress-detail">
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <h3 data-i18n="progress.module-progress" style="font-family:var(--font-pixel);font-size:16px;margin-bottom:var(--space-md)">📚 Progreso por módulo</h3>
+        <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+          {modulesOrdered.map((mod) => (
+            <div>
+              <div style="display:flex;justify-content:space-between;margin-bottom:var(--space-xs)">
+                <span style="font-family:var(--font-pixel);font-size:12px">{mod.data.title}</span>
+                <span style="color:var(--win-muted);font-family:var(--font-pixel);font-size:12px">
+                  <span class="module-progress-count" data-module={mod.data.slug}>0</span>/{mod.data.lessonCount}
+                </span>
+              </div>
+              <div style="width:100%;background:white;border:2px solid black;height:16px;position:relative;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.2)">
+                <div class="module-progress-bar" data-module={mod.data.slug} style="width:0%;height:100%;background:var(--win-link);border-right:2px solid black;transition:width 0.5s ease"></div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5);margin-top:var(--space-md)">
+        <h3 data-i18n="progress.total-progress" style="font-family:var(--font-pixel);font-size:16px;margin-bottom:var(--space-md)">📊 Progreso total</h3>
+        <div style="width:100%;background:white;border:2px solid black;height:24px;position:relative;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.2)">
+          <div id="total-progress-bar" style="width:0%;height:100%;background:#28C840;border-right:2px solid black;transition:width 0.5s ease"></div>
+          <span id="total-progress-label" style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-pixel);font-size:12px;color:black">0%</span>
+        </div>
+      </div>
+
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5);margin-top:var(--space-md)">
+        <h3 data-i18n="progress.study-streak" style="font-family:var(--font-pixel);font-size:16px;margin-bottom:var(--space-md)">⚡ Racha de estudio</h3>
+        <div id="streak-display">
+          <p data-i18n="progress.start-streak" style="color:var(--win-muted);font-size:18px">Completa tu primera lección para empezar tu racha. ¡La consistencia es la clave del aprendizaje!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ContentLayout>
+
+<script>
+  (function() {
+    const KEY = 'ligan-java-lab-progress';
+    let data;
+    try {
+      const raw = localStorage.getItem(KEY);
+      data = raw ? JSON.parse(raw) : { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
+    } catch { data = { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null }; }
+
+    const totalLessons = {totalLessons};
+    const totalQuizzes = {totalQuizzes};
+    const totalExercises = {totalExercises};
+
+    document.getElementById('lessons-count').textContent = data.lessons.length;
+    document.getElementById('quizzes-count').textContent = data.quizzes.length;
+    document.getElementById('exercises-count').textContent = data.exercises.length;
+
+    // Module progress bars
+    document.querySelectorAll('[data-module]').forEach(el => {
+      const moduleSlug = el.getAttribute('data-module');
+      const count = data.lessons.filter(s => {
+        // Find lesson slug from module
+        return document.querySelector(`[data-lesson-module="${moduleSlug}"]`) ||
+               document.querySelector(`[data-lesson-slug="${s}"]`);
+      }).length;
+      // For now, count by module pattern
+      const moduleLessons = {};
+
+      if (el.classList.contains('module-progress-count')) {
+        el.textContent = count;
+      }
+      if (el.classList.contains('module-progress-bar')) {
+        const max = parseInt(el.closest('div')?.querySelector('.module-progress-count')?.textContent?.split('/')[1] || '1');
+        el.style.width = Math.min(100, (count / Math.max(max, 1)) * 100) + '%';
+      }
+    });
+
+    // Total progress
+    const total = data.lessons.length + data.quizzes.length + data.exercises.length;
+    const maxTotal = totalLessons + totalQuizzes + totalExercises;
+    const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
+    document.getElementById('total-progress-bar').style.width = pct + '%';
+    document.getElementById('total-progress-label').textContent = pct + '%';
+
+    // Streak
+    if (data.streak > 0) {
+      document.getElementById('streak-display').innerHTML = `
+        <p style="font-family:var(--font-pixel);font-size:24px;color:#FFBD2E;margin:0">
+          🔥 ${data.streak} <span data-i18n="progress.days">días</span>
+        </p>
+        <p data-i18n="progress.streak-keep-it-up" style="color:var(--win-muted);margin-top:var(--space-sm);font-size:18px">
+          ¡Sigue así! La consistencia es clave.
+        </p>
+      `;
+    }
+  })();
+</script>

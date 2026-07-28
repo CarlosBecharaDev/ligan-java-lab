@@ -1,0 +1,52 @@
+[
+  {
+    "id": "ex-strings-facil",
+    "lessonSlug": "strings",
+    "title": "Información de un libro",
+    "difficulty": "facil",
+    "description": "Dado un título de libro, imprime: la longitud, el primer carácter, el último carácter, y si contiene la palabra 'Java'.",
+    "template": "public class InfoLibro {\n    public static void main(String[] args) {\n        String titulo = \"Aprendiendo Java desde Cero\";\n\n        // TODO: Imprime la longitud del título\n        // Imprime el primer carácter\n        // Imprime el último carácter\n        // Imprime si contiene la palabra \"Java\"\n\n    }\n}",
+    "hints": [
+      "Usa .length() para la longitud",
+      "Usa .charAt(0) para el primer carácter y .charAt(length-1) para el último",
+      "Usa .contains() para verificar si contiene una palabra"
+    ],
+    "solution": "public class InfoLibro {\n    public static void main(String[] args) {\n        String titulo = \"Aprendiendo Java desde Cero\";\n\n        System.out.println(\"Título: \" + titulo);\n        System.out.println(\"Longitud: \" + titulo.length());\n        System.out.println(\"Primer carácter: \" + titulo.charAt(0));\n        System.out.println(\"Último carácter: \" + titulo.charAt(titulo.length() - 1));\n        System.out.println(\"Contiene 'Java': \" + titulo.contains(\"Java\"));\n    }\n}",
+    "solutionExplanation": "Usamos length() para la longitud, charAt(0) y charAt(length-1) para los extremos, y contains() para verificar la presencia de una subcadena.",
+    "expectedOutput": "Título: Aprendiendo Java desde Cero\nLongitud: 27\nPrimer carácter: A\nÚltimo carácter: o\nContiene 'Java': true"
+  },
+  {
+    "id": "ex-strings-normal",
+    "lessonSlug": "strings",
+    "title": "Normalizador de texto",
+    "difficulty": "normal",
+    "description": "Crea una función que reciba un nombre con espacios extra y lo normalice: sin espacios al inicio/fin, con la primera letra de cada palabra en mayúscula y el resto en minúscula.",
+    "template": "public class NormalizadorTexto {\n    public static void main(String[] args) {\n        String nombre = \"  CARLOS  bechara  \";\n\n        // TODO: Elimina espacios extra al inicio y final\n        // Convierte todo a minúsculas\n        // Capitaliza la primera letra de cada palabra\n        // Usa split para dividir y StringBuilder para reconstruir\n        // Imprime el resultado\n\n    }\n}",
+    "hints": [
+      "Usa trim() para eliminar espacios",
+      "Usa toLowerCase() para normalizar",
+      "Usa split(\" \") para dividir en palabras",
+      "Usa substring(0,1).toUpperCase() + substring(1) para capitalizar"
+    ],
+    "solution": "public class NormalizadorTexto {\n    public static void main(String[] args) {\n        String nombre = \"  CARLOS  bechara  \";\n\n        String limpio = nombre.trim().toLowerCase();\n        String[] palabras = limpio.split(\"\\\\s+\");\n\n        StringBuilder resultado = new StringBuilder();\n        for (int i = 0; i < palabras.length; i++) {\n            if (i > 0) resultado.append(\" \");\n            String palabra = palabras[i];\n            resultado.append(palabra.substring(0, 1).toUpperCase())\n                     .append(palabra.substring(1));\n        }\n\n        System.out.println(\"Original: '\" + nombre + \"'\");\n        System.out.println(\"Normalizado: '\" + resultado + \"'\");\n    }\n}",
+    "solutionExplanation": "Eliminamos espacios con trim(), normalizamos a minúsculas, dividimos por espacios múltiples con split regex, y capitalizamos cada palabra usando substring(0,1).toUpperCase() concatenado con substring(1).",
+    "expectedOutput": "Original: '  CARLOS  bechara  '\nNormalizado: 'Carlos Bechara'"
+  },
+  {
+    "id": "ex-strings-dificil",
+    "lessonSlug": "strings",
+    "title": "Validador de URLs",
+    "difficulty": "dificil",
+    "description": "Crea un validador que verifique si una URL tiene el formato correcto: debe empezar con https://, terminar con .com o .org, y contener al menos un dominio con punto. Construye un informe detallado con StringBuilder.",
+    "template": "public class ValidadorURL {\n    public static void main(String[] args) {\n        String url = \"https://www.ejemplo.com/java/tutoriales\";\n\n        // TODO: Verifica que empiece con https://\n        // Verifica que termine con .com o .org\n        // Extrae y muestra el dominio\n        // Cuenta las partes de la ruta\n        // Construye un informe con StringBuilder\n        // Determina si la URL es válida\n\n    }\n}",
+    "hints": [
+      "Usa startsWith() y endsWith() para las verificaciones",
+      "Usa indexOf() para encontrar la posición del dominio",
+      "Usa substring() para extraer partes específicas",
+      "Usa split(\"/\") para contar segmentos de la ruta"
+    ],
+    "solution": "public class ValidadorURL {\n    public static void main(String[] args) {\n        String url = \"https://www.ejemplo.com/java/tutoriales\";\n\n        StringBuilder informe = new StringBuilder();\n        informe.append(\"=== Informe de URL ===\\n\");\n        informe.append(\"URL: \").append(url).append(\"\\n\");\n\n        boolean usaHTTPS = url.startsWith(\"https://\");\n        informe.append(\"Protocolo HTTPS: \").append(usaHTTPS ? \"✅ Sí\" : \"❌ No\").append(\"\\n\");\n\n        boolean extensionValida = url.endsWith(\".com\") || url.endsWith(\".org\");\n        informe.append(\"Extensión válida: \").append(extensionValida ? \"✅ Sí\" : \"❌ No\").append(\"\\n\");\n\n        int inicioDominio = url.indexOf(\"//\") + 2;\n        int finDominio = url.indexOf(\"/\", inicioDominio);\n        String dominio = url.substring(inicioDominio, finDominio);\n        informe.append(\"Dominio: \").append(dominio).append(\"\\n\");\n\n        boolean tienePunto = dominio.contains(\".\");\n        informe.append(\"Formato dominio: \").append(tienePunto ? \"✅ Válido\" : \"❌ Inválido\").append(\"\\n\");\n\n        String[] partes = url.substring(inicioDominio).split(\"/\");\n        informe.append(\"Segmentos ruta: \").append(partes.length - 1).append(\"\\n\");\n\n        boolean urlValida = usaHTTPS && extensionValida && tienePunto;\n        informe.append(\"\\nResultado: \").append(urlValida ? \"✅ URL VÁLIDA\" : \"❌ URL INVÁLIDA\");\n\n        System.out.println(informe);\n    }\n}",
+    "solutionExplanation": "Usamos startsWith/endsWith para validación de formato, indexOf para posiciones, substring para extracción, split para segmentar la ruta, y StringBuilder para construir el informe de forma eficiente.",
+    "expectedOutput": "=== Informe de URL ===\nURL: https://www.ejemplo.com/java/tutoriales\nProtocolo HTTPS: ✅ Sí\nExtensión válida: ✅ Sí\nDominio: www.ejemplo.com\nFormato dominio: ✅ Válido\nSegmentos ruta: 2\n\nResultado: ✅ URL VÁLIDA"
+  }
+]

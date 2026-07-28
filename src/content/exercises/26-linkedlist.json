@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-linkedlist-facil",
+    "title": "Pila de libros",
+    "difficulty": "facil",
+    "description": "Usa una LinkedList como pila (stack) para almacenar libros. Agrega 3 libros con push (addFirst), saca 2 con pop (removeFirst) y muestra el libro en el tope con peek (getFirst).",
+    "template": "import java.util.LinkedList;\n\npublic class PilaLibros {\n    public static void main(String[] args) {\n        LinkedList<String> pila = new LinkedList<>();\n        // TODO: Agrega 3 libros con addFirst()\n        // TODO: Muestra y saca 2 libros con removeFirst()\n        // TODO: Muestra el tope con getFirst()\n        System.out.println(\"Pila restante: \" + pila);\n    }\n}",
+    "hints": [
+      "addFirst() coloca un elemento al inicio de la LinkedList",
+      "removeFirst() extrae el elemento del inicio",
+      "getFirst() obtiene el elemento del inicio sin eliminarlo"
+    ],
+    "solution": "import java.util.LinkedList;\n\npublic class PilaLibros {\n    public static void main(String[] args) {\n        LinkedList<String> pila = new LinkedList<>();\n        pila.addFirst(\"Cien Años de Soledad\");\n        pila.addFirst(\"Don Quijote\");\n        pila.addFirst(\"La Sombra del Viento\");\n        System.out.println(\"Sacando: \" + pila.removeFirst());\n        System.out.println(\"Sacando: \" + pila.removeFirst());\n        System.out.println(\"Tope: \" + pila.getFirst());\n        System.out.println(\"Pila restante: \" + pila);\n    }\n}",
+    "solutionExplanation": "En una pila, el último en entrar es el primero en salir (LIFO). addFirst() apila en la parte superior, removeFirst() desapila, y getFirst() peek sin desapilar.",
+    "expectedOutput": "Sacando: La Sombra del Viento\nSacando: Don Quijote\nTope: Cien Años de Soledad\nPila restante: [Cien Años de Soledad]",
+    "lessonSlug": "linkedlist"
+  },
+  {
+    "id": "ex-linkedlist-normal",
+    "title": "Cola de clientes",
+    "difficulty": "normal",
+    "description": "Usa una LinkedList como cola (queue) para gestionar clientes en espera. Agrega clientes con offer, atiende con poll y muestra el tamaño de la cola.",
+    "template": "import java.util.LinkedList;\n\npublic class ColaClientes {\n    public static void main(String[] args) {\n        LinkedList<String> cola = new LinkedList<>();\n        // TODO: Agrega 4 clientes con offer()\n        System.out.println(\"Tamaño de cola: \" + cola.size());\n        // TODO: Atiende 2 clientes con poll()\n        System.out.println(\"Tamaño de cola: \" + cola.size());\n        System.out.println(\"Cola restante: \" + cola);\n    }\n}",
+    "hints": [
+      "offer() agrega al final de la LinkedList",
+      "poll() extrae del inicio de la LinkedList",
+      "size() retorna el número de elementos"
+    ],
+    "solution": "import java.util.LinkedList;\n\npublic class ColaClientes {\n    public static void main(String[] args) {\n        LinkedList<String> cola = new LinkedList<>();\n        cola.offer(\"Ana\");\n        cola.offer(\"Luis\");\n        cola.offer(\"María\");\n        cola.offer(\"Pedro\");\n        System.out.println(\"Tamaño de cola: \" + cola.size());\n        System.out.println(\"Atendiendo: \" + cola.poll());\n        System.out.println(\"Atendiendo: \" + cola.poll());\n        System.out.println(\"Tamaño de cola: \" + cola.size());\n        System.out.println(\"Cola restante: \" + cola);\n    }\n}",
+    "solutionExplanation": "En una cola, el primero en entrar es el primero en salir (FIFO). offer() encola al final, poll() desencola del inicio mostrando el nombre del cliente atendido.",
+    "expectedOutput": "Tamaño de cola: 4\nAtendiendo: Ana\nAtendiendo: Luis\nTamaño de cola: 2\nCola restante: [María, Pedro]",
+    "lessonSlug": "linkedlist"
+  },
+  {
+    "id": "ex-linkedlist-dificil",
+    "title": "Historial del navegador",
+    "difficulty": "dificil",
+    "description": "Implementa el historial de un navegador con向前 (back) y向前 (forward) usando ListIterator. Navega a 3 páginas, retrocede 1, avanza 1 y muestra la página actual.",
+    "template": "import java.util.LinkedList;\nimport java.util.ListIterator;\n\npublic class HistorialNavegador {\n    public static void main(String[] args) {\n        LinkedList<String> historial = new LinkedList<>();\n        historial.add(\"google.com\");\n        historial.add(\"github.com\");\n        historial.add(\"stackoverflow.com\");\n\n        ListIterator<String> iterador = historial.listIterator();\n        // Avanza hasta el final (posición actual: stackoverflow.com)\n        while (iterador.hasNext()) iterador.next();\n\n        // TODO: Retrocede 1 posición con previous()\n        // TODO: Muestra la página actual\n        // TODO: Avanza 1 posición con next()\n        // TODO: Muestra la página actual\n    }\n}",
+    "hints": [
+      "next() avanza el cursor y retorna el elemento",
+      "previous() retrocede el cursor y retorna el elemento",
+      "La posición del cursor determina la página actual"
+    ],
+    "solution": "import java.util.LinkedList;\nimport java.util.ListIterator;\n\npublic class HistorialNavegador {\n    public static void main(String[] args) {\n        LinkedList<String> historial = new LinkedList<>();\n        historial.add(\"google.com\");\n        historial.add(\"github.com\");\n        historial.add(\"stackoverflow.com\");\n\n        ListIterator<String> iterador = historial.listIterator();\n        while (iterador.hasNext()) iterador.next();\n\n        // Retrocede 1\n        String actual = iterador.previous();\n        System.out.println(\"Atrás a: \" + actual);\n\n        // Retrocede 1 más\n        actual = iterador.previous();\n        System.out.println(\"Atrás a: \" + actual);\n\n        // Avanza 1\n        actual = iterador.next();\n        System.out.println(\"Adelante a: \" + actual);\n\n        // Avanza 1 más\n        actual = iterador.next();\n        System.out.println(\"Adelante a: \" + actual);\n    }\n}",
+    "solutionExplanation": "ListIterator permite navegar en ambas direcciones. Se posiciona al final con next() en un bucle. Luego previous() retrocede y next() avanza. Cada llamada retorna la página a la que se mueve el cursor, simulando los botones atrás/adelante del navegador.",
+    "expectedOutput": "Atrás a: stackoverflow.com\nAtrás a: github.com\nAdelante a: stackoverflow.com\nAdelante a: github.com",
+    "lessonSlug": "linkedlist"
+  }
+]

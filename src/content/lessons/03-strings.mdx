@@ -1,0 +1,512 @@
+---
+title: "Strings y Manipulación de Texto"
+slug: "strings"
+module: "01-fundamentos"
+level: "Inicial"
+objectives:
+  - "Entender la inmutabilidad de String y su impacto en el rendimiento"
+  - "Usar los métodos principales de String: length, charAt, substring, indexOf, toUpperCase"
+  - "Manipular texto con replace, trim, split y contains"
+  - "Comparar strings correctamente con equalsIgnoreCase ycompareTo"
+  - "Construir texto eficiente con StringBuilder"
+prerequisites:
+  - "Haber completado Lección 01: Variables y Tipos de Datos"
+  - "Conocer la diferencia entre tipos primitivos y tipos de referencia"
+history:
+  introducedIn: "Java 1.0"
+  context: "Desde Java 1.0, String ha sido una clase inmutable diseñada para seguridad e integridad. Esta inmutabilidad permite que los strings sean compartidos simultáneamente entre múltiples hilos sin riesgo de corrupción de datos, y habilita el String Pool para optimizar el uso de memoria."
+  evolution: "Java 5 introdujo StringBuilder como reemplazo moderno de StringBuffer. Java 9 implementó el compact strings (JEP 254) para reducir el uso de memoria en strings ASCII. Java 12 agregó el método indent() y Java 13 introdujo text blocks con triples comillas."
+realWorldExamples:
+  - domain: "Procesamiento de nombres"
+    description: "En un sistema de registro de usuarios, es común normalizar nombres: convertir a mayúsculas, eliminar espacios extra, validar formatos y extraer iniciales."
+    code: |
+      String nombre = "  carlos  bechara  ";
+
+      // Limpiar espacios y formatear
+      String limpio = nombre.trim();
+      String mayusculas = limpio.toUpperCase();
+      String[] partes = limpio.split("\\s+");
+      String iniciales = partes[0].charAt(0) + ". " + partes[1].charAt(0) + ".";
+
+      System.out.println("Nombre limpio: " + limpio);
+      System.out.println("Mayúsculas: " + mayusculas);
+      System.out.println("Iniciales: " + iniciales);
+      System.out.println("Longitud: " + limpio.length());
+    result: |
+      Nombre limpio: carlos  bechara
+      Mayúsculas: CARLOS  BECHARA
+      Iniciales: C. B.
+      Longitud: 16
+  - domain: "Validación de formularios"
+    description: "En una app de login, se validan emails, contraseñas y nombres de usuario verificando formato, longitud y contenido usando métodos de String."
+    code: |
+      String email = "usuario@ejemplo.com";
+      String usuario = "carlos_dev";
+
+      boolean tieneArroba = email.contains("@");
+      boolean emailValido = tieneArroba && email.endsWith(".com");
+      boolean usuarioLargo = usuario.length() >= 5 && usuario.length() <= 20;
+      boolean usuarioSinEspacios = !usuario.contains(" ");
+
+      System.out.println("Email válido: " + emailValido);
+      System.out.println("Usuario válido: " + usuarioLargo);
+      System.out.println("Sin espacios: " + usuarioSinEspacios);
+    result: |
+      Email válido: true
+      Usuario válido: true
+      Sin espacios: true
+hasInteractive: false
+comparisons:
+  - title: "String vs StringBuilder"
+    items:
+      - name: "String"
+        features:
+          inmutabilidad: "Inmutable — cada operación crea un nuevo objeto"
+          rendimiento: "Lento para muchas concatenaciones"
+          uso: "Texto que no cambia, constantes, claves de mapa"
+          memoria: "Crea objetos temporales en cada modificación"
+      - name: "StringBuilder"
+        features:
+          inmutabilidad: "Mutable — modifica el mismo objeto"
+          rendimiento: "Rápido para construcción iterativa"
+          uso: "Construir strings en bucles, concatenar muchas partes"
+          memoria: "Un solo objeto, sin basura intermedia"
+    recommendation: "Usa String para texto inmutable (nombres, constantes, URLs). Usa StringBuilder cuando construyas texto en un bucle o concatenes más de 3-4 partes, ya que cada concatenación con + crea un objeto String nuevo."
+videos:
+  - url: ""
+    title: "Manejo de Strings en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Por qué String es inmutable en Java?"
+    answer: "La inmutabilidad garantiza que los strings sean seguros para usar entre múltiples hilos, permite el String Pool para ahorrar memoria, y hace que las claves de HashMap sean seguras. Si un String pudiera cambiar, todos los mapas y conjuntos que lo usarían se comportarían de forma impredecible."
+  - question: "¿Cuándo debo usar StringBuilder en vez de concatenación con `+`?"
+    answer: "Para 2-3 concatenaciones, `+` es legible y el compilador lo optimiza. Para concatenaciones dentro de bucles o con más de 4 partes, usa StringBuilder. En bucles, cada `+` crea un String nuevo en cada iteración, acumulando basura en memoria."
+  - question: "¿Qué es el String Pool?"
+    answer: "Es una región especial del Heap donde Java almacena strings literales para reutilizarlos. Si creas dos strings con el mismo literal, Java apunta ambos a la misma referencia en memoria. Esto ahorra espacio cuando se repiten mismos textos (como constantes o claves de configuración)."
+sources:
+  - title: "Java 21 Language Specification — The class String"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.3.3"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Characters and Strings"
+    url: "https://docs.oracle.com/javase/tutorial/java/data/strings.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es un String?
+
+Un `String` en Java es una **secuencia de caracteres** que forma parte de la librería estándar. A diferencia de los tipos primitivos, `String` es un **objeto** (tipo de referencia), lo que significa que tiene métodos propios que nos permiten manipularlo.
+
+```java
+String saludo = "Hola, Java";
+System.out.println(saludo.length());    // 10
+System.out.println(saludo.charAt(0));  // H
+```
+
+## La inmutabilidad: un concepto clave
+
+Los strings en Java son **inmutables**: una vez creados, no pueden modificarse. Cada operación que parece modificar un string en realidad crea uno **nuevo**:
+
+```java
+String original = "hola";
+String modificado = original.toUpperCase();
+
+System.out.println(original);   // hola (no cambió)
+System.out.println(modificado); // HOLA (nuevo string)
+```
+
+Esto tiene implicaciones importantes:
+- **Seguridad:** Los strings son seguros entre múltiples hilos.
+- **String Pool:** Java puede reutilizar strings con el mismo valor en memoria.
+- **Rendimiento:** La concatenación repetida en bucles es costosa (crea muchos objetos temporales).
+
+## Crear strings
+
+Hay dos formas principales de crear strings:
+
+<CodeBlock lang="java" title="Creación de strings">
+{`public class CrearStrings {
+    public static void main(String[] args) {
+        // Literal de string (se almacena en el String Pool)
+        String literal = "Hola Mundo";
+
+        // Constructor new (siempre crea un objeto nuevo en el Heap)
+        String objeto = new String("Hola Mundo");
+
+        // Caracteres
+        String desdeChar = new String(new char[]{'J', 'a', 'v', 'a'});
+
+        // Métodos estáticos de conversión
+        String desdeNumero = String.valueOf(42);
+        String desdeDouble = String.format("%.2f", 3.14159);
+
+        System.out.println(literal);
+        System.out.println(objeto);
+        System.out.println(desdeChar);
+        System.out.println(desdeNumero);
+        System.out.println(desdeDouble);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Hola Mundo
+Hola Mundo
+Java
+42
+3.14
+```
+
+### Literal vs. `new String()`
+
+```java
+String a = "java";
+String b = "java";
+String c = new String("java");
+
+System.out.println(a == b);       // true — mismo objeto en el Pool
+System.out.println(a == c);       // false — objetos diferentes
+System.out.println(a.equals(c));  // true — mismo contenido
+```
+
+> **Regla de oro:** Usa literales para strings conocidos. Usa `new String()` solo cuando necesites forzar un objeto nuevo (raramente es necesario).
+
+## Métodos esenciales de String
+
+### Información del string
+
+| Método | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `length()` | Número de caracteres | `"Java".length()` → `4` |
+| `charAt(i)` | Carácter en posición i | `"Java".charAt(1)` → `'a'` |
+| `isEmpty()` | true si length es 0 | `"".isEmpty()` → `true` |
+| `isBlank()` | true si está vacío o solo espacios | `" ".isBlank()` → `true` |
+
+<CodeBlock lang="java" title="Información del string">
+{`public class InfoString {
+    public static void main(String[] args) {
+        String texto = "Programación en Java";
+
+        System.out.println("Longitud: " + texto.length());          // 20
+        System.out.println("Primer carácter: " + texto.charAt(0));  // P
+        System.out.println("Último carácter: " + texto.charAt(texto.length() - 1)); // a
+        System.out.println("Está vacío: " + texto.isEmpty());       // false
+        System.out.println("En blanco: " + "  ".isBlank());         // true
+    }
+}`}
+</CodeBlock>
+
+### Búsqueda dentro del string
+
+| Método | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `indexOf("sub")` | Primera posición de "sub" | `"Java".indexOf("va")` → `2` |
+| `lastIndexOf("sub")` | Última posición | `"Java".lastIndexOf('a')` → `3` |
+| `contains("sub")` | true si contiene "sub" | `"Java".contains("av")` → `true` |
+| `startsWith("pre")` | true si empieza con "pre" | `"Java".startsWith("Ja")` → `true` |
+| `endsWith("suf")` | true si termina con "suf" | `"Java".endsWith("va")` → `true` |
+
+### Extracción de subcadenas
+
+| Método | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `substring(inicio)` | Desde inicio hasta el final | `"Java".substring(2)` → `"va"` |
+| `substring(inicio, fin)` | Desde inicio hasta fin-1 | `"Java".substring(1, 3)` → `"av"` |
+
+<CodeBlock lang="java" title="Búsqueda y extracción">
+{`public class BusquedaExtraccion {
+    public static void main(String[] args) {
+        String url = "https://www.ejemplo.com/java";
+
+        // Búsqueda
+        System.out.println("Contiene 'java': " + url.contains("java"));
+        System.out.println("Empieza con 'https': " + url.startsWith("https"));
+        System.out.println("Termina con '.com': " + url.endsWith(".com"));
+
+        // Posiciones
+        int posicionJava = url.indexOf("java");
+        System.out.println("Posición de 'java': " + posicionJava);
+
+        // Subcadenas
+        String dominio = url.substring(8, url.indexOf("/", 8));
+        System.out.println("Dominio: " + dominio);  // www.ejemplo.com
+
+        String extension = url.substring(url.lastIndexOf("."));
+        System.out.println("Extensión: " + extension);  // .com
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Contiene 'java': true
+Empieza con 'https': true
+Termina con '.com': false
+Posición de 'java': 23
+Dominio: www.ejemplo.com
+Extensión: .com
+```
+
+## Transformación de texto
+
+| Método | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `toUpperCase()` | Todo en mayúsculas | `"java".toUpperCase()` → `"JAVA"` |
+| `toLowerCase()` | Todo en minúsculas | `"JAVA".toLowerCase()` → `"java"` |
+| `trim()` | Elimina espacios al inicio y final | `" hola ".trim()` → `"hola"` |
+| `strip()` | Como trim pero con soporte Unicode | `" hola ".strip()` → `"hola"` |
+| `replace(old, new)` | Reemplaza todas las ocurrencias | `"java".replace('a', 'o')` → `"jovo"` |
+
+<CodeBlock lang="java" title="Transformación de texto">
+{`public class TransformacionTexto {
+    public static void main(String[] args) {
+        String nombre = "  Carlos Bechara  ";
+
+        // Limpiar y formatear
+        String limpio = nombre.trim();
+        String mayusculas = limpio.toUpperCase();
+        String minusculas = limpio.toLowerCase();
+
+        System.out.println("Original: '" + nombre + "'");
+        System.out.println("Limpio: '" + limpio + "'");
+        System.out.println("Mayúsculas: " + mayusculas);
+        System.out.println("Minúsculas: " + minusculas);
+
+        // Reemplazo
+        String mensaje = "Hola Mundo, bienvenido a Java";
+        String nuevo = mensaje.replace("Mundo", "Java Developer");
+        System.out.println("Reemplazado: " + nuevo);
+
+        // Reemplazo de múltiples caracteres
+        String codigo = "A1-B2-C3";
+        String sinGuiones = codigo.replace("-", "");
+        System.out.println("Sin guiones: " + sinGuiones);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Original: '  Carlos Bechara  '
+Limpio: 'Carlos Bechara'
+Mayúsculas: CARLOS BECHARA
+Minúsculas: carlos bechara
+Reemplazado: Hola Java Developer, bienvenido a Java
+Sin guiones: A1B2C3
+```
+
+## División y unión de strings
+
+<CodeBlock lang="java" title="split y join">
+{`public class SplitJoin {
+    public static void main(String[] args) {
+        // Dividir un string en un array
+        String csv = "Manzana,Pera,Uva,Naranja";
+        String[] frutas = csv.split(",");
+
+        System.out.println("Número de frutas: " + frutas.length);
+        for (String fruta : frutas) {
+            System.out.println("  - " + fruta);
+        }
+
+        // Unir un array en un string
+        String[] lineas = {"Primera línea", "Segunda línea", "Tercera línea"};
+        String unido = String.join(" | ", lineas);
+        System.out.println("Unido: " + unido);
+
+        // Dividir con límite
+        String datos = "uno,dos,tres,cuatro";
+        String[] primerosDos = datos.split(",", 2);
+        System.out.println("Primeros 2: " + primerosDos[0] + " y " + primerosDos[1]);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Número de frutas: 4
+  - Manzana
+  - Pera
+  - Uva
+  - Naranja
+Unido: Primera línea | Segunda línea | Tercera línea
+Primeros 2: uno y dos,tres,cuatro
+```
+
+## Comparación de strings
+
+Nunca uses `==` para comparar contenido de strings. Usa los métodos de comparación:
+
+| Método | Descripción |
+|--------|-------------|
+| `equals(other)` | Compara contenido exacto |
+| `equalsIgnoreCase(other)` | Compara ignorando mayúsculas |
+| `compareTo(other)` | Orden lexicográfico (negativo, 0, positivo) |
+| `compareToIgnoreCase(other)` | Como compareTo pero ignorando caso |
+
+<CodeBlock lang="java" title="Comparación de strings">
+{`public class ComparacionStrings {
+    public static void main(String[] args) {
+        String a = "Java";
+        String b = "java";
+        String c = "Kotlin";
+
+        // equals: contenido exacto
+        System.out.println("a.equals(b): " + a.equals(b));           // false
+
+        // equalsIgnoreCase: ignora mayúsculas
+        System.out.println("a.equalsIgnoreCase(b): " + a.equalsIgnoreCase(b)); // true
+
+        // compareTo: orden lexicográfico
+        System.out.println("a.compareTo(c): " + a.compareTo(c));     // negativo (Java < Kotlin)
+        System.out.println("c.compareTo(a): " + c.compareTo(a));     // positivo (Kotlin > Java)
+
+        // Comparación práctica: ordenar nombres
+        String[] nombres = {"Carlos", "ana", "Bernardo"};
+        java.util.Arrays.sort(nombres);
+        System.out.println("Orden natural:");
+        for (String n : nombres) {
+            System.out.println("  " + n);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+a.equals(b): false
+a.equalsIgnoreCase(b): true
+a.compareTo(c): -3
+c.compareTo(a): 3
+Orden natural:
+  Bernardoa
+  Carlos
+  ana
+```
+
+## Construcción eficiente con StringBuilder
+
+Cuando necesitas construir un string paso a paso (especialmente en bucles), usa `StringBuilder` en vez de concatenar con `+`:
+
+<CodeBlock lang="java" title="StringBuilder vs concatenación">
+{`public class EjemploStringBuilder {
+    public static void main(String[] args) {
+        // ❌ Ineficiente: crea un objeto String nuevo en cada iteración
+        String lenta = "";
+        for (int i = 0; i < 5; i++) {
+            lenta += "Número " + i + " ";  // crea String nuevo cada vez
+        }
+        System.out.println("Concatenación: " + lenta.trim());
+
+        // ✅ Eficiente: modifica el mismo objeto StringBuilder
+        StringBuilder rapida = new StringBuilder();
+        for (int i = 0; i < 5; i++) {
+            rapida.append("Número ").append(i).append(" ");
+        }
+        System.out.println("StringBuilder: " + rapida.toString().trim());
+
+        // Otros métodos útiles de StringBuilder
+        StringBuilder sb = new StringBuilder("Java");
+        sb.insert(4, " Script");   // "Java Script"
+        sb.delete(4, 10);          // "Java"
+        sb.replace(0, 4, "Python"); // "Python"
+        System.out.println("Builder: " + sb);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Concatenación: Número 0 Número 1 Número 2 Número 3 Número 4
+StringBuilder: Número 0 Número 1 Número 2 Número 3 Número 4
+Builder: Python
+```
+
+### Cuándo usar cada uno
+
+| Situación | Usa |
+|-----------|-----|
+| Texto conocido que no cambia | `String` literal |
+| Concatenar 2-3 partes | `+` (legible) |
+| Construir en un bucle | `StringBuilder` |
+| Concatenar más de 4 partes | `StringBuilder` |
+| Clave de HashMap | `String` (inmutabilidad = seguridad) |
+
+## Errores frecuentes
+
+### Error 1: Comparar con `==` en vez de `.equals()`
+```java
+// ❌ Compara referencias de memoria, no contenido
+String a = new String("java");
+String b = new String("java");
+if (a == b) { System.out.println("Iguales"); }  // NO se imprime
+
+// ✅ Compara contenido
+if (a.equals(b)) { System.out.println("Iguales"); }  // Sí se imprime
+```
+
+### Error 2: Subcadenas fuera de rango
+```java
+// ❌ StringIndexOutOfBoundsException
+String s = "Java";
+char c = s.charAt(10);
+
+// ✅ Verificar longitud primero
+if (s.length() > 10) {
+    char c = s.charAt(10);
+}
+```
+
+### Error 3: Concatenación en bucle
+```java
+// ❌ Crea 1000 objetos String temporales
+String resultado = "";
+for (int i = 0; i < 1000; i++) {
+    resultado += i + " ";
+}
+
+// ✅ Un solo StringBuilder
+StringBuilder sb = new StringBuilder();
+for (int i = 0; i < 1000; i++) {
+    sb.append(i).append(" ");
+}
+String resultado = sb.toString();
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

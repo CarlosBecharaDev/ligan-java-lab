@@ -1,0 +1,92 @@
+{
+  "id": "quiz-39-streams-avanzado",
+  "lessonSlug": "streams",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es lazy evaluation en streams?",
+      "options": [
+        "Las operaciones intermedias no se ejecutan hasta que se llama una operación terminal",
+        "Los streams se ejecutan siempre de forma perezosa",
+        "Solo las operaciones terminal son perezosas",
+        "Lazy evaluation no existe en Java"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Las operaciones intermedias (filter, map, etc.) son lazily evaluated: se ensamblan pero no procesan datos hasta que se invoca una operación terminal como collect() o forEach().",
+        "No todos los streams son necesariamente perezosos.",
+        "Las operaciones terminal son eagerly evaluated, no lazy.",
+        "Lazy evaluation sí existe en Java."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué hace Collectors.toList()?",
+      "options": [
+        "Es un Collector que agrega los elementos del stream a un ArrayList",
+        "Crea un stream a partir de una lista",
+        "Filtra elementos duplicados",
+        "Ordena los elementos alfabéticamente"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Collectors.toList() es un Collector que acumula los elementos del stream en un ArrayList.",
+        "Eso sería List.of() o stream creation.",
+        "Para eliminar duplicados se usa distinct().",
+        "Para ordenar se usa sorted()."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué hace flatMap() en un stream?",
+      "options": [
+        "Aplana un Stream<Stream<T>> a un Stream<T>",
+        "Filtra elementos nulos",
+        "Ordena los elementos del stream",
+        "Cuenta los elementos del stream"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. flatMap transforma cada elemento en un stream y luego aplana todos los streams resultantes en uno solo.",
+        "Para filtrar nulos se usa filter(Objects::nonNull).",
+        "Para ordenar se usa sorted().",
+        "Para contar se usa count()."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cuáles son formas de crear un Stream?",
+      "options": [
+        "Stream.of(), .stream() en Collection, Stream.iterate()",
+        "Solo new Stream()",
+        "Stream.create()",
+        "Collections.stream()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Se puede crear con Stream.of(valores), collection.stream(), Stream.iterate(), Stream.generate() y otras fábricas.",
+        "Stream no tiene constructor público, no se usa new Stream().",
+        "Stream.create() no existe.",
+        "La forma correcta es collection.stream(), no Collections.stream()."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es un parallel stream?",
+      "options": [
+        "Un stream que procesa elementos en paralelo usando múltiples hilos",
+        "Un stream que solo funciona con colecciones grandes",
+        "Un stream que ejecuta operaciones en orden inverso",
+        "Un stream que no soporta operaciones intermedias"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un parallel stream usa el ForkJoinPool para procesar elementos en paralelo con múltiples hilos.",
+        "Funciona con colecciones de cualquier tamaño.",
+        "No procesa en orden inverso.",
+        "Sí soporta operaciones intermedias."
+      ]
+    }
+  ]
+}

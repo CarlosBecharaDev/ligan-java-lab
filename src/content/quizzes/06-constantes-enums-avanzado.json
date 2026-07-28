@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-constantes-enums",
+  "lessonSlug": "constantes-enums",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\n```java\npublic enum Color { ROJO, VERDE, AZUL }\nSystem.out.println(Color.VERDE.ordinal());\n```",
+      "options": ["0", "1", "VERDE", "2"],
+      "correctIndex": 1,
+      "explanations": [
+        "ordinal() empieza en 0.",
+        "Correcto. ordinal() devuelve la posición 0-based. ROJO=0, VERDE=1, AZUL=2.",
+        "Se imprime el número, no el nombre.",
+        "2 es la posición de AZUL."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Por qué es mejor usar un enum en vez de constantes enteras (public static final int) para representar estados?",
+      "options": [
+        "Los enums usan menos memoria",
+        "Los enums son tipos seguros — no puedes pasar un valor inválido",
+        "Los enums son más rápidos al comparar",
+        "No hay diferencia"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El tamaño de memoria no es la ventaja principal.",
+        "Correcto. Con int enum, cualquiera puede pasar 99 aunque los estados válidos sean solo 3. Con enum, el compilador valida que solo uses constantes definidas.",
+        "== funciona igual para primitivos y enums.",
+        "Hay diferencias significativas en seguridad de tipos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Los enums en Java pueden tener constructor público?",
+      "options": [
+        "Sí, como cualquier clase",
+        "No, el constructor siempre es privado en un enum",
+        "Depende de si el enum es public o package-private",
+        "Solo puede tener constructor sin parámetros"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los constructores de enum siempre son privados.",
+        "Correcto. En Java, el constructor de un enum siempre es privado o package-private. No se puede instanciar un enum desde fuera.",
+        "El modificador de acceso del enum no afecta al constructor.",
+        "Puede tener parámetros, siempre que el constructor sea privado."
+      ]
+    }
+  ]
+}

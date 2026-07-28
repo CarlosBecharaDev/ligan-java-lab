@@ -1,0 +1,58 @@
+{
+  "id": "quiz-15-arrays-avanzado",
+  "lessonSlug": "arrays",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime?\nint[] a = {1, 2, 3};\nint[] b = a;\nb[0] = 99;\nSystem.out.println(a[0]);",
+      "options": [
+        "1",
+        "99",
+        "0",
+        "NullPointerException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Arrays se copian por referencia.",
+        "Correcto. b = a copia la referencia. Cambiar b[0] cambia a[0].",
+        "El array no se reinicia.",
+        "No hay null."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué sucede con nums[5] si nums tiene 5 elementos?",
+      "options": [
+        "Retorna 0",
+        "Retorna null",
+        "ArrayIndexOutOfBoundsException",
+        "Compila sin error"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "0 es valor por defecto, no de índice fuera de rango.",
+        "null es para objetos.",
+        "Correcto. Índices válidos van de 0 a 4.",
+        "Compila pero lanza excepción al ejecutar."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es la diferencia entre for-each y for clásico?",
+      "options": [
+        "for-each es más rápido",
+        "for clásico permite modificar el array",
+        "for-each requiere .length",
+        "No hay diferencia"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El rendimiento es similar.",
+        "Correcto. for-each itera copias de valores; for clásico permite arr[i] = valor.",
+        "for-each no usa .length.",
+        "La diferencia es el acceso al índice."
+      ]
+    }
+  ]
+}

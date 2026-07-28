@@ -1,0 +1,80 @@
+---
+import CodeEditor from './CodeEditor.astro';
+import ConsoleOutput from './ConsoleOutput.astro';
+
+export interface Props {
+  code?: string;
+  lessonSlug?: string;
+}
+
+const { code, lessonSlug } = Astro.props;
+const labId = `codelab-${Math.random().toString(36).slice(2, 6)}`;
+---
+
+<div class="codelab" id={labId}>
+  <div class="codelab__toolbar">
+    <span class="codelab__filename">Main.java</span>
+    <div style="display:flex;gap:8px">
+      <button class="codelab__run-btn" data-run={labId} aria-label="Ejecutar código">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3" /></svg>
+        Ejecutar
+      </button>
+      <button class="code-block__btn" data-download={labId} aria-label="Descargar Main.java">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+        Descargar
+      </button>
+    </div>
+  </div>
+
+  <CodeEditor code={code ?? 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hola, Java!");\n    }\n}'} lessonSlug={lessonSlug} />
+  <ConsoleOutput />
+</div>
+
+<script>
+  // Los scripts de Astro son module-scoped; buscamos por atributos data
+  document.querySelectorAll('.codelab').forEach((lab) => {
+    const runBtn = lab.querySelector('[data-run]');
+    const downloadBtn = lab.querySelector('[data-download]');
+    const consoleLines = lab.querySelector('.console-output__lines');
+
+    const OUTPUTS = [
+      '> Compilando Main.java...',
+      '> Ejecutando...',
+      '',
+      'Hola, Java!',
+      '',
+      'Proceso terminado con código 0 (simulado)'
+    ];
+
+    runBtn?.addEventListener('click', () => {
+      if (!consoleLines) return;
+      const salidasSimuladas = OUTPUTS.map((line) => {
+        const div = document.createElement('div');
+        div.className = 'console-output__line' + (line.startsWith('>') ? ' console-output__line--success' : '');
+        div.textContent = line;
+        return div;
+      });
+      consoleLines.innerHTML = '';
+      salidasSimuladas.forEach((el, i) => {
+        setTimeout(() => {
+          consoleLines.appendChild(el);
+          consoleLines.scrollTop = consoleLines.scrollHeight;
+        }, i * 200);
+      });
+    });
+
+    downloadBtn?.addEventListener('click', () => {
+      const view = (window as any).__editorView;
+      if (view) {
+        const codigo = view.state.doc.toString();
+        const blob = new Blob([codigo], { type: 'text/x-java-source' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'Main.java';
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+    });
+  });
+</script>

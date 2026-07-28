@@ -1,0 +1,43 @@
+[
+  {
+    "id": "ex-variables-facil",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Declaración de variables personales",
+    "difficulty": "facil",
+    "description": "Declara variables para almacenar tu nombre, edad, altura (en metros) e imprimir los valores en consola.",
+    "template": "public class VariablesPersonales {\n    public static void main(String[] args) {\n        // TODO: Declara las variables con los tipos correctos\n        // y imprime cada una con System.out.println\n\n    }\n}",
+    "hints": [
+      "Recuerda: String para texto, int para enteros, double para decimales",
+      "Usa System.out.println(\"texto: \" + variable) para imprimir"
+    ],
+    "solution": "public class VariablesPersonales {\n    public static void main(String[] args) {\n        String nombre = \"Carlos\";\n        int edad = 25;\n        double altura = 1.75;\n\n        System.out.println(\"Nombre: \" + nombre);\n        System.out.println(\"Edad: \" + edad);\n        System.out.println(\"Altura: \" + altura);\n    }\n}",
+    "solutionExplanation": "Declaramos tres variables con tipos diferentes: String para el nombre, int para la edad y double para la altura. Luego imprimimos cada valor concatenándolo con un texto descriptivo.",
+    "expectedOutput": "Nombre: Carlos\nEdad: 25\nAltura: 1.75"
+  },
+  {
+    "id": "ex-variables-normal",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Calculadora de área con constantes",
+    "difficulty": "normal",
+    "description": "Declara constantes para el largo y ancho de un rectángulo, calcula su área y perímetro, e imprime los resultados formateados.",
+    "template": "public class AreaRectangulo {\n    public static void main(String[] args) {\n        // TODO: Declara constantes para largo y ancho\n        // Calcula área (largo * ancho) y perímetro (2 * (largo + ancho))\n        // Imprime los resultados con printf formateado\n\n    }\n}",
+    "hints": [
+      "Usa final para las constantes y nómbralas en MAYÚSCULAS"
+    ],
+    "solution": "public class AreaRectangulo {\n    public static void main(String[] args) {\n        final double LARGO = 10.5;\n        final double ANCHO = 5.3;\n\n        double area = LARGO * ANCHO;\n        double perimetro = 2 * (LARGO + ANCHO);\n\n        System.out.printf(\"Rectángulo: %.1f x %.1f%n\", LARGO, ANCHO);\n        System.out.printf(\"Área: %.2f%n\", area);\n        System.out.printf(\"Perímetro: %.2f%n\", perimetro);\n    }\n}",
+    "solutionExplanation": "Declaramos LARGO y ANCHO como constantes con final. Calculamos el área multiplicando largo por ancho, y el perímetro con la fórmula 2*(largo+ancho). Usamos printf para formatear los decimales.",
+    "expectedOutput": "Rectángulo: 10.5 x 5.3\nÁrea: 55.65\nPerímetro: 31.60"
+  },
+  {
+    "id": "ex-variables-dificil",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Conversión de temperatura con casting",
+    "difficulty": "dificil",
+    "description": "Crea un conversor de temperatura que reciba Celsius como constante, lo convierta a Fahrenheit y Kelvin, y maneje correctamente los tipos numéricos.",
+    "template": "public class ConversionTemperatura {\n    public static void main(String[] args) {\n        // TODO: Convierte 37.5°C a Fahrenheit y Kelvin\n        // Fórmula: F = C * 9/5 + 32\n        // Fórmula: K = C + 273.15\n        // Imprime ambos resultados\n\n    }\n}",
+    "hints": [],
+    "solution": "public class ConversionTemperatura {\n    public static void main(String[] args) {\n        final double CELSIUS = 37.5;\n\n        double fahrenheit = CELSIUS * 9.0 / 5.0 + 32;\n        double kelvin = CELSIUS + 273.15;\n\n        System.out.printf(\"%.1f°C = %.1f°F%n\", CELSIUS, fahrenheit);\n        System.out.printf(\"%.1f°C = %.2fK%n\", CELSIUS, kelvin);\n\n        int fahrenheitEntero = (int) fahrenheit;\n        System.out.println(\"Fahrenheit truncado: \" + fahrenheitEntero);\n    }\n}",
+    "solutionExplanation": "Usamos 9.0/5.0 (no 9/5) porque 9/5 en enteros da 1, no 1.8. La división con decimales preserva la precisión. El casting (int) fahrenheit trunca la parte decimal sin redondear.",
+    "expectedOutput": "37.5°C = 99.5°F\n37.5°C = 310.65K\nFahrenheit truncado: 99"
+  }
+]

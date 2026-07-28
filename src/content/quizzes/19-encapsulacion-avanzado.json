@@ -1,0 +1,58 @@
+{
+  "id": "quiz-19-encapsulacion-avanzado",
+  "lessonSlug": "encapsulacion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la diferencia entre un objeto inmutable y uno encapsulado?",
+      "options": [
+        "Son lo mismo",
+        "El inmutable tiene campos final sin setters; el encapsulado tiene private con setters",
+        "El encapsulado no puede tener getters",
+        "El inmutable usa public en vez de private"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No son lo mismo: uno protege acceso, el otro prohíbe cambios.",
+        "Correcto. Inmutable = campos final + sin setters. Encapsulado = private + setters con validación.",
+        "Ambos usan getters para exponer datos.",
+        "Ambos usan private para proteger campos."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué sucede si intentas acceder a un atributo private desde otra clase?",
+      "options": [
+        "Se retorna null",
+        "Se usa el valor por defecto",
+        "Error de compilación",
+        "Se retorna 0"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "No se retorna null.",
+        "No se usa valor por defecto.",
+        "Correcto. Java no permite acceder a campos private fuera de su clase. Compila con error.",
+        "No se retorna 0."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuándo se recomienda usar un campo final (inmutable) en vez de un campo privado con setter?",
+      "options": [
+        "Cuando el valor puede cambiar frecuentemente",
+        "Cuando el valor debe establecerse solo en el constructor y no cambiar después",
+        "Cuando se necesita validación en cada modificación",
+        "Cuando se necesita un valor por defecto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los campos que cambian frecuentemente necesitan setters.",
+        "Correcto. final + sin setter = inmutable. Ideal para IDs, fechas y constantes de instancia.",
+        "La validación frecuente requiere setters, no final.",
+        "Los valores por defecto no determinan si usar final."
+      ]
+    }
+  ]
+}

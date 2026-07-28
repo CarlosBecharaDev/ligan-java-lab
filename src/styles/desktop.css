@@ -1,0 +1,449 @@
+/* ========================================================================
+   Desktop CSS — Retro pixel-art escritorio, ventanas, iconos y taskbar.
+   ======================================================================== */
+
+/* --- Escritorio --- */
+.desktop {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--bg);
+  overflow: hidden;
+}
+
+/* Fondo: wallpaper pixel-art */
+.desktop__bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-image: url('/wallpaper.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  image-rendering: auto;
+}
+
+/* Overlay sutil para legibilidad */
+.desktop__bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(26, 13, 46, 0.15);
+}
+
+/* Sparkle/star particles via CSS */
+.desktop__bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 20%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255, 255, 255, 0.5) 50%, transparent 100%),
+    radial-gradient(1px 1px at 50% 10%, rgba(255, 255, 255, 0.4) 50%, transparent 100%),
+    radial-gradient(1px 1px at 70% 40%, rgba(255, 255, 255, 0.6) 50%, transparent 100%),
+    radial-gradient(1px 1px at 90% 70%, rgba(255, 255, 255, 0.3) 50%, transparent 100%),
+    radial-gradient(2px 2px at 20% 80%, rgba(255, 215, 0, 0.4) 50%, transparent 100%),
+    radial-gradient(2px 2px at 80% 15%, rgba(255, 215, 0, 0.3) 50%, transparent 100%);
+  animation: twinkle 4s ease-in-out infinite alternate;
+}
+
+@keyframes twinkle {
+  from { opacity: 0.6; }
+  to { opacity: 1; }
+}
+
+/* Grid de iconos — columna izquierda estilo desktop retro */
+.desktop__grid {
+  position: relative;
+  z-index: var(--z-desktop);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-lg);
+  width: fit-content;
+  max-height: calc(100vh - 56px);
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  .desktop__grid {
+    padding: var(--space-xl);
+    gap: var(--space-md);
+  }
+}
+
+/* --- Icono del escritorio (carpeta pixel-art) --- */
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background var(--transition);
+  user-select: none;
+  text-decoration: none;
+  width: 80px;
+}
+
+.desktop-icon:hover,
+.desktop-icon:focus-visible {
+  background: rgba(255, 255, 255, 0.08);
+  text-decoration: none;
+}
+
+/* Carpeta pixel-art amarilla */
+.desktop-icon__graphic {
+  width: 48px;
+  height: 40px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  filter: drop-shadow(2px 2px 0 rgba(0, 0, 0, 0.5));
+  transition: transform var(--transition-bounce);
+}
+
+/* Folder shape con CSS puro */
+.desktop-icon__graphic::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 8px;
+  background: #DAA520;
+  border-radius: 2px 2px 0 0;
+}
+
+.desktop-icon__graphic::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(180deg, #FFD700 0%, #DAA520 100%);
+  border-radius: 0 2px 2px 2px;
+  border: 1px solid #B8860B;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
+}
+
+.desktop-icon:hover .desktop-icon__graphic,
+.desktop-icon:focus-visible .desktop-icon__graphic {
+  transform: scale(1.1);
+}
+
+/* Ocultar el SVG original dentro del graphic */
+.desktop-icon__graphic svg {
+  display: none;
+}
+
+.desktop-icon__label {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: #FFFFFF;
+  text-align: center;
+  line-height: 1.2;
+  max-width: 80px;
+  word-wrap: break-word;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.9), 2px 2px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* --- Ventana retro (Win95 style) --- */
+.window {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  background: var(--win-bg);
+  border: 2px solid var(--win-border-dark);
+  border-top-color: #D0C0A0;
+  border-left-color: #D0C0A0;
+  box-shadow: var(--shadow-win);
+  overflow: hidden;
+  z-index: var(--z-window);
+  animation: windowOpen 200ms ease both;
+  /* Default centered position */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 700px);
+  max-height: 85vh;
+}
+
+@keyframes windowOpen {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+
+.window--maximized {
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  max-height: 100vh !important;
+  transform: none !important;
+  border-radius: 0;
+}
+
+.window--maximized .window__titlebar {
+  cursor: default;
+}
+
+/* Barra de título retro (gris-azulada) */
+.window__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 6px;
+  background: linear-gradient(90deg, var(--win-titlebar) 0%, #9898B0 50%, var(--win-titlebar) 100%);
+  cursor: grab;
+  user-select: none;
+  min-height: 28px;
+}
+
+.window__titlebar:active {
+  cursor: grabbing;
+}
+
+.window__title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-family: var(--font-pixel);
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: var(--win-titlebar-text);
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.window__title svg {
+  display: none;
+}
+
+.window__controls {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Botones de control tipo macOS (círculos de color) */
+.window__btn {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  transition: opacity var(--transition);
+  padding: 0;
+}
+
+.window__btn svg {
+  display: none;
+}
+
+.window__btn:first-child {
+  background: var(--win-minimize);
+}
+
+.window__btn:nth-child(2) {
+  background: var(--win-maximize);
+}
+
+.window__btn--close,
+.window__btn:last-child {
+  background: var(--win-close);
+}
+
+.window__btn:hover {
+  opacity: 0.8;
+}
+
+/* Cuerpo de la ventana (crema/beige) */
+.window__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--space-lg);
+  background: var(--win-bg);
+  color: var(--win-text);
+  font-family: var(--font-ui);
+  border-top: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.window__body h1,
+.window__body h2,
+.window__body h3 {
+  color: var(--win-text);
+  font-family: var(--font-pixel);
+}
+
+.window__body p {
+  color: var(--win-muted);
+}
+
+.window__body a {
+  color: var(--win-link);
+}
+
+.window__body a:hover {
+  color: var(--win-link-hover);
+}
+
+/* --- Móvil: ventanas a pantalla completa --- */
+@media (max-width: 767px) {
+  .window {
+    position: fixed;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100vh !important;
+    transform: none !important;
+    border-radius: 0;
+  }
+
+  .window__titlebar {
+    cursor: default;
+  }
+}
+
+/* --- Taskbar retro (negro con separadores amarillos) --- */
+.taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-md);
+  background: var(--taskbar-bg);
+  border-top: 2px solid var(--taskbar-separator);
+  z-index: var(--z-taskbar);
+  font-family: var(--font-pixel);
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.5);
+}
+
+.taskbar__left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.taskbar__center {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  overflow-x: auto;
+  flex: 1;
+  justify-content: center;
+  padding: 0 var(--space-sm);
+}
+
+.taskbar__right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: 0.6rem;
+  color: var(--taskbar-text);
+}
+
+/* Botón de taskbar estilo retro */
+.taskbar__window-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: 2px 6px;
+  border: 1px solid transparent;
+  font-family: var(--font-pixel);
+  font-size: 0.5rem;
+  color: var(--taskbar-text);
+  transition: background var(--transition), color var(--transition);
+  white-space: nowrap;
+  text-decoration: none;
+}
+
+.taskbar__window-btn:hover {
+  background: rgba(255, 215, 0, 0.1);
+  color: var(--taskbar-active);
+  border-color: var(--taskbar-separator);
+  text-decoration: none;
+}
+
+.taskbar__window-btn--active {
+  background: rgba(255, 215, 0, 0.15);
+  color: var(--taskbar-active);
+  border-color: var(--taskbar-separator);
+}
+
+/* Logo de taskbar */
+.taskbar__logo {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-pixel);
+  font-size: 0.6rem;
+  color: var(--taskbar-active);
+  text-decoration: none;
+  padding: 4px 10px;
+  background: rgba(255, 215, 0, 0.1);
+  border: 1px solid var(--taskbar-separator);
+  transition: background var(--transition);
+}
+
+.taskbar__logo:hover {
+  background: rgba(255, 215, 0, 0.2);
+  text-decoration: none;
+}
+
+.taskbar__logo svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Selector de idioma */
+.taskbar__lang {
+  display: flex;
+  gap: 2px;
+}
+
+.taskbar__lang-btn {
+  padding: 2px 6px;
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--taskbar-text);
+  border: 1px solid var(--taskbar-border);
+  cursor: pointer;
+  transition: all var(--transition);
+}
+
+.taskbar__lang-btn:hover,
+.taskbar__lang-btn.active {
+  background: var(--taskbar-active);
+  color: #000;
+  border-color: var(--taskbar-active);
+}
+
+/* Apps counter */
+.taskbar__apps {
+  padding: 2px 8px;
+  border: 1px solid var(--taskbar-border);
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  color: var(--taskbar-active);
+}
+
+/* Clock */
+.taskbar__clock {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--taskbar-text);
+  padding: 2px 6px;
+  border-left: 1px solid var(--taskbar-border);
+}

@@ -1,0 +1,58 @@
+{
+  "id": "quiz-19-encapsulacion-basico",
+  "lessonSlug": "encapsulacion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Que modificador de acceso hace que un atributo solo sea accesible dentro de su propia clase?",
+      "options": [
+        "public",
+        "protected",
+        "private",
+        "default"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "public permite acceso desde cualquier lugar.",
+        "protected permite acceso en subclases y mismo paquete.",
+        "Correcto. private restringe el acceso solo a la misma clase.",
+        "default permite acceso en el mismo paquete."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Que es un getter?",
+      "options": [
+        "Un metodo que modifica un atributo",
+        "Un metodo que retorna el valor de un atributo",
+        "Un constructor especial",
+        "Un atributo privado"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Eso es un setter.",
+        "Correcto. Un getter es un metodo publico que retorna el valor de un atributo privado.",
+        "No tiene relacion con constructores.",
+        "Un getter es un metodo, no un atributo."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Cual es la ventaja principal de usar setters con validacion?",
+      "options": [
+        "El codigo es mas corto",
+        "Se puede acceder al atributo desde fuera",
+        "Se protege la integridad de los datos del objeto",
+        "Se hacen los atributos publicos"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "La longitud del codigo no es la ventaja principal.",
+        "Eso lo hacen los getters, no los setters.",
+        "Correcto. Los setters permiten validar antes de modificar, protegiendo el estado.",
+        "Los setters mantienen los atributos privados."
+      ]
+    }
+  ]
+}

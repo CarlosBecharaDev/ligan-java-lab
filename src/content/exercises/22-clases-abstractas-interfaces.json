@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-abstractas-interfaces-facil",
+    "title": "Interfaz Notificable",
+    "difficulty": "facil",
+    "description": "Crea una interfaz Notificable con enviar() y dos clases que la implementen.",
+    "template": "// TODO: interface Notificable\n// void enviar(String mensaje)\n\n// TODO: class Email implements Notificable\n// enviar(): \"Email: [mensaje]\"\n\n// TODO: class SMS implements Notificable\n// enviar(): \"SMS: [mensaje]\"\n\npublic class Main {\n    static void notificar(Notificable n, String msg) {\n        n.enviar(msg);\n    }\n    public static void main(String[] args) {\n        notificar(new Email(), \"Hola\");\n        notificar(new SMS(), \"Hola\");\n    }\n}",
+    "hints": [
+      "interface Notificable { void enviar(String mensaje); }",
+      "class Email implements Notificable",
+      "Cada clase implementa enviar() diferente"
+    ],
+    "solution": "interface Notificable {\n    void enviar(String mensaje);\n}\n\nclass Email implements Notificable {\n    @Override\n    public void enviar(String mensaje) { System.out.println(\"Email: \" + mensaje); }\n}\n\nclass SMS implements Notificable {\n    @Override\n    public void enviar(String mensaje) { System.out.println(\"SMS: \" + mensaje); }\n}\n\npublic class Main {\n    static void notificar(Notificable n, String msg) { n.enviar(msg); }\n    public static void main(String[] args) {\n        notificar(new Email(), \"Hola\");\n        notificar(new SMS(), \"Hola\");\n    }\n}",
+    "solutionExplanation": "Interfaz define el contrato, cada clase lo implementa a su manera.",
+    "expectedOutput": "Email: Hola\nSMS: Hola",
+    "lessonSlug": "clases-abstractas-interfaces"
+  },
+  {
+    "id": "ex-abstractas-interfaces-normal",
+    "title": "Clase abstracta Animal",
+    "difficulty": "normal",
+    "description": "Crea una clase abstracta Animal con método abstracto hacerSonido() y método concreto dormir().",
+    "template": "// TODO: abstract class Animal\n// atributo: String nombre\n// constructor: Animal(String nombre)\n// abstract void hacerSonido()\n// void dormir(): \"[nombre] está durmiendo\"\n\n// TODO: class Perro extends Animal\n// hacerSonido(): \"¡Guau!\"\n\n// TODO: class Gato extends Animal\n// hacerSonido(): \"¡Miau!\"\n\npublic class Main {\n    public static void main(String[] args) {\n        Animal p = new Perro(\"Max\");\n        Animal g = new Gato(\"Luna\");\n        p.hacerSonido();\n        g.hacerSonido();\n        p.dormir();\n        g.dormir();\n    }\n}",
+    "hints": [
+      "abstract class Animal { abstract void hacerSonido(); }",
+      "Perro extends Animal con super(nombre)",
+      "dormir() tiene cuerpo: System.out.println(nombre + \" está durmiendo\")"
+    ],
+    "solution": "abstract class Animal {\n    String nombre;\n    Animal(String nombre) { this.nombre = nombre; }\n    abstract void hacerSonido();\n    void dormir() { System.out.println(nombre + \" está durmiendo\"); }\n}\n\nclass Perro extends Animal {\n    Perro(String nombre) { super(nombre); }\n    @Override void hacerSonido() { System.out.println(\"¡Guau!\"); }\n}\n\nclass Gato extends Animal {\n    Gato(String nombre) { super(nombre); }\n    @Override void hacerSonido() { System.out.println(\"¡Miau!\"); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Animal p = new Perro(\"Max\");\n        Animal g = new Gato(\"Luna\");\n        p.hacerSonido();\n        g.hacerSonido();\n        p.dormir();\n        g.dormir();\n    }\n}",
+    "solutionExplanation": "Abstract class: código compartido (nombre, dormir()) + contrato (hacerSonido()).",
+    "expectedOutput": "¡Guau!\n¡Miau!\nMax está durmiendo\nLuna está durmiendo",
+    "lessonSlug": "clases-abstractas-interfaces"
+  },
+  {
+    "id": "ex-abstractas-interfaces-dificil",
+    "title": "Sistema de pagos con interface y abstract class",
+    "difficulty": "dificil",
+    "description": "Combina abstract class y interface: Pago (abstract) + Validable (interface).",
+    "template": "// TODO: interface Validable\n// boolean validar()\n\n// TODO: abstract class Pago\n// atributo: double monto\n// constructor: Pago(double monto)\n// abstract void procesar()\n\n// TODO: class PagoTarjeta extends Pago implements Validable\n// atributo: String numero\n// validar(): numero.length() == 16\n// procesar(): \"TC ****[últimas4] - $monto\"\n\n// TODO: class PagoEfectivo extends Pago implements Validable\n// validar(): monto > 0 && monto <= 500\n// procesar(): \"Efectivo: $monto\"\n\npublic class Main {\n    static void cobrar(Pago p) {\n        if (p instanceof Validable && !((Validable) p).validar()) {\n            System.out.println(\"Pago no válido\");\n            return;\n        }\n        p.procesar();\n    }\n    public static void main(String[] args) {\n        cobrar(new PagoTarjeta(150, \"1234567812345678\"));\n        cobrar(new PagoEfectivo(300));\n        cobrar(new PagoEfectivo(600));\n    }\n}",
+    "hints": [
+      "interface Validable { boolean validar(); }",
+      "PagoTarjeta extends Pago implements Validable",
+      "cobrar() usa instanceof Validable para validar"
+    ],
+    "solution": "interface Validable {\n    boolean validar();\n}\n\nabstract class Pago {\n    double monto;\n    Pago(double monto) { this.monto = monto; }\n    abstract void procesar();\n}\n\nclass PagoTarjeta extends Pago implements Validable {\n    String numero;\n    PagoTarjeta(double monto, String numero) { super(monto); this.numero = numero; }\n    @Override public boolean validar() { return numero.length() == 16; }\n    @Override void procesar() {\n        String ultimas = numero.substring(numero.length() - 4);\n        System.out.println(\"TC ****\" + ultimas + \" - $\" + monto);\n    }\n}\n\nclass PagoEfectivo extends Pago implements Validable {\n    PagoEfectivo(double monto) { super(monto); }\n    @Override public boolean validar() { return monto > 0 && monto <= 500; }\n    @Override void procesar() { System.out.println(\"Efectivo: $\" + monto); }\n}\n\npublic class Main {\n    static void cobrar(Pago p) {\n        if (p instanceof Validable && !((Validable) p).validar()) {\n            System.out.println(\"Pago no válido\");\n            return;\n        }\n        p.procesar();\n    }\n    public static void main(String[] args) {\n        cobrar(new PagoTarjeta(150, \"1234567812345678\"));\n        cobrar(new PagoEfectivo(300));\n        cobrar(new PagoEfectivo(600));\n    }\n}",
+    "solutionExplanation": "Combinación: abstract class para código compartido + interface para contrato de validación.",
+    "expectedOutput": "TC ****5678 - $150.0\nEfectivo: $300.0\nPago no válido",
+    "lessonSlug": "clases-abstractas-interfaces"
+  }
+]

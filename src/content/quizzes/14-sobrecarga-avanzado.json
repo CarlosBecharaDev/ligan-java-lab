@@ -1,0 +1,58 @@
+{
+  "id": "quiz-14-sobrecarga-avanzado",
+  "lessonSlug": "sobrecarga",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué resultado?\nstatic void f(Object o) { System.out.print(\"Object\"); }\nstatic void f(String s) { System.out.print(\"String\"); }\nf(null);",
+      "options": [
+        "Object",
+        "String",
+        "NullPointerException",
+        "Error ambigüedad"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "null es compatible con ambos.",
+        "Correcto. El compilador elige String porque es más específico que Object.",
+        "null no causa NullPointerException aquí.",
+        "No hay ambigüedad: String es subtipo de Object."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre sobrecarga y sobreescritura?",
+      "options": [
+        "No hay diferencia",
+        "Sobrecarga cambia parámetros; sobreescritura mantiene mismos parámetros en clase hija",
+        "Sobreescritura es con return; sobrecarga con void",
+        "Sobrecarga es para constructores"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Son conceptos completamente diferentes.",
+        "Correcto. Sobrecarga: mismo nombre, diferentes parámetros (misma clase). Sobreescritura: mismo nombre, mismos parámetros (clase hija redefine método del padre).",
+        "El tipo de retorno no es la diferencia clave.",
+        "Ambos aplican a métodos regulares."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué elegiría el compilador para procesar(5, 3.0)?\nstatic void procesar(int a, double b)\nstatic void procesar(double a, int b)",
+      "options": [
+        "procesar(int, double)",
+        "procesar(double, int)",
+        "Error ambigüedad",
+        "Ejecuta ambos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. 5 es int (exact) y 3.0 es double (exact), coincide con procesar(int, double).",
+        "Para procesar(double, int), 5 tendría que promoverse a double.",
+        "No hay ambigüedad: procesar(int, double) es match exacto.",
+        "Solo se ejecuta un método."
+      ]
+    }
+  ]
+}

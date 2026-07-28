@@ -1,0 +1,509 @@
+---
+title: "Operadores en Java"
+slug: "operadores"
+module: "01-fundamentos"
+level: "Inicial"
+objectives:
+  - "Utilizar operadores aritméticos para realizar cálculos matemáticos"
+  - "Diferenciar entre preincremento y postincremento"
+  - "Aplicar operadores de asignación compuestos para simplificar código"
+  - "Evaluar expresiones con operadores de comparación y lógicos"
+  - "Resolver expresiones usando el operador ternario"
+prerequisites:
+  - "Haber completado Lección 01: Variables y Tipos de Datos"
+  - "Conocer los tipos primitivos int, double, boolean"
+history:
+  introducedIn: "Java 1.0"
+  context: "Desde su primera versión en 1996, Java heredó la familia de operadores de C/C++, pero eliminó operadores peligrosos como el operador de coma y restringió la precedencia para evitar errores comunes. Java agregó el operador `instanceof` y modernizó el manejo de strings con el operador `+`."
+  evolution: "Java 7 introdujo el operador `switch` con strings. Java 14 agregó el operador `->` para switches exprimidos. Java 16 añadió el operador `instanceof` con patrones."
+realWorldExamples:
+  - domain: "E-commerce"
+    description: "En una tienda online, los operadores calculan descuentos, impuestos y totales. Un carrito de compras necesita aritmética, comparaciones para validar stock y lógica para combinar cupones."
+    code: |
+      double precio = 89.99;
+      double descuento = 0.15;
+      int cantidad = 3;
+
+      double subtotal = precio * cantidad;
+      double montoDescuento = subtotal * descuento;
+      double total = subtotal - montoDescuento;
+      boolean hayStock = cantidad <= 50;
+
+      System.out.printf("Subtotal: $%.2f%n", subtotal);
+      System.out.printf("Descuento: -$%.2f%n", montoDescuento);
+      System.out.printf("Total: $%.2f%n", total);
+      System.out.println("Stock disponible: " + hayStock);
+    result: |
+      Subtotal: $269.97
+      Descuento: -$40.50
+      Total: $229.48
+      Stock disponible: true
+  - domain: "Banca"
+    description: "Un sistema bancario usa operadores para calcular intereses, comparar saldos y validar transacciones. La precisión en los operadores aritméticos es crítica para evitar errores financieros."
+    code: |
+      double saldo = 5000.00;
+      double tasaMensual = 0.025;
+      double saldoMinimo = 100.00;
+
+      double interes = saldo * tasaMensual;
+      double nuevoSaldo = saldo + interes;
+      boolean puedeRetirar = nuevoSaldo > saldoMinimo;
+
+      System.out.printf("Saldo actual: $%.2f%n", saldo);
+      System.out.printf("Interés: $%.2f%n", interes);
+      System.out.printf("Nuevo saldo: $%.2f%n", nuevoSaldo);
+      System.out.println("Puede retirar: " + puedeRetirar);
+    result: |
+      Saldo actual: $5000.00
+      Interés: $125.00
+      Nuevo saldo: $5125.00
+      Puede retirar: true
+hasInteractive: false
+comparisons:
+  - title: "Operadores aritméticos vs. asignación compuesta"
+    items:
+      - name: "Aritméticos tradicionales"
+        features:
+          sintaxis: "resultado = a + b;"
+          claridad: "Explícito y verbose"
+          uso: "Operaciones entre dos variables diferentes"
+      - name: "Asignación compuesta"
+        features:
+          sintaxis: "a += b;"
+          claridad: "Conciso y directo"
+          uso: "Modificar una variable usando su propio valor"
+    recommendation: "Usa asignación compuesta cuando modificas una variable con su propio valor (a += 5). Usa aritméticos tradicionales cuando calculas un resultado nuevo a partir de dos variables."
+videos:
+  - url: ""
+    title: "Operadores en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Cuál es la diferencia entre `a++` y `++a`?"
+    answer: "`a++` (postincremento) usa el valor actual y luego incrementa. `++a` (preincremento) incrementa primero y luego usa el nuevo valor. La diferencia importa cuando los usas dentro de una expresión: `int b = a++;` asigna el valor antiguo a b, mientras que `int b = ++a;` asigna el valor ya incrementado."
+  - question: "¿Por qué `5 / 2` da `2` y no `2.5` en Java?"
+    answer: "Porque ambos operandos son enteros (`int`), Java realiza división entera y trunca la parte decimal. Para obtener `2.5`, al menos uno de los operandos debe ser de tipo `double` o `float`: `5.0 / 2` o `(double) 5 / 2`."
+  - question: "¿Qué es el operador ternario y cuándo usarlo?"
+    answer: "El operador ternario `condición ? valorSiTrue : valorSiFalse` es una forma compacta de un `if-else` que devuelve un valor. Úsalo para asignaciones simples. Para lógica compleja con múltiples efectos secundarios, es mejor usar `if-else` tradicional por legibilidad."
+  - question: "¿Qué diferencia hay entre `&&` y `&`?"
+    answer: "`&&` (AND cortocircuitado) evalúa el segundo operando solo si el primero es `true`. `&` (AND bita-a-bita, o AND sin cortocircuito) siempre evalúa ambos operandos. Siempre usa `&&` para expresiones booleanas porque es más eficiente y evita errores."
+sources:
+  - title: "Java 21 Language Specification — Operators"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-15.html"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Operators"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/operators.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué son los operadores?
+
+Los **operadores** son símbolos especiales que realizan operaciones sobre valores y variables. Son los componentes fundamentales de cualquier expresión en Java.
+
+Imagina que los operadores son las operaciones de una calculadora: sumar, restar, comparar, decidir. Sin operadores, las variables serían solo datos estáticos sin ninguna utilidad.
+
+Java organiza sus operadores en 6 categorías:
+
+| Categoría | Ejemplos | Propósito |
+|-----------|----------|-----------|
+| Aritméticos | `+`, `-`, `*`, `/`, `%` | Cálculos matemáticos |
+| Asignación | `=`, `+=`, `-=` | Guardar valores en variables |
+| Comparación | `==`, `!=`, `>`, `<` | Comparar dos valores (devuelven `boolean`) |
+| Lógicos | `&&`, `\|\|`, `!` | Combinar expresiones booleanas |
+| Unarios | `++`, `--`, `+`, `-`, `!` | Operar sobre un solo operando |
+| Ternario | `? :` | Decisión inline (atajo de `if-else`) |
+
+## Operadores aritméticos
+
+Los operadores aritméticos son los más intuitivos. Realizan operaciones matemáticas básicas:
+
+| Operador | Nombre | Ejemplo | Resultado |
+|----------|--------|---------|-----------|
+| `+` | Suma | `5 + 3` | `8` |
+| `-` | Resta | `5 - 3` | `2` |
+| `*` | Multiplicación | `5 * 3` | `15` |
+| `/` | División | `5 / 3` | `1` |
+| `%` | Módulo (residuo) | `5 % 3` | `2` |
+
+<CodeBlock lang="java" title="Operadores aritméticos">
+{`public class OperadoresAritmeticos {
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 3;
+
+        System.out.println("Suma: " + (a + b));       // 13
+        System.out.println("Resta: " + (a - b));      // 7
+        System.out.println("Multiplicación: " + (a * b)); // 30
+        System.out.println("División entera: " + (a / b)); // 3
+        System.out.println("Módulo: " + (a % b));     // 1
+
+        // División con decimales
+        double x = 10.0;
+        System.out.println("División decimal: " + (x / b)); // 3.3333...
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Suma: 13
+Resta: 7
+Multiplicación: 30
+División entera: 3
+Módulo: 1
+División decimal: 3.3333333333333335
+```
+
+### La trampa de la división entera
+
+Cuando dividimos dos enteros, Java trunca la parte decimal. Esto es una fuente común de errores:
+
+```java
+int a = 7;
+int b = 2;
+System.out.println(a / b);    // 3, NO 3.5
+
+// Para obtener decimales, al menos uno debe ser double
+double resultado = (double) a / b;  // 3.5
+System.out.println(resultado);
+```
+
+### El operador módulo (%)
+
+El módulo devuelve el **residuo** de la división. Es útil para verificar si un número es par o impar, o para implementar lógica cíclica:
+
+```java
+System.out.println(10 % 3);   // 1  (10 = 3*3 + 1)
+System.out.println(15 % 5);   // 0  (división exacta)
+System.out.println(7 % 2);    // 1  (impar)
+System.out.println(8 % 2);    // 0  (par)
+```
+
+## Operadores unarios: incremento y decremento
+
+Los operadores unarios operan sobre **un solo** valor. Los más importantes son `++` (incremento) y `--` (decremento), que suman o restan 1 respectivamente.
+
+### Pre vs. Post: la diferencia crucial
+
+Java ofrece dos formas de incrementar una variable, y la diferencia importa cuando las combinas con asignaciones:
+
+| Operador | Nombre | Comportamiento |
+|----------|--------|---------------|
+| `++a` | Preincremento | Primero incrementa, luego usa el valor |
+| `a++` | Postincremento | Primero usa el valor, luego incrementa |
+
+<CodeBlock lang="java" title="Preincremento vs. Postincremento">
+{`public class IncrementoDecremento {
+    public static void main(String[] args) {
+        int a = 5;
+        int b = 5;
+
+        // Preincremento: primero incrementa, luego asigna
+        int resultado1 = ++a;  // a se convierte en 6, resultado1 = 6
+        System.out.println("Preincremento: a=" + a + ", resultado=" + resultado1);
+
+        // Postincremento: primero asigna, luego incrementa
+        int resultado2 = b++;  // resultado2 = 5, luego b se convierte en 6
+        System.out.println("Postincremento: b=" + b + ", resultado=" + resultado2);
+
+        // Ejemplo práctico: contador en bucle
+        int contador = 0;
+        System.out.println("Contador antes: " + contador);
+        contador++;  // forma más común: solo incrementa sin usar el valor
+        System.out.println("Contador después: " + contador);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Preincremento: a=6, resultado=6
+Postincremento: b=6, resultado=5
+Contador antes: 0
+Contador después: 1
+```
+
+> **Consejo:** En la práctica, `a++` y `++a` son equivalentes cuando los usas en una línea independiente. La diferencia solo importa cuando los combinas con asignaciones o dentro de expresiones más complejas.
+
+## Operadores de asignación
+
+Ya conoces el operador `=` para asignar valores. Java también ofrece **asignaciones compuestas** que combinan una operación aritmética con una asignación:
+
+| Operador | Ejemplo | Equivalente a |
+|----------|---------|---------------|
+| `+=` | `a += 5` | `a = a + 5` |
+| `-=` | `a -= 3` | `a = a - 3` |
+| `*=` | `a *= 2` | `a = a * 2` |
+| `/=` | `a /= 4` | `a = a / 4` |
+| `%=` | `a %= 3` | `a = a % 3` |
+
+<CodeBlock lang="java" title="Asignación compuesta">
+{`public class AsignacionCompuesta {
+    public static void main(String[] args) {
+        int puntos = 100;
+        System.out.println("Puntos iniciales: " + puntos);
+
+        puntos += 50;   // sumar 50 puntos
+        System.out.println("Después de ganar: " + puntos);
+
+        puntos -= 30;   // restar 30 puntos
+        System.out.println("Después de perder: " + puntos);
+
+        puntos *= 2;    // duplicar puntos
+        System.out.println("Después de bonificación: " + puntos);
+
+        // Asignación de múltiples variables (mismo tipo)
+        int x = 10, y = 20, z = 30;
+        System.out.println("x=" + x + ", y=" + y + ", z=" + z);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Puntos iniciales: 100
+Después de ganar: 150
+Después de perder: 120
+Después de bonificación: 240
+x=10, y=20, z=30
+```
+
+> **NOTA:** No puedes usar `var` con declaraciones múltiples. Debes especificar el tipo explícitamente: `int x = 10, y = 20;`.
+
+## Operadores de comparación
+
+Los operadores de comparación (también llamados **relacionales**) comparan dos valores y devuelven un `boolean` (`true` o `false`):
+
+| Operador | Nombre | Ejemplo | Resultado |
+|----------|--------|---------|-----------|
+| `==` | Igual a | `5 == 5` | `true` |
+| `!=` | Diferente de | `5 != 3` | `true` |
+| `>` | Mayor que | `5 > 3` | `true` |
+| `<` | Menor que | `5 < 3` | `false` |
+| `>=` | Mayor o igual | `5 >= 5` | `true` |
+| `<=` | Menor o igual | `5 <= 3` | `false` |
+
+<CodeBlock lang="java" title="Operadores de comparación">
+{`public class OperadoresComparacion {
+    public static void main(String[] args) {
+        int edad = 25;
+        int edadMinima = 18;
+
+        boolean puedeVotar = edad >= edadMinima;
+        boolean esMayor = edad > 65;
+
+        System.out.println("Edad: " + edad);
+        System.out.println("Puede votar: " + puedeVotar);
+        System.out.println("Es mayor de 65: " + esMayor);
+
+        // ¡Cuidado! == compara valores, no contenido de strings
+        String nombre1 = "Java";
+        String nombre2 = "Java";
+        System.out.println("Mismo nombre: " + nombre1.equals(nombre2)); // true
+        System.out.println("Referencia ==: " + (nombre1 == nombre2));    // puede ser true o false
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Edad: 25
+Puede votar: true
+Es mayor de 65: false
+Mismo nombre: true
+Referencia ==: true
+```
+
+> **Regla de oro:** Para primitivos usa `==`. Para objetos (String, etc.) usa `.equals()`. El operador `==` en objetos compara la dirección de memoria, no el contenido.
+
+## Operadores lógicos
+
+Los operadores lógicos combinan expresiones booleanas. Son esenciales para crear condiciones complejas:
+
+| Operador | Nombre | Significado | Resultado |
+|----------|--------|-------------|-----------|
+| `&&` | AND | Ambos deben ser `true` | Solo `true` si ambos son `true` |
+| `\|\|` | OR | Al menos uno debe ser `true` | Solo `false` si ambos son `false` |
+| `!` | NOT | Invierte el valor | `!true` = `false` |
+
+### Tabla de verdad del AND (`&&`)
+
+| A | B | A && B |
+|---|---|--------|
+| `true` | `true` | `true` |
+| `true` | `false` | `false` |
+| `false` | `true` | `false` |
+| `false` | `false` | `false` |
+
+### Tabla de verdad del OR (`||`)
+
+| A | B | A \|\| B |
+|---|---|---------|
+| `true` | `true` | `true` |
+| `true` | `false` | `true` |
+| `false` | `true` | `true` |
+| `false` | `false` | `false` |
+
+<CodeBlock lang="java" title="Operadores lógicos">
+{`public class OperadoresLogicos {
+    public static void main(String[] args) {
+        int edad = 25;
+        boolean tieneLicencia = true;
+        double ingresos = 3500.00;
+
+        // AND: ambas condiciones deben cumplirse
+        boolean puedeConducir = edad >= 18 && tieneLicencia;
+        System.out.println("Puede conducir: " + puedeConducir); // true
+
+        // OR: al menos una condición debe cumplirse
+        boolean esEstudiante = edad < 23;
+        boolean esPensionado = edad > 65;
+        boolean tieneDescuento = esEstudiante || esPensionado;
+        System.out.println("Tiene descuento: " + tieneDescuento); // false
+
+        // NOT: invierte el valor
+        boolean noTieneLicencia = !tieneLicencia;
+        System.out.println("No tiene licencia: " + noTieneLicencia); // false
+
+        // Combinando múltiples operadores
+        boolean calificacionA = true;
+        double promedio = 9.2;
+        boolean mereceHonores = calificacionA && promedio >= 9.0 && !esPensionado;
+        System.out.println("Merece honores: " + mereceHonores); // true
+    }
+}`}
+</CodeBlock>
+
+### Cortocircuito: por qué `&&` es mejor que `&`
+
+El operador `&&` tiene **evaluación de cortocircuito**: si el primer operando es `false`, no evalúa el segundo (porque el resultado ya es `false`). Esto evita errores:
+
+```java
+int divisor = 0;
+// ¡Cuidado! Sin cortocircuito esto lanzaría ArithmeticException
+// if (divisor != 0 && 10 / divisor > 2) { ... }
+
+// Con && es seguro: si divisor es 0, no evalúa la división
+if (divisor != 0 && 10 / divisor > 2) {
+    System.out.println("División válida");
+} else {
+    System.out.println("Divisor es cero");  // se imprime esto
+}
+```
+
+## Operador ternario
+
+El operador ternario es un `if-else` condensado en una sola expresión. Su sintaxis es:
+
+```java
+condición ? valorSiTrue : valorSiFalse
+```
+
+<CodeBlock lang="java" title="Operador ternario">
+{`public class OperadorTernario {
+    public static void main(String[] args) {
+        int edad = 20;
+
+        // Ternario simple
+        String mensaje = edad >= 18 ? "Mayor de edad" : "Menor de edad";
+        System.out.println(mensaje); // Mayor de edad
+
+        // Ternario con números
+        int a = 15, b = 23;
+        int mayor = (a > b) ? a : b;
+        System.out.println("El mayor es: " + mayor); // 23
+
+        // Ternario anidado (usar con moderación)
+        double nota = 8.5;
+        String calificacion = nota >= 9 ? "Excelente"
+            : nota >= 7 ? "Bueno"
+            : nota >= 5 ? "Suficiente"
+            : "Insuficiente";
+        System.out.println("Calificación: " + calificacion); // Bueno
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Mayor de edad
+El mayor es: 23
+Calificación: Bueno
+```
+
+> **Consejo:** Usa el ternario para asignaciones simples. Para lógica con efectos secundarios (llamar métodos, imprimir), usa `if-else` tradicional por legibilidad.
+
+## Errores frecuentes
+
+### Error 1: División entera inesperada
+```java
+// ❌ Resultado: 0 (no 0.5)
+int resultado = 1 / 2;
+
+// ✅ Al menos un operando debe ser decimal
+double correcto = 1.0 / 2;  // 0.5
+```
+
+### Error 2: Confundir `=` con `==`
+```java
+// ❌ Esto es asignación, no comparación
+if (x = 5) { }  // Error: incompatible types
+
+// ✅ Esto es comparación
+if (x == 5) { }
+```
+
+### Error 3: Precedencia incorrecta
+```java
+// ❌ Esto calcula: 2 + (3 * 4) = 14
+int resultado = 2 + 3 * 4;
+
+// ✅ Usa paréntesis para claridad
+int resultado = (2 + 3) * 4;  // 20
+```
+
+### Error 4: Usar `&` en vez de `&&`
+```java
+// ❌ Evalúa ambos lados siempre (puede causar errores)
+if (x != 0 & 10 / x > 2) { }
+
+// ✅ Cortocircuito: si x es 0, no evalúa la división
+if (x != 0 && 10 / x > 2) { }
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

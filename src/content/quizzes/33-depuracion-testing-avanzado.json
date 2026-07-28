@@ -1,0 +1,92 @@
+{
+  "id": "quiz-33-depuracion-testing-avanzado",
+  "lessonSlug": "depuracion-testing",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es TDD (Test-Driven Development)?",
+      "options": [
+        "Una metodología donde se escribe el código primero y los tests después",
+        "Una metodología donde se escribe el test antes del código, se hace fallar, y luego se implementa",
+        "Una forma de depurar código escribiendo tests durante la depuración",
+        "Un framework para ejecutar tests automáticamente en producción"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "TDD invierte el orden: el test se escribe primero, no después.",
+        "Correcto. TDD (Test-Driven Development) es un ciclo donde primero se escribe un test que falla, luego se escribe el código mínimo para que pase, y finalmente se refactoriza. El ciclo es: Red -> Green -> Refactor.",
+        "TDD no es una técnica de depuración; es una metodología de desarrollo.",
+        "TDD no ejecuta tests en producción; se usa durante el desarrollo."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué aserciones ofrece JUnit 5 para verificar resultados?",
+      "options": [
+        "Solo assertEquals y assertNotEquals",
+        "assertEquals, assertTrue, assertFalse, assertThrows, assertAll entre otras",
+        "Solo assertTrue y assertFalse",
+        "Una única función assert() que verifica todo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "JUnit 5 ofrece muchas más aserciones que solo assertEquals y assertNotEquals.",
+        "Correcto. JUnit 5 ofrece un conjunto rico de aserciones: assertEquals, assertTrue, assertFalse, assertThrows (para excepciones), assertAll (para agrupar aserciones), assertNotNull, entre otras.",
+        "JUnit 5 tiene más aserciones que solo assertTrue y assertFalse.",
+        "No existe una única función assert() que verifique todo en JUnit."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es un test de integración?",
+      "options": [
+        "Un test que verifica una única función aislada del código",
+        "Una prueba que verifica que múltiples componentes o módulos funcionen correctamente juntos",
+        "Un test que se integra automáticamente con el sistema de versiones",
+        "Una prueba que solo se ejecuta en el entorno de producción"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Un test que verifica una función aislada es un test unitario, no de integración.",
+        "Correcto. Un test de integración verifica que múltiples componentes, módulos o servicios funcionen correctamente cuando interactúan entre sí, como la conexión a una base de datos o la comunicación entre servicios.",
+        "Los tests de integración no tienen relación específica con sistemas de versiones.",
+        "Los tests de integración se ejecutan en entornos de desarrollo y CI, no solo en producción."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se depura un NullPointerException en Java?",
+      "options": [
+        "Agregando más prints en el código sin usar el depurador",
+        "Examinando el stack trace para identificar la línea exacta, e inspeccionando las variables en esa línea",
+        "Agregando un try-catch que imprima el mensaje de error",
+        "Eliminando la referencia nula sin investigar la causa"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Agregar prints es útil pero no es la forma más eficiente de depurar.",
+        "Correcto. El stack trace del NullPointerException indica la línea exacta donde ocurrió. Se debe inspeccionar esa línea y las variables involucradas para determinar cuál es nula y por qué no fue inicializada.",
+        "Un try-catch no resuelve la causa del NullPointerException; solo lo captura.",
+        "Eliminar la referencia sin investigar no resuelve el problema de fondo."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es un assertion message en JUnit?",
+      "options": [
+        "El mensaje que se imprime cuando el test pasa exitosamente",
+        "El primer parámetro opcional que describe el error esperado si la aserción falla",
+        "Un mensaje que se envía por email al equipo cuando un test falla",
+        "La documentación del método que se está testeando"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El assertion message no se imprime cuando el test pasa; se muestra cuando falla.",
+        "Correcto. El assertion message es el primer parámetro opcional en una aserción (ej. assertEquals(\"mensaje\", expected, actual)) que se muestra como descripción del error si la aserción falla, facilitando la identificación del problema.",
+        "Los assertion messages no se envían por email.",
+        "Los assertion messages no son documentación; son mensajes de error para tests fallidos."
+      ]
+    }
+  ]
+}

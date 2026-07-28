@@ -1,0 +1,92 @@
+{
+  "id": "quiz-41-records-avanzado",
+  "lessonSlug": "records",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es un compact constructor en un record?",
+      "options": [
+        "Un constructor sin lista de parámetros que valida valores antes de asignar",
+        "Un constructor que acepta menos parámetros",
+        "Un constructor privado que solo inicializa campos finales",
+        "Un método estático que crea el record"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El compact constructor no recibe parámetros (estos se definen en la cabecera del record) y se usa para validar o transformar valores antes de la asignación.",
+        "No se refiere a menos parámetros.",
+        "No es un constructor privado.",
+        "No es un método estático."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Se pueden agregar campos de instancia a un record?",
+      "options": [
+        "No, solo se pueden tener los campos definidos en la cabecera del record",
+        "Sí, tantos como se necesiten",
+        "Solo si son estáticos",
+        "Solo si son privados"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un record solo puede tener los componentes (campos) declarados en su cabecera. No admite campos de instancia adicionales.",
+        "No se pueden agregar campos de instancia.",
+        "Los campos estáticos sí se pueden agregar, pero no son de instancia.",
+        "No es cuestión de visibilidad."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué interfaz implementan los records?",
+      "options": [
+        "Implementan Serializable",
+        "Implementan Comparable",
+        "Implementan Iterable",
+        "No implementan ninguna interfaz"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Los records implementan la interfaz Serializable, lo que les permite serializarse.",
+        "No implementan Comparable por defecto.",
+        "No implementan Iterable por defecto.",
+        "Sí implementan al menos Serializable."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es un record component?",
+      "options": [
+        "Cada parámetro del record, que se convierte en un campo inmutable",
+        "Un método privado del record",
+        "Una constante estática del record",
+        "Una interfaz que implementa el record"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Cada componente (parámetro en la cabecera) se convierte en un campo final con su método de acceso (getter).",
+        "No es un método privado.",
+        "No es una constante estática.",
+        "No es una interfaz."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Pueden los records extender otras clases?",
+      "options": [
+        "No, heredan de java.lang.Record y no pueden extender otras clases",
+        "Sí, pueden extender cualquier clase",
+        "Solo pueden extender Object",
+        "Solo pueden extender clases abstractas"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Los records implícitamente extienden java.lang.Record y no pueden extender otras clases (Record a su vez extiende Object).",
+        "No pueden extender cualquier clase.",
+        "Object es la superclase de Record, pero no se puede extender directamente.",
+        "No están limitados a clases abstractas."
+      ]
+    }
+  ]
+}

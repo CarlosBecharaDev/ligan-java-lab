@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-scanner-facil",
+    "lessonSlug": "entrada-datos-scanner",
+    "title": "Saludo personalizado",
+    "difficulty": "facil",
+    "description": "Pide al usuario su nombre y su color favorito, y muestra un saludo personalizado con esa información.",
+    "template": "import java.util.Scanner;\n\npublic class SaludoPersonalizado {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // TODO: Pide el nombre con nextLine()\n        // Pide el color favorito con nextLine()\n        // Muestra: \"¡Hola [nombre]! Tu color favorito es [color]\"\n        // Cierra el Scanner\n\n    }\n}",
+    "hints": [
+      "Usa System.out.print() (sin ln) para el mensaje de petición",
+      "Recuerda cerrar Scanner con sc.close()"
+    ],
+    "solution": "import java.util.Scanner;\n\npublic class SaludoPersonalizado {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        System.out.print(\"¿Cómo te llamas? \");\n        String nombre = sc.nextLine();\n\n        System.out.print(\"¿Cuál es tu color favorito? \");\n        String color = sc.nextLine();\n\n        System.out.println(\"¡Hola \" + nombre + \"! Tu color favorito es \" + color);\n\n        sc.close();\n    }\n}",
+    "solutionExplanation": "Usamos nextLine() para leer tanto el nombre como el color, ya que ambos pueden contener espacios. El saludo concatena las variables con texto literal.",
+    "expectedOutput": "¿Cómo te llamas? Carlos\n¿Cuál es tu color favorito? azul\n¡Hola Carlos! Tu color favorito es azul"
+  },
+  {
+    "id": "ex-scanner-normal",
+    "lessonSlug": "entrada-datos-scanner",
+    "title": "Calculadora con Scanner",
+    "difficulty": "normal",
+    "description": "Crea una calculadora que pida dos números al usuario y muestre su suma, resta, multiplicación y división. Maneja la división por cero.",
+    "template": "import java.util.Scanner;\n\npublic class CalculadoraScanner {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // TODO: Pide el primer número (double)\n        // Pide el segundo número (double)\n        // Limpia el buffer después de cada nextDouble\n        // Calcula y muestra las 4 operaciones\n        // Maneja el caso de división por cero\n\n    }\n}",
+    "hints": [
+      "Usa nextDouble() para leer decimales",
+      "Recuerda limpiar el buffer con sc.nextLine() después de cada nextDouble",
+      "Verifica que el divisor no sea 0 antes de dividir"
+    ],
+    "solution": "import java.util.Scanner;\n\npublic class CalculadoraScanner {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        System.out.print(\"Primer número: \");\n        double a = sc.nextDouble();\n        sc.nextLine();\n\n        System.out.print(\"Segundo número: \");\n        double b = sc.nextDouble();\n        sc.nextLine();\n\n        System.out.println(\"\\n--- Resultados ---\");\n        System.out.printf(\"Suma: %.2f%n\", a + b);\n        System.out.printf(\"Resta: %.2f%n\", a - b);\n        System.out.printf(\"Multiplicación: %.2f%n\", a * b);\n\n        if (b != 0) {\n            System.out.printf(\"División: %.2f%n\", a / b);\n        } else {\n            System.out.println(\"División: No se puede dividir por cero\");\n        }\n\n        sc.close();\n    }\n}",
+    "solutionExplanation": "Usamos nextDouble() para leer números decimales y limpiamos el buffer después de cada lectura. Verificamos que b no sea 0 antes de dividir para evitar ArithmeticException.",
+    "expectedOutput": "Primer número: 10\nSegundo número: 3\n\n--- Resultados ---\nSuma: 13.00\nResta: 7.00\nMultiplicación: 30.00\nDivisión: 3.33"
+  },
+  {
+    "id": "ex-scanner-dificil",
+    "lessonSlug": "entrada-datos-scanner",
+    "title": "Formulario con validación",
+    "difficulty": "dificil",
+    "description": "Crea un formulario que pida nombre, edad (mayor de 0, menor de 150), email (debe contener @) y teléfono (solo dígitos). Valida cada campo y repite hasta obtener datos válidos.",
+    "template": "import java.util.Scanner;\n\npublic class FormularioValidado {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // TODO: Pide nombre (no vacío)\n        // Pide edad (entero entre 1 y 149)\n        // Pide email (debe contener @)\n        // Pide teléfono (solo dígitos, 10 caracteres)\n        // Para cada campo, repite hasta obtener dato válido\n        // Muestra resumen final\n\n    }\n}",
+    "hints": [
+      "Usa while(!valido) para repetir cada campo",
+      "Usa hasNextInt() para validar enteros",
+      "Usa String.contains(\"@\") para validar email",
+      "Usa String.matches(\"\\\\d+\") para verificar solo dígitos"
+    ],
+    "solution": "import java.util.Scanner;\n\npublic class FormularioValidado {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // Nombre\n        String nombre = \"\";\n        while (nombre.isEmpty()) {\n            System.out.print(\"Nombre: \");\n            nombre = sc.nextLine().trim();\n            if (nombre.isEmpty()) System.out.println(\"❌ El nombre no puede estar vacío\");\n        }\n\n        // Edad\n        int edad = 0;\n        boolean edadValida = false;\n        while (!edadValida) {\n            System.out.print(\"Edad: \");\n            if (sc.hasNextInt()) {\n                edad = sc.nextInt();\n                sc.nextLine();\n                if (edad > 0 && edad < 150) {\n                    edadValida = true;\n                } else {\n                    System.out.println(\"❌ La edad debe estar entre 1 y 149\");\n                }\n            } else {\n                System.out.println(\"❌ Debe ser un número entero\");\n                sc.next();\n            }\n        }\n\n        // Email\n        String email = \"\";\n        while (!email.contains(\"@\")) {\n            System.out.print(\"Email: \");\n            email = sc.nextLine().trim();\n            if (!email.contains(\"@\")) System.out.println(\"❌ El email debe contener @\");\n        }\n\n        // Teléfono\n        String telefono = \"\";\n        while (!telefono.matches(\"\\\\d{10}\")) {\n            System.out.print(\"Teléfono (10 dígitos): \");\n            telefono = sc.nextLine().trim();\n            if (!telefono.matches(\"\\\\d{10}\")) System.out.println(\"❌ Debe tener exactamente 10 dígitos\");\n        }\n\n        System.out.println(\"\\n=== Registro exitoso ===\");\n        System.out.println(\"Nombre: \" + nombre);\n        System.out.println(\"Edad: \" + edad);\n        System.out.println(\"Email: \" + email);\n        System.out.println(\"Teléfono: \" + telefono);\n\n        sc.close();\n    }\n}",
+    "solutionExplanation": "Cada campo tiene su propio bucle de validación. Para nombre usamos isEmpty(), para edad hasNextInt() con rango, para email contains(\"@\"), y para teléfono regex \\d{10}. Cada campo se repite hasta que sea válido.",
+    "expectedOutput": "Nombre: \n❌ El nombre no puede estar vacío\nNombre: Carlos\nEdad: abc\n❌ Debe ser un número entero\nEdad: 25\nEmail: carlos\n❌ El email debe contener @\nEmail: carlos@ejemplo.com\nTeléfono: 123\n❌ Debe tener exactamente 10 dígitos\nTeléfono: 5551234567\n\n=== Registro exitoso ===\nNombre: Carlos\nEdad: 25\nEmail: carlos@ejemplo.com\nTeléfono: 5551234567"
+  }
+]

@@ -1,0 +1,368 @@
+---
+title: "Sentencias de Decisión: if-else"
+slug: "if-else"
+module: "02-control-de-flujo"
+level: "Inicial"
+objectives:
+  - "Evaluar condiciones booleanas con la sentencia if"
+  - "Construir bifurcaciones con if-else y else-if"
+  - "Anidar sentencias if correctamente"
+  - "Usar bloques de código con llaves para evitar errores lógicos"
+  - "Resolver el problema del colgante (dangling else)"
+prerequisites:
+  - "Haber completado Módulo 01 — Fundamentos de Java"
+  - "Conocer operadores de comparación (==, !=, >, <, >=, <=)"
+  - "Conocer operadores lógicos (&&, ||, !)"
+history:
+  introducedIn: "Java 1.0"
+  context: "Las sentencias if-else existen desde la primera versión de Java, heredadas de C y C++. A diferencia de lenguajes como Python, Java usa llaves para delimitar bloques y exige que la condición sea una expresión booleana explícita, evitando confusiones como 'truthy/falsy'."
+  evolution: "Java 1.4 eliminó la necesidad de break en switch. Java 12-14 introdujo switch expressions y sintaxis con flecha. La sentencia if, sin embargo, se mantiene prácticamente igual desde Java 1.0 por su claridad y simplicidad."
+realWorldExamples:
+  - domain: "Control de acceso"
+    description: "Un sistema de control de acceso evalúa múltiples condiciones: edad, licencia y membresía para decidir si un usuario puede ingresar."
+    code: |
+      public class ControlAcceso {
+          public static void main(String[] args) {
+              int edad = 22;
+              boolean tieneLicencia = true;
+              boolean esMiembro = false;
+
+              if (edad >= 18) {
+                  if (tieneLicencia) {
+                      System.out.println("✅ Acceso permitido");
+                      if (esMiembro) {
+                          System.out.println("🎉 Bienvenido, miembro VIP");
+                      } else {
+                          System.out.println("ℹ️  Considere hacerse miembro");
+                      }
+                  } else {
+                      System.out.println("❌ Necesita licencia válida");
+                  }
+              } else {
+                  System.out.println("❌ Debe ser mayor de edad");
+              }
+          }
+      }
+    result: |
+      ✅ Acceso permitido
+      ℹ️  Considere hacerse miembro
+  - domain: "Calculadora de impuestos"
+    description: "Un sistema fiscal aplica diferentes tasas impositivas según el rango de ingresos usando escalas con else-if."
+    code: |
+      public class CalculadoraImpuestos {
+          public static void main(String[] args) {
+              double ingreso = 52000.0;
+              double impuesto;
+
+              if (ingreso <= 10000) {
+                  impuesto = ingreso * 0.05;
+              } else if (ingreso <= 30000) {
+                  impuesto = 10000 * 0.05 + (ingreso - 10000) * 0.10;
+              } else if (ingreso <= 60000) {
+                  impuesto = 10000 * 0.05 + 20000 * 0.10 + (ingreso - 30000) * 0.15;
+              } else {
+                  impuesto = 10000 * 0.05 + 20000 * 0.10 + 30000 * 0.15 + (ingreso - 60000) * 0.30;
+              }
+
+              System.out.printf("Ingreso: $%.2f%n", ingreso);
+              System.out.printf("Impuesto: $%.2f%n", impuesto);
+              System.out.printf("Tasa efectiva: %.1f%%%n", (impuesto / ingreso) * 100);
+          }
+      }
+    result: |
+      Ingreso: $52000.00
+      Impuesto: $8800.00
+      Tasa efectiva: 16.9%
+hasInteractive: false
+comparisons:
+  - title: "if-else vs operador ternario"
+    items:
+      - name: "if-else"
+        features:
+          sintaxis: "Varias líneas, con llaves"
+          legibilidad: "Claro para lógica compleja"
+          uso: "Cuando hay efectos secundarios o múltiples instrucciones"
+          anidación: "Soporta anidación profunda"
+      - name: "Ternario (? :)"
+        features:
+          sintaxis: "Una línea: cond ? valTrue : valFalse"
+          legibilidad: "Compacto para asignaciones simples"
+          uso: "Asignaciones inline con dos opciones"
+          anidación: "Posible pero ilegible"
+    recommendation: "Usa if-else para lógica con múltiples pasos o condiciones complejas. Usa el ternario solo para asignaciones rápidas de dos opciones."
+videos:
+  - url: ""
+    title: "Sentencias de decisión en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Es obligatorio usar llaves `{}` en if-else?"
+    answer: "No. Si el bloque tiene una sola instrucción, las llaves son opcionales. Pero es una mala práctica omitirlas porque puede llevar a errores lógicos (dangling else). Siempre usa llaves aunque sea una línea."
+  - question: "¿Qué es el 'dangling else'?"
+    answer: "Es un error clásico de legibilidad donde un else se asocia al if incorrecto. Java asocia cada else con el if más cercano sin else. Las llaves resuelven este problema delimitando claramente los bloques."
+  - question: "¿Puedo usar if sin else?"
+    answer: "Sí. El else es opcional. Si solo necesitas ejecutar código cuando se cumple una condición, usa if solo."
+sources:
+  - title: "Java 21 Language Specification — The if Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.9"
+    date: "2026-07-27"
+  - title: "Java Tutorials — The if-then and if-then-else Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/if.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es una sentencia de decisión?
+
+Las sentencias de decisión permiten que un programa **tome caminos diferentes** según condiciones específicas. Son la base de la lógica en cualquier lenguaje de programación.
+
+En Java, la sentencia de decisión fundamental es `if`:
+
+```java
+if (condicion) {
+    // bloque que se ejecuta si condicion es true
+}
+```
+
+## La sentencia if
+
+El `if` ejecuta un bloque de código **solo si** la condición es `true`:
+
+<CodeBlock lang="java" title="Sentencia if básica">
+{`public class IfBasico {
+    public static void main(String[] args) {
+        int edad = 20;
+
+        if (edad >= 18) {
+            System.out.println("Eres mayor de edad");
+        }
+
+        System.out.println("Esta línea siempre se ejecuta");
+
+        // if con una sola línea (sin llaves, no recomendado)
+        if (edad >= 18) System.out.println("Mayor de edad");
+
+        // Siempre usa llaves para evitar errores
+        if (edad >= 18) {
+            System.out.println("Mayor de edad");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Eres mayor de edad
+Esta línea siempre se ejecuta
+Mayor de edad
+Mayor de edad
+```
+
+## If-else: dos caminos
+
+El `else` ejecuta un bloque cuando la condición es `false`:
+
+```java
+if (condicion) {
+    // cuando es true
+} else {
+    // cuando es false
+}
+```
+
+<CodeBlock lang="java" title="If-else">
+{`public class IfElse {
+    public static void main(String[] args) {
+        int temperatura = 5;
+
+        if (temperatura > 25) {
+            System.out.println("Hace calor 🥵");
+        } else {
+            System.out.println("Hace frío 🥶");
+        }
+
+        System.out.println("Dentro o fuera, el programa continúa");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Hace frío 🥶
+Dentro o fuera, el programa continúa
+```
+
+## Else-if: múltiples condiciones
+
+Cuando tienes más de dos caminos, encadena `else if`:
+
+<CodeBlock lang="java" title="Else-if">
+{`public class ElseIf {
+    public static void main(String[] args) {
+        int nota = 85;
+
+        if (nota >= 90) {
+            System.out.println("Excelente 🏆");
+        } else if (nota >= 80) {
+            System.out.println("Muy bien 👍");
+        } else if (nota >= 70) {
+            System.out.println("Bien 👌");
+        } else if (nota >= 60) {
+            System.out.println("Suficiente 📖");
+        } else {
+            System.out.println("Reprobado ❌");
+        }
+
+        System.out.println("Nota final: " + nota);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Muy bien 👍
+Nota final: 85
+```
+
+## Condiciones booleanas complejas
+
+Puedes combinar múltiples condiciones con operadores lógicos:
+
+<CodeBlock lang="java" title="Condiciones compuestas">
+{`public class CondicionesCompuestas {
+    public static void main(String[] args) {
+        int edad = 25;
+        boolean tieneLicencia = true;
+        boolean tieneMultas = false;
+
+        // AND: ambas deben cumplirse
+        if (edad >= 18 && tieneLicencia) {
+            System.out.println("Puede conducir legalmente");
+        }
+
+        // OR: al menos una debe cumplirse
+        if (edad < 12 || tieneMultas) {
+            System.out.println("Tiene restricciones");
+        }
+
+        // NOT + AND: combinación
+        if (edad >= 18 && !tieneMultas) {
+            System.out.println("No tiene multas y es mayor");
+        }
+
+        // Condición compuesta compleja
+        if ((edad >= 18 && tieneLicencia) && !tieneMultas) {
+            System.out.println("✅ Conductor sin restricciones");
+        } else {
+            System.out.println("⚠️ No puede conducir");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Puede conducir legalmente
+No tiene multas y es mayor
+✅ Conductor sin restricciones
+```
+
+## If-else vs operador ternario
+
+El operador ternario es una versión compacta de `if-else` para asignaciones:
+
+```java
+// if-else tradicional
+String mensaje;
+if (edad >= 18) {
+    mensaje = "Mayor de edad";
+} else {
+    mensaje = "Menor de edad";
+}
+
+// Ternario equivalente (una línea)
+String mensaje = (edad >= 18) ? "Mayor de edad" : "Menor de edad";
+```
+
+## Errores frecuentes
+
+### Error 1: Usar `=` en vez de `==`
+```java
+// ❌ Asigna 5 a x, no compara. La condición siempre es true
+if (x = 5) { }  // Error de compilación
+
+// ✅ Comparación correcta
+if (x == 5) { }
+```
+
+### Error 2: Olvidar las llaves
+```java
+// ❌ Solo "Verificar..." está dentro del if
+if (edad >= 18)
+    System.out.println("Verificar...");
+    System.out.println("Mayor de edad");  // siempre se ejecuta
+
+// ✅ Con llaves, ambas líneas están dentro
+if (edad >= 18) {
+    System.out.println("Verificar...");
+    System.out.println("Mayor de edad");
+}
+```
+
+### Error 3: Punto y coma después del if
+```java
+// ❌ El ; termina la sentencia if, el bloque siempre se ejecuta
+if (edad >= 18); {
+    System.out.println("Mayor de edad");  // siempre se imprime
+}
+
+// ✅ Sin punto y coma
+if (edad >= 18) {
+    System.out.println("Mayor de edad");
+}
+```
+
+### Error 4: Comparación de Strings con ==
+```java
+// ❌ Compara referencias, no contenido
+if (nombre == "Carlos") { }
+
+// ✅ Compara contenido correctamente
+if ("Carlos".equals(nombre)) { }
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

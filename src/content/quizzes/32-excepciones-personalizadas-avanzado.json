@@ -1,0 +1,92 @@
+{
+  "id": "quiz-32-excepciones-personalizadas-avanzado",
+  "lessonSlug": "excepciones-personalizadas",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué campos útiles se pueden agregar a una excepción personalizada?",
+      "options": [
+        "Un campo de tipo Runnable para ejecutar código al lanzar la excepción",
+        "Código de error, campo inválido, timestamp u otra información relevante del contexto",
+        "Un campo estático que contenga todas las excepciones del sistema",
+        "Un campo que almacene el objeto que causó el error directamente"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Las excepciones no deben contener Runnable ni ejecutar código al lanzarse.",
+        "Correcto. Se pueden agregar campos como código de error (int o String), nombre del campo inválido, timestamp, o cualquier información que ayude a diagnosticar el problema.",
+        "Una excepción no debe almacenar todas las excepciones del sistema.",
+        "La causa del error se almacena con el mecanismo de cause, no como campo directo."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuándo es apropiado usar una checked exception personalizada vs una unchecked?",
+      "options": [
+        "Checked para errores de programación, unchecked para errores recuperables",
+        "Checked para errores recuperables que el caller debe manejar; unchecked para errores de programación",
+        "Siempre usar checked porque obliga a manejar el error",
+        "Siempre usar unchecked porque no obliga a escribir try-catch"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El uso está invertido; checked es para errores recuperables.",
+        "Correcto. Checked exceptions son para errores que el caller puede y debe manejar (ej. archivo no encontrado). Unchecked exceptions son para errores de programación que deberían corregirse en desarrollo (ej. argumento nulo).",
+        "Obligar a manejar errores no siempre es beneficioso; depende del contexto.",
+        "Evitar try-catch no es una razón válida para usar unchecked."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué métodos ofrece la clase Throwable para inspeccionar una excepción?",
+      "options": [
+        "getName(), getStack(), getLevel()",
+        "getMessage(), getCause(), printStackTrace(), getStackTrace()",
+        "getError(), getWarning(), getInfo()",
+        "getDescription(), getReason(), getDetail()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Estos métodos no existen en Throwable.",
+        "Correcto. Throwable ofrece getMessage() para el mensaje, getCause() para la excepción original, printStackTrace() para imprimir el stack trace, y getStackTrace() para obtener el stack trace como arreglo.",
+        "Estos métodos no existen en la API de Throwable.",
+        "Estos métodos no existen en Throwable."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es un error code en el contexto de excepciones personalizadas?",
+      "options": [
+        "Un número que indica la cantidad de veces que se ha lanzado la excepción",
+        "Un campo int o String que identifica el tipo específico de error para manejo programático",
+        "El código fuente donde se lanzó la excepción",
+        "Un código que se usa para desactivar la excepción en producción"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El error code no cuenta lanzamientos de excepciones.",
+        "Correcto. Un error code es un campo (int o String) dentro de la excepción que permite identificar el tipo específico de error de forma programática, útil para distinguir entre múltiples causas del mismo tipo de excepción.",
+        "El código fuente se obtiene del stack trace, no de un campo error code.",
+        "Los errores no se desactivan con códigos; se manejan o previenen."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Se puede extender una excepción existente en Java para crear una excepción personalizada?",
+      "options": [
+        "No, todas las excepciones personalizadas deben extender directamente Exception",
+        "Sí, por ejemplo: custom ValidationException extends IllegalArgumentException",
+        "Solo si la excepción padre es una checked exception",
+        "Solo si la excepción padre tiene un constructor público"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Se pueden extender excepciones existentes, no solo Exception directamente.",
+        "Correcto. Se puede extender cualquier excepción existente para crear una más específica. Por ejemplo: custom ValidationException extends IllegalArgumentException permite crear una excepción de validación más descriptiva.",
+        "Se pueden extender tanto checked como unchecked exceptions.",
+        "El constructor público no es la única restricción; se puede superar con constructors que llamen a super."
+      ]
+    }
+  ]
+}

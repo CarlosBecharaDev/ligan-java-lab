@@ -1,0 +1,53 @@
+{
+  "id": "quiz-basico-strings",
+  "lessonSlug": "strings",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué devuelve `\"Java\".length()`?",
+      "options": ["3", "4", "5", "Error"],
+      "correctIndex": 1,
+      "explanations": [
+        "3 contaría solo 'Jav'.",
+        "Correcto. 'Java' tiene 4 caracteres: J, a, v, a.",
+        "5 incluiría un carácter invisible.",
+        "length() es un método válido de String."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre `trim()` e `isBlank()`?",
+      "options": [
+        "Son lo mismo",
+        "trim() elimina espacios, isBlank() verifica si está vacío o solo tiene espacios",
+        "isBlank() elimina espacios, trim() verifica longitud",
+        "trim() funciona solo al inicio, isBlank() en toda la cadena"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Son diferentes en su propósito.",
+        "Correcto. trim() retorna un nuevo String sin espacios al inicio/fin. isBlank() retorna true si el string está vacío o contiene solo caracteres de espacio.",
+        "Es al revés: trim() elimina, isBlank() verifica.",
+        "trim() elimina espacios en ambos extremos."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Por qué los Strings son inmutables en Java?",
+      "options": [
+        "Para ahorrar memoria",
+        "Porque Java no permite modificar objetos",
+        "Para seguridad, reutilización en Pool y compatibilidad entre hilos",
+        "Es un bug de Java que nunca se corrigió"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "La inmutabilidad puede ahorrar memoria (Pool), pero no es la razón principal.",
+        "Java sí permite modificar objetos mutables como StringBuilder.",
+        "Correcto. La inmutabilidad garantiza seguridad en hilos, permite el String Pool, y hace que las claves de HashMap sean confiables.",
+        "No es un bug; es una decisión de diseño intencional."
+      ]
+    }
+  ]
+}

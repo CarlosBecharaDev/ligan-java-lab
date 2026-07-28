@@ -1,0 +1,92 @@
+{
+  "id": "quiz-27-string-avanzado-avanzado",
+  "lessonSlug": "string-avanzado",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Por qué String es inmutable en Java?",
+      "options": [
+        "Seguridad, cache de string pool, thread-safety",
+        "Para ahorrar memoria",
+        "Porque es rapido",
+        "No hay razon especifica"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. La inmutabilidad proporciona seguridad (para URLs, clases, etc.), permite el string pool, y hace que los Strings sean thread-safe.",
+        "No. La inmutabilidad puede consumir mas memoria por la creacion de objetos temporales.",
+        "No. La velocidad no es la razon principal de la inmutabilidad.",
+        "No. Hay razones tecnicas importantes para la inmutabilidad."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es String.intern()?",
+      "options": [
+        "Agrega el String al pool y retorna la referencia del pool",
+        "Elimina el String de memoria",
+        "Crea una copia del String",
+        "Convierte a mayusculas"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. intern() agrega el String al string pool (si no existe) y retorna la referencia del pool.",
+        "No. No elimina el String, lo agrega al pool.",
+        "No. No crea una copia, retorna la referencia existente o la nueva en el pool.",
+        "No. No tiene relacion con mayusculas, es para el manejo del pool."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se compara el contenido de dos Strings?",
+      "options": [
+        "equals() (no ==)",
+        "== unicamente",
+        "comparar()",
+        "match()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. equals() compara el contenido de los Strings. El operador == compara referencias de memoria.",
+        "No. == compara si son el mismo objeto en memoria, no el contenido.",
+        "No. No existe el metodo comparar() en String.",
+        "No. No existe el metodo match() para comparar contenido."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo funciona substring() en Java moderno?",
+      "options": [
+        "Crea un nuevo String sin copiar el arreglo original (optimizacion JDK 7+)",
+        "Siempre copia el arreglo completo",
+        "Modifica el String original",
+        "Retorna una vista del String"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Desde JDK 7u6, substring() crea un nuevo String que comparte el arreglo de caracteres, es mas eficiente.",
+        "No. Desde JDK 7+ no copia el arreglo completo.",
+        "No. Los Strings son inmutables, no puede modificar el original.",
+        "No. No retorna una vista, retorna un nuevo String independiente."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es TextBlock en Java?",
+      "options": [
+        "Texto multilinea con \"\"\" (Java 15+)",
+        "Un bloque de codigo ejecutable",
+        "Una coleccion de textos",
+        "Un tipo de variable"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. TextBlock es una caracteristica de Java 15+ que permite escribir strings multilinea usando triple comilla doble \"\"\".",
+        "No. No es un bloque de codigo, es una forma de declarar strings multilinea.",
+        "No. No es una coleccion, es un tipo de String.",
+        "No. No es una variable, es una forma de literal de String."
+      ]
+    }
+  ]
+}

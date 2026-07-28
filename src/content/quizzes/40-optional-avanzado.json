@@ -1,0 +1,92 @@
+{
+  "id": "quiz-40-optional-avanzado",
+  "lessonSlug": "optional",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué hace ifPresent() en un Optional?",
+      "options": [
+        "Ejecuta un Consumer si el Optional tiene un valor",
+        "Retorna el valor del Optional",
+        "Crea un nuevo Optional con el valor transformado",
+        "Lanza una excepción si está vacío"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. ifPresent(consumer) ejecuta la acción del Consumer solo si el Optional contiene un valor.",
+        "Para retornar el valor se usa get() o orElse().",
+        "Para transformar se usa map().",
+        "Para lanzar excepción se usa orElseThrow()."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué hace map() en un Optional?",
+      "options": [
+        "Transforma el valor si existe, retornando un Optional con el nuevo valor",
+        "Filtra el valor según una condición",
+        "Aplana Optional anidados",
+        "Retorna el valor o un defecto"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. map(function) aplica la transformación al valor del Optional si existe, retornando un nuevo Optional.",
+        "Para filtrar se usa filter().",
+        "Para aplanar se usa flatMap().",
+        "Para valor o defecto se usa orElse()."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué hace flatMap() en un Optional?",
+      "options": [
+        "Transforma el valor evitando la creación de Optional anidado (Optional<Optional<T>>)",
+        "Retorna el valor o un defecto",
+        "Filtra valores nulos",
+        "Ejecuta una acción si hay valor"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. flatMap(function) aplica una función que retorna un Optional, evitando Optional<Optional<T>>.",
+        "Para valor o defecto se usa orElse().",
+        "Para filtrar se usa filter().",
+        "Para ejecutar una acción se usa ifPresent()."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué hace orElseThrow() en un Optional?",
+      "options": [
+        "Retorna el valor si existe o lanza una excepción si el Optional está vacío",
+        "Retorna siempre null",
+        "Ignora el valor y retorna void",
+        "Crea un nuevo Optional vacío"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. orElseThrow() retorna el valor si está presente o lanza NoSuchElementException (o una excepción personalizada) si está vacío.",
+        "No retorna null.",
+        "No retorna void.",
+        "No crea un Optional vacío."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Por qué se recomienda no usar get() directamente en un Optional?",
+      "options": [
+        "Porque lanza NoSuchElementException si el Optional está vacío",
+        "Porque retorna null",
+        "Porque es más lento que orElse()",
+        "Porque get() no existe en Optional"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. get() lanza NoSuchElementException si el Optional está vacío, por lo que se prefiere orElse(), orElseThrow() o ifPresent().",
+        "No retorna null.",
+        "No es cuestión de rendimiento.",
+        "get() sí existe en Optional."
+      ]
+    }
+  ]
+}

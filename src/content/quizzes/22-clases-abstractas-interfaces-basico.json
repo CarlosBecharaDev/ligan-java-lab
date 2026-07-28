@@ -1,0 +1,109 @@
+{
+  "id": "quiz-22-clases-abstractas-interfaces-basico",
+  "lessonSlug": "clases-abstractas-interfaces",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es una clase abstracta?",
+      "options": [
+        "Una clase que no se puede heredar",
+        "Una clase que no se puede instanciar directamente",
+        "Una clase sin métodos",
+        "Una clase privada"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Se puede heredar de clases abstractas.",
+        "Correcto. Solo se puede crear objetos de sus subclases.",
+        "Puede tener métodos.",
+        "No tiene relación con visibilidad."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué palabra clave se usa para implementar una interfaz?",
+      "options": [
+        "extends",
+        "implements",
+        "interface",
+        "abstract"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "extends es para herencia de clases.",
+        "Correcto. implements establece que la clase cumple el contrato.",
+        "interface define la interfaz.",
+        "abstract define clases abstractas."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuántas interfaces puede implementar una clase?",
+      "options": [
+        "Solo una",
+        "Múltiples",
+        "Ninguna",
+        "Depende de la versión"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Solo una clase puede extender.",
+        "Correcto. Java permite implementar múltiples interfaces.",
+        "Puede implementar ninguna o varias.",
+        "No depende de versión."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué hace un método abstracto?",
+      "options": [
+        "Retorna null",
+        "No tiene cuerpo, las subclases deben implementarlo",
+        "Es static",
+        "Es privado"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No tiene relación con null.",
+        "Correcto. abstract void hacer(); → sin cuerpo, obligatorio implementar.",
+        "No puede ser static.",
+        "No puede ser privado."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuándo uses interface vs clase abstracta?",
+      "options": [
+        "Siempre interface",
+        "Abstracta: compartir código. Interface: definir contrato",
+        "Siempre clase abstracta",
+        "No hay diferencia"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No siempre.",
+        "Correcto. Abstracta para código compartido, interface para contrato puro.",
+        "No siempre abstracta.",
+        "Sí hay diferencias."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Puede una interfaz tener atributos?",
+      "options": [
+        "No, nunca",
+        "Solo static final (constantes)",
+        "Atributos normales",
+        "Solo privados"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Puede tener atributos, pero son constantes.",
+        "Correcto. Los atributos en interfaces son implícitamente public static final.",
+        "No puede tener atributos normales.",
+        "No puede tener privados."
+      ]
+    }
+  ]
+}

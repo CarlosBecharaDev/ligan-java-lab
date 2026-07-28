@@ -1,0 +1,426 @@
+---
+title: "Constructores"
+slug: "constructores"
+description: "Aprende a inicializar objetos con constructores, constructores sobrecargados y el palabra this."
+module: "04-poo"
+level: "Inicial"
+order: 18
+estimatedMinutes: 30
+objectives:
+  - "Crear constructores para inicializar objetos"
+  - "Usar constructor sobrecargado para múltiples formas de creación"
+  - "Entender this para referenciar atributos del objeto"
+  - "Distinguir constructor por defecto vs parametrizado"
+prerequisites:
+  - "clases-objetos"
+realWorldExamples:
+  - domain: "Salud"
+    description: "Ejemplo practico de Salud"
+    code: "public class Paciente {\n    String nombre;\n    int edad;\n    double temperatura;\n    String diagnostico;\n\n    // Constructor completo (para nuevos pacientes)\n    Paciente(String nombre, int edad, double temperatura, String diagnostico) {\n        this.nombre = nombre;\n        this.edad = edad;\n        this.temperatura = temperatura;\n        this.diagnostico = diagnostico;\n    }\n\n    // Constructor rápido (urgencia: solo nombre y temperatura)\n    Paciente(String nombre, double temperatura) {\n     ..."
+    result: "Constructor completo (para nuevos pacientes)"
+  - domain: "Ecommerce"
+    description: "Ejemplo practico de Ecommerce"
+    code: "public class Producto {\n    String nombre;\n    double precio;\n    int stock;\n\n    // Constructor completo con validación\n    Producto(String nombre, double precio, int stock) {\n        this.nombre = nombre;\n        this.precio = Math.max(0, precio);  // No negativos\n        this.stock = Math.max(0, stock);\n    }\n\n    // Constructor de oferta (precio original y descuento)\n    Producto(String nombre, double precioOriginal, double descuento, int stock) {\n        this(nombre, precioOriginal * (1 - d..."
+    result: "Constructor completo con validación"
+hasInteractive: false
+comparisons:
+  - title: "Constructor vs Método normal"
+    items:
+      - name: "Constructor"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso izquierdo"
+      - name: "Método normal"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso derecho"
+    recommendation: "Usa la opcion que mejor se adapte a tu caso especifico"
+videos: []
+faqs:
+  - question: "¿Puedo tener un constructor void?"
+    answer: "No. Un constructor no tiene tipo de retorno, ni siquiera void. Si pones `void MiClase(){}`, se interpreta como un método normal."
+  - question: "¿Puede un constructor llamar a otro?"
+    answer: "Sí, con `this(...)`. Debe ser la primera línea del constructor."
+  - question: "¿Qué pasa si no pongo this en el constructor?"
+    answer: "El parámetro \"encubre\" el atributo. `nombre = nombre` asigna el parámetro a sí mismo, y el atributo queda en su valor por defecto."
+  - question: "¿Cuándo uso constructor por defecto?"
+    answer: "Cuando la inicialización es opcional o el objeto puede funcionar sin datos iniciales. Por ejemplo, un objeto que se llena después con setters."
+sources:
+  - title: "Oracle - Providing Constructors for Your Classes"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html"
+    date: "2025-07-27"
+  - title: "Oracle - Using the this Keyword"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/thiskey.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Java Constructor"
+    url: "https://www.baeldung.com/java constructors"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Constructor in Java"
+    url: "https://www.geeksforgeeks.org/constructors-in-java/"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Objetivos de Aprendizaje
+
+Al finalizar esta lección, podrás:
+- Crear constructores para inicializar objetos
+- Usar constructor sobrecargado para múltiples formas de creación
+- Entender `this` para referenciar atributos del objeto
+- Distinguir constructor por defecto vs parametrizado
+
+---
+
+## ¿Qué es un Constructor?
+
+Un **constructor** es un método especial que se ejecuta automáticamente cuando creas un objeto con `new`. Su trabajo es inicializar los atributos del objeto.
+
+```java
+public class Mascota {
+    String nombre;
+    int edad;
+
+    // Constructor
+    Mascota(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+}
+
+// Uso
+Mascota m = new Mascota("Max", 3);  // Se llama al constructor
+System.out.println(m.nombre);       // "Max"
+```
+
+**Diferencias entre constructor y método:**
+
+| Característica | Constructor | Método |
+|---------------|-------------|---------|
+| Se llama con | `new` | `objeto.metodo()` |
+| Nombre | Igual que la clase | Cualquier nombre válido |
+| Retorno | No tiene (ni void) | Puede tener cualquier tipo |
+| Se ejecuta | Una vez (al crear) | Las veces que se llame |
+
+---
+
+## El palabra `this`
+
+`this` hace referencia al **objeto actual**. Es útil cuando el parámetro tiene el mismo nombre que el atributo:
+
+```java
+public class Persona {
+    String nombre;
+    int edad;
+
+    // Sin this: el parámetro "nombre" ENCUBRE el atributo
+    Persona(String nombre, int edad) {
+        nombre = nombre;  // ❌ El parámetro se asigna a sí mismo
+        edad = edad;      // ❌ Mismo problema
+    }
+
+    // Con this: se distingue el atributo del parámetro
+    Persona(String nombre, int edad) {
+        this.nombre = nombre;  // ✅ this.nombre = atributo
+        this.edad = edad;      // ✅ nombre = parámetro
+    }
+}
+```
+
+<CodeBlock
+  title="Constructor con this"
+  lang="java"
+  code={`public class Producto {
+    String nombre;
+    double precio;
+    int stock;
+
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " - $" + precio + " (Stock: " + stock + ")");
+    }
+
+    public static void main(String[] args) {
+        Producto p = new Producto("Laptop", 999.99, 10);
+        p.mostrar();  // Laptop - $999.99 (Stock: 10)
+    }
+}`}
+/>
+
+---
+
+## Constructor por Defecto
+
+Si no defines ningún constructor, Java crea uno vacío automáticamente:
+
+```java
+public class Persona {
+    String nombre;
+    int edad;
+    // Java crea implícitamente: Persona() {}
+}
+
+// Puedes usarlo sin problema
+Persona p = new Persona();  // ✅ Funciona
+p.nombre = "Ana";           // Asignas después
+```
+
+Pero **tan pronto defines un constructor**, Java ya no crea el por defecto:
+
+```java
+public class Persona {
+    String nombre;
+
+    Persona(String nombre) {
+        this.nombre = nombre;
+    }
+}
+
+// Esto ya NO compila
+Persona p = new Persona();  // ❌ Error: no hay constructor sin parámetros
+```
+
+Si necesitas ambos, define los dos explícitamente.
+
+---
+
+## Constructor Sobrecargado
+
+Puedes tener múltiples constructores con diferentes parámetros (sobrecarga):
+
+```java
+public class Persona {
+    String nombre;
+    int edad;
+    String email;
+
+    // Constructor completo
+    Persona(String nombre, int edad, String email) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.email = email;
+    }
+
+    // Constructor parcial
+    Persona(String nombre, int edad) {
+        this(nombre, edad, "Sin email");  // Llama al otro constructor
+    }
+
+    // Constructor mínimo
+    Persona(String nombre) {
+        this(nombre, 0);  // Llama al anterior
+    }
+
+    // Constructor por defecto (vacío)
+    Persona() {
+        this("Desconocido");  // Llama al anterior
+    }
+}
+```
+
+**Flujo de llamadas:**
+```
+new Persona()           → llama Persona(String)
+new Persona("Ana")      → llama Persona(String, int)
+new Persona("Ana", 25)  → llama Persona(String, int, String)
+```
+
+<CodeBlock
+  title="Sobrecarga práctica"
+  lang="java"
+  code={`public class Mascota {
+    String nombre;
+    String especie;
+    int edad;
+    double peso;
+
+    // Todos los datos
+    Mascota(String nombre, String especie, int edad, double peso) {
+        this.nombre = nombre;
+        this.especie = especie;
+        this.edad = edad;
+        this.peso = peso;
+    }
+
+    // Nombre y especie (edad y peso por defecto)
+    Mascota(String nombre, String especie) {
+        this(nombre, especie, 1, 0.0);
+    }
+
+    // Solo nombre (resto por defecto)
+    Mascota(String nombre) {
+        this(nombre, "Desconocido");
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " | " + especie + " | " + edad + " años | " + peso + " kg");
+    }
+
+    public static void main(String[] args) {
+        Mascota m1 = new Mascota("Max", "Perro", 5, 12.5);
+        Mascota m2 = new Mascota("Luna", "Gato");
+        Mascota m3 = new Mascota("Piolín");
+
+        m1.mostrar();  // Max | Perro | 5 años | 12.5 kg
+        m2.mostrar();  // Luna | Gato | 1 años | 0.0 kg
+        m3.mostrar();  // Piolín | Desconocido | 1 años | 0.0 kg
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: Salud 🏥
+
+<CodeBlock
+  title="Constructor de paciente"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    int edad;
+    double temperatura;
+    String diagnostico;
+
+    // Constructor completo (para nuevos pacientes)
+    Paciente(String nombre, int edad, double temperatura, String diagnostico) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.temperatura = temperatura;
+        this.diagnostico = diagnostico;
+    }
+
+    // Constructor rápido (urgencia: solo nombre y temperatura)
+    Paciente(String nombre, double temperatura) {
+        this(nombre, 0, temperatura, "Por determinar");
+    }
+
+    // Constructor para transferencia (con diagnóstico previo)
+    Paciente(String nombre, int edad, String diagnostico) {
+        this(nombre, edad, 36.5, diagnostico);
+    }
+
+    boolean necesitaUrgencia() {
+        return temperatura >= 39.0;
+    }
+
+    void mostrarFicha() {
+        String urgencia = necesitaUrgencia() ? " [URGENCIA]" : "";
+        System.out.println(nombre + " (" + edad + " años) - " + temperatura + "°C");
+        System.out.println("Diagnóstico: " + diagnostico + urgencia);
+    }
+
+    public static void main(String[] args) {
+        Paciente p1 = new Paciente("Carlos", 45, 36.8, "Resfriado");
+        Paciente p2 = new Paciente("Ana", 39.5);  // Solo nombre y temperatura
+        Paciente p3 = new Paciente("Pedro", 67, "Diabetes");
+
+        p1.mostrarFicha();
+        p2.mostrarFicha();
+        p3.mostrarFicha();
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: E-commerce 🛒
+
+<CodeBlock
+  title="Constructor de producto con validación"
+  lang="java"
+  code={`public class Producto {
+    String nombre;
+    double precio;
+    int stock;
+
+    // Constructor completo con validación
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = Math.max(0, precio);  // No negativos
+        this.stock = Math.max(0, stock);
+    }
+
+    // Constructor de oferta (precio original y descuento)
+    Producto(String nombre, double precioOriginal, double descuento, int stock) {
+        this(nombre, precioOriginal * (1 - descuento), stock);
+    }
+
+    // Producto agotado
+    Producto(String nombre, double precio) {
+        this(nombre, precio, 0);
+    }
+
+    double precioConIva(double iva) {
+        return precio * (1 + iva);
+    }
+
+    void mostrar() {
+        String estado = stock > 0 ? "Disponible" : "Agotado";
+        System.out.println(nombre + " - $" + precio + " | " + estado + " (" + stock + ")");
+    }
+
+    public static void main(String[] args) {
+        Producto normal = new Producto("Laptop", 1200.00, 10);
+        Producto oferta = new Producto("Mouse", 45.00, 0.20, 50);  // 20% descuento
+        Producto agotado = new Producto("Teclado", 89.99);
+
+        normal.mostrar();    // Laptop - $1200.0 | Disponible (10)
+        oferta.mostrar();    // Mouse - $36.0 | Disponible (50)
+        agotado.mostrar();   // Teclado - $89.99 | Agotado (0)
+    }
+}`}
+/>
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Constructor** | Método especial que inicializa al crear un objeto |
+| **Constructor por defecto** | Sin parámetros, Java lo crea si no hay otros |
+| **Constructor parametrizado** | Con parámetros para inicializar atributos |
+| **Sobrecarga** | Múltiples constructores con diferentes firmas |
+| **this** | Referencia al objeto actual |
+
+---
+
+## Preguntas Frecuentes
+
+<details>
+<summary>¿Puedo tener un constructor void?</summary>
+No. Un constructor no tiene tipo de retorno, ni siquiera void. Si pones `void MiClase(){}`, se interpreta como un método normal.
+</details>
+
+<details>
+<summary>¿Puede un constructor llamar a otro?</summary>
+Sí, con `this(...)`. Debe ser la primera línea del constructor.
+</details>
+
+<details>
+<summary>¿Qué pasa si no pongo this en el constructor?</summary>
+El parámetro "encubre" el atributo. `nombre = nombre` asigna el parámetro a sí mismo, y el atributo queda en su valor por defecto.
+</details>
+
+<details>
+<summary>¿Cuándo uso constructor por defecto?</summary>
+Cuando la inicialización es opcional o el objeto puede funcionar sin datos iniciales. Por ejemplo, un objeto que se llena después con setters.
+</details>
+
+---
+
+## Fuentes y Referencias
+
+- [Oracle - Providing Constructors for Your Classes](https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html)
+- [Oracle - Using the this Keyword](https://docs.oracle.com/javase/tutorial/java/javaOO/thiskey.html)
+- [Baeldung - Java Constructor](https://www.baeldung.com/java constructors)
+- [GeeksforGeeks - Constructor in Java](https://www.geeksforgeeks.org/constructors-in-java/)

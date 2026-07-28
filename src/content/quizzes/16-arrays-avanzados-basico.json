@@ -1,0 +1,58 @@
+{
+  "id": "quiz-16-arrays-avanzados-basico",
+  "lessonSlug": "arrays-avanzados",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cómo se accede al elemento en fila 2, columna 1 de una matriz?",
+      "options": [
+        "matriz[2][1]",
+        "matriz[1][2]",
+        "matriz(2,1)",
+        "matriz[1,2]"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. matriz[fila][columna], comenzando desde 0.",
+        "Esto es columna 2, fila 1.",
+        "Java usa corchetes, no paréntesis.",
+        "Java usa corchetes separados."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuántas comparaciones hace Bubble Sort en un array de 5 elementos?",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "5 es el número de elementos.",
+        "Correcto. En cada pasada: (n-1)+(n-2)+...+1 = 10 comparaciones totales.",
+        "15 no es la cantidad correcta.",
+        "25 es n², pero bubble sort reduce comparaciones cada pasada."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué retorna la búsqueda lineal si no encuentra el elemento?",
+      "options": [
+        "0",
+        "null",
+        "-1",
+        "Excepción"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "0 es un índice válido.",
+        "null es para objetos.",
+        "Correcto. -1 es la convención universal para 'no encontrado'.",
+        "No lanza excepción."
+      ]
+    }
+  ]
+}

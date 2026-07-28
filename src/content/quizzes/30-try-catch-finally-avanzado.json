@@ -1,0 +1,92 @@
+{
+  "id": "quiz-30-try-catch-finally-avanzado",
+  "lessonSlug": "try-catch-finally",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuándo se ejecuta finally en relación con una sentencia return dentro de try?",
+      "options": [
+        "Finally no se ejecuta si hay un return dentro de try",
+        "Finally se ejecuta antes del return del bloque try",
+        "Finally se ejecuta después de que try retorna el valor, pero antes de que el método devuelva el resultado",
+        "Finally solo se ejecuta cuando el método no tiene return"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Finally siempre se ejecuta, incluso si hay un return en try.",
+        "Correcto. When try has a return statement, finally still executes after the return value is evaluated but before the method actually returns to the caller.",
+        "El finally se ejecuta después de calcular el valor a retornar, no antes.",
+        "Finally se ejecuta siempre, no depende de si hay return."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué pasa si el bloque finally contiene una sentencia return?",
+      "options": [
+        "El return del finally se ignora y se usa el return del try",
+        "Se produce un error de compilación porque no se pueden tener returns en finally",
+        "El return del finally sobrescribe el return del try, y el método retorna el valor de finally",
+        "Se ejecuta tanto el return del try como el del finally"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "El return del finally no se ignora; tiene prioridad sobre el del try.",
+        "Es legal usar return en finally, pero es una mala práctica porque puede enmascarar errores.",
+        "Correcto. Si finally tiene un return, este sobrescribe el valor que try iba a retornar. Esto es peligroso porque puede enmascarar excepciones.",
+        "Solo un return puede ejecutarse; finally sobrescribe al de try."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Se pueden anidar bloques try-catch en Java?",
+      "options": [
+        "No, Java no permite anidar try-catch",
+        "Sí, pero se recomienda evitar el anidamiento excesivo por legibilidad",
+        "Solo si se usa un solo tipo de excepción en cada nivel",
+        "Solo en métodos que declaran throws"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java sí permite anidar try-catch; es una característica válida.",
+        "Correcto. Se puede anidar try-catch, pero el anidamiento excesivo dificulta la legibilidad y el mantenimiento del código.",
+        "El anidamiento no tiene restricciones sobre los tipos de excepción en cada nivel.",
+        "El uso de throws no tiene relación con la capacidad de anidar try-catch."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Si un método declara `catch(Exception e)`, ¿qué excepciones NO se capturan?",
+      "options": [
+        "RuntimeException y todas sus subclases",
+        "Solo las clases Error y Throwable",
+        "Todas las checked exceptions",
+        "Ninguna, Exception captura todo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "RuntimeException sí se captura con catch(Exception e) porque RuntimeException es hija de Exception.",
+        "Correcto. Exception es padre de todas las excepciones excepto Error y Throwable. Para capturar Error se necesita catch(Error e) o catch(Throwable e).",
+        "Exception sí captura las checked exceptions porque它们 heredan de Exception.",
+        "Exception no captura Error ni Throwable directamente."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo funciona AutoCloseable en try-with-resources?",
+      "options": [
+        "Se llama close() manualmente al final del bloque try",
+        "Java invoca close() automáticamente al salir del bloque try-with-resources, ya sea normalmente o por excepción",
+        "AutoCloseable solo funciona con streams, no con conexiones de base de datos",
+        "Se necesita usar finally después de try-with-resources para cerrar el recurso"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Con try-with-resources no se necesita llamar close() manualmente; Java lo hace automáticamente.",
+        "Correcto. Cuando se declara un recurso en try-with-resources, Java invoca close() automáticamente al salir del bloque, sin importar si salió normalmente o por excepción.",
+        "AutoCloseable funciona con cualquier recurso que implemente la interfaz, no solo streams.",
+        "try-with-resources ya maneja el cierre; no se necesita finally adicional para eso."
+      ]
+    }
+  ]
+}

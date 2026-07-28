@@ -1,0 +1,314 @@
+---
+title: "Excepciones Personalizadas"
+slug: "excepciones-personalizadas"
+module: "06-errores"
+level: "Intermedio"
+objectives:
+  - "Crear clases de excepción propias extendiendo Exception o RuntimeException"
+  - "Diseñar excepciones con campos útiles (código de error, datos contextuales)"
+  - "Usar excepciones personalizadas para modelar errores de dominio"
+  - "Implementar excepciones jerárquicas para un módulo completo"
+  - "Aplicar patrones de diseño de excepciones en aplicaciones reales"
+prerequisites:
+  - "Haber completado Lección 31: throw y throws"
+  - "Entender herencia de clases"
+history:
+  introducedIn: "Excepciones personalizadas desde Java 1.0"
+  context: "Las excepciones personalizadas permiten modelar errores específicos del dominio de tu aplicación. En vez de usar genéricas como RuntimeException o IllegalArgumentException, creas excepciones como SaldoInsuficienteException que comunican exactamente qué falló."
+  evolution: "El patrón de excepciones personalizadas ha evolucionado desde simples extensiones de Exception hasta jerarquías complejas con códigos de error, datos contextuales, y builders. Java 14 introdujo records, que son ideales para errores inmutables."
+realWorldExamples:
+  - domain: "E-commerce — errores de dominio"
+    description: "Un sistema de e-commerce define excepciones específicas para cada tipo de error de negocio: stock insuficiente, producto inactivo, cupón expirado."
+    code: |
+      // Excepciones personalizadas
+      class StockInsuficienteException extends RuntimeException {
+          private final String producto;
+          private final int disponible;
+          private final int solicitado;
+
+          StockInsuficienteException(String producto, int disponible, int solicitado) {
+              super(String.format("Stock insuficiente de '%s': %d disponibles, %d solicitados",
+                  producto, disponible, solicitado));
+              this.producto = producto;
+              this.disponible = disponible;
+              this.solicitado = solicitado;
+          }
+
+          public String getProducto() { return producto; }
+          public int getDisponible() { return disponible; }
+          public int getSolicitado() { return solicitado; }
+      }
+
+      public class TiendaOnline {
+          static int stock = 5;
+
+          static void ordenar(String producto, int cantidad) {
+              if (cantidad > stock) {
+                  throw new StockInsuficienteException(producto, stock, cantidad);
+              }
+              stock -= cantidad;
+              System.out.printf("Orden de %d x %s procesada (stock: %d)%n",
+                  cantidad, producto, stock);
+          }
+
+          public static void main(String[] args) {
+              try {
+                  ordenar("Laptop", 3);
+                  ordenar("Laptop", 4);
+              } catch (StockInsuficienteException e) {
+                  System.out.println("Error: " + e.getMessage());
+                  System.out.println("Sugerencia: pedir " +
+                      (e.getSolicitado() - e.getDisponible()) + " unidades más");
+              }
+          }
+      }
+    result: |
+      Orden de 3 x Laptop procesada (stock: 2)
+      Error: Stock insuficiente de 'Laptop': 2 disponibles, 4 solicitados
+      Sugerencia: pedir 2 unidades más
+
+  - domain: "Salud — validación de historia clínica"
+    description: "Un sistema hospitalario valida historias clínicas con excepciones específicas: campos obligatorios faltantes, formato de fecha inválido, edad fuera de rango."
+    code: |
+      class ValidacionHistoriaException extends Exception {
+          private final String campo;
+          private final String valor;
+
+          ValidacionHistoriaException(String campo, String valor, String mensaje) {
+              super(mensaje);
+              this.campo = campo;
+              this.valor = valor;
+          }
+
+          public String getCampo() { return campo; }
+          public String getValor() { return valor; }
+      }
+
+      public class HistoriaClinica {
+          static void validar(String campo, String valor) throws ValidacionHistoriaException {
+              if (valor == null || valor.isBlank()) {
+                  throw new ValidacionHistoriaException(campo, valor,
+                      "Campo obligatorio vacío: " + campo);
+              }
+          }
+
+          static void validarEdad(int edad) throws ValidacionHistoriaException {
+              if (edad < 0 || edad > 150) {
+                  throw new ValidacionHistoriaException("edad",
+                      String.valueOf(edad),
+                      "Edad fuera de rango válido (0-150): " + edad);
+              }
+          }
+
+          public static void main(String[] args) {
+              try {
+                  validar("nombre", "");
+                  validar("diagnóstico", "Gripe A");
+                  validarEdad(200);
+              } catch (ValidacionHistoriaException e) {
+                  System.out.printf("Error en campo '%s' (valor: %s): %s%n",
+                      e.getCampo(), e.getValor(), e.getMessage());
+              }
+          }
+      }
+    result: |
+      Error en campo 'nombre' (valor: ): Campo obligatorio vacío: nombre
+
+hasInteractive: false
+comparisons:
+  - title: "Excepción checked vs unchecked personalizada"
+    items:
+      - name: "Extiende Exception (Checked)"
+        features:
+          compilacion: "El compilador obliga a manejar o declarar"
+          uso: "Errores que el llamador debe recuperar obligatoriamente"
+          ejemplo: "ValidacionException, FileNotFoundException"
+          filosofia: "El error es predecible y manejable"
+      - name: "Extiende RuntimeException (Unchecked)"
+        features:
+          compilacion: "No es obligatorio manejar"
+          uso: "Bugs, errores de programación, violaciones de contrato"
+          ejemplo: "StockInsuficienteException, DatosInvalidosException"
+          filosofia: "Si ocurre, es un bug que debe corregirse"
+    recommendation: "Crea excepciones unchecked (RuntimeException) para errores de dominio que representan violaciones de reglas de negocio. Crea excepciones checked cuando el llamador tenga una forma razonable de recuperarse del error."
+videos:
+  - url: ""
+    title: "Excepciones personalizadas en Java"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Cuándo crear mi propia excepción en vez de usar una genérica?"
+    answer: "Cuando el error es específico de tu dominio y necesitas comunicar información adicional. Por ejemplo, StockInsuficienteException puede incluir el producto, stock disponible y cantidad solicitada, algo que IllegalArgumentException no comunica claramente."
+  - question: "¿Debo crear mi propia jerarquía de excepciones?"
+    answer: "Para aplicaciones grandes, sí. Crea una excepción base del módulo (AppException) y excepciones específicas que extiendan de ella. Esto permite al llamador capturar toda la jerarquía con un solo catch si quiere, o manejar cada una específicamente."
+  - question: "¿Las excepciones pueden tener campos y métodos?"
+    answer: "Sí. Las excepciones son clases normales. Puedes agregar campos como código de error, datos contextuales, timestamps, etc. Esto ayuda al llamador a tomar decisiones informadas sobre cómo manejar el error."
+sources:
+  - title: "Java Tutorials — Creating Exception Classes"
+    url: "https://docs.oracle.com/javase/tutorial/essential/exceptions/custom.html"
+    date: "2026-07-27"
+  - title: "Effective Java — Chapter 10: Exceptions"
+    url: "https://www.oreilly.com/library/view/effective-java/9780134686097/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Por qué crear excepciones personalizadas?
+
+Las excepciones genéricas (`IllegalArgumentException`, `RuntimeException`) no comunican **qué específicamente** falló. Una excepción personalizada como `SaldoInsuficienteException` le dice al llamador exactamente qué pasó y le da datos útiles para recuperarse.
+
+## Crear una excepción unchecked
+
+<CodeBlock lang="java" title="Excepción unchecked personalizada">
+{`class SaldoInsuficienteException extends RuntimeException {
+    private final double saldoActual;
+    private final double montoSolicitado;
+
+    SaldoInsuficienteException(double saldoActual, double montoSolicitado) {
+        super(String.format(
+            "Saldo insuficiente: disponible $%.2f, solicitado $%.2f",
+            saldoActual, montoSolicitado));
+        this.saldoActual = saldoActual;
+        this.montoSolicitado = montoSolicitado;
+    }
+
+    public double getSaldoActual() { return saldoActual; }
+    public double getMontoSolicitado() { return montoSolicitado; }
+    public double getFalta() { return montoSolicitado - saldoActual; }
+}
+
+public class CuentaBancaria {
+    private double saldo;
+
+    CuentaBancaria(double saldo) { this.saldo = saldo; }
+
+    void retirar(double monto) {
+        if (monto > saldo) {
+            throw new SaldoInsuficienteException(saldo, monto);
+        }
+        saldo -= monto;
+        System.out.printf("Retiro: $%.2f. Saldo: $%.2f%n", monto, saldo);
+    }
+
+    public static void main(String[] args) {
+        CuentaBancaria cuenta = new CuentaBancaria(500);
+        try {
+            cuenta.retirar(300);
+            cuenta.retirar(400);
+        } catch (SaldoInsuficienteException e) {
+            System.out.println("Error: " + e.getMessage());
+            System.out.printf("Falta: $%.2f%n", e.getFalta());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Retiro: $300.00. Saldo: $200.00
+Error: Saldo insuficiente: disponible $200.00, solicitado $400.00
+Falta: $200.00
+```
+
+## Crear una excepción checked
+
+<CodeBlock lang="java" title="Excepción checked personalizada">
+{`class ConexionException extends Exception {
+    private final String servidor;
+    private final int codigoError;
+
+    ConexionException(String servidor, int codigoError, String mensaje) {
+        super(mensaje);
+        this.servidor = servidor;
+        this.codigoError = codigoError;
+    }
+
+    public String getServidor() { return servidor; }
+    public int getCodigoError() { return codigoError; }
+}
+
+public class ServicioExterno {
+    static void conectar(String servidor) throws ConexionException {
+        if (servidor.contains("localhost")) {
+            throw new ConexionException(servidor, 503,
+                "No se pudo conectar a " + servidor);
+        }
+        System.out.println("Conectado a " + servidor);
+    }
+
+    public static void main(String[] args) {
+        try {
+            conectar("api.empresa.com");
+            conectar("localhost:8080");
+        } catch (ConexionException e) {
+            System.out.printf("Error %d: %s (servidor: %s)%n",
+                e.getCodigoError(), e.getMessage(), e.getServidor());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Conectado a api.empresa.com
+Error 503: No se pudo conectar a localhost:8080 (servidor: localhost:8080)
+```
+
+## Jerarquía de excepciones para un módulo
+
+```java
+// Excepción base del módulo
+class AppException extends Exception {
+    AppException(String msg) { super(msg); }
+    AppException(String msg, Throwable cause) { super(msg, cause); }
+}
+
+// Excepciones específicas
+class DatabaseException extends AppException { ... }
+class ValidationException extends AppException { ... }
+class AuthenticationException extends AppException { ... }
+```
+
+**Ventaja:** Puedes capturar todas las excepciones del módulo con `catch (AppException e)` o manejar cada una por separado.
+
+## Datos útiles en excepciones
+
+| Campo | Tipo | Ejemplo |
+|-------|------|---------|
+| `errorCode` | String/int | `"ERR_STOCK_001"` |
+| `timestamp` | LocalDateTime | `2026-07-27T10:30:00` |
+| `context` | Map/String | `"producto=Laptop, usuario=123"` |
+| `cause` | Throwable | La excepción original |
+| `severity` | enum | `WARNING, ERROR, CRITICAL` |
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

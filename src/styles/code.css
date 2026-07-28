@@ -1,0 +1,202 @@
+/* ========================================================================
+   Code CSS — Retro pixel-art style for code blocks, Code Lab and CodeMirror.
+   ======================================================================== */
+
+/* --- Bloque de código --- */
+.code-block {
+  position: relative;
+  margin-bottom: var(--space-lg);
+  overflow: hidden;
+  border: 2px solid var(--win-border-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.code-block__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--win-titlebar);
+  border-bottom: 1px solid var(--win-border-dark);
+}
+
+.code-block__lang {
+  font-size: var(--text-xs);
+  color: var(--win-titlebar-text);
+  font-family: var(--font-pixel);
+  font-size: 0.55rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.code-block__actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.code-block__btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-xs) var(--space-sm);
+  font-size: var(--text-xs);
+  font-family: var(--font-ui);
+  color: var(--win-titlebar-text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background var(--transition), color var(--transition);
+}
+
+.code-block__btn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+.code-block pre {
+  margin: 0;
+  border-radius: 0;
+  border: none;
+  background: #1A0D2E;
+  box-shadow: none;
+}
+
+/* --- Code Lab --- */
+.codelab {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 2px solid var(--win-border-dark);
+  overflow: hidden;
+  min-height: 400px;
+  box-shadow: var(--shadow-lg);
+}
+
+.codelab__editor {
+  flex: 1;
+  min-height: 250px;
+  border-bottom: 2px solid var(--win-border-dark);
+}
+
+.codelab__console {
+  min-height: 150px;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.codelab__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-sm) var(--space-md);
+  background: var(--win-titlebar);
+  border-bottom: 2px solid var(--win-border-dark);
+}
+
+.codelab__run-btn {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--accent);
+  color: #000;
+  font-weight: 600;
+  font-size: var(--text-sm);
+  font-family: var(--font-ui);
+  border: 2px solid #B8860B;
+  border-top-color: #FFE44D;
+  border-left-color: #FFE44D;
+  box-shadow: var(--shadow-sm);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.codelab__run-btn:hover {
+  background: var(--accent-hover);
+  transform: scale(1.02);
+}
+
+.codelab__run-btn:active {
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.3);
+  border-top-color: #B8860B;
+  border-left-color: #B8860B;
+  border-bottom-color: #FFE44D;
+  border-right-color: #FFE44D;
+}
+
+/* --- Consola retro (CRT style) --- */
+.console-output {
+  background: #0A0A1A;
+  padding: var(--space-md);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: #33FF33;
+  text-shadow: 0 0 4px rgba(51, 255, 51, 0.3);
+}
+
+.console-output__warning {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: rgba(255, 189, 46, 0.1);
+  border: 1px solid rgba(255, 189, 46, 0.3);
+  color: var(--warning);
+  font-size: var(--text-xs);
+  margin-bottom: var(--space-md);
+}
+
+.console-output__line {
+  padding: var(--space-xs) 0;
+}
+
+.console-output__line--error {
+  color: #FF4444;
+  text-shadow: 0 0 4px rgba(255, 68, 68, 0.3);
+}
+
+.console-output__line--success {
+  color: #33FF33;
+  text-shadow: 0 0 4px rgba(51, 255, 51, 0.3);
+}
+
+/* --- CodeMirror overrides (retro terminal style) --- */
+.cm-editor {
+  height: 100%;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  background: #1A0D2E !important;
+}
+
+.cm-editor .cm-gutters {
+  background: #2D1B4E !important;
+  border-right: 2px solid #4D3B6E !important;
+  color: #B0A0C0 !important;
+}
+
+.cm-editor .cm-activeLineGutter {
+  background: #3D2B5A !important;
+}
+
+.cm-editor .cm-activeLine {
+  background: rgba(200, 98, 168, 0.08) !important;
+}
+
+.cm-editor .cm-selectionBackground {
+  background: rgba(255, 215, 0, 0.2) !important;
+}
+
+.cm-editor .cm-cursor {
+  border-left-color: var(--accent) !important;
+  border-left-width: 2px !important;
+}
+
+/* --- Responsive --- */
+@media (max-width: 767px) {
+  .codelab {
+    min-height: 350px;
+  }
+
+  .codelab__toolbar {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+}

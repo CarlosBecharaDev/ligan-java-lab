@@ -1,0 +1,11 @@
+{
+  "id": "mod-04",
+  "slug": "04-poo",
+  "number": 4,
+  "title": "Programación Orientada a Objetos",
+  "description": "El corazón de Java. Aprende a modelar el mundo real con clases y objetos.",
+  "icon": "Box",
+  "status": "disponible",
+  "lessonCount": 7,
+  "lessons": ["clases-objetos", "constructores", "encapsulacion", "herencia", "polimorfismo", "clases-abstractas-interfaces", "agregacion-composicion"]
+}

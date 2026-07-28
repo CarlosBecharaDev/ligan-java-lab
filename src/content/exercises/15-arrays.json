@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-arrays-facil",
+    "title": "Invertir un array",
+    "difficulty": "facil",
+    "description": "Dado un array de enteros, invierte su orden. [1,2,3] -> [3,2,1].",
+    "template": "public class InvertirArray {\n    public static void main(String[] args) {\n        int[] numeros = {1, 2, 3, 4, 5};\n        // TODO: Invertir usando dos índices\n        for (int n : numeros) System.out.print(n + \" \");\n        System.out.println();\n    }\n}",
+    "hints": [
+      "Usa i desde 0 y j desde length-1",
+      "Intercambia arr[i] y arr[j] con temp",
+      "Termina cuando i >= j"
+    ],
+    "solution": "public class InvertirArray {\n    public static void main(String[] args) {\n        int[] numeros = {1, 2, 3, 4, 5};\n        for (int i = 0, j = numeros.length - 1; i < j; i++, j--) {\n            int temp = numeros[i];\n            numeros[i] = numeros[j];\n            numeros[j] = temp;\n        }\n        for (int n : numeros) System.out.print(n + \" \");\n        System.out.println();\n    }\n}",
+    "solutionExplanation": "Se intercambian elementos desde los extremos hacia el centro.",
+    "expectedOutput": "5 4 3 2 1",
+    "lessonSlug": "arrays"
+  },
+  {
+    "id": "ex-arrays-normal",
+    "title": "Contar valores únicos en array ordenado",
+    "difficulty": "normal",
+    "description": "Cuenta valores únicos en un array ordenado sin crear nuevo array.",
+    "template": "public class ContarUnicos {\n    public static void main(String[] args) {\n        int[] datos = {1, 1, 2, 3, 3, 3, 4, 5, 5};\n        // TODO: Compara cada elemento con el anterior\n        int unicos = 0;\n        System.out.println(\"Únicos: \" + unicos);\n    }\n}",
+    "hints": [
+      "El primer siempre es único",
+      "Compara datos[i] con datos[i-1]",
+      "Si son diferentes, incrementa"
+    ],
+    "solution": "public class ContarUnicos {\n    public static void main(String[] args) {\n        int[] datos = {1, 1, 2, 3, 3, 3, 4, 5, 5};\n        int unicos = 1;\n        for (int i = 1; i < datos.length; i++) {\n            if (datos[i] != datos[i - 1]) unicos++;\n        }\n        System.out.println(\"Únicos: \" + unicos);\n    }\n}",
+    "solutionExplanation": "Array ordenado: duplicados están juntos. Si datos[i] != datos[i-1], es nuevo.",
+    "expectedOutput": "Únicos: 5",
+    "lessonSlug": "arrays"
+  },
+  {
+    "id": "ex-arrays-dificil",
+    "title": "Rotar array N posiciones a la derecha",
+    "difficulty": "dificil",
+    "description": "Rota un array N posiciones a la derecha. [1,2,3,4,5] rotado 2 → [4,5,1,2,3].",
+    "template": "public class RotarArray {\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3, 4, 5, 6, 7};\n        int posiciones = 3;\n        // TODO: Guardar último, mover todo a la derecha, temp en [0]\n        for (int n : arr) System.out.print(n + \" \");\n        System.out.println();\n    }\n}",
+    "hints": [
+      "Guarda arr[length-1], mueve todos a la derecha, arr[0] = temp",
+      "Repite posiciones veces",
+      "Usa posiciones % length para rotaciones mayores"
+    ],
+    "solution": "public class RotarArray {\n    public static void main(String[] args) {\n        int[] arr = {1, 2, 3, 4, 5, 6, 7};\n        int posiciones = 3;\n        posiciones = posiciones % arr.length;\n        for (int p = 0; p < posiciones; p++) {\n            int temp = arr[arr.length - 1];\n            for (int i = arr.length - 1; i > 0; i--) {\n                arr[i] = arr[i - 1];\n            }\n            arr[0] = temp;\n        }\n        for (int n : arr) System.out.print(n + \" \");\n        System.out.println();\n    }\n}",
+    "solutionExplanation": "Cada rotación guarda el último, mueve todos a la derecha, coloca temp en [0].",
+    "expectedOutput": "5 6 7 1 2 3 4",
+    "lessonSlug": "arrays"
+  }
+]

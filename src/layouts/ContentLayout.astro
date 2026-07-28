@@ -1,0 +1,139 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="content-page">
+    <!-- Retro window wrapper for content -->
+    <div class="content-window">
+      <div class="content-window__titlebar">
+        <span class="content-window__title">{title}</span>
+        <div class="content-window__controls">
+          <span class="content-window__ctrl content-window__ctrl--min"></span>
+          <span class="content-window__ctrl content-window__ctrl--max"></span>
+          <span class="content-window__ctrl content-window__ctrl--close"></span>
+        </div>
+      </div>
+      <div class="content-window__body">
+        <slot />
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .content-page {
+    min-height: 100vh;
+    padding: var(--space-xl);
+    background-image: url('/wallpaper.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+  }
+
+  .content-window {
+    width: 100%;
+    max-width: var(--content-width-lg);
+    background: var(--win-bg);
+    border: 2px solid var(--win-border-dark);
+    border-top-color: #D0C0A0;
+    border-left-color: #D0C0A0;
+    box-shadow: var(--shadow-win);
+    margin-top: var(--space-xl);
+    margin-bottom: var(--space-xl);
+  }
+
+  .content-window__titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: linear-gradient(90deg, var(--win-titlebar) 0%, #9898B0 50%, var(--win-titlebar) 100%);
+    min-height: 28px;
+  }
+
+  .content-window__title {
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    color: var(--win-titlebar-text);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .content-window__controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .content-window__ctrl {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .content-window__ctrl--min {
+    background: var(--win-minimize);
+  }
+
+  .content-window__ctrl--max {
+    background: var(--win-maximize);
+  }
+
+  .content-window__ctrl--close {
+    background: var(--win-close);
+  }
+
+  .content-window__body {
+    padding: var(--space-2xl) var(--space-xl);
+    background: var(--win-bg);
+    color: var(--win-text);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .content-window__body :global(h1),
+  .content-window__body :global(h2),
+  .content-window__body :global(h3),
+  .content-window__body :global(h4) {
+    color: var(--win-text);
+  }
+
+  .content-window__body :global(p) {
+    color: var(--win-muted);
+  }
+
+  .content-window__body :global(a) {
+    color: var(--win-link);
+  }
+
+  .content-window__body :global(a:hover) {
+    color: var(--win-link-hover);
+  }
+
+  @media (max-width: 767px) {
+    .content-page {
+      padding: var(--space-sm);
+    }
+
+    .content-window {
+      margin-top: var(--space-sm);
+      margin-bottom: var(--space-sm);
+    }
+
+    .content-window__body {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+</style>

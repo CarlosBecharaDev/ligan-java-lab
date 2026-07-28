@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-while-facil",
+    "lessonSlug": "while-do-while",
+    "title": "Tabla de multiplicar con while",
+    "difficulty": "facil",
+    "description": "Muestra la tabla del 7 usando un bucle while, del 1 al 10.",
+    "template": "public class Tabla7 {\n    public static void main(String[] args) {\n        int i = 1;\n\n        // TODO: Usa while para imprimir:\n        // 7 x 1 = 7\n        // 7 x 2 = 14\n        // ... hasta 7 x 10 = 70\n        // Recuerda incrementar i dentro del bucle\n\n    }\n}",
+    "hints": [
+      "Inicializa i = 1 y la condición es i <= 10",
+      "No olvides i++ al final del cuerpo para evitar un bucle infinito"
+    ],
+    "solution": "public class Tabla7 {\n    public static void main(String[] args) {\n        int i = 1;\n\n        while (i <= 10) {\n            System.out.println(\"7 x \" + i + \" = \" + (7 * i));\n            i++;\n        }\n    }\n}",
+    "solutionExplanation": "El contador i empieza en 1 y se incrementa en cada iteración. La condición i <= 10 garantiza exactamente 10 iteraciones. Sin el i++ el bucle sería infinito.",
+    "expectedOutput": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70"
+  },
+  {
+    "id": "ex-while-normal",
+    "lessonSlug": "while-do-while",
+    "title": "Adivina el número con intentos limitados",
+    "difficulty": "normal",
+    "description": "Simula un juego donde el usuario intenta adivinar un número secreto entre 1 y 100. Usa do-while para permitir hasta 5 intentos, mostrando pistas de 'mayor' o 'menor'.",
+    "template": "public class AdivinaNumero {\n    public static void main(String[] args) {\n        int secreto = 73;\n        int[] intentos = {50, 80, 70, 75, 73};  // entradas simuladas\n        int idx = 0;\n        int intento;\n        boolean acierto = false;\n\n        // TODO: Usa do-while para iterar los intentos\n        // Muestra: \"Intento N: X - el secreto es mayor/menor\"\n        // Si acierta, imprime \"¡Correcto!\" y termina\n        // Limita a 5 intentos máximos\n\n    }\n}",
+    "hints": [
+      "Mantén un contador de intentos (empieza en 0)",
+      "La condición del do-while: !acierto && intentosRealizados < 5",
+      "Compara el intento con el secreto para dar la pista"
+    ],
+    "solution": "public class AdivinaNumero {\n    public static void main(String[] args) {\n        int secreto = 73;\n        int[] intentos = {50, 80, 70, 75, 73};\n        int idx = 0;\n        int intento;\n        boolean acierto = false;\n        int realizados = 0;\n\n        do {\n            intento = intentos[idx++];\n            realizados++;\n            System.out.print(\"Intento \" + realizados + \": \" + intento);\n            if (intento == secreto) {\n                acierto = true;\n                System.out.println(\" - ¡Correcto! 🎉\");\n            } else if (intento < secreto) {\n                System.out.println(\" - el secreto es mayor\");\n            } else {\n                System.out.println(\" - el secreto es menor\");\n            }\n        } while (!acierto && realizados < 5);\n\n        if (!acierto) {\n            System.out.println(\"Sin aciertos. El número era \" + secreto);\n        }\n    }\n}",
+    "solutionExplanation": "do-while garantiza al menos un intento. Llevamos un contador de intentos y un booleano de acierto. La condición compuesta permite salir al acertar o al agotar los 5 intentos. Las pistas de mayor/menor guían al usuario.",
+    "expectedOutput": "Intento 1: 50 - el secreto es mayor\nIntento 2: 80 - el secreto es menor\nIntento 3: 70 - el secreto es mayor\nIntento 4: 75 - el secreto es menor\nIntento 5: 73 - ¡Correcto! 🎉"
+  },
+  {
+    "id": "ex-while-dificil",
+    "lessonSlug": "while-do-while",
+    "title": "Cálculo de raíz cuadrada por método babilónico",
+    "difficulty": "dificil",
+    "description": "Calcula la raíz cuadrada de un número usando el método babilónico (Newton): itera mejorando una estimación hasta que la diferencia entre iteraciones sea menor a 0.0001. El número de iteraciones es desconocido.",
+    "template": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;  // raíz exacta = 12\n        double estimacion = numero / 2.0;  // estimación inicial\n        double epsilon = 0.0001;\n\n        // TODO: Método babilónico: mientras la diferencia sea >= epsilon\n        // nueva = (estimacion + numero / estimacion) / 2\n        // Actualiza estimacion con el nuevo valor\n        // Cuenta las iteraciones\n        // Imprime: \"Raíz de 144 = 12.0000 (en N iteraciones)\"\n\n    }\n}",
+    "hints": [
+      "Usa Math.abs(nueva - estimacion) para medir el cambio entre iteraciones",
+      "La condición del while: la diferencia >= epsilon",
+      "Recuerda actualizar estimacion = nueva al final de cada iteración"
+    ],
+    "solution": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;\n        double estimacion = numero / 2.0;\n        double epsilon = 0.0001;\n        int iteraciones = 0;\n\n        while (true) {\n            double nueva = (estimacion + numero / estimacion) / 2.0;\n            iteraciones++;\n            if (Math.abs(nueva - estimacion) < epsilon) {\n                estimacion = nueva;\n                break;\n            }\n            estimacion = nueva;\n        }\n\n        System.out.printf(\"Raíz de %.1f = %.4f (en %d iteraciones)%n\",\n                numero, estimacion, iteraciones);\n    }\n}",
+    "solutionExplanation": "El método babilónico refina la estimación en cada iteración con la fórmula (e + n/e)/2. Usamos while(true) con una condición de salida basada en la convergencia (cambio < epsilon), un caso clásico de bucle indeterminado donde no se conoce el número de iteraciones de antemano.",
+    "expectedOutput": "Raíz de 144.0 = 12.0000 (en 9 iteraciones)"
+  }
+]

@@ -1,0 +1,92 @@
+{
+  "id": "quiz-35-file-writer-avanzado",
+  "lessonSlug": "file-writer",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la ventaja principal de BufferedWriter sobre FileWriter directo?",
+      "options": [
+        "BufferedWriter puede escribir binario",
+        "BufferedWriter es más eficiente gracias a un buffer interno que reduce escrituras al disco",
+        "BufferedWriter permite escribir en múltiples archivos a la vez",
+        "BufferedWriter soporta codificación UTF-8 y FileWriter no"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "BufferedWriter trabaja con texto, no con binario.",
+        "Correcto. BufferedWriter acumula datos en un buffer en memoria y los escribe al disco en bloques, reduciendo significativamente las operaciones de E/S.",
+        "BufferedWriter solo escribe en un archivo a la vez.",
+        "Ambas clases soportan UTF-8 a través de la codificación adecuada."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es el patrón correcto para copiar un archivo de texto en Java?",
+      "options": [
+        "File.copy(origen, destino)",
+        "Leer con BufferedReader y escribir con BufferedWriter línea por línea",
+        "Files.copy() es la única forma posible",
+        "new FileWriter(destino).write(new FileReader(origen))"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "File no tiene un método copy() estático.",
+        "Correcto. El patrón clásico es leer cada línea con BufferedReader y escribirla con BufferedWriter para una copia eficiente.",
+        "Files.copy() es una alternativa de NIO, pero no es la única forma.",
+        "No se puede pasar un FileReader directamente al método write() de FileWriter."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es PrintWriter en Java?",
+      "options": [
+        "Una clase para imprimir en la consola únicamente",
+        "Un Writer con métodos de formato como println() y printf()",
+        "Un lector de archivos con formato",
+        "Una herramienta para generar archivos PDF"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "PrintWriter no se limita a la consola; puede escribir en archivos.",
+        "Correcto. PrintWriter extiende Writer y ofrece métodos convenientes como println() y printf() para escribir texto formateado.",
+        "PrintWriter escribe, no lee archivos.",
+        "PrintWriter no genera archivos PDF."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cuál es la diferencia entre pw.write() y pw.println()?",
+      "options": [
+        "write() escribe binario y println() escribe texto",
+        "write() escribe sin salto de línea y println() agrega un salto de línea automáticamente",
+        "No hay diferencia, son intercambiables",
+        "write() solo acepta Strings y println() solo acepta números"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Ambos métodos trabajan con texto.",
+        "Correcto. write() escribe el texto tal cual sin añadir nada extra, mientras que println() agrega un salto de línea después del contenido.",
+        "Son diferentes en su comportamiento respecto a los saltos de línea.",
+        "Ambos métodos aceptan varios tipos de datos."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuándo es preferible usar Files.writeString() sobre FileWriter?",
+      "options": [
+        "Cuando se necesita escribir carácter por carácter",
+        "Cuando se tiene todo el contenido completo y se quiere escribirlo de una sola vez",
+        "Cuando se necesita usar try-with-resources",
+        "Files.writeString() solo sirve para archivos pequeños"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Files.writeString() no está diseñado para escritura carácter por carácter.",
+        "Correcto. Files.writeString() es ideal cuando ya se tiene el contenido completo como String y se quiere escribir de forma simple y concisa.",
+        "Ambos pueden usarse con try-with-resources.",
+        "Files.writeString() no tiene restricción de tamaño."
+      ]
+    }
+  ]
+}

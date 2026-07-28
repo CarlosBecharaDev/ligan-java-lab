@@ -1,0 +1,293 @@
+---
+title: "Proyecto: Juego de Aventura de Texto"
+slug: "juego-texto"
+module: "09-proyectos"
+level: "Avanzado"
+objectives:
+  - "Diseñar una arquitectura de juego con clases Espacio, Jugador, Objeto"
+  - "Implementar navegación entre espacios conectados"
+  - "Usar HashMap para modelar inventario y conexiones"
+  - "Aplicar herencia para objetos y acciones"
+  - "Validar movimientos y acciones con reglas del juego"
+prerequisites:
+  - "Haber completado todos los módulos anteriores"
+  - "Conocer HashMap, herencia, interfaces y manejo de excepciones"
+history:
+  introducedIn: "Proyecto final: juego de aventura de texto"
+  context: "Un juego de aventura de texto (también conocido como adventure game o Zork-like) es un proyecto clásico para integrar todos los conceptos de programación. El jugador explora espacios, recoge objetos y resuelve acertijos usando comandos de texto."
+  evolution: "La versión base tiene 4 espacios conectados entre sí. Los comandos son: ir, mirar, tomar, usar, inventario. Puedes extenderlo con más espacios, acertijos, NPCs, y un sistema de combate."
+realWorldExamples: []
+hasInteractive: false
+comparisons: []
+videos:
+  - url: ""
+    title: "Proyecto: Juego de Aventura de Texto en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Cómo se modelan las conexiones entre espacios?"
+    answer: "Cada Espacio tiene un HashMap<String, Espacio> llamado salidas. Las claves son direcciones (norte, sur, este, oeste) y los valores son los espacios conectados. Si no hay salida en una dirección, el mapa contiene null."
+  - question: "¿Cómo funciona el parser de comandos?"
+    answer: "El parser divide el comando del usuario en dos partes: verbo (accion) y objeto (lo que recibe la acción). Por ejemplo, 'tomar llave' se divide en verbo='tomar' y objeto='llave'. Un switch dirige cada verbo a su método correspondiente."
+  - question: "¿Cómo agrego objetivos o misiones al juego?"
+    answer: "Agrega una lista de objetivos (objetos que debe tener el jugador) y verifica al entrar a ciertos espacios si se cumplen. Cada espacio puede tener una descripción diferente según el estado del juego (objetos tomados, acciones realizadas)."
+sources:
+  - title: "Java Tutorials — Inheritance"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Descripción del proyecto
+
+Crearás un **juego de aventura de texto** donde el jugador explora espacios, recoge objetos y resuelve acertijos usando comandos de texto simples como `ir norte`, `tomar llave`, `mirar`.
+
+## Paso 1: Clase Espacio
+
+<CodeBlock lang="java" title="Modelo de Espacio con salidas y objetos">
+{`import java.util.HashMap;
+
+public class Espacio {
+    private String nombre;
+    private String descripcion;
+    private HashMap<String, Espacio> salidas;
+    private HashMap<String, Objeto> objetos;
+
+    public Espacio(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.salidas = new HashMap<>();
+        this.objetos = new HashMap<>();
+    }
+
+    public void agregarSalida(String direccion, Espacio destino) {
+        salidas.put(direccion, destino);
+    }
+
+    public Espacio getSalida(String direccion) {
+        return salidas.get(direccion);
+    }
+
+    public void agregarObjeto(Objeto obj) {
+        objetos.put(obj.getNombre(), obj);
+    }
+
+    public Objeto tomarObjeto(String nombre) {
+        return objetos.remove(nombre);
+    }
+
+    public boolean tieneObjeto(String nombre) {
+        return objetos.containsKey(nombre);
+    }
+
+    public String getNombre() { return nombre; }
+
+    public String getDescripcionCompleta() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\\n=== ").append(nombre).append(" ===\\n");
+        sb.append(descripcion).append("\\n\\n");
+
+        if (!objetos.isEmpty()) {
+            sb.append("Ves: ");
+            objetos.keySet().forEach(o -> sb.append(o).append(", "));
+            sb.setLength(sb.length() - 2);
+            sb.append("\\n");
+        }
+
+        sb.append("Salidas: ");
+        salidas.keySet().forEach(s -> sb.append(s).append(" "));
+        return sb.toString();
+    }
+}`}
+</CodeBlock>
+
+## Paso 2: Clase Objeto
+
+<CodeBlock lang="java" title="Modelo de Objeto">
+{`public class Objeto {
+    private String nombre;
+    private String descripcion;
+    private boolean portable;
+
+    public Objeto(String nombre, String descripcion, boolean portable) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.portable = portable;
+    }
+
+    public String getNombre() { return nombre; }
+    public String getDescripcion() { return descripcion; }
+    public boolean esPortable() { return portable; }
+
+    @Override
+    public String toString() {
+        return nombre + ": " + descripcion;
+    }
+}`}
+</CodeBlock>
+
+## Paso 3: Clase Jugador
+
+<CodeBlock lang="java" title="Jugador con inventario">
+{`import java.util.HashMap;
+
+public class Jugador {
+    private Espacio ubicacion;
+    private HashMap<String, Objeto> inventario;
+
+    public Jugador(Espacio inicio) {
+        this.ubicacion = inicio;
+        this.inventario = new HashMap<>();
+    }
+
+    public String irA(String direccion) {
+        Espacio destino = ubicacion.getSalida(direccion);
+        if (destino == null) {
+            return "No puedes ir en esa dirección.";
+        }
+        ubicacion = destino;
+        return ubicacion.getDescripcionCompleta();
+    }
+
+    public String tomar(String nombreObjeto) {
+        if (!ubicacion.tieneObjeto(nombreObjeto)) {
+            return "No hay '" + nombreObjeto + "' aquí.";
+        }
+        Objeto obj = ubicacion.tomarObjeto(nombreObjeto);
+        if (!obj.esPortable()) {
+            ubicacion.agregarObjeto(obj); // devolverlo
+            return "No puedes tomar " + obj.getNombre() + ".";
+        }
+        inventario.put(obj.getNombre(), obj);
+        return "Tomaste " + obj.getNombre() + ".";
+    }
+
+    public String mirar() {
+        return ubicacion.getDescripcionCompleta();
+    }
+
+    public String inventario() {
+        if (inventario.isEmpty()) {
+            return "No llevas nada.";
+        }
+        StringBuilder sb = new StringBuilder("Inventario:\\n");
+        inventario.values().forEach(o ->
+            sb.append("  - ").append(o).append("\\n"));
+        return sb.toString();
+    }
+
+    public boolean tieneObjeto(String nombre) {
+        return inventario.containsKey(nombre);
+    }
+}`}
+</CodeBlock>
+
+## Paso 4: Constructor del mundo
+
+<CodeBlock lang="java" title="Crear los espacios y objetos del juego">
+{`public class Mundo {
+    private Jugador jugador;
+
+    public Mundo() {
+        // Crear espacios
+        Espacio entrada = new Espacio("Entrada",
+            "Estás en la entrada de una mansión antigua. ");
+        Espacio salon = new Espacio("Salón",
+            "Un gran salón con muebles antiguos. ");
+        Espacio cocina = new Espacio("Cocina",
+            "Una cocina fría con olor a humedad.");
+        Espacio jardin = new Espacio("Jardín",
+            "Un jardín descuidado con una fuente seca.");
+
+        // Conectar espacios
+        entrada.agregarSalida("norte", salon);
+        salon.agregarSalida("sur", entrada);
+        salon.agregarSalida("este", cocina);
+        salon.agregarSalida("oeste", jardin);
+        cocina.agregarSalida("oeste", salon);
+        jardin.agregarSalida("este", salon);
+
+        // Colocar objetos
+        salon.agregarObjeto(new Objeto("llave", "Una llave oxidada", true));
+        cocina.agregarObjeto(new Objeto("vela", "Una vela sin usar", true));
+        jardin.agregarObjeto(new Objeto("cofre",
+            "Un cofre cerrado con una cerradura", false));
+
+        jugador = new Jugador(entrada);
+    }
+
+    public Jugador getJugador() { return jugador; }
+}`}
+</CodeBlock>
+
+## Paso 5: Parser de comandos
+
+<CodeBlock lang="java" title="Parser y menú principal del juego">
+{`import java.util.Scanner;
+
+public class JuegoAventura {
+    public static void main(String[] args) {
+        Mundo mundo = new Mundo();
+        Jugador jugador = mundo.getJugador();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\\n🏰 AVENTURA EN LA MANSIÓN 🏰");
+        System.out.println("Comandos: ir [dir], tomar [obj], mirar, inventario, salir");
+        System.out.println(jugador.mirar());
+
+        while (true) {
+            System.out.print("\\n> ");
+            String entrada = sc.nextLine().trim().toLowerCase();
+            String[] partes = entrada.split(" ", 2);
+            String verbo = partes[0];
+            String objeto = partes.length > 1 ? partes[1] : "";
+
+            if (verbo.equals("salir") || verbo.equals("exit")) {
+                System.out.println("¡Gracias por jugar!");
+                break;
+            }
+
+            String resultado = switch (verbo) {
+                case "ir", "mover" -> jugador.irA(objeto);
+                case "tomar", "agarrar" -> jugador.tomar(objeto);
+                case "mirar", "ver" -> jugador.mirar();
+                case "inventario", "i" -> jugador.inventario();
+                default -> "No entiendo '" + verbo + "'.";
+            };
+            System.out.println(resultado);
+        }
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+## Ejercicios de extensión
+
+1. **Más espacios**: agrega 4+ espacios nuevos con conexiones complejas
+2. **Acertijos**: un objeto se obtiene solo si el jugador responde correctamente
+3. **NPCs**: personajes no jugadores que dan pistas
+4. **Victoria**: condición de ganar (reunir ciertos objetos o llegar a un lugar)
+5. **Guardar/cargar**: serializa el estado del juego con ObjectOutputStream
+6. **Puntos**: agrega puntuación por objetos encontrados y acciones realizadas
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

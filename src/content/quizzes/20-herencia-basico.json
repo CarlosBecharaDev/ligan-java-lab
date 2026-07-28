@@ -1,0 +1,58 @@
+{
+  "id": "quiz-20-herencia-basico",
+  "lessonSlug": "herencia",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Que palabra clave se usa para que una clase herede de otra?",
+      "options": [
+        "implements",
+        "extends",
+        "inherits",
+        "super"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "implements se usa para interfaces, no para herencia de clases.",
+        "Correcto. extends declara que una clase hereda de otra.",
+        "inherits no existe en Java.",
+        "super se usa para acceder al padre, no para declarar herencia."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Que hace super() en un constructor de clase hija?",
+      "options": [
+        "Crea un nuevo objeto",
+        "Llama al constructor de la superclase",
+        "Detiene la ejecucion",
+        "Retorna un valor"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No crea objetos.",
+        "Correcto. super() llama al constructor de la clase padre y debe ser la primera linea.",
+        "No detiene nada.",
+        "Los constructores no retornan valores."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Que anotacion se usa para indicar que un metodo sobreescribe al del padre?",
+      "options": [
+        "@Abstract",
+        "@Override",
+        "@Super",
+        "@Extend"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "@Abstract define metodos abstractos.",
+        "Correcto. @Override indica que se sobreescribe un metodo de la superclase.",
+        "@Super no existe.",
+        "@Extend no existe."
+      ]
+    }
+  ]
+}

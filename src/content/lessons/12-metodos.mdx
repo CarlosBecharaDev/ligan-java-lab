@@ -1,0 +1,340 @@
+---
+title: "Definición y Llamada de Métodos"
+slug: "metodos"
+module: "03-metodos-y-arrays"
+level: "Inicial"
+objectives:
+  - "Definir métodos con parámetros y argumentos"
+  - "Entender la diferencia entre parámetros y argumentos"
+  - "Llamar métodos estáticos desde main y desde otros métodos"
+  - "Usar métodos para descomponer problemas en partes más pequeñas"
+  - "Aplicar la regla DRY (Don't Repeat Yourself) con métodos"
+prerequisites:
+  - "Haber completado Módulo 02: Control de Flujo"
+  - "Entender tipos de datos básicos (int, double, String, boolean)"
+  - "Conocer estructura básica de una clase con main"
+history:
+  introducedIn: "Métodos desde Java 1.0"
+  context: "Los métodos (funciones) existen desde los primeros lenguajes de programación. En Java, todo el código vive dentro de métodos — incluso main es un método. La idea central es escribir una vez y usar muchas veces: definir un bloque de código con un nombre, y ejecutarlo cuantas veces se necesite pasando diferentes datos."
+  evolution: "Java 1.0 introdujo métodos estáticos y de instancia. Java 8 añadió métodos por defecto (default) en interfaces. Los métodos son la unidad fundamental de organización en Java; todo código debe estar dentro de un método."
+realWorldExamples:
+  - domain: "Salud — cálculo de dosis medicamento"
+    description: "Un sistema hospitalario calcula la dosis de un medicamento según el peso del paciente. Un método encapsula la lógica de cálculo para reutilizarla con diferentes pacientes."
+    code: |
+      public class DosisMedicamento {
+          static double calcularDosis(double pesoKg, double dosisPorKg) {
+              return pesoKg * dosisPorKg;
+          }
+
+          public static void main(String[] args) {
+              double dosisAna = calcularDosis(65.0, 10.0);
+              double dosisLuis = calcularDosis(82.5, 10.0);
+              double dosisNina = calcularDosis(25.0, 15.0);
+
+              System.out.printf("Ana: %.1f mg%n", dosisAna);
+              System.out.printf("Luis: %.1f mg%n", dosisLuis);
+              System.out.printf("Niña: %.1f mg%n", dosisNina);
+          }
+      }
+    result: |
+      Ana: 650.0 mg
+      Luis: 825.0 mg
+      Niña: 375.0 mg
+
+  - domain: "E-commerce — cálculo de descuento"
+    description: "Una tienda online aplica descuentos según el nivel del cliente (básico, premium, VIP). Un método determina el porcentaje de descuento y otro calcula el precio final."
+    code: |
+      public class DescuentoTienda {
+          static double obtenerDescuento(String nivel) {
+              switch (nivel.toLowerCase()) {
+                  case "vip":     return 20.0;
+                  case "premium": return 10.0;
+                  case "basico":  return 5.0;
+                  default:        return 0.0;
+              }
+          }
+
+          static double precioFinal(double precio, String nivel) {
+              double descuento = obtenerDescuento(nivel);
+              return precio - (precio * descuento / 100);
+          }
+
+          public static void main(String[] args) {
+              double precio = 500.0;
+              String[] clientes = {"basico", "premium", "vip"};
+
+              for (String cliente : clientes) {
+                  double final_ = precioFinal(precio, cliente);
+                  System.out.printf("%s: $%.0f → $%.0f (-%.0f%%)%n",
+                      cliente, precio, final_,
+                      obtenerDescuento(cliente));
+              }
+          }
+      }
+    result: |
+      basico: $500 → $475 (-5%)
+      premium: $500 → $450 (-10%)
+      vip: $500 → $400 (-20%)
+hasInteractive: false
+comparisons:
+  - title: "Código con métodos vs sin métodos"
+    items:
+      - name: "Sin métodos (todo en main)"
+        features:
+          reutilizacion: "Copiar y pegar el mismo código"
+          legibilidad: "Un solo método largo y difícil de leer"
+          mantenimiento: "Si cambia la lógica, hay que cambiarla en todos los lugares"
+          errores: "Más propensos al copiar código"
+      - name: "Con métodos"
+        features:
+          reutilizacion: "Llamar el mismo método con diferentes datos"
+          legibilidad: "Cada método hace una cosa específica y clara"
+          mantenimiento: "Cambiar una vez y afecta todas las llamadas"
+          errores: "Menos propensos porque la lógica está en un solo lugar"
+    recommendation: "Siempre usa métodos para extraer bloques de código que se repiten o que hacen algo específico. Un método no debería tener más de 20-30 líneas. Si es más largo, divídelo en métodos más pequeños."
+videos:
+  - url: ""
+    title: "Métodos en Java para principiantes"
+    channel: "HolaMundo"
+    summary: "Tutorial Java en español latino por Santiago — ejemplos claros y práctica"
+faqs:
+  - question: "¿Cuál es la diferencia entre parámetros y argumentos?"
+    answer: "Los parámetros son las variables que se definen en la firma del método (ej: double peso). Los argumentos son los valores reales que se pasan al llamar el método (ej: 65.0). Piensa en los parámetros como un formulario en blanco y los argumentos como los datos que escribes en el formulario."
+  - question: "¿Por qué se usa static en los métodos de ejemplo?"
+    answer: "En Java, para llamar un método desde main (que es estático), el método también debe ser estático. Los métodos de instancia (sin static) requieren crear un objeto primero. Aprenderemos la diferencia completa en el módulo de POO."
+  - question: "¿Qué pasa si no pongo return en un método que retorna un valor?"
+    answer: "El compilador lanza un error: 'missing return statement'. Todo método con tipo de retorno diferente a void debe tener al menos un return con un valor. Los métodos void pueden terminar sin return, o usar return sin valor para salir antes."
+sources:
+  - title: "Java 21 Language Specification — Method Declaration"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Defining Methods"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/methods.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es un método?
+
+Un método es un **bloque de código con un nombre** que realiza una tarea específica. En lugar de escribir todo el código en `main`, lo divides en métodos que hacen cosas concretas, que puedes reutilizar cuantas veces necesites.
+
+```
+// Sintaxis básica
+modificador tipoRetorno nombreMetodo(parametros) {
+    // cuerpo
+    return valor; // si tipoRetorno no es void
+}
+```
+
+## Tu primer método
+
+Veamos un método simple que saluda a una persona:
+
+<CodeBlock lang="java" title="Método básico — saludar">
+{`public class Saludar {
+    // Definición del método
+    static void saludar(String nombre) {
+        System.out.println("¡Hola, " + nombre + "!");
+    }
+
+    public static void main(String[] args) {
+        // Llamada al método
+        saludar("Ana");
+        saludar("Luis");
+        saludar("María");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+¡Hola, Ana!
+¡Hola, Luis!
+¡Hola, María!
+```
+
+El método `saludar` se define una vez y se llama tres veces con diferentes argumentos. Sin métodos, tendrías que escribir `System.out.println("¡Hola, " + nombre + "!");` tres veces.
+
+## Parámetros vs argumentos
+
+Estos términos se confunden frecuentemente:
+
+- **Parámetro**: la variable en la definición del método (`String nombre`)
+- **Argumento**: el valor real que pasas al llamar (`"Ana"`)
+
+```java
+//            parámetros
+static int sumar(int a, int b) {
+    return a + b;
+}
+
+//         argumentos
+int resultado = sumar(5, 3);  // a=5, b=3 → retorna 8
+```
+
+## Métodos con retorno
+
+Un método puede **devolver un valor** usando `return`. El tipo de retorno indica qué tipo de dato devuelve:
+
+<CodeBlock lang="java" title="Método con retorno — calcular área de círculo">
+{`public class AreaCirculo {
+    static double calcularArea(double radio) {
+        return Math.PI * radio * radio;
+    }
+
+    static String clasificar(double area) {
+        if (area < 10)  return "Pequeño";
+        if (area < 50)  return "Mediano";
+        return "Grande";
+    }
+
+    public static void main(String[] args) {
+        double[] radios = {2.0, 4.0, 7.0};
+
+        for (double r : radios) {
+            double area = calcularArea(r);
+            String tipo = clasificar(area);
+            System.out.printf("Radio %.1f → Area: %.2f (%s)%n",
+                r, area, tipo);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Radio 2.0 → Area: 12.57 (Mediano)
+Radio 4.0 → Area: 50.27 (Grande)
+Radio 7.0 → Area: 153.94 (Grande)
+```
+
+## Métodos void — sin retorno
+
+Un método `void` ejecuta una acción pero **no devuelve nada**. No necesita `return`, o puede usar `return;` sin valor para salir antes:
+
+<CodeBlock lang="java" title="Método void — imprimir reporte">
+{`public class Reporte {
+    static void imprimirLinea(char caracter, int veces) {
+        for (int i = 0; i < veces; i++) {
+            System.out.print(caracter);
+        }
+        System.out.println();
+    }
+
+    static void imprimirTitulo(String titulo) {
+        imprimirLinea('=', 40);
+        System.out.println("  " + titulo);
+        imprimirLinea('=', 40);
+    }
+
+    public static void main(String[] args) {
+        imprimirTitulo("REPORTE DE VENTAS");
+        System.out.println("Enero:   $12,500");
+        System.out.println("Febrero: $15,200");
+        System.out.println("Marzo:   $18,900");
+        imprimirLinea('-', 40);
+        System.out.println("Total:   $46,600");
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+========================================
+  REPORTE DE VENTAS
+========================================
+Enero:   $12,500
+Febrero: $15,200
+Marzo:   $18,900
+----------------------------------------
+Total:   $46,600
+```
+
+## Múltiples parámetros
+
+Un método puede recibir varios parámetros de diferentes tipos:
+
+<CodeBlock lang="java" title="Múltiples parámetros — calculadora de impuestos">
+{`public class Impuestos {
+    static double calcularImpuesto(
+            double monto, double tasaPorcentaje, double descuento) {
+        double base = monto - descuento;
+        if (base < 0) base = 0;
+        return base * tasaPorcentaje / 100;
+    }
+
+    public static void main(String[] args) {
+        double imp1 = calcularImpuesto(100000, 19, 0);
+        double imp2 = calcularImpuesto(100000, 19, 20000);
+        double imp3 = calcularImpuesto(50000, 16, 5000);
+
+        System.out.printf("Sin descuento: $%.2f%n", imp1);
+        System.out.printf("Con descuento $20k: $%.2f%n", imp2);
+        System.out.printf("Tasa 16%%: $%.2f%n", imp3);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Sin descuento: $19000.00
+Con descuento $20k: $15200.00
+Tasa 16%: $7200.00
+```
+
+## El orden importa
+
+En Java, un método debe estar **definido antes** de ser usado (dentro de la misma clase). La buena práctica es poner los métodos auxiliares antes de `main`, o en una clase separada.
+
+```
+// ✅ Correcto: método definido antes de usarlo
+static void saludar(String nombre) { ... }
+
+public static void main(String[] args) {
+    saludar("Ana"); // funciona
+}
+```
+
+## Parámetros por valor
+
+En Java, los tipos primitivos se pasan **por valor**: el método recibe una copia, no la variable original. Modificar el parámetro dentro del método NO cambia la variable original:
+
+<CodeBlock lang="java" title="Paso por valor — el original no cambia">
+{`public class PasoPorValor {
+    static void duplicar(int numero) {
+        numero = numero * 2; // modifica la copia
+        System.out.println("Dentro del método: " + numero);
+    }
+
+    public static void main(String[] args) {
+        int edad = 25;
+        System.out.println("Antes: " + edad);
+        duplicar(edad);
+        System.out.println("Después: " + edad);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Antes: 25
+Dentro del método: 50
+Después: 25
+```
+
+La variable `edad` sigue siendo 25 porque `duplicar` recibió una copia, no la referencia original.
+
+

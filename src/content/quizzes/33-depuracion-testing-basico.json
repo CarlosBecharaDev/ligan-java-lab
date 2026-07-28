@@ -1,0 +1,92 @@
+{
+  "id": "quiz-33-depuracion-testing-basico",
+  "lessonSlug": "depuracion-testing",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es depuración (debugging) en programación?",
+      "options": [
+        "Un método para optimizar la velocidad del código",
+        "Encontrar y corregir errores (bugs) en el código del programa",
+        "Una técnica para escribir código más rápido",
+        "Un proceso para crear documentación del programa"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La depuración no optimiza velocidad; encuentra errores.",
+        "Correcto. Depurar (debugging) es el proceso de encontrar y corregir errores (bugs) en el código del programa, analizando su comportamiento paso a paso.",
+        "La depuración no es una técnica de productividad para escribir código.",
+        "La documentación es un proceso separado de la depuración."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es un breakpoint en un depurador?",
+      "options": [
+        "Un punto donde el programa se reinicia automáticamente",
+        "Un punto donde la ejecución del programa se pausa para inspeccionar el estado",
+        "Un error que detiene la compilación del programa",
+        "Una línea de código que se elimina durante la depuración"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Un breakpoint no reinicia el programa; lo pausa.",
+        "Correcto. Un breakpoint es un punto marcado en el código donde la ejecución se detiene, permitiendo inspeccionar variables, el stack trace y el estado del programa en ese momento.",
+        "Los breakpoints no son errores; son herramientas del depurador.",
+        "Los breakpoints no eliminan código; solo pausan la ejecución."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es JUnit en Java?",
+      "options": [
+        "Un compilador alternativo para Java",
+        "Un framework para escribir y ejecutar tests automatizados",
+        "Una librería para crear interfaces gráficas",
+        "Una herramienta para deploy de aplicaciones"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "JUnit no es un compilador; se usa junto al compilador estándar de Java.",
+        "Correcto. JUnit es el framework de testing más utilizado en Java para escribir y ejecutar tests unitarios automatizados que verifican que el código funciona correctamente.",
+        "JUnit no crea interfaces gráficas; es para testing.",
+        "JUnit no maneja deployments; es para testing de código."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué hace la anotación @Test en JUnit?",
+      "options": [
+        "Marca una clase como una clase de prueba",
+        "Marca un método individual como un método de prueba que se ejecutará",
+        "Indica que el método es un constructor de la clase",
+        "Declara una variable como un valor de prueba"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La anotación @Test se coloca en métodos, no en clases.",
+        "Correcto. La anotación @Test marca un método como un test que será ejecutado por el framework JUnit para verificar el comportamiento esperado del código.",
+        "@Test no declara constructores; marca métodos de prueba.",
+        "@Test no declara variables; marca métodos."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué hace el método assertEquals en JUnit?",
+      "options": [
+        "Compara si dos objetos están en la misma dirección de memoria",
+        "Verifica que dos valores sean iguales; si no lo son, el test falla",
+        "Asigna un valor igual a dos variables diferentes",
+        "Cuenta la cantidad de aserciones exitosas en un test"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "assertEquals no compara direcciones de memoria; compara valores.",
+        "Correcto. assertEquals(expected, actual) verifica que el valor esperado sea igual al valor actual. Si son diferentes, el test falla y muestra un mensaje de error indicando la diferencia.",
+        "assertEquals no asigna valores; los compara.",
+        "assertEquals no cuenta aserciones; es una aserción individual."
+      ]
+    }
+  ]
+}

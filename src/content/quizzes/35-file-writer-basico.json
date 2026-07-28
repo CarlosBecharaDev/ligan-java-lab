@@ -1,0 +1,87 @@
+{
+  "id": "quiz-35-file-writer-basico",
+  "lessonSlug": "file-writer",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué clase se usa para escribir archivos de texto en Java?",
+      "options": ["FileReader", "FileWriter o PrintWriter", "BufferedWriter únicamente", "System.out"],
+      "correctIndex": 1,
+      "explanations": [
+        "FileReader se usa para leer archivos, no para escribir.",
+        "Correcto. FileWriter y PrintWriter son las clases principales para escribir archivos de texto en Java.",
+        "BufferedWriter se usa para mejorar el rendimiento, pero no es la forma principal de escribir.",
+        "System.out imprime en consola, no en archivos."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se escribe una línea de texto en un archivo con PrintWriter?",
+      "options": [
+        "pw.writeLine(\"texto\")",
+        "pw.println(\"texto\")",
+        "pw.addLine(\"texto\")",
+        "pw.insert(\"texto\")"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "writeLine() no es un método de PrintWriter.",
+        "Correcto. println() escribe el texto seguido de un salto de línea en el archivo.",
+        "addLine() no existe en PrintWriter.",
+        "insert() no es un método de PrintWriter."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué hace el segundo parámetro `true` al crear un FileWriter?",
+      "options": [
+        "Activa el modo de solo lectura",
+        "Abre el archivo en modo append (agregar al final)",
+        "Habilita la compresión del archivo",
+        "Crea el archivo en modo binario"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El parámetro boolean no controla el modo de solo lectura.",
+        "Correcto. Cuando se pasa true, el FileWriter abre el archivo en modo append y agrega contenido al final sin sobrescribir.",
+        "No tiene relación con compresión.",
+        "FileWriter siempre trabaja con texto, no en modo binario."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se escribe texto con formato en un archivo de forma similar a System.out.printf()?",
+      "options": [
+        "pw.format(\"%s tiene %d años\", nombre, edad)",
+        "pw.printFormatted(\"texto\")",
+        "pw.fprintf(\"texto\")",
+        "pw.formattedWrite(\"texto\")"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. PrintWriter tiene el método printf() y format() que funcionan igual que System.out.printf().",
+        "printFormatted() no es un método de PrintWriter.",
+        "fprintf() es de C, no de Java.",
+        "formattedWrite() no existe en PrintWriter."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué excepción puede lanzar FileWriter al intentar escribir en un archivo?",
+      "options": [
+        "FileNotFoundException",
+        "IOException",
+        "FileWriteException",
+        "AccessException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "FileNotFoundException la lanza FileReader, no FileWriter al escribir.",
+        "Correcto. FileWriter puede lanzar IOException cuando ocurre un error de E/S durante la escritura.",
+        "FileWriteException no existe en el API estándar de Java.",
+        "AccessException no existe en el API estándar de Java."
+      ]
+    }
+  ]
+}

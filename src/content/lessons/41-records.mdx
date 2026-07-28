@@ -1,0 +1,331 @@
+---
+title: "Records — Clases de Datos Inmutables"
+slug: "records"
+module: "08-java-moderno"
+level: "Avanzado"
+objectives:
+  - "Crear records para modelar datos inmutables de forma concisa"
+  - "Entender los componentes generados automáticamente (constructor, accessors, equals, hashCode, toString)"
+  - "Usar compact constructors para validación"
+  - "Agregar métodos estáticos y de instancia en records"
+  - "Comparar records con clases tradicionales"
+prerequisites:
+  - "Haber completado Lección 38: Lambdas"
+  - "Entender POO: clases, constructores, encapsulación"
+history:
+  introducedIn: "Records desde Java 14 (preview), Java 16 (estable)"
+  context: "Los records son una forma concisa de declarar clases que son portadores de datos inmutables. Inspirados en los data classes de Kotlin y Scala, eliminan la ceremonia de escribir constructores, getters, equals, hashCode y toString manualmente."
+  evolution: "Java 14: preview (JEP 359). Java 15: segundo preview. Java 16: estable (JEP 395). Java 17+: los records se integran con pattern matching. La tendencia es que los records reemplacen gradualmente las clases de datos simples en Java."
+realWorldExamples:
+  - domain: "E-commerce — modelo de producto con record"
+    description: "Un sistema de e-commerce modela productos con record. La inmutabilidad garantiza que los precios y datos no cambien accidentalmente después de crear el pedido."
+    code: |
+      import java.util.*;
+
+      record ProductoRecord(String id, String nombre, double precio) {}
+
+      record Pedido(String idPedido, ProductoRecord producto, int cantidad) {
+          public double total() { return producto.precio() * cantidad; }
+
+          public Pedido {
+              if (cantidad <= 0) {
+                  throw new IllegalArgumentException(
+                      "Cantidad debe ser > 0: " + cantidad);
+              }
+              if (producto == null) {
+                  throw new NullPointerException("Producto no puede ser null");
+              }
+          }
+      }
+
+      public class DemoRecord {
+          public static void main(String[] args) {
+              ProductoRecord laptop = new ProductoRecord("P001", "Laptop", 2500);
+              System.out.println("Producto: " + laptop);
+              System.out.println("Nombre: " + laptop.nombre());  // accessor
+              System.out.println("Precio: $" + laptop.precio());
+
+              Pedido pedido = new Pedido("ORD-001", laptop, 2);
+              System.out.println("Pedido: " + pedido);
+              System.out.println("Total: $" + pedido.total());
+
+              try {
+                  new Pedido("ORD-002", laptop, 0);
+              } catch (IllegalArgumentException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+      }
+    result: |
+      Producto: ProductoRecord[id=P001, nombre=Laptop, precio=2500.0]
+      Nombre: Laptop
+      Precio: $2500.0
+      Pedido: Pedido[idPedido=ORD-001, producto=ProductoRecord[id=P001, nombre=Laptop, precio=2500.0], cantidad=2]
+      Total: $5000.0
+      Error: Cantidad debe ser > 0: 0
+
+  - domain: "Salud — modelo de paciente inmutable"
+    description: "Un hospital modela datos de pacientes inmutables con record. Los datos no pueden modificarse después de creados, garantizando integridad de la historia clínica."
+    code: |
+      import java.time.*;
+
+      record PacienteRecord(String nombre, LocalDate fechaNacimiento,
+                           String diagnostico, boolean urgencia) {
+          // Compact constructor con validación
+          public PacienteRecord {
+              if (nombre == null || nombre.isBlank()) {
+                  throw new IllegalArgumentException("Nombre requerido");
+              }
+              if (fechaNacimiento.isAfter(LocalDate.now())) {
+                  throw new IllegalArgumentException(
+                      "Fecha de nacimiento futura: " + fechaNacimiento);
+              }
+          }
+
+          // Método de instancia
+          public int edad() {
+              return Period.between(fechaNacimiento, LocalDate.now()).getYears();
+          }
+
+          // Método estático (factory)
+          public static PacienteRecord urgente(String nombre, LocalDate fnac) {
+              return new PacienteRecord(nombre, fnac, "Urgencia general", true);
+          }
+      }
+
+      public class HospitalRecords {
+          public static void main(String[] args) {
+              PacienteRecord p1 = new PacienteRecord("Ana García",
+                  LocalDate.of(1990, 5, 10), "Gripe", false);
+              System.out.printf("%s: %d años, %s%n",
+                  p1.nombre(), p1.edad(), p1.diagnostico());
+
+              PacienteRecord urgente = PacienteRecord.urgente(
+                  "Luis Pérez", LocalDate.of(1985, 8, 20));
+              System.out.printf("URGENTE: %s - %s%n",
+                  urgente.nombre(), urgente.diagnostico());
+          }
+      }
+    result: |
+      Ana García: 36 años, Gripe
+      URGENTE: Luis Pérez - Urgencia general
+
+hasInteractive: false
+comparisons:
+  - title: "Clase tradicional vs Record"
+    items:
+      - name: "Clase POJO tradicional"
+        features:
+          codigo: "~60 líneas para una clase de datos simple"
+          inmutable: "Requiere final en campos y sin setters"
+          equals/hashCode: "Debes implementarlos manualmente (o usar IDE/Lombok)"
+          toString: "Debes implementarlo manualmente"
+      - name: "Record (Java 16+)"
+        features:
+          codigo: "1 línea: record X(tipo campo, ...)"
+          inmutable: "Automático — todos los campos son final"
+          equals/hashCode: "Generados automáticamente basados en todos los campos"
+          toString: "Generado automáticamente con todos los campos"
+    recommendation: "Usa records para clases que son solo portadores de datos (DTOs, modelos de valor, respuestas de API). Usa clases tradicionales cuando necesites herencia, mutabilidad, o comportamiento complejo."
+videos:
+  - url: ""
+    title: "Records en Java 16"
+    channel: "MoureDev"
+    summary: "Java moderno explicado por Brais Moure — código limpio y buenas prácticas"
+faqs:
+  - question: "¿Puedo hacer que un record herede de otra clase?"
+    answer: "No. Los records extienden implícitamente java.lang.Record y no pueden heredar de otras clases. Sin embargo, pueden implementar interfaces. Si necesitas herencia, usa una clase tradicional."
+  - question: "¿Puedo modificar un record después de crearlo?"
+    answer: "No. Los records son inmutables: todos los campos son final. Si necesitas modificar datos, crea un nuevo record con los valores modificados o usa una clase tradicional."
+  - question: "¿Los records son más rápidos que las clases normales?"
+    answer: "Ligeramente, porque equals/hashCode/toString están implementados en el JVM de forma optimizada. Sin embargo, la diferencia no debería ser el factor principal para elegir records."
+sources:
+  - title: "JEP 395 — Records (Java 16)"
+    url: "https://openjdk.org/jeps/395"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Records"
+    url: "https://docs.oracle.com/javase/tutorial/java/records.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es un Record?
+
+Un **record** es una clase especial diseñada para contener **datos inmutables** de forma concisa. El compilador genera automáticamente:
+
+```java
+// Esta única línea genera:
+record Persona(String nombre, int edad) { }
+
+// ✅ Constructor con todos los campos
+// ✅ Accessors (nombre(), edad() — NO getNombre())
+// ✅ equals() y hashCode()
+// ✅ toString()
+```
+
+## Comparación: clase vs record
+
+**Clase tradicional (~50 líneas):**
+```java
+public class Persona {
+    private final String nombre;
+    private final int edad;
+
+    public Persona(String nombre, int edad) { ... }
+    public String getNombre() { return nombre; }
+    public int getEdad() { return edad; }
+    public boolean equals(Object o) { ... }
+    public int hashCode() { ... }
+    public String toString() { ... }
+}
+```
+
+**Record (1 línea):**
+```java
+record Persona(String nombre, int edad) { }
+```
+
+## Usar un record
+
+<CodeBlock lang="java" title="Record en acción">
+{`public class DemoRecord {
+    public static void main(String[] args) {
+        record Punto(int x, int y) {}
+
+        Punto p1 = new Punto(3, 4);
+        Punto p2 = new Punto(3, 4);
+        Punto p3 = new Punto(5, 6);
+
+        // toString
+        System.out.println("p1: " + p1);
+
+        // Accessors (sin get prefijo)
+        System.out.println("x: " + p1.x() + ", y: " + p1.y());
+
+        // equals
+        System.out.println("p1.equals(p2): " + p1.equals(p2));
+        System.out.println("p1.equals(p3): " + p1.equals(p3));
+
+        // hashCode
+        System.out.println("hashCode: " + p1.hashCode());
+
+        // Deconstructor (pattern matching, Java 21+)
+        if (p1 instanceof Punto(var x, var y)) {
+            System.out.println("Desestructurado: " + x + ", " + y);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+p1: Punto[x=3, y=4]
+x: 3, y: 4
+p1.equals(p2): true
+p1.equals(p3): false
+hashCode: 28
+Desestructurado: 3, 4
+```
+
+## Compact Constructor — validación
+
+<CodeBlock lang="java" title="Validar datos en el compact constructor">
+{`public class CompactConstructor {
+    public static void main(String[] args) {
+        record Email(String direccion) {
+            Email {  // Compact constructor: no necesitas asignar this.direccion
+                if (direccion == null || !direccion.contains("@")) {
+                    throw new IllegalArgumentException(
+                        "Email inválido: " + direccion);
+                }
+            }
+        }
+
+        Email valido = new Email("user@mail.com");
+        System.out.println("OK: " + valido.direccion());
+
+        try {
+            new Email("invalido");
+        } catch (IllegalArgumentException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Métodos en records
+
+<CodeBlock lang="java" title="Agregar métodos a un record">
+{`public class MetodosRecord {
+    public static void main(String[] args) {
+        record Temperatura(double celsius) {
+            // Método de instancia
+            public double fahrenheit() {
+                return celsius * 9.0 / 5.0 + 32;
+            }
+
+            // Método estático
+            public static Temperatura fromFahrenheit(double f) {
+                return new Temperatura((f - 32) * 5.0 / 9.0);
+            }
+        }
+
+        Temperatura t = new Temperatura(37.5);
+        System.out.printf("%.1f°C = %.1f°F%n", t.celsius(), t.fahrenheit());
+
+        Temperatura t2 = Temperatura.fromFahrenheit(98.6);
+        System.out.printf("98.6°F = %.1f°C%n", t2.celsius());
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+37.5°C = 99.5°F
+98.6°F = 37.0°C
+```
+
+## Records implementando interfaces
+
+```java
+interface Identificable {
+    String id();
+}
+
+record Producto(String id, String nombre, double precio)
+    implements Identificable {
+    // id() ya está implementado por el record
+}
+```
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

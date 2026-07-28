@@ -1,0 +1,67 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="Sobre el proyecto" description="Conoce el propósito y el autor de Ligan Java Lab">
+  <div class="retro-container" style="max-width:var(--content-width);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <div style="display:flex;align-items:center;gap:var(--space-lg);margin-bottom:var(--space-xl)">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--win-text)" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+      <div>
+        <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);margin:0;" data-i18n="about.title">Sobre el proyecto</h1>
+        <p style="color:var(--win-muted);margin:0;font-size:1.2rem;margin-top:0.5rem;" data-i18n="about.subtitle">Ligan Java Lab v0.1.0</p>
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.whatis">¿Qué es Ligan Java Lab?</h2>
+    <p style="font-size:1.2rem;" data-i18n="about.whatis-desc">Una plataforma educativa web para aprender Java 21 LTS desde cero, en español latino. Combina lecciones escritas, ejemplos del mundo real, quizzes interactivos y un Code Lab simulado para practicar sin necesidad de instalar nada.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.motivation">Motivación</h2>
+    <p style="font-size:1.2rem;" data-i18n="about.motivation-desc">Este proyecto nace de la necesidad de tener un recurso completo, gratuito y en español que lleve al estudiante desde los fundamentos hasta proyectos reales, con una progresión clara y mucha práctica.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.author">Autor</h2>
+    <div class="retro-panel" style="background:var(--win-bg);border:2px solid var(--win-border);box-shadow:3px 3px 0 rgba(0,0,0,0.3);padding:var(--space-lg);margin:var(--space-lg) 0">
+      <p style="margin:0;font-size:1.2rem;"><strong style="font-family:var(--font-pixel);font-size:0.9rem;" data-i18n="about.author-name">Carlos Bechara</strong> <span style="color:var(--win-muted)" data-i18n="about.author-desc1">— Desarrollador y educador</span></p>
+      <p style="color:var(--win-muted);margin-top:var(--space-sm);font-size:1.1rem;" data-i18n="about.author-desc2">Apasionado por la enseñanza de Java y las tecnologías backend. Cree en el aprendizaje práctico con ejemplos reales y una progresión clara.</p>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.stack">Stack técnico</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-bottom:var(--space-lg)">
+      <span class="retro-tag">Astro 7.x</span>
+      <span class="retro-tag">TypeScript</span>
+      <span class="retro-tag">CSS custom</span>
+      <span class="retro-tag">CodeMirror 6</span>
+      <span class="retro-tag">Shiki</span>
+      <span class="retro-tag">Zod 4</span>
+      <span class="retro-tag">Lucide</span>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.license">Licencia</h2>
+    <p style="font-size:1.2rem;" data-i18n="about.license-desc">Proyecto educativo de código abierto. Todos los derechos reservados © {new Date().getFullYear()} Carlos Bechara.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;" data-i18n="about.attributions">Atribuciones</h2>
+    <ul style="list-style:disc;padding-left:var(--space-lg);color:var(--win-muted);font-size:1.2rem;">
+      <li>Iconos: <a href="https://lucide.dev/" target="_blank" style="color:var(--win-link);">Lucide</a> (licencia ISC)</li>
+      <li>Fuentes: <a href="https://fonts.google.com/specimen/Inter" target="_blank" style="color:var(--win-link);">Inter</a> y <a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" style="color:var(--win-link);">JetBrains Mono</a> (OFL)</li>
+      <li>Resaltado de sintaxis: <a href="https://shiki.matsu.io/" target="_blank" style="color:var(--win-link);">Shiki</a></li>
+    </ul>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-tag {
+    padding: var(--space-xs) var(--space-sm);
+    background: #E8D5B5;
+    border: 2px solid var(--win-border);
+    border-right-color: #5A5040;
+    border-bottom-color: #5A5040;
+    font-size: 1.1rem;
+    font-family: var(--font-pixel);
+    color: var(--win-text);
+  }
+</style>

@@ -1,0 +1,109 @@
+{
+  "id": "quiz-17-clases-objetos-basico",
+  "lessonSlug": "clases-objetos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué operador crea un objeto en Java?",
+      "options": [
+        "new",
+        "create",
+        "instance",
+        "object"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. new reserva memoria y retorna la referencia.",
+        "create no existe como operador.",
+        "instance no es un operador.",
+        "object no es un operador."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué hace 'Persona b = a;' si 'a' es un objeto?",
+      "options": [
+        "Crea un objeto nuevo igual",
+        "Hace que b apunte al mismo objeto",
+        "Copia todos los atributos",
+        "Error de compilación"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No crea objeto nuevo, solo copia la referencia.",
+        "Correcto. Ambas variables apuntan al mismo objeto en memoria.",
+        "No copia atributos, solo la dirección.",
+        "Es código válido."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es el valor por defecto de un int en una clase?",
+      "options": [
+        "null",
+        "1",
+        "0",
+        "-1"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "null es para tipos objeto.",
+        "No inicia en 1.",
+        "Correcto. Java asigna 0 a los enteros.",
+        "No inicia en -1."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué palabra clave hace que un miembro pertenezca a la clase?",
+      "options": [
+        "global",
+        "shared",
+        "static",
+        "public"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "global no existe en Java.",
+        "shared no existe en Java.",
+        "Correcto. static hace que el miembro sea de clase.",
+        "public solo controla visibilidad, no pertenencia."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo se accede a un método static?",
+      "options": [
+        "Solo desde un objeto",
+        "Desde la clase o un objeto",
+        "Solo con herencia",
+        "Desde cualquier package"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Puede accederse sin crear objeto.",
+        "Correcto. static se accede vía Clase.metodo() o objeto.metodo().",
+        "La herencia no tiene relación.",
+        "Depende del modificador de acceso."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Cuántos objetos crea este código?\nPersona a = new Persona();\nPersona b = a;\nPersona c = new Persona();",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "2 objetos: 'a' y 'c'. 'b = a' solo copia la referencia.",
+        "Correcto. Solo hay 2 llamadas a new.",
+        "3 sería si b fuera independiente.",
+        "Exagerado."
+      ]
+    }
+  ]
+}

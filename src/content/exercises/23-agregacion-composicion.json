@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-agregacion-composicion-facil",
+    "title": "Computadora con componentes",
+    "difficulty": "facil",
+    "description": "Crea Computadora con composicion: CPU y RAM como objetos internos.",
+    "template": "class CPU {\n    String modelo;\n    double velocidad;\n    CPU(String modelo, double v) { this.modelo = modelo; this.velocidad = v; }\n    void mostrar() { System.out.println(\"CPU: \" + modelo + \" @\" + velocidad + \"GHz\"); }\n}\n\nclass RAM {\n    int gb;\n    RAM(int gb) { this.gb = gb; }\n    void mostrar() { System.out.println(\"RAM: \" + gb + \"GB\"); }\n}\n\nclass Computadora {\n    CPU cpu;\n    RAM ram;\n    String marca;\n    Computadora(String m, double v, int r, String marca) {\n        this.cpu = new CPU(m, v);\n        this.ram = new RAM(r);\n        this.marca = marca;\n    }\n    void mostrar() {\n        System.out.println(\"Computadora: \" + marca);\n        cpu.mostrar();\n        ram.mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Computadora pc = new Computadora(\"Intel i7\", 3.6, 16, \"Dell\");\n        pc.mostrar();\n    }\n}",
+    "hints": [
+      "Computadora crea CPU y RAM en su constructor",
+      "this.cpu = new CPU(modelo, v);",
+      "Mostrar cada componente"
+    ],
+    "solution": "class CPU {\n    String modelo;\n    double velocidad;\n    CPU(String m, double v) { modelo = m; velocidad = v; }\n    void mostrar() { System.out.println(\"CPU: \" + modelo + \" @\" + velocidad + \"GHz\"); }\n}\n\nclass RAM {\n    int gb;\n    RAM(int g) { gb = g; }\n    void mostrar() { System.out.println(\"RAM: \" + gb + \"GB\"); }\n}\n\nclass Computadora {\n    CPU cpu;\n    RAM ram;\n    String marca;\n    Computadora(String m, double v, int r, String marca) {\n        cpu = new CPU(m, v);\n        ram = new RAM(r);\n        this.marca = marca;\n    }\n    void mostrar() {\n        System.out.println(\"Computadora: \" + marca);\n        cpu.mostrar();\n        ram.mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Computadora pc = new Computadora(\"Intel i7\", 3.6, 16, \"Dell\");\n        pc.mostrar();\n    }\n}",
+    "solutionExplanation": "Composicion: Computadora crea y posee CPU y RAM.",
+    "expectedOutput": "Computadora: Dell\nCPU: Intel i7 @3.6GHz\nRAM: 16GB",
+    "lessonSlug": "agregacion-composicion"
+  },
+  {
+    "id": "ex-agregacion-composicion-normal",
+    "title": "Pedido con Productos",
+    "difficulty": "normal",
+    "description": "Crea Pedido y Producto. El pedido usa productos existentes (agregacion).",
+    "template": "class Producto {\n    String nombre;\n    double precio;\n    Producto(String nombre, double precio) { this.nombre = nombre; this.precio = precio; }\n}\n\nclass Pedido {\n    Producto[] productos = new Producto[10];\n    int cantidad = 0;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        Producto p2 = new Producto(\"Mouse\", 25);\n        Pedido pedido = new Pedido();\n        pedido.agregarProducto(p1);\n        pedido.agregarProducto(p2);\n        pedido.mostrar();\n    }\n}",
+    "hints": [
+      "agregarProducto() guarda la referencia",
+      "total() suma precios",
+      "mostrar() lista cada producto"
+    ],
+    "solution": "class Producto {\n    String nombre;\n    double precio;\n    Producto(String n, double p) { nombre = n; precio = p; }\n}\n\nclass Pedido {\n    Producto[] productos = new Producto[10];\n    int cantidad = 0;\n    void agregarProducto(Producto p) { if (cantidad < 10) productos[cantidad++] = p; }\n    double total() { double s = 0; for (int i = 0; i < cantidad; i++) s += productos[i].precio; return s; }\n    void mostrar() {\n        System.out.println(\"Pedido:\");\n        for (int i = 0; i < cantidad; i++)\n            System.out.println(\"  - \" + productos[i].nombre + \": $\" + productos[i].precio);\n        System.out.println(\"Total: $\" + total());\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        Producto p2 = new Producto(\"Mouse\", 25);\n        Pedido pedido = new Pedido();\n        pedido.agregarProducto(p1);\n        pedido.agregarProducto(p2);\n        pedido.mostrar();\n    }\n}",
+    "solutionExplanation": "Agregacion: Pedido usa referencias a Productos.",
+    "expectedOutput": "Pedido:\n  - Laptop: $1200.0\n  - Mouse: $25.0\nTotal: $1225.0",
+    "lessonSlug": "agregacion-composicion"
+  },
+  {
+    "id": "ex-agregacion-composicion-dificil",
+    "title": "Hospital con relacion mixta",
+    "difficulty": "dificil",
+    "description": "Crea Hospital (composicion con Consulta) y Doctor (agregacion con Hospital).",
+    "template": "class Paciente {\n    String nombre;\n    Paciente(String nombre) { this.nombre = nombre; }\n}\n\nclass Consulta {\n    Paciente paciente;\n    String diagnostico;\n}\n\nclass Doctor {\n    String nombre;\n}\n\nclass Hospital {\n    String nombre;\n    Consulta[] consultas = new Consulta[10];\n    int cantidad = 0;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Doctor doc = new Doctor(\"Dr. Perez\");\n        Hospital hospital = new Hospital(\"Hospital Central\");\n        Consulta c1 = doc.atender(new Paciente(\"Ana\"), \"Dolor de pecho\");\n        Consulta c2 = doc.atender(new Paciente(\"Luis\"), \"Check-up\");\n        hospital.agregarConsulta(c1);\n        hospital.agregarConsulta(c2);\n        hospital.mostrar();\n    }\n}",
+    "hints": [
+      "Consulta contiene Paciente (composicion)",
+      "Doctor.atender() crea Consulta",
+      "Hospital almacena referencias (agregacion)"
+    ],
+    "solution": "class Paciente {\n    String nombre;\n    Paciente(String n) { nombre = n; }\n}\n\nclass Consulta {\n    Paciente paciente;\n    String diagnostico;\n    Consulta(Paciente p, String d) { paciente = p; diagnostico = d; }\n    void mostrar() { System.out.println(\"Consulta: \" + paciente.nombre + \" - \" + diagnostico); }\n}\n\nclass Doctor {\n    String nombre;\n    Doctor(String n) { nombre = n; }\n    Consulta atender(Paciente p, String d) {\n        System.out.println(\"Dr. \" + nombre + \" atiende a \" + p.nombre);\n        return new Consulta(p, d);\n    }\n}\n\nclass Hospital {\n    String nombre;\n    Consulta[] consultas = new Consulta[10];\n    int cantidad = 0;\n    Hospital(String n) { nombre = n; }\n    void agregarConsulta(Consulta c) { if (cantidad < 10) consultas[cantidad++] = c; }\n    void mostrar() {\n        System.out.println(\"Hospital: \" + nombre);\n        for (int i = 0; i < cantidad; i++) consultas[i].mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Doctor doc = new Doctor(\"Dr. Perez\");\n        Hospital hospital = new Hospital(\"Hospital Central\");\n        Consulta c1 = doc.atender(new Paciente(\"Ana\"), \"Dolor de pecho\");\n        Consulta c2 = doc.atender(new Paciente(\"Luis\"), \"Check-up\");\n        hospital.agregarConsulta(c1);\n        hospital.agregarConsulta(c2);\n        hospital.mostrar();\n    }\n}",
+    "solutionExplanation": "Mix de composicion y agregacion.",
+    "expectedOutput": "Dr. Perez atiende a Ana\nDr. Perez atiende a Luis\nHospital: Hospital Central\nConsulta: Ana - Dolor de pecho\nConsulta: Luis - Check-up",
+    "lessonSlug": "agregacion-composicion"
+  }
+]

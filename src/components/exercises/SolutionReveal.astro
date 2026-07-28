@@ -1,0 +1,111 @@
+---
+export interface Props {
+  title?: string;
+  solution: string;
+  explanation: string;
+  expectedOutput: string;
+}
+
+const { solution, explanation, expectedOutput } = Astro.props;
+const srId = `sr-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<div class="solution-reveal" data-sr-id={srId}>
+  <button class="solution-reveal__toggle" aria-expanded="false" aria-controls={srId}>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
+    Mostrar solución
+  </button>
+
+  <div id={srId} class="solution-reveal__content" hidden>
+    <h4>Código de solución</h4>
+    <pre class="solution-reveal__code"><code>{solution}</code></pre>
+
+    <h4>Explicación</h4>
+    <p class="solution-reveal__explanation">{explanation}</p>
+
+    <h4>Salida esperada</h4>
+    <pre class="solution-reveal__output"><code>{expectedOutput}</code></pre>
+  </div>
+</div>
+
+<style>
+  .solution-reveal {
+    margin-top: var(--space-md);
+  }
+
+  .solution-reveal__toggle {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--muted);
+    transition: color var(--transition), border-color var(--transition);
+  }
+
+  .solution-reveal__toggle:hover {
+    color: var(--text);
+    border-color: var(--sky);
+  }
+
+  .solution-reveal__content {
+    margin-top: var(--space-md);
+    padding: var(--space-md);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+  }
+
+  .solution-reveal__content h4 {
+    font-size: var(--text-sm);
+    color: var(--sky);
+    margin-top: var(--space-md);
+    margin-bottom: var(--space-sm);
+  }
+
+  .solution-reveal__content h4:first-child {
+    margin-top: 0;
+  }
+
+  .solution-reveal__code {
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--line);
+    background: var(--surface);
+  }
+
+  .solution-reveal__explanation {
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: var(--space-md);
+  }
+
+  .solution-reveal__output {
+    margin-bottom: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--success);
+  }
+</style>
+
+<script>
+  // Los scripts de Astro son module-scoped; buscamos por clase
+  document.querySelectorAll('.solution-reveal').forEach((container) => {
+    const toggleBtn = container.querySelector('.solution-reveal__toggle');
+    const content = container.querySelector('.solution-reveal__content');
+
+    toggleBtn?.addEventListener('click', () => {
+      const hidden = content?.hasAttribute('hidden');
+      if (content) {
+        content.toggleAttribute('hidden');
+        toggleBtn.setAttribute('aria-expanded', String(!hidden));
+        toggleBtn.innerHTML = hidden
+          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Ocultar solución'
+          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Mostrar solución';
+      }
+    });
+  });
+</script>

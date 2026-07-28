@@ -1,0 +1,109 @@
+{
+  "id": "quiz-22-clases-abstractas-interfaces-avanzado",
+  "lessonSlug": "clases-abstractas-interfaces",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué ventaja tiene una clase abstracta sobre una interfaz?",
+      "options": [
+        "Permite多重herencia",
+        "Puede tener constructores y código implementado",
+        "Es más rápida",
+        "No requiere herencia"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java no permite多重herencia.",
+        "Correcto. Las abstractas pueden tener constructores y métodos con cuerpo.",
+        "No hay diferencia de velocidad.",
+        "Requiere herencia."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es un default method en una interfaz?",
+      "options": [
+        "Un método que retorna null",
+        "Un método con cuerpo que no es obligatorio sobrescribir",
+        "Un método static",
+        "Un método privado"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No tiene relación con null.",
+        "Correcto. default void hacer() { ... } tiene cuerpo, no obligatorio Override.",
+        "No es static.",
+        "No es privado."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué pasa si una clase implementa dos interfaces con el mismo método default?",
+      "options": [
+        "Error de compilación siempre",
+        "La clase debe sobrescribir el método para resolver la ambigüedad",
+        "Java elige uno automáticamente",
+        "No puede implementar ambos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No siempre es error.",
+        "Correcto. La clase debe Override para elegir cuál usar.",
+        "Java no elige automáticamente.",
+        "Sí puede implementar ambos."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Puede una interfaz extender de otra interfaz?",
+      "options": [
+        "No",
+        "Sí, con extends",
+        "Solo una",
+        "Solo con herencia múltiple"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Sí puede.",
+        "Correcto. interface B extends A { } es válido.",
+        "Puede extender de múltiples.",
+        "No es herencia múltiple de clases."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué patron usa una interfaz con un solo método abstracto?",
+      "options": [
+        "Singleton",
+        "Functional Interface",
+        "Builder",
+        "Factory"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Singleton controla instancias.",
+        "Correcto. @FunctionalInterface permite usar lambdas.",
+        "Builder construye objetos.",
+        "Factory crea objetos."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Cuál es la diferencia clave entre abstract class e interface?",
+      "options": [
+        "No hay diferencia",
+        "Abstract class: herencia simple + código compartido. Interface: contrato + múltiple implementación",
+        "Interface es más segura",
+        "Abstract class es más rápida"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Sí hay diferencia.",
+        "Correcto. Herencia simple vs múltiple implementación es la diferencia fundamental.",
+        "No es cuestión de seguridad.",
+        "No es cuestión de velocidad."
+      ]
+    }
+  ]
+}

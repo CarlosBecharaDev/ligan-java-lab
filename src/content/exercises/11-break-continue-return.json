@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-break-facil",
+    "lessonSlug": "break-continue-return",
+    "title": "Buscar un elemento en un array con break",
+    "difficulty": "facil",
+    "description": "Dado un array de números, busca un elemento específico y detente en cuanto lo encuentres. Muestra la posición o un mensaje de no encontrado.",
+    "template": "public class BuscarElemento {\n    public static void main(String[] args) {\n        int[] nums = {45, 12, 78, 34, 6, 89, 23};\n        int buscado = 34;\n\n        // TODO: Usa un bucle for con break\n        // Cuando encuentres el número, imprime:\n        //   \"Encontrado en posición: X\" y sal con break\n        // Si termina el bucle sin encontrar, imprime:\n        //   \"No encontrado\"\n        // (Pista: usa un booleano 'encontrado')\n\n    }\n}",
+    "hints": [
+      "Declara boolean encontrado = false antes del for",
+      "Si nums[i] == buscado, marca encontrado = true e imprime, luego break",
+      "After el for, si !encontrado imprime 'No encontrado'"
+    ],
+    "solution": "public class BuscarElemento {\n    public static void main(String[] args) {\n        int[] nums = {45, 12, 78, 34, 6, 89, 23};\n        int buscado = 34;\n        boolean encontrado = false;\n\n        for (int i = 0; i < nums.length; i++) {\n            if (nums[i] == buscado) {\n                System.out.println(\"Encontrado en posición: \" + i);\n                encontrado = true;\n                break;\n            }\n        }\n\n        if (!encontrado) {\n            System.out.println(\"No encontrado\");\n        }\n    }\n}",
+    "solutionExplanation": "Usamos un booleano 'encontrado' para saber si el bucle terminó por break o porque recorrió todo. Al encontrar el número imprimimos la posición y break sale del bucle inmediatamente.",
+    "expectedOutput": "Encontrado en posición: 3"
+  },
+  {
+    "id": "ex-break-normal",
+    "lessonSlug": "break-continue-return",
+    "title": "Filtrar números negativos con continue",
+    "difficulty": "normal",
+    "description": "Recorre un array con números (positivos, negativos y cero) e imprime solo los positivos usando continue para saltar los negativos y ceros.",
+    "template": "public class FiltrarPositivos {\n    public static void main(String[] args) {\n        int[] datos = {5, -3, 0, 12, -7, 8, -1, 0, 4};\n\n        System.out.println(\"Números positivos:\");\n        // TODO: Usa un bucle for con continue para saltar\n        // números que sean <= 0 (negativos y ceros)\n        // Imprime solo los positivos, uno por línea\n\n    }\n}",
+    "hints": [
+      "continue se ejecuta cuando el número es <= 0, saltando la impresión",
+      "Si el número es positivo (> 0), se imprime",
+      "continue va al inicio de la siguiente iteración sin ejecutar el código posterior"
+    ],
+    "solution": "public class FiltrarPositivos {\n    public static void main(String[] args) {\n        int[] datos = {5, -3, 0, 12, -7, 8, -1, 0, 4};\n\n        System.out.println(\"Números positivos:\");\n        for (int i = 0; i < datos.length; i++) {\n            if (datos[i] <= 0) {\n                continue;  // salta negativos y ceros\n            }\n            System.out.println(datos[i]);\n        }\n    }\n}",
+    "solutionExplanation": "En cada iteración verificamos si el número es <= 0; si es así, continue salta el resto del cuerpo (la impresión) y va directamente a la siguiente iteración. Solo los positivos llegan al println.",
+    "expectedOutput": "Números positivos:\n5\n12\n8\n4"
+  },
+  {
+    "id": "ex-break-dificil",
+    "lessonSlug": "break-continue-return",
+    "title": "Búsqueda y procesamiento con break etiquetado",
+    "difficulty": "dificil",
+    "description": "Usa un bucle etiquetado con break etiquetado para buscar un par de números en una matriz que sumen un objetivo dado (similar a dos sum). El break etiquetado sale de ambos bucles al encontrar la solución.",
+    "template": "public class DosSumMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 5, 3, 7},\n            {9, 2, 8, 4},\n            {6, 11, 23, 1}\n        };\n        int objetivo = 14;  // 3 + 11, 4 + 10, 2 + 12, etc.\n\n        // TODO: Usa bucles anidados con etiqueta \"busqueda\"\n        // Para cada par (matriz[i][j], matriz[i][k]) en la misma fila,\n        // busca si suman el objetivo\n        // Cuando lo encuentres, imprime la solución y usa\n        //   break busqueda; para salir de AMBOS bucles\n        // Si no hay solución tras recorrer todo, imprime \"No encontrado\"\n\n    }\n}",
+    "hints": [
+      "Declara la etiqueta antes del bucle externo: busqueda:",
+      "Usa break busqueda; (no break;) para salir de ambos bucles",
+      "Verifica solo pares distintos (j != k) en la misma fila"
+    ],
+    "solution": "public class DosSumMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 5, 3, 7},\n            {9, 2, 8, 4},\n            {6, 11, 23, 1}\n        };\n        int objetivo = 14;\n        boolean encontrado = false;\n\n        busqueda:\n        for (int i = 0; i < matriz.length; i++) {\n            for (int j = 0; j < matriz[i].length - 1; j++) {\n                for (int k = j + 1; k < matriz[i].length; k++) {\n                    if (matriz[i][j] + matriz[i][k] == objetivo) {\n                        System.out.printf(\"Encontrado: %d + %d = %d en fila %d (posiciones %d y %d)%n\",\n                                matriz[i][j], matriz[i][k], objetivo, i, j, k);\n                        encontrado = true;\n                        break busqueda;  // sale de los 3 bucles\n                    }\n                }\n            }\n        }\n\n        if (!encontrado) {\n            System.out.println(\"No encontrado\");\n        }\n    }\n}",
+    "solutionExplanation": "La etiqueta busqueda se coloca antes del primer bucle for. Al encontrar la solución, break busqueda sale de los 3 bucles simultáneamente. Sin la etiqueta, break solo saldría del bucle más interno. Esto es más eficiente que un return porque permite lógica posterior con la misma estructura.",
+    "expectedOutput": "Encontrado: 3 + 11 = 14 en fila 2 (posiciones 0 y 1)"
+  }
+]

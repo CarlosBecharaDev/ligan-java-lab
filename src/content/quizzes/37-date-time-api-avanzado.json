@@ -1,0 +1,92 @@
+{
+  "id": "quiz-37-date-time-api-avanzado",
+  "lessonSlug": "date-time-api",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Por qué se recomienda NO usar java.util.Date en código nuevo?",
+      "options": [
+        "Es más lento que java.time",
+        "Es mutable, inseguro en concurrencia, y tiene problemas de diseño (meses empiezan en 0)",
+        "Está obsoleto y fue eliminado en Java 17",
+        "Solo funciona con el calendario gregoriano"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La velocidad no es el problema principal.",
+        "Correcto. Date es mutable (no thread-safe), los meses empiezan en 0, mezcla fecha y hora, y tiene una API confusa.",
+        "Date no ha sido eliminado; sigue disponible por compatibilidad.",
+        "Date funciona con el calendario gregoriano sin restricciones."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre Period y Duration en java.time?",
+      "options": [
+        "No hay diferencia, son intercambiables",
+        "Period representa años/meses/días, Duration representa horas/minutos/segundos",
+        "Period es para fechas, Duration es para strings",
+        "Duration solo funciona con LocalDate, Period con LocalTime"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Son clases diferentes con propósitos distintos.",
+        "Correcto. Period mide tiempo en unidades de calendario (años, meses, días), mientras que Duration mide tiempo en unidades precisas de reloj (horas, minutos, segundos, nanosegundos).",
+        "Ambos representan intervalos de tiempo, no strings.",
+        "Period funciona con LocalDate y Duration con LocalTime, pero la distinción es más amplia."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se calcula la diferencia entre dos fechas en java.time?",
+      "options": [
+        "fecha1.diff(fecha2)",
+        "Period.between(fecha1, fecha2)",
+        "fecha1 - fecha2",
+        "Date.difference(fecha1, fecha2)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "diff() no existe como método en LocalDate.",
+        "Correcto. Period.between(fecha1, fecha2) retorna un objeto Period con la diferencia en años, meses y días entre ambas fechas.",
+        "No se puede usar el operador - directamente con fechas en Java.",
+        "Date.difference() no existe."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué representa ZonedDateTime en java.time?",
+      "options": [
+        "Una fecha sin zona horaria",
+        "Una fecha y hora con zona horaria completa (offset y zona del sistema)",
+        "Una zona horaria del mundo",
+        "Una fecha en formato UTC únicamente"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "ZonedDateTime sí incluye zona horaria.",
+        "Correcto. ZonedDateTime combina fecha, hora y zona horaria, incluyendo el offset UTC y la zona del sistema (como America/Mexico_City).",
+        "ZonedDateTime es una combinación de fecha/hora/zona, no solo una zona.",
+        "ZonedDateTime soporta cualquier zona horaria, no solo UTC."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo se convierte un String con formato de fecha a LocalDate?",
+      "options": [
+        "LocalDate.toDate(\"2024-01-15\")",
+        "LocalDate.parse(\"2024-01-15\")",
+        "new LocalDate(\"2024-01-15\")",
+        "LocalDate.fromString(\"2024-01-15\")"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "toDate() no es un método de LocalDate.",
+        "Correcto. LocalDate.parse() convierte un String en formato ISO-8601 (yyyy-MM-dd) a un objeto LocalDate.",
+        "LocalDate no tiene constructor que reciba un String.",
+        "fromString() no es un método de LocalDate."
+      ]
+    }
+  ]
+}

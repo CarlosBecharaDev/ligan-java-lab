@@ -1,0 +1,328 @@
+---
+title: "Serialización — Guardar Objetos"
+slug: "serializacion"
+module: "07-archivos"
+level: "Avanzado"
+objectives:
+  - "Crear objetos serializables implementando Serializable"
+  - "Guardar objetos completos con ObjectOutputStream"
+  - "Leer objetos guardados con ObjectInputStream"
+  - "Manejar la serialVersionUID para control de versiones"
+  - "Usar transient para excluir campos de la serialización"
+prerequisites:
+  - "Haber completado Lección 35: Escritura de Archivos"
+  - "Entender herencia y encapsulación"
+history:
+  introducedIn: "Serialización desde Java 1.1"
+  context: "La serialización en Java permite convertir objetos en secuencias de bytes para guardarlos en archivos o enviarlos por red. Fue introducida en Java 1.1 y es fundamental para RMI (Remote Method Invocation), persistencia, y comunicación entre sistemas."
+  evolution: "Java 1.1 introdujo Serializable y ObjectOutputStream/ObjectInputStream. Java 14 introdujo record classes que son serializables por defecto con representación más simple. La serialización tradicional está siendo reemplazada por formatos como JSON, XML y Protocol Buffers en aplicaciones modernas."
+realWorldExamples:
+  - domain: "E-commerce — carrito de compras persistente"
+    description: "Un sistema guarda el carrito de compras del usuario en disco para que no se pierda si el usuario cierra sesión."
+    code: |
+      import java.io.*;
+      import java.util.ArrayList;
+
+      class Producto implements Serializable {
+          private static final long serialVersionUID = 1L;
+          String nombre;
+          double precio;
+          int cantidad;
+
+          Producto(String nombre, double precio, int cantidad) {
+              this.nombre = nombre;
+              this.precio = precio;
+              this.cantidad = cantidad;
+          }
+
+          public String toString() {
+              return String.format("%s x%d ($%.2f c/u)",
+                  nombre, cantidad, precio);
+          }
+      }
+
+      public class CarritoPersistente {
+          static void guardarCarrito(ArrayList<Producto> carrito, String ruta) {
+              try (ObjectOutputStream oos = new ObjectOutputStream(
+                      new FileOutputStream(ruta))) {
+                  oos.writeObject(carrito);
+                  System.out.println("Carrito guardado: " + carrito.size() + " productos");
+              } catch (IOException e) {
+                  System.out.println("Error al guardar: " + e.getMessage());
+              }
+          }
+
+          static ArrayList<Producto> cargarCarrito(String ruta) {
+              try (ObjectInputStream ois = new ObjectInputStream(
+                      new FileInputStream(ruta))) {
+                  @SuppressWarnings("unchecked")
+                  ArrayList<Producto> carrito = (ArrayList<Producto>) ois.readObject();
+                  return carrito;
+              } catch (IOException | ClassNotFoundException e) {
+                  return new ArrayList<>();
+              }
+          }
+
+          public static void main(String[] args) {
+              ArrayList<Producto> carrito = new ArrayList<>();
+              carrito.add(new Producto("Laptop", 2500.00, 1));
+              carrito.add(new Producto("Mouse", 45.00, 2));
+
+              guardarCarrito(carrito, "carrito.dat");
+              ArrayList<Producto> cargado = cargarCarrito("carrito.dat");
+              System.out.println("Carrito cargado:");
+              for (Producto p : cargado) System.out.println("  " + p);
+          }
+      }
+    result: |
+      Carrito guardado: 2 productos
+      Carrito cargado:
+        Laptop x1 ($2500.00 c/u)
+        Mouse x2 ($45.00 c/u)
+
+  - domain: "Salud — historial clínico persistente"
+    description: "Un hospital serializa historiales clínicos de pacientes. El campo temperatura en vivo se marca como transient para no guardarlo."
+    code: |
+      import java.io.*;
+      import java.util.ArrayList;
+
+      class HistoriaClinica implements Serializable {
+          private static final long serialVersionUID = 2L;
+          String nombre;
+          String diagnostico;
+          transient double temperaturaActual;  // No se guarda
+
+          HistoriaClinica(String nombre, String diagnostico) {
+              this.nombre = nombre;
+              this.diagnostico = diagnostico;
+          }
+
+          private void writeObject(ObjectOutputStream oos) throws IOException {
+              oos.defaultWriteObject();
+          }
+
+          private void readObject(ObjectInputStream ois)
+                  throws IOException, ClassNotFoundException {
+              ois.defaultReadObject();
+              temperaturaActual = 0.0;  // valor por defecto al cargar
+          }
+      }
+
+      public class GuardarHistorial {
+          public static void main(String[] args)
+                  throws Exception {
+              ArrayList<HistoriaClinica> historiales = new ArrayList<>();
+              historiales.add(new HistoriaClinica("Ana", "Gripe"));
+              historiales.add(new HistoriaClinica("Luis", "Fractura"));
+              historiales.get(0).temperaturaActual = 38.5;
+              historiales.get(1).temperaturaActual = 36.8;
+
+              try (ObjectOutputStream oos = new ObjectOutputStream(
+                      new FileOutputStream("historiales.dat"))) {
+                  oos.writeObject(historiales);
+              }
+
+              try (ObjectInputStream ois = new ObjectInputStream(
+                      new FileInputStream("historiales.dat"))) {
+                  @SuppressWarnings("unchecked")
+                  ArrayList<HistoriaClinica> cargados =
+                      (ArrayList<HistoriaClinica>) ois.readObject();
+                  for (HistoriaClinica h : cargados) {
+                      System.out.printf("%s: %s (temp: %.1f)%n",
+                          h.nombre, h.diagnostico, h.temperaturaActual);
+                  }
+              }
+          }
+      }
+    result: |
+      Ana: Gripe (temp: 0.0)
+      Luis: Fractura (temp: 0.0)
+
+hasInteractive: false
+comparisons:
+  - title: "Serialización Java vs JSON (moderno)"
+    items:
+      - name: "Serialización Java (ObjectStream)"
+        features:
+          formato: "Binario — no legible por humanos"
+          portabilidad: "Solo funciona entre JVMs"
+          versionado: "Requiere serialVersionUID manual"
+          uso: "Comunicación entre JVMs, persistencia local"
+      - name: "JSON (Gson, Jackson)"
+        features:
+          formato: "Texto — legible por humanos"
+          portabilidad: "Funciona entre cualquier lenguaje/plataforma"
+          versionado: "Campos nuevos son opcionales por defecto"
+          uso: "APIs REST, almacenamiento en base de datos"
+    recommendation: "Usa la serialización Java para persistencia local rápida o comunicación entre JVMs del mismo sistema. Para APIs, microservicios, o persistencia en base de datos, usa JSON con Jackson o Gson."
+videos:
+  - url: ""
+    title: "Serialización en Java"
+    channel: "MoureDev"
+    summary: "Java moderno explicado por Brais Moure — código limpio y buenas prácticas"
+faqs:
+  - question: "¿Qué es serialVersionUID y por qué es importante?"
+    answer: "Es un número de versión único para la clase. Si cambias la clase (agregas/eliminas campos), debes actualizar el serialVersionUID; de lo contrario, la deserialización fallará por incompatibilidad de versiones."
+  - question: "¿Qué campos no se serializan?"
+    answer: "Los campos marcados como transient no se guardan. También los campos static pertenecen a la clase y no se serializan. Las referencias a objetos no serializables lanzan NotSerializableException."
+  - question: "¿La serialización es segura?"
+    answer: "No. La deserialización puede ser explotada por atacantes (deserialization attacks). Nunca deserialices datos de fuentes no confiables. Considera usar alternativas como JSON o validar los datos deserializados."
+sources:
+  - title: "Java 21 API — ObjectInputStream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/ObjectInputStream.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Serialization"
+    url: "https://docs.oracle.com/javase/tutorial/jndi/objects/serial.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es la serialización?
+
+Es el proceso de convertir un **objeto completo** (con todos sus campos) en un array de bytes para guardarlo en disco o enviarlo por red. La deserialización hace el proceso inverso: bytes → objeto.
+
+```java
+// Guardar un objeto en disco
+ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream("objeto.dat"));
+oos.writeObject(miObjeto);
+oos.close();
+
+// Leerlo de vuelta
+ObjectInputStream ois = new ObjectInputStream(new FileInputStream("objeto.dat"));
+MiClase obj = (MiClase) ois.readObject();
+ois.close();
+```
+
+## Crear una clase serializable
+
+<CodeBlock lang="java" title="Implementar Serializable es simple">
+{`import java.io.Serializable;
+
+class Persona implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String nombre;
+    int edad;
+    double altura;
+
+    Persona(String nombre, int edad, double altura) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.altura = altura;
+    }
+
+    public String toString() {
+        return nombre + ", " + edad + " años, " + altura + " m";
+    }
+}`}
+</CodeBlock>
+
+Solo necesitas implementar la interfaz `Serializable` — no tiene métodos que implementar (es una interfaz de marcado).
+
+## Guardar y leer objetos
+
+<CodeBlock lang="java" title="ObjectOutputStream y ObjectInputStream">
+{`import java.io.*;
+
+public class GuardarPersonas {
+    public static void main(String[] args)
+            throws Exception {
+        // --- Guardar objetos ---
+        try (ObjectOutputStream oos = new ObjectOutputStream(
+                new FileOutputStream("personas.dat"))) {
+            oos.writeObject(new Persona("Ana", 25, 1.65));
+            oos.writeObject(new Persona("Luis", 30, 1.80));
+            oos.writeObject(new Persona("María", 35, 1.70));
+            System.out.println("Objetos guardados");
+        }
+
+        // --- Leer objetos ---
+        try (ObjectInputStream ois = new ObjectInputStream(
+                new FileInputStream("personas.dat"))) {
+            for (int i = 0; i < 3; i++) {
+                Persona p = (Persona) ois.readObject();
+                System.out.println("Leído: " + p);
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Objetos guardados
+Leído: Ana, 25 años, 1.65 m
+Leído: Luis, 30 años, 1.8 m
+Leído: María, 35 años, 1.7 m
+```
+
+## transient — campos que no se guardan
+
+<CodeBlock lang="java" title="Excluir campos con transient">
+{`import java.io.Serializable;
+
+class Sesion implements Serializable {
+    private static final long serialVersionUID = 1L;
+
+    String usuario;
+    transient String tokenSeguridad;  // NO se guarda en disco
+    transient long horaExpiracion;     // NO se guarda
+
+    Sesion(String usuario, String token) {
+        this.usuario = usuario;
+        this.tokenSeguridad = token;
+        this.horaExpiracion = System.currentTimeMillis() + 3600000;
+    }
+
+    public String toString() {
+        return usuario + " (token: " + tokenSeguridad + ")";
+    }
+}`}
+</CodeBlock>
+
+## serialVersionUID — control de versiones
+
+```java
+class MiClase implements Serializable {
+    // Si cambias la clase, cambia este número
+    private static final long serialVersionUID = 1L;
+    // ...
+}
+```
+
+**Si NO declaras serialVersionUID:**
+- Java genera uno automáticamente basado en la estructura de la clase
+- Si cambias algún campo, el UID cambia y la deserialización falla
+- **Siempre** declara serialVersionUID explícitamente
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

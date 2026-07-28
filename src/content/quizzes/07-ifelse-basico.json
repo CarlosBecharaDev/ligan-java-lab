@@ -1,0 +1,48 @@
+{
+  "id": "quiz-basico-ifelse",
+  "lessonSlug": "if-else",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\n```java\nint x = 10;\nif (x > 5) {\n    System.out.println(\"A\");\n} else {\n    System.out.println(\"B\");\n}\n```",
+      "options": ["A", "B", "Error", "Nada"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. 10 > 5 es true, se ejecuta el bloque if.",
+        "10 > 5 es true, no se ejecuta el else.",
+        "El código compila sin errores.",
+        "El if se ejecuta porque la condición es true."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué operador usas para comparar si dos valores primitivos son iguales?",
+      "options": ["=", "==", "equals", "!="],
+      "correctIndex": 1,
+      "explanations": [
+        "= es asignación, no comparación.",
+        "Correcto. == compara si dos valores primitivos son iguales.",
+        "equals() es para comparar objetos String.",
+        "!= es el operador de desigualdad (diferente)."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué sucede si un if no tiene bloque (sin llaves)?",
+      "options": [
+        "Error de compilación",
+        "Nada, el if no ejecuta código",
+        "Ejecuta el else automáticamente",
+        "Lanza excepción en runtime"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El if vacío compila, solo no hace nada.",
+        "Correcto. Un if sin bloque no ejecuta código y continúa.",
+        "El else solo se ejecuta si existe y la condición es false.",
+        "No lanza excepción."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/ContentLayout.astro';
+import QuizCard from '@components/quiz/QuizCard.astro';
+
+export async function getStaticPaths() {
+  const quizzes = await getCollection('quizzes');
+  const lessons = await getCollection('lessons');
+
+  // Group quizzes by lessonSlug
+  const quizMap = new Map<string, typeof quizzes>();
+  for (const quiz of quizzes) {
+    const slug = quiz.data.lessonSlug;
+    if (!quizMap.has(slug)) quizMap.set(slug, []);
+    quizMap.get(slug)!.push(quiz);
+  }
+
+  return Array.from(quizMap.entries()).map(([slug, quizEntries]) => {
+    const lesson = lessons.find((l) => l.data.slug === slug);
+    return {
+      params: { slug },
+      props: {
+        slug,
+        lessonTitle: lesson?.data.title ?? slug,
+        quizzes: quizEntries.map((q) => q.data),
+      },
+    };
+  });
+}
+
+const { slug, lessonTitle, quizzes } = Astro.props;
+---
+
+<ContentLayout title={`Quiz: ${lessonTitle}`} description="Pon a prueba tus conocimientos">
+  <div style="max-width:var(--content-width);margin:0 auto">
+    <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:var(--space-sm)">🧠 Quiz: {lessonTitle}</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-lg)" data-i18n="quiz.intro">
+      Responde todas las preguntas para evaluar tu comprensión del tema.
+    </p>
+
+    {quizzes.length > 0 ? (
+      quizzes.map((quiz) => (
+        <QuizCard quiz={quiz} />
+      ))
+    ) : (
+      <div style="text-align:center;padding:var(--space-2xl);background:rgba(0,0,0,0.05);border:2px solid var(--win-border)">
+        <p style="color:var(--win-muted);font-size:var(--text-lg)" data-i18n="quiz.empty">📝 Próximamente habrá quizzes para esta lección.</p>
+      </div>
+    )}
+
+    <div style="margin-top:var(--space-xl);text-align:center">
+      <button
+        id="mark-quiz-complete-btn"
+        data-slug={slug}
+        data-i18n="quiz.mark-complete"
+        style="padding:var(--space-sm) var(--space-lg);background:var(--success);color:#000;font-weight:600;border:2px solid #1A8030;border-top-color:#4DE860;border-left-color:#4DE860;cursor:pointer;font-family:var(--font-ui);font-size:var(--text-base);box-shadow:2px 2px 0 rgba(0,0,0,0.3)"
+      >
+        ✅ Marcar quiz como completado
+      </button>
+      <span id="quiz-complete-status" style="display:none;margin-left:var(--space-sm);color:var(--success);font-weight:600;font-family:var(--font-ui)" data-i18n="quiz.completed">✓ Completado</span>
+    </div>
+    <div style="margin-top:var(--space-md);text-align:center">
+      <a href={`/tema/${slug}`} style="color:var(--win-link);text-decoration:none;font-family:var(--font-ui)" data-i18n="quiz.back">← Volver a la lección</a>
+    </div>
+  </div>
+</ContentLayout>
+
+<script>
+  (function() {
+    const KEY = 'ligan-java-lab-progress';
+    const slug = '{slug}';
+    const btn = document.getElementById('mark-quiz-complete-btn');
+    const status = document.getElementById('quiz-complete-status');
+
+    function loadProgress() {
+      try {
+        const raw = localStorage.getItem(KEY);
+        return raw ? JSON.parse(raw) : { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
+      } catch { return { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null }; }
+    }
+
+    function saveProgress(data) {
+      localStorage.setItem(KEY, JSON.stringify(data));
+    }
+
+    function updateUI(data) {
+      if (data.quizzes.includes(slug)) {
+        btn.style.display = 'none';
+        status.style.display = 'inline';
+      }
+    }
+
+    updateUI(loadProgress());
+
+    btn?.addEventListener('click', () => {
+      const data = loadProgress();
+      if (!data.quizzes.includes(slug)) {
+        data.quizzes.push(slug);
+        saveProgress(data);
+        updateUI(data);
+      }
+    });
+  })();
+</script>

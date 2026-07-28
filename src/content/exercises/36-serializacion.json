@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-serializacion-facil",
+    "title": "Serializar Persona",
+    "difficulty": "facil",
+    "description": "Crea una clase Persona que implemente Serializable, guárdala en un archivo y recupérala.",
+    "template": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        Persona p = new Persona(\"Ana\", 25);\n        // Serializa la persona en \"persona.dat\"\n        // Deserializa la persona y muestra sus datos\n    }\n}\n\nclass Persona {\n    String nombre;\n    int edad;\n    Persona(String nombre, int edad) {\n        this.nombre = nombre;\n        this.edad = edad;\n    }\n}",
+    "hints": [
+      "Persona debe implementar la interfaz Serializable",
+      "Usa ObjectOutputStream para escribir el objeto",
+      "Usa ObjectInputStream para leer el objeto"
+    ],
+    "solution": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        Persona p = new Persona(\"Ana\", 25);\n\n        // Serializar\n        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(\"persona.dat\"))) {\n            oos.writeObject(p);\n            System.out.println(\"Persona serializada\");\n        } catch (IOException e) {\n            System.out.println(\"Error al serializar: \" + e.getMessage());\n        }\n\n        // Deserializar\n        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(\"persona.dat\"))) {\n            Persona cargada = (Persona) ois.readObject();\n            System.out.println(\"Nombre: \" + cargada.nombre + \", Edad: \" + cargada.edad);\n        } catch (IOException | ClassNotFoundException e) {\n            System.out.println(\"Error al deserializar: \" + e.getMessage());\n        }\n    }\n}\n\nclass Persona implements Serializable {\n    String nombre;\n    int edad;\n    Persona(String nombre, int edad) {\n        this.nombre = nombre;\n        this.edad = edad;\n    }\n}",
+    "solutionExplanation": "Persona implementa Serializable, lo que permite guardar su estado en un archivo. ObjectOutputStream escribe el objeto y ObjectInputStream lo lee y reconstruye.",
+    "expectedOutput": "Persona serializada\nNombre: Ana, Edad: 25",
+    "lessonSlug": "serializacion"
+  },
+  {
+    "id": "ex-serializacion-normal",
+    "title": "Serializar lista",
+    "difficulty": "normal",
+    "description": "Serializa un ArrayList de objetos Producto, guárdalo y recupéralo.",
+    "template": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<Producto> lista = new ArrayList<>();\n        lista.add(new Producto(\"Laptop\", 1200));\n        lista.add(new Producto(\"Mouse\", 25));\n        lista.add(new Producto(\"Teclado\", 50));\n        // Serializa y deserializa la lista\n    }\n}\n\nclass Producto implements Serializable {\n    String nombre;\n    double precio;\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n}",
+    "hints": [
+      "ArrayList ya implementa Serializable",
+      "Producto también debe implementar Serializable",
+      "Al deserializar, haz cast con (ArrayList<Producto>)"
+    ],
+    "solution": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\nimport java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<Producto> lista = new ArrayList<>();\n        lista.add(new Producto(\"Laptop\", 1200));\n        lista.add(new Producto(\"Mouse\", 25));\n        lista.add(new Producto(\"Teclado\", 50));\n\n        // Serializar\n        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(\"productos.dat\"))) {\n            oos.writeObject(lista);\n            System.out.println(\"Lista serializada con \" + lista.size() + \" productos\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n\n        // Deserializar\n        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(\"productos.dat\"))) {\n            ArrayList<Producto> cargada = (ArrayList<Producto>) ois.readObject();\n            for (Producto p : cargada) {\n                System.out.println(p.nombre + \": $\" + p.precio);\n            }\n        } catch (IOException | ClassNotFoundException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}\n\nclass Producto implements Serializable {\n    String nombre;\n    double precio;\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n}",
+    "solutionExplanation": "ArrayList implementa Serializable. Al serializar toda la lista, todos los objetos Producto dentro de ella también se serializan siempre que implementen Serializable.",
+    "expectedOutput": "Lista serializada con 3 productos\nLaptop: $1200.0\nMouse: $25.0\nTeclado: $50.0",
+    "lessonSlug": "serializacion"
+  },
+  {
+    "id": "ex-serializacion-dificil",
+    "title": "Serialización parcial",
+    "difficulty": "dificil",
+    "description": "Crea una clase con un campo transient que no se serialice, demostrando la serialización parcial.",
+    "template": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        Cuenta cuenta = new Cuenta(\"Juan\", 5000.0, \"SECRET123\");\n        // Serializa la cuenta, deserializa y muestra\n        // El password NO debe guardarse\n    }\n}\n\nclass Cuenta implements Serializable {\n    String titular;\n    double saldo;\n    String password; // Este campo debe ser transient\n    Cuenta(String titular, double saldo, String password) {\n        this.titular = titular;\n        this.saldo = saldo;\n        this.password = password;\n    }\n}",
+    "hints": [
+      "Agrega la palabra clave 'transient' antes del tipo del campo password",
+      "Al deserializar, password tendrá valor null",
+      "Muestra la cuenta antes y después para comparar"
+    ],
+    "solution": "import java.io.Serializable;\nimport java.io.ObjectOutputStream;\nimport java.io.ObjectInputStream;\nimport java.io.FileOutputStream;\nimport java.io.FileInputStream;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        Cuenta cuenta = new Cuenta(\"Juan\", 5000.0, \"SECRET123\");\n\n        System.out.println(\"=== Antes de serializar ===\");\n        System.out.println(\"Titular: \" + cuenta.titular);\n        System.out.println(\"Saldo: \" + cuenta.saldo);\n        System.out.println(\"Password: \" + cuenta.password);\n\n        // Serializar\n        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(\"cuenta.dat\"))) {\n            oos.writeObject(cuenta);\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n\n        // Deserializar\n        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(\"cuenta.dat\"))) {\n            Cuenta cargada = (Cuenta) ois.readObject();\n            System.out.println(\"\\n=== Después de deserializar ===\");\n            System.out.println(\"Titular: \" + cargada.titular);\n            System.out.println(\"Saldo: \" + cargada.saldo);\n            System.out.println(\"Password: \" + cargada.password);\n        } catch (IOException | ClassNotFoundException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}\n\nclass Cuenta implements Serializable {\n    String titular;\n    double saldo;\n    transient String password;\n    Cuenta(String titular, double saldo, String password) {\n        this.titular = titular;\n        this.saldo = saldo;\n        this.password = password;\n    }\n}",
+    "solutionExplanation": "La palabra clave 'transient' indica que el campo password no debe serializarse. Al deserializar, su valor será null, protegiendo información sensible.",
+    "expectedOutput": "=== Antes de serializar ===\nTitular: Juan\nSaldo: 5000.0\nPassword: SECRET123\n\n=== Después de deserializar ===\nTitular: Juan\nSaldo: 5000.0\nPassword: null",
+    "lessonSlug": "serializacion"
+  }
+]

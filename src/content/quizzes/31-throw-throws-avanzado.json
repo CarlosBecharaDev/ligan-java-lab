@@ -1,0 +1,92 @@
+{
+  "id": "quiz-31-throw-throws-avanzado",
+  "lessonSlug": "throw-throws",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la diferencia fundamental entre `throw` y `throws`?",
+      "options": [
+        "throw se usa en clases, throws se usa en interfaces",
+        "throw lanza una excepción concreta, throws declara que un método puede lanzar una excepción",
+        "throw es para checked exceptions, throws es para unchecked",
+        "No hay diferencia, son intercambiables"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throw y throws no tienen restricciones de clases vs interfaces.",
+        "Correcto. throw es una sentencia que lanza una excepción concreta (throw new Ex()), mientras que throws es una cláusula en la firma del método que declara que puede lanzar excepciones de cierto tipo.",
+        "Ambos pueden usarse con checked y unchecked exceptions.",
+        "Son palabras clave distintas con funciones completamente diferentes."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Se puede usar `throw` con una excepción que no haya sido instanciada?",
+      "options": [
+        "Sí, Java crea la instancia automáticamente",
+        "No, primero se debe crear la instancia: throw new Excepcion(...)",
+        "Solo si la excepción tiene un constructor vacío",
+        "Solo si se declara la excepción con throws en el método"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java no crea instancias de excepciones automáticamente.",
+        "Correcto. throw requiere un objeto de excepción ya instanciado. La forma correcta es: throw new MiExcepcion(\"mensaje\").",
+        "throw no funciona sin una instancia, sin importar el constructor.",
+        "throws no tiene relación con la capacidad de usar throw."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Si un método A llama a un método B que declara `throws IOException`, ¿qué opciones tiene A?",
+      "options": [
+        "Ignorar la excepción y asumir que nunca ocurrirá",
+        "Capturarla con try-catch o propagarla con throws en su propia firma",
+        "Solo puede capturarla, nunca propagarla",
+        "Solo puede propagarla, nunca capturarla"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Ignorar una checked exception causa error de compilación.",
+        "Correcto. Cuando un método llama a otro que declara una checked exception, el método llamador debe manejarla (try-catch) o propagarla (declarar throws en su propia firma).",
+        "Ambas opciones son válidas: capturar o propagar.",
+        "Ambas opciones son válidas: capturar o propagar."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Puede un método lanzar una unchecked exception (como NullPointerException) sin declararla con `throws`?",
+      "options": [
+        "No, siempre se debe declarar con throws",
+        "Sí, porque las unchecked exceptions no requieren ser declaradas",
+        "Solo si se usa try-catch en el método",
+        "Solo si la excepción es un Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Las unchecked exceptions no requieren ser declaradas con throws.",
+        "Correcto. Las unchecked exceptions (RuntimeException y sus subclases) no necesitan ser declaradas en la firma del método, aunque es opcional hacerlo por documentación.",
+        "try-catch no es necesario para unchecked exceptions.",
+        "Las unchecked exceptions no son Errors; son categorías diferentes."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es exception chaining en Java?",
+      "options": [
+        "Lanzar múltiples excepciones una después de otra en el mismo catch",
+        "Crear una excepción que encapsula otra como causa, usando el constructor: new Excepcion(\"mensaje\", cause)",
+        "Encadenar múltiples bloques catch uno después de otro",
+        "Una técnica para evitar usar try-catch en el código"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Exception chaining no se refiere a lanzar excepciones consecutivas.",
+        "Correcto. Exception chaining consiste en crear una nueva excepción que encapsula la excepción original como causa (cause), preservando el stack trace original. Se usa: new MiExcepcion(\"mensaje\", excepcionOriginal).",
+        "Encadenar catch es una característica del lenguaje, no exception chaining.",
+        "Exception chaining no evita el uso de try-catch; complementa el manejo de errores."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-throw-throws-facil",
+    "title": "Lanzar excepción",
+    "difficulty": "facil",
+    "description": "Crea un método llamado validarEdad que reciba un entero y lance IllegalArgumentException con el mensaje 'La edad no puede ser negativa' si el valor es menor que 0. Si es válida, muestra 'Edad válida: {edad}'.",
+    "template": "public class LanzarExcepcion {\n    public static void validarEdad(int edad) {\n        // TODO: lanza IllegalArgumentException si edad < 0\n    }\n\n    public static void main(String[] args) {\n        // TODO: llama a validarEdad con 25, -3 y 0 usando try-catch\n    }\n}",
+    "hints": [
+      "Usa una sentencia if para verificar si edad es menor que 0",
+      "Para lanzar la excepción usa: throw new IllegalArgumentException(\"La edad no puede ser negativa\")",
+      "En el main, envuelve cada llamada en un try-catch para manejar la excepción"
+    ],
+    "solution": "public class LanzarExcepcion {\n    public static void validarEdad(int edad) {\n        if (edad < 0) {\n            throw new IllegalArgumentException(\"La edad no puede ser negativa\");\n        }\n        System.out.println(\"Edad válida: \" + edad);\n    }\n\n    public static void main(String[] args) {\n        int[] edades = {25, -3, 0};\n        for (int edad : edades) {\n            try {\n                validarEdad(edad);\n            } catch (IllegalArgumentException e) {\n                System.out.println(\"Error: \" + e.getMessage());\n            }\n        }\n    }\n}",
+    "solutionExplanation": "El método validarEdad verifica si el argumento es negativo. Si lo es, usa 'throw' para lanzar IllegalArgumentException con un mensaje descriptivo. Si no es negativo, simplemente muestra que la edad es válida. En el main se recorre un arreglo con diferentes valores y cada llamada se envuelve en try-catch.",
+    "expectedOutput": "Edad válida: 25\nError: La edad no puede ser negativa\nEdad válida: 0",
+    "lessonSlug": "throw-throws"
+  },
+  {
+    "id": "ex-throw-throws-normal",
+    "title": "Cadena de métodos",
+    "difficulty": "normal",
+    "description": "Crea una cadena de métodos: el método raizCuadrada recibe un double y lanza IllegalArgumentException si es negativo. El método calcular recibe un double, llama a raizCuadrada y propaga la excepción con 'throws'. El método ejecutar llama a calcular dentro de un try-catch y muestra el resultado o el error.",
+    "template": "public class CadenaMetodos {\n    public static double raizCuadrada(double numero) {\n        // TODO: lanza IllegalArgumentException si numero < 0\n    }\n\n    public static double calcular(double valor) throws IllegalArgumentException {\n        // TODO: llama a raizCuadrada y propaga la excepción\n    }\n\n    public static void ejecutar(double valor) {\n        // TODO: llama a calcular con try-catch\n    }\n\n    public static void main(String[] args) {\n        ejecutar(25);\n        ejecutar(-4);\n        ejecutar(16);\n    }\n}",
+    "hints": [
+      "En raizCuadrada, verifica si numero < 0 y lanza IllegalArgumentException",
+      "En calcular, simplemente llama a raizCuadrada(valor) — el 'throws' en la firma indica que puede propagar la excepción",
+      "En ejecutar, envuelve la llamada a calcular en try-catch para capturar y manejar la excepción"
+    ],
+    "solution": "public class CadenaMetodos {\n    public static double raizCuadrada(double numero) {\n        if (numero < 0) {\n            throw new IllegalArgumentException(\"No se puede calcular raíz cuadrada de número negativo: \" + numero);\n        }\n        return Math.sqrt(numero);\n    }\n\n    public static double calcular(double valor) throws IllegalArgumentException {\n        return raizCuadrada(valor);\n    }\n\n    public static void ejecutar(double valor) {\n        try {\n            double resultado = calcular(valor);\n            System.out.println(\"Raíz cuadrada de \" + valor + \" = \" + resultado);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n\n    public static void main(String[] args) {\n        ejecutar(25);\n        ejecutar(-4);\n        ejecutar(16);\n    }\n}",
+    "solutionExplanation": "La excepción nace en raizCuadrada cuando el número es negativo. El método calcular usa 'throws IllegalArgumentException' en su firma para indicar que puede propagar esa excepción sin manejarla. El método ejecutar es quien finalmente captura la excepción con try-catch. Esto demuestra el patrón de propagación de excepciones a través de una cadena de llamadas.",
+    "expectedOutput": "Raíz cuadrada de 25.0 = 5.0\nError: No se puede calcular raíz cuadrada de número negativo: -4.0\nRaíz cuadrada de 16.0 = 4.0",
+    "lessonSlug": "throw-throws"
+  },
+  {
+    "id": "ex-throw-throws-dificil",
+    "title": "Validador completo",
+    "difficulty": "dificil",
+    "description": "Crea un método registrarUsuario(String nombre, int edad, String email) que lance diferentes excepciones según el error: NullPointerException si el nombre es null, IllegalArgumentException si el nombre está vacío, IllegalArgumentException si la edad está fuera del rango [0, 120], NullPointerException si el email es null, y ArithmeticException si el email no contiene '@'. Cada throw debe tener un mensaje descriptivo.",
+    "template": "public class ValidadorCompleto {\n    public static void registrarUsuario(String nombre, int edad, String email) {\n        // TODO: valida nombre, edad y email lanzando distintas excepciones\n    }\n\n    public static void main(String[] args) {\n        String[][] usuarios = {\n            {\"Ana\", \"25\", \"ana@mail.com\"},\n            {\"\", \"25\", \"test@test.com\"},\n            {\"Bob\", \"-5\", \"bob@mail.com\"},\n            {\"Carlos\", \"200\", \"carlos@mail.com\"},\n            {\"Diana\", \"30\", \"null\"},\n            {\"Eve\", \"22\", \"eve\"}\n        };\n        // TODO: itera y prueba cada usuario con try-catch\n    }\n}",
+    "hints": [
+      "Valida el nombre primero: si es null lanza NullPointerException, si está vacío lanza IllegalArgumentException",
+      "Valida la edad: si es menor que 0 o mayor que 120 lanza IllegalArgumentException con mensaje descriptivo",
+      "Valida el email: si es null lanza NullPointerException, si no contiene '@' lanza ArithmeticException",
+      "Cada validación debe usar throw con un mensaje que incluya el nombre del campo con error"
+    ],
+    "solution": "public class ValidadorCompleto {\n    public static void registrarUsuario(String nombre, int edad, String email) {\n        if (nombre == null) {\n            throw new NullPointerException(\"El nombre no puede ser null\");\n        }\n        if (nombre.isEmpty()) {\n            throw new IllegalArgumentException(\"El nombre no puede estar vacío\");\n        }\n        if (edad < 0 || edad > 120) {\n            throw new IllegalArgumentException(\"La edad debe estar entre 0 y 120, valor recibido: \" + edad);\n        }\n        if (email == null) {\n            throw new NullPointerException(\"El email no puede ser null\");\n        }\n        if (!email.contains(\"@\")) {\n            throw new ArithmeticException(\"El email debe ser válido (contener @): \" + email);\n        }\n        System.out.println(\"Usuario registrado: \" + nombre + \", Edad: \" + edad + \", Email: \" + email);\n    }\n\n    public static void main(String[] args) {\n        String[][] usuarios = {\n            {\"Ana\", \"25\", \"ana@mail.com\"},\n            {\"\", \"25\", \"test@test.com\"},\n            {\"Bob\", \"-5\", \"bob@mail.com\"},\n            {\"Carlos\", \"200\", \"carlos@mail.com\"},\n            {\"Diana\", \"30\", \"null\"},\n            {\"Eve\", \"22\", \"eve\"}\n        };\n        for (String[] usuario : usuarios) {\n            try {\n                registrarUsuario(usuario[0], Integer.parseInt(usuario[1]), usuario[2]);\n            } catch (NullPointerException | IllegalArgumentException | ArithmeticException e) {\n                System.out.println(\"Error de validación: \" + e.getMessage());\n            }\n        }\n    }\n}",
+    "solutionExplanation": "El método registrarUsuario realiza validaciones secuenciales usando throw con distintos tipos de excepciones según la naturaleza del error: NullPointerException para campos null, IllegalArgumentException para valores fuera de rango o vacíos, y ArithmeticException para formato inválido de email. Cada throw incluye un mensaje descriptivo. El main prueba múltiples usuarios, algunos válidos y otros con diferentes tipos de errores.",
+    "expectedOutput": "Usuario registrado: Ana, Edad: 25, Email: ana@mail.com\nError de validación: El nombre no puede estar vacío\nError de validación: La edad debe estar entre 0 y 120, valor recibido: -5\nError de validación: La edad debe estar entre 0 y 120, valor recibido: 200\nError de validación: El email debe ser válido (contener @): null\nError de validación: El email debe ser válido (contener @): eve",
+    "lessonSlug": "throw-throws"
+  }
+]

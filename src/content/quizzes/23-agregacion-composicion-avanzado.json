@@ -1,0 +1,109 @@
+{
+  "id": "quiz-23-agregacion-composicion-avanzado",
+  "lessonSlug": "agregacion-composicion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cómo se implementa agregación?",
+      "options": [
+        "El objeto se crea en el constructor del contenedor",
+        "El objeto se pasa como parámetro (se recibe una referencia)",
+        "El objeto se crea dentro del método",
+        "El objeto es static"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Eso sería composición.",
+        "Correcto. Agregación = referencia recibida, no creada internamente.",
+        "No se crea dentro del método.",
+        "No es static."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se implementa composición?",
+      "options": [
+        "Se recibe como parámetro",
+        "Se crea el objeto dentro del contenedor (new en constructor o atributo)",
+        "Se hereda",
+        "Se usa singleton"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Recibir como parámetro es agregación.",
+        "Correcto. El contenedor crea y posee el objeto.",
+        "No es herencia.",
+        "No es singleton."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué problema resuelve la composición sobre la herencia?",
+      "options": [
+        "Es más rápida",
+        "Evita acoplamiento fuerte y permite mayor flexibilidad",
+        "Permite múltiples constructores",
+        "No requiere interfaces"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No es cuestión de velocidad.",
+        "Correcto. Composición > Herencia: más flexible y menos acoplado.",
+        "No tiene relación con constructores.",
+        "Puede usar interfaces igual."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es un objeto Value Object?",
+      "options": [
+        "Un objeto que cambia constantemente",
+        "Un objeto inmutable que representa un valor (como Money o Date)",
+        "Un objeto con muchos atributos",
+        "Un objeto estático"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los Value Objects son inmutables.",
+        "Correcto. Representan valores como $10.50, no entidades con identidad.",
+        "No es por cantidad de atributos.",
+        "No es por static."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es el patrón de diseño \"Composition over Inheritance\"?",
+      "options": [
+        "Usar herencia siempre",
+        "Preferir composición para reutilizar código en vez de herencia",
+        "Nunca usar herencia",
+        "Usar solo interfaces"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No siempre herencia.",
+        "Correcto. Preferir composición cuando es posible.",
+        "La herencia sigue siendo válida.",
+        "No es solo interfaces."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Qué pasaría si destruyes un Pedido pero sus Productos no existen más?",
+      "options": [
+        "Es composición (el Pedido \"posee\" los Productos)",
+        "Es agregación (los Productos existen independientemente)",
+        "Es herencia",
+        "No tiene relación"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Si los Productos mueren con el Pedido, es composición.",
+        "Si sobreviven, es agregación.",
+        "No es herencia.",
+        "Sí tiene relación."
+      ]
+    }
+  ]
+}

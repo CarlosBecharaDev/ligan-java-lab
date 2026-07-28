@@ -1,0 +1,671 @@
+---
+title: "Agregación y Composición"
+slug: "agregacion-composicion"
+description: "Aprende a modelar relaciones entre objetos en Java. Diferencia entre agregación (referencia débil) y composición (propiedad fuerte)."
+module: "04-poo"
+level: "Avanzado"
+order: 23
+estimatedMinutes: 35
+objectives:
+  - "Entender la relación \"tiene-un\" (has-a) entre objetos"
+  - "Distinguir entre agregación y composición"
+  - "Construir objetos complejos a partir de partes"
+  - "Pasar objetos como parámetros de métodos"
+  - "Modelar sistemas del mundo real con relaciones entre objetos"
+prerequisites:
+  - "clases-objetos"
+  - "clases-abstractas-interfaces"
+realWorldExamples:
+  - domain: "Salud"
+    description: "Ejemplo practico de Salud"
+    code: "public class Medicamento {\n    String nombre;\n    double dosis;\n\n    Medicamento(String nombre, double dosis) {\n        this.nombre = nombre;\n        this.dosis = dosis;\n    }\n\n    void mostrar() {\n        System.out.println(\"  Medicamento: \" + nombre + \" \" + dosis + \"mg\");\n    }\n}\n\n// Composición: una Receta CREA sus medicamentos\npublic class Receta {\n    Medico medico;  // Agregación: referencia débil\n    ArrayList<Medicamento> medicamentos;\n    String fecha;\n\n    Receta(Medico medico, String ..."
+    result: "Composición: una Receta CREA sus medicamentos"
+  - domain: "Ecommerce"
+    description: "Ejemplo practico de Ecommerce"
+    code: "public class Producto {\n    String nombre;\n    double precio;\n\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n}\n\npublic class ItemPedido {\n    Producto producto;  // Agregación: referencia al producto\n    int cantidad;\n\n    ItemPedido(Producto producto, int cantidad) {\n        this.producto = producto;\n        this.cantidad = cantidad;\n    }\n\n    double calcularSubtotal() {\n        return producto.precio * cantidad;\n    }\n\n    void ..."
+    result: "Agregación: referencia al producto"
+hasInteractive: false
+comparisons:
+  - title: "Agregación vs Composición"
+    items:
+      - name: "Agregación (tiene-un)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso izquierdo"
+      - name: "Composición (se-compone-de)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso derecho"
+    recommendation: "Usa la opcion que mejor se adapte a tu caso especifico"
+videos: []
+faqs:
+  - question: "¿Cómo sé si es agregación o composición?"
+    answer: "Pregúntate: si elimino el contenedor, ¿el contenido sigue teniendo sentido? Si sí, es agregación. Si no, es composición. Un Hospital sin Pacientes sigue siendo Hospital (agregación). Un Pedido sin Items no existe (composición)."
+  - question: "¿Puedo mezclar ambas en la misma clase?"
+    answer: "Sí. Una clase puede tener atributos de agregación y composición al mismo tiempo. Por ejemplo, un Hospital agrega Pacientes (agregación) pero se compone de Consultas (composición)."
+  - question: "¿Cómo paso un objeto como parámetro?"
+    answer: "Simplemente usa el tipo del objeto como tipo del parámetro: `void atender(Paciente p)`. Java pasa una referencia al objeto, no una copia."
+  - question: "¿Qué pasa con la memoria en composición?"
+    answer: "Cuando se elimina el contenedor (o ya no hay referencias), el recolector de basura de Java elimina también las partes, ya que nadie más las referencia."
+sources:
+  - title: "Oracle - Passing Information to a Method"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Composition vs Aggregation"
+    url: "https://www.baeldung.com/java-composition-aggregation"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Association Composition and Aggregation in Java"
+    url: "https://www.geeksforgeeks.org/association-composition-aggregation-java/"
+    date: "2025-07-27"
+  - title: "Oracle - Controlling Access to Members of a Class"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Objetivos de Aprendizaje
+
+Al finalizar esta lección, podrás:
+- Entender la relación "tiene-un" (has-a) entre objetos
+- Distinguir entre agregación y composición
+- Construir objetos complejos a partir de partes
+- Pasar objetos como parámetros de métodos
+- Modelar sistemas del mundo real con relaciones entre objetos
+
+---
+
+## ¿Qué es la Relación Has-A?
+
+En POO, cuando una clase **contiene** una referencia a otra clase, decimos que tiene una relación **has-a** (tiene-un). Esto es diferente de la herencia (is-a):
+
+```java
+// Relación has-a: Un Hospital TIENE Pacientes
+public class Hospital {
+    String nombre;
+    Paciente[] pacientes;  // El hospital "tiene" pacientes
+}
+
+// Relación is-a: Un Doctor ES un Persona
+public class Doctor extends Persona {
+    String especialidad;
+}
+```
+
+<CodeBlock
+  title="Relación has-a básica"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    int edad;
+
+    Paciente(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " (" + edad + " años)");
+    }
+}
+
+// Un Consulta TIENE UN Paciente (has-a)
+public class Consulta {
+    Paciente paciente;  // Referencia a otro objeto
+    String motivo;
+    String fecha;
+
+    Consulta(Paciente paciente, String motivo, String fecha) {
+        this.paciente = paciente;
+        this.mostrar = motivo;
+        this.fecha = fecha;
+    }
+
+    void mostrarDetalle() {
+        System.out.println("Consulta del " + fecha);
+        System.out.println("Paciente: " + paciente.nombre);
+        System.out.println("Motivo: " + motivo);
+    }
+
+    public static void main(String[] args) {
+        Paciente p = new Paciente("María", 35);
+        Consulta c = new Consulta(p, "Dolor de cabeza", "2025-01-15");
+        c.mostrarDetalle();
+    }
+}`}
+/>
+
+**¿Cuándo usar has-a?**
+- Cuando una clase **necesita** otra para funcionar
+- Cuando un objeto **contiene** o **usa** otros objetos
+- Cuando modelas cosas del mundo real (un carro tiene un motor, un hospital tiene pacientes)
+
+---
+
+## Agregación (Referencia Débil)
+
+En la **agregación**, un objeto contiene una referencia a otro, pero ambos **pueden existir independientemente**. Es una relación más flexible:
+
+```java
+// Un Paciente puede existir sin un Hospital
+// Un Hospital puede existir sin ese Paciente específico
+public class Hospital {
+    String nombre;
+    ArrayList<Paciente> pacientes;  // Referencia débil
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.pacientes = new ArrayList<>();
+    }
+
+    void agregarPaciente(Paciente p) {
+        pacientes.add(p);
+    }
+
+    void mostrarPacientes() {
+        System.out.println("Hospital " + nombre + ":");
+        for (Paciente p : pacientes) {
+            System.out.println("  - " + p.nombre);
+        }
+    }
+}
+
+public class Paciente {
+    String nombre;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+    }
+}
+
+// Ejemplo: el paciente sobrevive si se "sale" del hospital
+Paciente p = new Paciente("Carlos");
+Hospital h1 = new Hospital("Hospital Central");
+h1.agregarPaciente(p);
+
+// Carlos sigue existiendo aunque lo saquen del hospital
+```
+
+**Características de la agregación:**
+- Los objetos se crean por separado
+- Se pasan como referencia (no se copian)
+- Si se elimina el contenedor, el contenido **sigue existiendo**
+- Relación voluntaria: el contenido puede pertenecer a varios contenedores
+
+<CodeBlock
+  title="Agregación: Hospital con Pacientes"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    String cedula;
+
+    Paciente(String nombre, String cedula) {
+        this.nombre = nombre;
+        this.cedula = cedula;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " | C.I: " + cedula);
+    }
+}
+
+public class Consulta {
+    Paciente paciente;  // Agregación: referencia débil
+    String fecha;
+    String diagnostico;
+
+    Consulta(Paciente paciente, String fecha, String diagnostico) {
+        this.paciente = paciente;
+        this.fecha = fecha;
+        this.diagnostico = diagnostico;
+    }
+
+    void mostrarConsulta() {
+        System.out.println("Fecha: " + fecha);
+        System.out.println("Paciente: " + paciente.nombre);
+        System.out.println("Diagnóstico: " + diagnostico);
+    }
+}
+
+public class Hospital {
+    String nombre;
+    ArrayList<Consulta> consultas;
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.consultas = new ArrayList<>();
+    }
+
+    void agendarConsulta(Consulta c) {
+        consultas.add(c);
+    }
+
+    void mostrarConsultas() {
+        System.out.println("Consultas del " + nombre + ":");
+        for (Consulta c : consultas) {
+            System.out.println("  - " + c.paciente.nombre + ": " + c.diagnostico);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Crear pacientes primero (independientes)
+        Paciente p1 = new Paciente("Ana García", "12345678");
+        Paciente p2 = new Paciente("Luis Pérez", "87654321");
+
+        // Crear consultas (agregan referencias a pacientes)
+        Consulta c1 = new Consulta(p1, "2025-01-10", "Resfriado común");
+        Consulta c2 = new Consulta(p2, "2025-01-12", "Control general");
+        Consulta c3 = new Consulta(p1, "2025-01-20", "Seguimiento");
+
+        // Hospital agrega las consultas
+        Hospital h = new Hospital("Hospital Central");
+        h.agendarConsulta(c1);
+        h.agendarConsulta(c2);
+        h.agendarConsulta(c3);
+
+        h.mostrarConsultas();
+
+        // p1 sigue existiendo fuera del hospital
+        System.out.println("\nPaciente fuera: " + p1.nombre);
+    }
+}`}
+/>
+
+---
+
+## Composición (Propiedad Fuerte)
+
+En la **composición**, un objeto **crea y controla** a sus partes. Cuando el contenedor muere, las partes también mueren. Es una relación de dependencia total:
+
+**Características de la composición:**
+- El contenedor **crea** las partes (con `new` dentro del método)
+- Las partes **no existen fuera** del contenedor
+- Si se destruye el contenedor, las partes se destruyen
+- El contenedor tiene **control total** sobre las partes
+
+<CodeBlock
+  title="Composición: Pedido con Items"
+  lang="java"
+  code={`public class ItemPedido {
+    String producto;
+    int cantidad;
+    double precioUnitario;
+
+    ItemPedido(String producto, int cantidad, double precioUnitario) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
+    double calcularSubtotal() {
+        return cantidad * precioUnitario;
+    }
+}
+
+public class Pedido {
+    String cliente;
+    String fecha;
+    ArrayList<ItemPedido> items;  // Composición: crea sus items
+
+    Pedido(String cliente, String fecha) {
+        this.cliente = cliente;
+        this.fecha = fecha;
+        this.items = new ArrayList<>();
+    }
+
+    // El pedido CREA el item (no recibe uno externo)
+    void agregarProducto(String nombre, int cantidad, double precio) {
+        ItemPedido item = new ItemPedido(nombre, cantidad, precio);
+        items.add(item);
+    }
+
+    double calcularTotal() {
+        double total = 0;
+        for (ItemPedido item : items) {
+            total += item.calcularSubtotal();
+        }
+        return total;
+    }
+
+    void mostrarResumen() {
+        System.out.println("=== Pedido de " + cliente + " (" + fecha + ") ===");
+        for (ItemPedido item : items) {
+            System.out.printf("  %-20s x%d  $%.2f%n",
+                item.producto, item.cantidad, item.calcularSubtotal());
+        }
+        System.out.printf("  TOTAL: $%.2f%n", calcularTotal());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Pedido pedido = new Pedido("María López", "2025-01-15");
+
+        // El pedido crea sus items internamente
+        pedido.agregarProducto("Laptop HP", 1, 1500.00);
+        pedido.agregarProducto("Mouse Logitech", 2, 45.99);
+        pedido.agregarProducto("Cable HDMI", 3, 12.50);
+
+        pedido.mostrarResumen();
+        // === Pedido de María López (2025-01-15) ===
+        //   Laptop HP            x1  $1500.00
+        //   Mouse Logitech       x2  $91.98
+        //   Cable HDMI           x3  $37.50
+        //   TOTAL: $1629.48
+    }
+}`}
+/>
+
+---
+
+## Pasando Objetos como Parámetros
+
+Un concepto clave es pasar objetos como argumentos a métodos. Esto permite que los objetos interactúen entre sí:
+
+```java
+public class Doctor {
+    String nombre;
+    String especialidad;
+
+    Doctor(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+
+    // Recibe un objeto Paciente como parámetro
+    void atender(Paciente p) {
+        System.out.println("Dr. " + nombre + " atiende a " + p.nombre);
+    }
+}
+```
+
+<CodeBlock
+  title="Pasar objetos como parámetros"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    boolean enTratamiento;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+        this.enTratamiento = false;
+    }
+}
+
+public class Medico {
+    String nombre;
+    String especialidad;
+
+    Medico(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+
+    // Recibe un Paciente como parámetro
+    void diagnosticar(Paciente p) {
+        p.enTratamiento = true;
+        System.out.println("Dr. " + nombre + " diagnostica a " + p.nombre);
+    }
+
+    // Recibe dos objetos
+    void transferir(Paciente p, Medico otroMedico) {
+        System.out.println(nombre + " transfiere a " + p.nombre + " con Dr. " + otroMedico.nombre);
+        otroMedico.diagnosticar(p);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Paciente p1 = new Paciente("Carlos");
+        Medico m1 = new Medico("García", "Cardiología");
+        Medico m2 = new Medico("Rodríguez", "Neurología");
+
+        m1.diagnosticar(p1);
+        System.out.println(p1.enTratamiento);  // true
+
+        m1.transferir(p1, m2);
+        // Dr. García transfiere a Carlos con Dr. Rodríguez
+        // Dr. Rodríguez diagnostica a Carlos
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: Salud
+
+<CodeBlock
+  title="Hospital con composición y agregación"
+  lang="java"
+  code={`public class Medicamento {
+    String nombre;
+    double dosis;
+
+    Medicamento(String nombre, double dosis) {
+        this.nombre = nombre;
+        this.dosis = dosis;
+    }
+
+    void mostrar() {
+        System.out.println("  Medicamento: " + nombre + " " + dosis + "mg");
+    }
+}
+
+// Composición: una Receta CREA sus medicamentos
+public class Receta {
+    Medico medico;  // Agregación: referencia débil
+    ArrayList<Medicamento> medicamentos;
+    String fecha;
+
+    Receta(Medico medico, String fecha) {
+        this.medico = medico;
+        this.fecha = fecha;
+        this.medicamentos = new ArrayList<>();
+    }
+
+    // Composición: la receta crea sus medicamentos
+    void agregarMedicamento(String nombre, double dosis) {
+        Medicamento m = new Medicamento(nombre, dosis);
+        medicamentos.add(m);
+    }
+
+    void mostrarReceta() {
+        System.out.println("Receta del " + fecha + " - Dr. " + medico.nombre);
+        for (Medicamento m : medicamentos) {
+            m.mostrar();
+        }
+    }
+}
+
+public class Medico {
+    String nombre;
+    String especialidad;
+
+    Medico(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+}
+
+public class Hospital {
+    String nombre;
+    ArrayList<Medico> medicos;  // Agregación: médicos independientes
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.medicos = new ArrayList<>();
+    }
+
+    void contratarMedico(Medico m) {
+        medicos.add(m);
+    }
+
+    void mostrarEquipo() {
+        System.out.println("Equipo del " + nombre + ":");
+        for (Medico m : medicos) {
+            System.out.println("  Dr. " + m.nombre + " - " + m.especialidad);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Crear médicos (agregación: existen independientes)
+        Medico m1 = new Medico("García", "Cardiología");
+        Medico m2 = new Medico("Rodríguez", "Pediatría");
+
+        // Hospital agrega médicos
+        Hospital h = new Hospital("Hospital Central");
+        h.contratarMedico(m1);
+        h.contratarMedico(m2);
+        h.mostrarEquipo();
+
+        // Crear receta (composición: crea medicamentos)
+        Receta receta = new Receta(m1, "2025-01-15");
+        receta.agregarMedicamento("Aspirina", 500);
+        receta.agregarMedicamento("Ibuprofeno", 400);
+        receta.mostrarReceta();
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: E-commerce
+
+<CodeBlock
+  title="Pedido con composición y agregación"
+  lang="java"
+  code={`public class Producto {
+    String nombre;
+    double precio;
+
+    Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+}
+
+public class ItemPedido {
+    Producto producto;  // Agregación: referencia al producto
+    int cantidad;
+
+    ItemPedido(Producto producto, int cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
+
+    double calcularSubtotal() {
+        return producto.precio * cantidad;
+    }
+
+    void mostrar() {
+        System.out.println("  " + producto.nombre + " x" + cantidad + " = $" + calcularSubtotal());
+    }
+}
+
+// Composición: el Pedido CREA sus items internamente
+public class Pedido {
+    String cliente;
+    ArrayList<ItemPedido> items;
+
+    Pedido(String cliente) {
+        this.cliente = cliente;
+        this.items = new ArrayList<>();
+    }
+
+    // Recibe productos existentes (agregación) y crea items (composición)
+    void agregarProducto(Producto producto, int cantidad) {
+        ItemPedido item = new ItemPedido(producto, cantidad);
+        items.add(item);
+    }
+
+    double calcularTotal() {
+        double total = 0;
+        for (ItemPedido item : items) {
+            total += item.calcularSubtotal();
+        }
+        return total;
+    }
+
+    void mostrarResumen() {
+        System.out.println("Pedido de " + cliente + ":");
+        for (ItemPedido item : items) {
+            item.mostrar();
+        }
+        System.out.printf("Total: $%.2f%n", calcularTotal());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Productos existen independientemente (agregación)
+        Producto laptop = new Producto("Laptop", 1500.00);
+        Producto mouse = new Producto("Mouse", 25.99);
+        Producto teclado = new Producto("Teclado", 45.50);
+
+        // Pedido crea sus items (composición)
+        Pedido pedido = new Pedido("Ana García");
+        pedido.agregarProducto(laptop, 1);
+        pedido.agregarProducto(mouse, 2);
+        pedido.agregarProducto(teclado, 1);
+
+        pedido.mostrarResumen();
+        // Pedido de Ana García:
+        //   Laptop x1 = $1500.00
+        //   Mouse x2 = $51.98
+        //   Teclado x1 = $45.50
+        // Total: $1597.48
+    }
+}`}
+/>
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Has-A** | Relación donde un objeto contiene a otro |
+| **Agregación** | Referencia débil: el contenido puede existir solo |
+| **Composición** | Propiedad fuerte: el contenido muere con el contenedor |
+| **Parámetros** | Pasar objetos como argumentos a métodos |
+
+---
+
+## Preguntas Frecuentes
+
+<details>
+<summary>¿Cómo sé si es agregación o composición?</summary>
+Pregúntate: si elimino el contenedor, ¿el contenido sigue teniendo sentido? Si sí, es agregación. Si no, es composición. Un Hospital sin Pacientes sigue siendo Hospital (agregación). Un Pedido sin Items no existe (composición).
+</details>
+
+<details>
+<summary>¿Puedo mezclar ambas en la misma clase?</summary>
+Sí. Una clase puede tener atributos de agregación y composición al mismo tiempo. Por ejemplo, un Hospital agrega Pacientes (agregación) pero se compone de Consultas (composición).
+</details>
+
+<details>
+<summary>¿Cómo paso un objeto como parámetro?</summary>
+Simplemente usa el tipo del objeto como tipo del parámetro: `void atender(Paciente p)`. Java pasa una referencia al objeto, no una copia.
+</details>
+
+<details>
+<summary>¿Qué pasa con la memoria en composición?</summary>
+Cuando se elimina el contenedor (o ya no hay referencias), el recolector de basura de Java elimina también las partes, ya que nadie más las referencia.
+</details>
+
+---
+
+## Fuentes y Referencias
+
+- [Oracle - Passing Information to a Method](https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html)
+- [Baeldung - Composition vs Aggregation](https://www.baeldung.com/java-composition-aggregation)
+- [GeeksforGeeks - Association Composition and Aggregation in Java](https://www.geeksforgeeks.org/association-composition-aggregation-java/)
+- [Oracle - Controlling Access to Members of a Class](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)

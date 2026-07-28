@@ -1,0 +1,109 @@
+{
+  "id": "quiz-18-constructores-avanzado",
+  "lessonSlug": "constructores",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es el problema?\nPersona(String nombre, int edad) {\n    nombre = nombre;\n    edad = edad;\n}",
+      "options": [
+        "Falta this",
+        "Falta return",
+        "No hay problema",
+        "Error de tipos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Sin this, el parámetro encubre al atributo.",
+        "Los constructores no necesitan return.",
+        "Sí hay problema: los atributos no se inicializan.",
+        "Los tipos son correctos."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿En qué orden debe estar this() en un constructor?",
+      "options": [
+        "En cualquier parte",
+        "Debe ser la primera línea",
+        "Al final del constructor",
+        "Después de las variables locales"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No puede estar en cualquier parte.",
+        "Correcto. this() debe ser la primera instrucción.",
+        "No al final.",
+        "Debe ser la primera línea."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué imprime?\nMascota a = new Mascota(\"Max\", \"Perro\", 3, 10.0);\nMascota b = new Mascota(\"Luna\");\nSystem.out.println(b.edad + \" \" + b.peso);",
+      "options": [
+        "3 10.0",
+        "1 0.0",
+        "0 0.0",
+        "null 0.0"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Es el valor de a, no b.",
+        "Correcto. Mascota(String) llama Mascota(String, String) con edad=1, peso=0.0.",
+        "No es el valor por defecto.",
+        "int no puede ser null."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué pasa si defines un constructor con parámetros?",
+      "options": [
+        "Se mantiene el constructor por defecto",
+        "Java sigue creando el por defecto",
+        "Ya no hay constructor por defecto automáticamente",
+        "Se eliminan todos los constructores"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "No se mantiene automáticamente.",
+        "Java deja de crearlo.",
+        "Correcto. Solo si no hay ningún constructor definido.",
+        "Solo se elimina el por defecto."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es la ventaja de la sobrecarga de constructores?",
+      "options": [
+        "Ahorrar líneas de código",
+        "Crear objetos de diferentes formas con inicialización segura",
+        "Heredar constructores de otra clase",
+        "Hacer los constructores static"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No se trata de ahorrar líneas.",
+        "Correcto. Da flexibilidad al crear objetos sin perder inicialización.",
+        "Los constructores no se heredan.",
+        "Los constructores no pueden ser static."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "¿Qué error?\npublic class A {\n    A() { this(); }\n}",
+      "options": [
+        "No hay error",
+        "Llamada circular: this() se llama a sí mismo infinitamente",
+        "Falta return",
+        "this() solo funciona con parámetros"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Hay error.",
+        "Correcto. A() llama a this() que es A() → stack overflow.",
+        "No es problema de return.",
+        "this() funciona sin parámetros."
+      ]
+    }
+  ]
+}

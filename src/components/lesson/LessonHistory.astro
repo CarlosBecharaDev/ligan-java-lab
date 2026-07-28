@@ -1,0 +1,19 @@
+---
+export interface Props {
+  introducedIn: string;
+  context: string;
+  evolution?: string;
+}
+
+const { introducedIn, context, evolution } = Astro.props;
+---
+
+<div class="lesson-history">
+  <h3 class="lesson-history__title">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+    Historia del concepto
+  </h3>
+  <p><strong>Introducido en:</strong> {introducedIn}</p>
+  <p><strong>Contexto:</strong> {context}</p>
+  {evolution && <p><strong>Evolución:</strong> {evolution}</p>}
+</div>

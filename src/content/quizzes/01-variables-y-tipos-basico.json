@@ -1,0 +1,43 @@
+{
+  "id": "quiz-basico-variables",
+  "lessonSlug": "variables-y-tipos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál de los siguientes NO es un tipo primitivo en Java?",
+      "options": ["int", "boolean", "String", "char"],
+      "correctIndex": 2,
+      "explanations": [
+        "int es un tipo primitivo entero de 32 bits.",
+        "boolean es un tipo primitivo que solo acepta true o false.",
+        "String es una clase (tipo de referencia), no un tipo primitivo.",
+        "char es un tipo primitivo que almacena un carácter Unicode."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué sucede al compilar `int x; System.out.println(x);`?",
+      "options": ["Imprime 0", "Imprime null", "Error de compilación", "Excepción en runtime"],
+      "correctIndex": 2,
+      "explanations": [
+        "Las variables locales no tienen valor por defecto en Java.",
+        "Las variables locales no tienen valor por defecto en Java.",
+        "Correcto. Las variables locales deben inicializarse antes de usarse.",
+        "El error ocurre en compilación, no en runtime."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué palabra clave se usa para declarar una constante en Java?",
+      "options": ["const", "final", "static", "var"],
+      "correctIndex": 1,
+      "explanations": [
+        "const no existe como palabra reservada funcional en Java.",
+        "Correcto. final declara una variable que no puede reasignarse.",
+        "static indica que algo pertenece a la clase, no a la instancia.",
+        "var se usa para inferencia de tipos, no para constantes."
+      ]
+    }
+  ]
+}

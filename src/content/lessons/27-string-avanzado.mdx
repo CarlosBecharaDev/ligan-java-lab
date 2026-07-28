@@ -1,0 +1,391 @@
+---
+title: "Métodos Avanzados de String"
+slug: "string-avanzado"
+module: "05-colecciones"
+level: "Intermedio"
+objectives:
+  - "Usar métodos de manipulación: substring, replace, trim, strip"
+  - "Aplicar métodos de búsqueda: startsWith, endsWith, indexOf, matches"
+  - "Convertir entre mayúsculas, minúsculas y formato con toUpperCase, toLowerCase, format"
+  - "Dividir y unir strings con split y join"
+  - "Entender la inmutabilidad de String y cuándo usar StringBuilder"
+prerequisites:
+  - "Haber completado Lección 03: Strings"
+  - "Conocer métodos básicos de String (length, charAt, equals)"
+history:
+  introducedIn: "Métodos de String desde Java 1.0, mejoras continuas"
+  context: "La clase String en Java es inmutable: una vez creado, no puede cambiarse. Cada operación crea un nuevo objeto String. Esto tiene implicaciones de rendimiento que es importante entender. StringBuilder y StringBuffer ofrecen alternativas mutables."
+  evolution: "Java 1.0 introdujo String con métodos básicos. Java 5 añadió String.format(). Java 11 agregó strip(), isBlank(), y repeat(). Java 12 introdujo transform(). Aunque String es la clase más usada en Java, su inmutabilidad la hace ineficiente para concatenaciones frecuentes."
+realWorldExamples:
+  - domain: "E-commerce — validación y formato de datos"
+    description: "Un sistema de e-commerce valida y formatea datos de clientes: nombres en formato título, emails válidos, teléfonos con formato específico."
+    code: |
+      public class ValidarDatos {
+          static boolean esEmailValido(String email) {
+              return email != null
+                  && email.contains("@")
+                  && email.contains(".")
+                  && email.indexOf("@") < email.lastIndexOf(".");
+          }
+
+          static String formatoTelefono(String tel) {
+              String soloDigitos = tel.replaceAll("[^0-9]", "");
+              if (soloDigitos.length() == 10) {
+                  return String.format("(%s) %s-%s",
+                      soloDigitos.substring(0, 3),
+                      soloDigitos.substring(3, 6),
+                      soloDigitos.substring(6));
+              }
+              return tel;
+          }
+
+          public static void main(String[] args) {
+              System.out.println(esEmailValido("user@mail.com"));
+              System.out.println(esEmailValido("invalido"));
+              System.out.println(formatoTelefono("3101234567"));
+              System.out.println(formatoTelefono("310-123-4567"));
+          }
+      }
+    result: |
+      true
+      false
+      (310) 123-4567
+      (310) 123-4567
+
+  - domain: "Salud — procesamiento de historias clínicas"
+    description: "Un sistema hospitalario procesa notas clínicas: extrae palabras clave, cuenta menciones de síntomas, y genera resúmenes formateados."
+    code: |
+      public class ProcesarNotas {
+          static int contarMenciones(String texto, String palabra) {
+              String lower = texto.toLowerCase();
+              String[] palabras = lower.split("\\W+");
+              int count = 0;
+              for (String p : palabras) {
+                  if (p.equals(palabra.toLowerCase())) count++;
+              }
+              return count;
+          }
+
+          public static void main(String[] args) {
+              String nota = "Paciente presenta fiebre, dolor de cabeza, "
+                  + "náuseas. Fiebre persistente desde ayer.";
+
+              String[] sintomas = {"fiebre", "dolor", "náuseas"};
+              for (String s : sintomas) {
+                  int n = contarMenciones(nota, s);
+                  System.out.printf("%s: %d mencion(es)%n", s, n);
+              }
+
+              // Resumen con formato
+              String resumen = String.format(
+                  "Síntomas reportados (%d tipos): %s",
+                  sintomas.length,
+                  String.join(", ", sintomas)
+              );
+              System.out.println(resumen);
+          }
+      }
+    result: |
+      fiebre: 2 mencion(es)
+      dolor: 1 mencion(es)
+      náuseas: 1 mencion(es)
+      Síntomas reportados (3 tipos): fiebre, dolor, náuseas
+
+hasInteractive: false
+comparisons:
+  - title: "String vs StringBuilder vs StringBuffer"
+    items:
+      - name: "String"
+        features:
+          mutabilidad: "Inmutable — cada operación crea nuevo objeto"
+          rendimiento: "Lento para concatenaciones frecuentes"
+          thread_safe: "Sí (por ser inmutable)"
+          uso: "Datos que no cambian, constantes"
+      - name: "StringBuilder"
+        features:
+          mutabilidad: "Mutable — modifica el mismo objeto"
+          rendimiento: "Rápido para construir strings paso a paso"
+          thread_safe: "No — no es seguro en hilos múltiples"
+          uso: "Construir strings en un solo hilo"
+      - name: "StringBuffer"
+        features:
+          mutabilidad: "Mutable — modifica el mismo objeto"
+          rendimiento: "Ligeramente más lento por sincronización"
+          thread_safe: "Sí — métodos sincronizados"
+          uso: "Construir strings en hilos múltiples"
+    recommendation: "Usa String para datos inmutables y constantes. Usa StringBuilder cuando construyas strings en un bucle o paso a paso. Solo usa StringBuffer si necesitas thread safety (casi nunca en código moderno)."
+videos:
+  - url: ""
+    title: "Métodos avanzados de String en Java"
+    channel: "Código Facilito"
+    summary: "Lección práctica de Java — explicación paso a paso con ejercicios"
+faqs:
+  - question: "¿Por qué String es inmutable en Java?"
+    answer: "Por seguridad (Strings se usan para conexiones de red, archivos, clases), interning (Strings con el mismo valor comparten memoria), y simplificación del diseño. La inmutabilidad permite que los Strings se usen como claves en HashMap y se compartan entre hilos sin riesgo."
+  - question: "¿Cuándo debo usar StringBuilder?"
+    answer: "Cuando construyas un string mediante múltiples operaciones, especialmente en bucles. Por ejemplo, concatenar 1000 strings en un bucle con '+' crea 1000 objetos temporales; StringBuilder lo hace en un solo objeto mutable."
+  - question: "¿Qué es String.intern()?"
+    answer: "String.intern() agrega el string al pool de strings (string pool) y retorna la referencia del pool. Si otro string con el mismo valor ya existe en el pool, retorna esa referencia. Esto ahorra memoria cuando tienes muchos strings duplicados."
+sources:
+  - title: "Java 21 API — String"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Strings"
+    url: "https://docs.oracle.com/javase/tutorial/java/data/strings.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Inmutabilidad de String
+
+En Java, **String es inmutable**: una vez creado, no puede modificarse. Cada operación crea un **nuevo** String.
+
+```java
+String s = "Hola";
+s.toUpperCase();   // retorna "HOLA" pero NO modifica s
+System.out.println(s);  // imprime "Hola"
+
+String s2 = s.toUpperCase();  // s2 es nuevo, s sigue igual
+```
+
+**Consecuencia:** Las concatenaciones frecuentes en bucles crean muchos objetos temporales. Para eso existe StringBuilder.
+
+## Extraer subcadenas
+
+<CodeBlock lang="java" title="substring y métodos de extracción">
+{`public class Substring {
+    public static void main(String[] args) {
+        String fecha = "2026-07-27";
+
+        // substring(inicio, fin) — fin excluido
+        String anio = fecha.substring(0, 4);
+        String mes = fecha.substring(5, 7);
+        String dia = fecha.substring(8, 10);
+
+        System.out.println("Año: " + anio);
+        System.out.println("Mes: " + mes);
+        System.out.println("Día: " + dia);
+
+        // substring(inicio) — hasta el final
+        String desdeJulio = fecha.substring(5);
+        System.out.println("Desde julio: " + desdeJulio);
+
+        // charAt — obtener carácter en posición
+        System.out.println("Primer carácter: " + fecha.charAt(0));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Año: 2026
+Mes: 07
+Día: 27
+Desde julio: 07-27
+Primer carácter: 2
+```
+
+## Buscar en un String
+
+<CodeBlock lang="java" title="Métodos de búsqueda">
+{`public class BuscarString {
+    public static void main(String[] args) {
+        String email = "usuario@ejemplo.com";
+
+        // indexOf — posición de subcadena
+        int arroba = email.indexOf("@");
+        System.out.println("@ en posición: " + arroba);
+
+        // lastIndexOf — última aparición
+        int ultimo = email.lastIndexOf(".");
+        System.out.println("Último . en posición: " + ultimo);
+
+        // startsWith y endsWith
+        System.out.println("Empieza con 'user': " + email.startsWith("user"));
+        System.out.println("Termina con '.com': " + email.endsWith(".com"));
+
+        // contains
+        System.out.println("Contiene '@': " + email.contains("@"));
+
+        // Comparación ignorando mayúsculas
+        String nombre = "Carlos";
+        System.out.println("igual 'carlos'?: " + nombre.equalsIgnoreCase("carlos"));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+@ en posición: 7
+Último . en posición: 13
+Empieza con 'user': true
+Termina con '.com': true
+Contiene '@': true
+igual 'carlos'?: true
+```
+
+## Reemplazar, recortar y dividir
+
+<CodeBlock lang="java" title="replace, trim/strip, split">
+{`public class ManipularString {
+    public static void main(String[] args) {
+        // replace
+        String msg = "Hola Mundo Java";
+        System.out.println(msg.replace("Java", "Mundo"));
+        System.out.println(msg.replaceAll("o", "0"));
+
+        // trim (Java 1.0) y strip (Java 11+)
+        String conEspacios = "   Hola   ";
+        System.out.println("[" + conEspacios.trim() + "]");
+        System.out.println("[" + conEspacios.strip() + "]");
+
+        // split
+        String csv = "manzana,pera,uva,naranja";
+        String[] frutas = csv.split(",");
+        for (String f : frutas) {
+            System.out.println("  - " + f);
+        }
+
+        // join
+        String unido = String.join(" | ", frutas);
+        System.out.println("Unido: " + unido);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Hola Mundo Mundo
+H0la Mund0 Java
+[   Hola   ]
+[Hola]
+  - manzana
+  - pera
+  - uva
+  - naranja
+Unido: manzana | pera | uva | naranja
+```
+
+## Formatear strings
+
+<CodeBlock lang="java" title="String.format y printf">
+{`public class Formatear {
+    public static void main(String[] args) {
+        String nombre = "Ana";
+        double nota = 9.25;
+        int edad = 22;
+
+        // String.format — retorna un nuevo String
+        String perfil = String.format(
+            "%s tiene %d años y nota %.1f",
+            nombre, edad, nota
+        );
+        System.out.println(perfil);
+
+        // Formatos comunes
+        System.out.printf("Hexadecimal: %x%n", 255);
+        System.out.printf("Octal: %o%n", 255);
+        System.out.printf("Notación científica: %e%n", 123456.789);
+        System.out.printf("Con ceros: %05d%n", 42);
+
+        // Alineación
+        System.out.printf("%-10s | %5d%n", "Java", 30);
+        System.out.printf("%-10s | %5d%n", "Python", 25);
+        System.out.printf("%-10s | %5d%n", "JavaScript", 20);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Ana tiene 22 años y nota 9.3
+Hexadecimal: ff
+Octal: 377
+Notación científica: 1.234568e+05
+Con ceros: 00042
+Java       |    30
+Python     |    25
+JavaScript |    20
+```
+
+## StringBuilder — para construir strings eficientemente
+
+<CodeBlock lang="java" title="Construir texto con StringBuilder">
+{`public class BuilderString {
+    public static void main(String[] args) {
+        StringBuilder sb = new StringBuilder();
+
+        // append — agregar texto
+        sb.append("Línea 1\\n");
+        sb.append("Línea 2\\n");
+        sb.append("Línea 3\\n");
+
+        String resultado = sb.toString();
+        System.out.println(resultado);
+
+        // Construir CSV
+        StringBuilder csv = new StringBuilder();
+        String[] datos = {"Ana", "25", "Bogotá"};
+        for (int i = 0; i < datos.length; i++) {
+            csv.append(datos[i]);
+            if (i < datos.length - 1) csv.append(", ");
+        }
+        System.out.println("CSV: " + csv.toString());
+
+        // insert, delete, reverse
+        StringBuilder sb2 = new StringBuilder("Hola");
+        sb2.insert(4, " Mundo");
+        System.out.println("Insert: " + sb2);
+
+        sb2.delete(4, 10);
+        System.out.println("Delete: " + sb2);
+
+        sb2.reverse();
+        System.out.println("Reverse: " + sb2);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Línea 1
+Línea 2
+Línea 3
+
+CSV: Ana, 25, Bogotá
+Insert: Hola Mundo
+Delete: Hola
+Reverse: aloH
+```
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-optional-facil",
+    "title": "Valor seguro",
+    "difficulty": "facil",
+    "description": "Dado un HashMap con nombres y edades, usa Optional para buscar la edad de un nombre. Si el nombre no existe, mostrar un valor por defecto de -1. Usa Optional.ofNullable y orElse.",
+    "template": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Map<String, Integer> edades = new HashMap<>();\n        edades.put(\"Ana\", 25);\n        edades.put(\"Luis\", 30);\n        edades.put(\"Maria\", 22);\n\n        // TODO: Usar Optional.ofNullable para buscar la edad de \"Luis\"\n        // Si no existe, usar orElse(-1)\n        int edadLuis = -1; // reemplazar\n\n        // TODO: Buscar la edad de \"Pedro\" que no existe\n        int edadPedro = -1; // reemplazar\n\n        System.out.println(\"Edad de Luis: \" + edadLuis);\n        System.out.println(\"Edad de Pedro: \" + edadPedro);\n    }\n}",
+    "hints": [
+      "Optional.ofNullable(edades.get(\"Luis\")) crea un Optional desde un valor que puede ser null",
+      ".orElse(-1) retorna el valor o -1 si el Optional esta vacio",
+      "HashMap.get() retorna null si la clave no existe"
+    ],
+    "solution": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Map<String, Integer> edades = new HashMap<>();\n        edades.put(\"Ana\", 25);\n        edades.put(\"Luis\", 30);\n        edades.put(\"Maria\", 22);\n\n        int edadLuis = Optional.ofNullable(edades.get(\"Luis\"))\n            .orElse(-1);\n\n        int edadPedro = Optional.ofNullable(edades.get(\"Pedro\"))\n            .orElse(-1);\n\n        System.out.println(\"Edad de Luis: \" + edadLuis);\n        System.out.println(\"Edad de Pedro: \" + edadPedro);\n    }\n}",
+    "solutionExplanation": "Optional.ofNullable() crea un Optional que puede estar vacio si el valor es null. orElse() proporciona un valor por defecto cuando el Optional esta vacio. Esto evitaNullPointerExceptions.",
+    "expectedOutput": "Edad de Luis: 30\nEdad de Pedro: -1",
+    "lessonSlug": "optional"
+  },
+  {
+    "id": "ex-optional-normal",
+    "title": "Cadena de operaciones",
+    "difficulty": "normal",
+    "description": "Dado un Optional con un String, aplica una cadena de operaciones: si el valor esta presente y no esta vacio, convierte a mayusculas y le agrega \"!\" al final. Si el String es null o vacio, lanza una excepcion con orElseThrow.",
+    "template": "import java.util.Optional;\n\npublic class Main {\n    public static void main(String[] args) {\n        Optional<String> texto1 = Optional.of(\"hola mundo\");\n        Optional<String> texto2 = Optional.of(\"\");\n        Optional<String> texto3 = Optional.empty();\n\n        // TODO: Para texto1, usar map para convertir a mayusculas\n        // Luego map para agregar \"!\" al final\n        // Usar orElseThrow para el caso vacio\n        String resultado1 = \"\";\n\n        // TODO: Procesar texto2 igual\n        String resultado2 = \"\";\n\n        // TODO: Procesar texto3 igual\n        String resultado3 = \"\";\n\n        System.out.println(\"Texto1: \" + resultado1);\n    }\n}",
+    "hints": [
+      ".map(s -> s.toUpperCase()) aplica una transformacion si el valor existe",
+      ".filter(s -> !s.isEmpty()) valida que el string no este vacio",
+      ".orElseThrow(() -> new RuntimeException(\"texto vacio\")) lanza excepcion si no hay valor"
+    ],
+    "solution": "import java.util.Optional;\n\npublic class Main {\n    public static void main(String[] args) {\n        Optional<String> texto1 = Optional.of(\"hola mundo\");\n        Optional<String> texto2 = Optional.of(\"\");\n        Optional<String> texto3 = Optional.empty();\n\n        String resultado1 = texto1\n            .filter(s -> !s.isEmpty())\n            .map(s -> s.toUpperCase())\n            .map(s -> s + \"!\")\n            .orElseThrow(() -> new RuntimeException(\"texto vacio o nulo\"));\n\n        try {\n            String resultado2 = texto2\n                .filter(s -> !s.isEmpty())\n                .map(s -> s.toUpperCase())\n                .map(s -> s + \"!\")\n                .orElseThrow(() -> new RuntimeException(\"texto vacio o nulo\"));\n            System.out.println(\"Texto2: \" + resultado2);\n        } catch (RuntimeException e) {\n            System.out.println(\"Texto2 error: \" + e.getMessage());\n        }\n\n        try {\n            String resultado3 = texto3\n                .filter(s -> !s.isEmpty())\n                .map(s -> s.toUpperCase())\n                .map(s -> s + \"!\")\n                .orElseThrow(() -> new RuntimeException(\"texto vacio o nulo\"));\n            System.out.println(\"Texto3: \" + resultado3);\n        } catch (RuntimeException e) {\n            System.out.println(\"Texto3 error: \" + e.getMessage());\n        }\n\n        System.out.println(\"Texto1: \" + resultado1);\n    }\n}",
+    "solutionExplanation": "La cadena filter -> map -> map -> orElseThrow procesa el valor paso a paso. filter valida que no este vacio, map transforma, y orElseThrow lanza excepcion si en algun punto se queda sin valor.",
+    "expectedOutput": "Texto2 error: texto vacio o nulo\nTexto3 error: texto vacio o nulo\nTexto1: HOLA MUNDO!",
+    "lessonSlug": "optional"
+  },
+  {
+    "id": "ex-optional-dificil",
+    "title": "Optional con nullable",
+    "difficulty": "dificil",
+    "description": "Dada una lista de Optional<String> (algunos vacios, algunos con valor), crea un stream que: 1) Filtre solo los que tienen valor (no estan vacios), 2) Extraiga el valor con .get(), 3) Filtre los que no estan vacios en contenido, 4) Convierta a mayusculas, 5) Imprima cada uno y cuantos quedan.",
+    "template": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Optional<String>> opcionales = Arrays.asList(\n            Optional.of(\"Java\"),\n            Optional.empty(),\n            Optional.of(\"\"),\n            Optional.of(\"Stream\"),\n            Optional.empty(),\n            Optional.of(\"Optional\"),\n            Optional.of(\"null\"),\n            Optional.empty()\n        );\n\n        // TODO: Crear un stream de la lista\n        // Filtrar Optional que no estan vacios con .filter(Optional::isPresent)\n        // Obtener el valor con .map(Optional::get)\n        // Filtrar strings que no esten vacios con .filter(s -> !s.isEmpty())\n        // Filtrar que no sean \"null\" con .filter(s -> !s.equals(\"null\"))\n        // Convertir a mayusculas con .map(String::toUpperCase)\n        // Imprimir cada uno y contar\n\n    }\n}",
+    "hints": [
+      "Optional::isPresent es un method reference que verifica si el Optional tiene valor",
+      "Optional::get extrae el valor del Optional",
+      "Cadena completa: filter -> map -> filter -> filter -> map -> forEach"
+    ],
+    "solution": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Optional<String>> opcionales = Arrays.asList(\n            Optional.of(\"Java\"),\n            Optional.empty(),\n            Optional.of(\"\"),\n            Optional.of(\"Stream\"),\n            Optional.empty(),\n            Optional.of(\"Optional\"),\n            Optional.of(\"null\"),\n            Optional.empty()\n        );\n\n        long cantidad = opcionales.stream()\n            .filter(Optional::isPresent)\n            .map(Optional::get)\n            .filter(s -> !s.isEmpty())\n            .filter(s -> !s.equals(\"null\"))\n            .map(String::toUpperCase)\n            .peek(System.out::println)\n            .count();\n\n        System.out.println(\"Total: \" + cantidad);\n    }\n}",
+    "solutionExplanation": "El stream procesa la lista de Optional paso a paso: isPresent filtra los vacios, get extrae el valor, los filtros siguientes eliminan strings vacios y el literal \"null\", y map convierte a mayusculas. peek imprime sin consumir el stream.",
+    "expectedOutput": "JAVA\nSTREAM\nOPTIONAL\nTotal: 3",
+    "lessonSlug": "optional"
+  }
+]

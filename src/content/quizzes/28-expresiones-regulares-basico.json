@@ -1,0 +1,75 @@
+{
+  "id": "quiz-28-expresiones-regulares-basico",
+  "lessonSlug": "expresiones-regulares",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es una expresion regular?",
+      "options": [
+        "Patron para buscar texto",
+        "Un tipo de variable",
+        "Una funcion de ordenamiento",
+        "Un tipo de循环结构"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Una expresion regular (regex) es un patron que se usa para buscar, validar o manipular texto.",
+        "No. No es un tipo de variable, es un patron de busqueda.",
+        "No. No es una funcion de ordenamiento.",
+        "No. No es una estructura de control, es un patron de texto."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo se usan expresiones regulares en Java?",
+      "options": [
+        "Pattern y Matcher",
+        "Regex y Search",
+        "Find y Match",
+        "Scan y Parse"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. En Java se usa Pattern para compilar el patron y Matcher para realizar las coincidencias.",
+        "No. No existen las clases Regex y Search en Java estandar.",
+        "No. No son clases, son metodos de Matcher.",
+        "No. No existen las clases Scan y Parse para regex."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué hace \\d en una expresion regular?",
+      "options": [
+        "Coincide con un digito",
+        "Coincide con una letra",
+        "Coincide con un espacio",
+        "Coincide con cualquier caracter"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. \\d es un metacaracter que coincide con cualquier digito del 0 al 9.",
+        "No. Para letras se usa \\w o clases como [a-zA-Z].",
+        "No. Para espacios se usa \\s.",
+        "No. Para cualquier caracter se usa el punto (.)."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué hace el operador + en una expresion regular?",
+      "options": [
+        "Una o mas ocurrencias",
+        "Cero o una ocurrencia",
+        "Exactamente una ocurrencia",
+        "Ninguna ocurrencia"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. El + significa una o mas ocurrencias del patron anterior.",
+        "No. Cero o una ocurrencia es el operador ?.",
+        "No. No hay un operador para exactamente una, + es una o mas.",
+        "No. No existe un operador para ninguna ocurrencia."
+      ]
+    }
+  ]
+}

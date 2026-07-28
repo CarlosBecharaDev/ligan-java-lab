@@ -1,0 +1,56 @@
+---
+export interface Props {
+  id: string;
+  title: string;
+  icon?: string;
+  isOpen: boolean;
+  isMaximized: boolean;
+  zIndex: number;
+  onClose?: (id: string) => void;
+  onMinimize?: (id: string) => void;
+  onMaximize?: (id: string) => void;
+}
+
+const { id, title, isOpen, isMaximized, zIndex } = Astro.props;
+---
+
+{
+  isOpen && (
+    <div
+      class={`window ${isMaximized ? 'window--maximized' : ''}`}
+      style={`z-index: ${zIndex};`}
+      role="dialog"
+      aria-label={title}
+      aria-modal="true"
+    >
+      <div class="window__titlebar">
+        <span class="window__title">
+          {title}
+        </span>
+        <div class="window__controls">
+          <button
+            class="window__btn"
+            aria-label="Minimizar"
+            data-i18n-aria="win.minimize"
+          >
+          </button>
+          <button
+            class="window__btn"
+            aria-label="Maximizar"
+            data-i18n-aria="win.maximize"
+          >
+          </button>
+          <button
+            class="window__btn window__btn--close"
+            aria-label="Cerrar"
+            data-i18n-aria="win.close"
+          >
+          </button>
+        </div>
+      </div>
+      <div class="window__body">
+        <slot />
+      </div>
+    </div>
+  )
+}

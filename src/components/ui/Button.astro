@@ -1,0 +1,100 @@
+---
+export interface Props {
+  variant?: 'primary' | 'secondary' | 'ghost' | 'danger';
+  size?: 'sm' | 'md' | 'lg';
+  as?: 'button' | 'a';
+  href?: string;
+}
+
+const { variant = 'primary', size = 'md', as = 'button', href } = Astro.props;
+const classes = `btn btn--${variant} btn--${size}`;
+---
+
+{as === 'a' ? (
+  <a href={href} class={classes}><slot /></a>
+) : (
+  <button class={classes}><slot /></button>
+)}
+
+<style>
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    font-family: var(--font-ui);
+    font-weight: normal;
+    border-radius: 0;
+    transition: all 0.1s;
+    cursor: pointer;
+    text-decoration: none;
+    line-height: 1;
+    border: 2px solid var(--win-text);
+    box-shadow: var(--shadow-sm);
+    text-transform: uppercase;
+  }
+
+  .btn:active {
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
+    transform: translate(2px, 2px);
+  }
+
+  .btn--sm {
+    font-size: var(--text-xs);
+    padding: var(--space-xs) var(--space-sm);
+  }
+
+  .btn--md {
+    font-size: var(--text-sm);
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .btn--lg {
+    font-size: var(--text-base);
+    padding: var(--space-md) var(--space-lg);
+  }
+
+  .btn--primary {
+    background: var(--accent);
+    color: var(--win-text);
+  }
+
+  .btn--primary:hover {
+    background: #e6c200;
+  }
+
+  .btn--secondary {
+    background: var(--win-bg);
+    color: var(--win-text);
+    border-color: var(--win-text);
+  }
+
+  .btn--secondary:hover {
+    background: #e5d6b8;
+  }
+
+  .btn--ghost {
+    background: transparent;
+    color: var(--win-bg);
+    border: 2px solid transparent;
+    box-shadow: none;
+  }
+
+  .btn--ghost:hover {
+    border: 2px dashed var(--win-bg);
+  }
+
+  .btn--ghost:active {
+    box-shadow: none;
+    transform: scale(0.97);
+  }
+
+  .btn--danger {
+    background: var(--win-close);
+    color: #fff;
+  }
+
+  .btn--danger:hover {
+    opacity: 0.9;
+  }
+</style>

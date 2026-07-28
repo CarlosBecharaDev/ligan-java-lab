@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-operadores-facil",
+    "lessonSlug": "operadores",
+    "title": "Calculadora básica",
+    "difficulty": "facil",
+    "description": "Declara dos variables numéricas e imprime el resultado de sumarlas, restarlas, multiplicarlas, dividirlas y obtener el módulo.",
+    "template": "public class CalculadoraBasica {\n    public static void main(String[] args) {\n        // TODO: Declara dos variables int con valores de tu elección\n        // Imprime el resultado de las 5 operaciones aritméticas básicas\n\n    }\n}",
+    "hints": [
+      "Usa System.out.println para cada operación",
+      "Recuerda que la división entre enteros trunca los decimales"
+    ],
+    "solution": "public class CalculadoraBasica {\n    public static void main(String[] args) {\n        int a = 15;\n        int b = 4;\n\n        System.out.println(\"Suma: \" + (a + b));\n        System.out.println(\"Resta: \" + (a - b));\n        System.out.println(\"Multiplicación: \" + (a * b));\n        System.out.println(\"División: \" + (a / b));\n        System.out.println(\"Módulo: \" + (a % b));\n    }\n}",
+    "solutionExplanation": "Declaramos dos variables enteras y realizamos las 5 operaciones aritméticas básicas. La división entre enteros da 3 (trunca 3.75), y el módulo da 3 (residuo de 15/4).",
+    "expectedOutput": "Suma: 19\nResta: 11\nMultiplicación: 60\nDivisión: 3\nMódulo: 3"
+  },
+  {
+    "id": "ex-operadores-normal",
+    "lessonSlug": "operadores",
+    "title": "Comparador de edades",
+    "difficulty": "normal",
+    "description": "Crea un programa que compare dos edades usando operadores de comparación y lógicos. Determina si ambas personas pueden votar, si al menos una es mayor de 65 años, y si tienen la misma edad.",
+    "template": "public class ComparadorEdades {\n    public static void main(String[] args) {\n        // TODO: Define dos variables de edad\n        // Determina con boolean si cada una puede votar (>= 18)\n        // Determina si AMBOS pueden votar (AND)\n        // Determina si AL MENOS UNO es mayor de 65 (OR)\n        // Determina si tienen la misma edad\n        // Imprime todos los resultados\n\n    }\n}",
+    "hints": [
+      "Usa >= para comparar con la edad mínima",
+      "Usa && para verificar si AMBOS cumplen la condición",
+      "Usa || para verificar si AL MENOS UNO cumple"
+    ],
+    "solution": "public class ComparadorEdades {\n    public static void main(String[] args) {\n        int edad1 = 25;\n        int edad2 = 70;\n\n        boolean puedeVotar1 = edad1 >= 18;\n        boolean puedeVotar2 = edad2 >= 18;\n        boolean ambosVotan = puedeVotar1 && puedeVotar2;\n        boolean algunoMayor65 = edad1 > 65 || edad2 > 65;\n        boolean mismaEdad = edad1 == edad2;\n\n        System.out.println(\"Persona 1 puede votar: \" + puedeVotar1);\n        System.out.println(\"Persona 2 puede votar: \" + puedeVotar2);\n        System.out.println(\"Ambos pueden votar: \" + ambosVotan);\n        System.out.println(\"Alguno mayor de 65: \" + algunoMayor65);\n        System.out.println(\"Misma edad: \" + mismaEdad);\n    }\n}",
+    "solutionExplanation": "Usamos operadores de comparación (>=, >, ==) para evaluar cada condición, y operadores lógicos (&&, ||) para combinarlas. Cada resultado se almacena en un boolean descriptivo.",
+    "expectedOutput": "Persona 1 puede votar: true\nPersona 2 puede votar: true\nAmbos pueden votar: true\nAlguno mayor de 65: true\nMisma edad: false"
+  },
+  {
+    "id": "ex-operadores-dificil",
+    "lessonSlug": "operadores",
+    "title": "Calculadora de impuestos con descuentos",
+    "difficulty": "dificil",
+    "description": "Calcula el precio final de un producto aplicando: precio base, descuento condicional (15% si compra más de 10 unidades, 10% si más de 5, sin descuento si 5 o menos), impuesto del 16%, y redondeo a 2 decimales.",
+    "template": "public class CalculadoraImpuestos {\n    public static void main(String[] args) {\n        // TODO: Define precio unitario, cantidad\n        // Calcula subtotal\n        // Aplica descuento condicional con ternario:\n        //   cantidad > 10 → 15%\n        //   cantidad > 5 → 10%\n        //   sino → 0%\n        // Calcula impuesto del 16% sobre el precio con descuento\n        // Calcula total e imprime todo formateado\n\n    }\n}",
+    "hints": [
+      "Puedes anidar operadores ternarios para los descuentos",
+      "Usa printf con %.2f para formatear a 2 decimales",
+      "El impuesto se calcula sobre el precio YA con descuento"
+    ],
+    "solution": "public class CalculadoraImpuestos {\n    public static void main(String[] args) {\n        final double PRECIO_UNITARIO = 49.99;\n        final double IMPUESTO = 0.16;\n        int cantidad = 12;\n\n        double subtotal = PRECIO_UNITARIO * cantidad;\n\n        // Descuento condicional con ternario anidado\n        double porcentajeDescuento = cantidad > 10 ? 0.15\n            : cantidad > 5 ? 0.10\n            : 0.0;\n\n        double montoDescuento = subtotal * porcentajeDescuento;\n        double precioConDescuento = subtotal - montoDescuento;\n        double impuestoMonto = precioConDescuento * IMPUESTO;\n        double total = precioConDescuento + impuestoMonto;\n\n        System.out.printf(\"Precio unitario: $%.2f%n\", PRECIO_UNITARIO);\n        System.out.printf(\"Cantidad: %d%n\", cantidad);\n        System.out.printf(\"Subtotal: $%.2f%n\", subtotal);\n        System.out.printf(\"Descuento (%.0f%%): -$%.2f%n\",\n            porcentajeDescuento * 100, montoDescuento);\n        System.out.printf(\"Precio con descuento: $%.2f%n\", precioConDescuento);\n        System.out.printf(\"Impuesto (16%%): $%.2f%n\", impuestoMonto);\n        System.out.printf(\"Total: $%.2f%n\", total);\n    }\n}",
+    "solutionExplanation": "Usamos un ternario anidado para determinar el porcentaje de descuento según la cantidad. El impuesto se calcula sobre el precio ya con descuento. printf con %.2f formatea los decimales a 2 cifras.",
+    "expectedOutput": "Precio unitario: $49.99\nCantidad: 12\nSubtotal: $599.88\nDescuento (15%): -$89.98\nPrecio con descuento: $509.90\nImpuesto (16%): $81.58\nTotal: $591.48"
+  }
+]

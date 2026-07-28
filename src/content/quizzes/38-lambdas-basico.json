@@ -1,0 +1,92 @@
+{
+  "id": "quiz-38-lambdas-basico",
+  "lessonSlug": "lambdas",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es una lambda en Java?",
+      "options": [
+        "Una función anónima que se puede pasar como valor",
+        "Una clase con un solo método",
+        "Una variable estática",
+        "Un tipo de bucle"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Una lambda es una función anónima que puede pasarse como argumento o asignarse a una variable.",
+        "Eso describe una interfaz funcional, no la lambda en sí.",
+        "Una lambda no es una variable estática.",
+        "Una lambda no es un bucle."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la sintaxis correcta de una lambda?",
+      "options": [
+        "(parámetros) -> { cuerpo }",
+        "(parámetros) => { cuerpo }",
+        "lambda(parámetros) { cuerpo }",
+        "function(parámetros) { cuerpo }"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. La sintaxis lambda usa flecha (->) entre parámetros y cuerpo.",
+        "=> es sintaxis de JavaScript/TypeScript, no Java.",
+        "lambda no es una palabra clave en Java.",
+        "function no es la sintaxis lambda en Java."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es una interfaz funcional?",
+      "options": [
+        "Una interfaz con un solo método abstracto",
+        "Una interfaz con múltiples métodos",
+        "Una clase abstracta",
+        "Un método estático"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Una interfaz funcional tiene exactamente un método abstracto, lo que permite usar lambdas con ella.",
+        "Una interfaz con múltiples métodos no es funcional.",
+        "No es una clase abstracta, es una interfaz.",
+        "Un método estático no define una interfaz funcional."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es Predicate<T>?",
+      "options": [
+        "Una función que recibe T y retorna boolean",
+        "Una función que recibe T y retorna R",
+        "Una función que no recibe nada y retorna T",
+        "Una función que recibe dos T y retorna boolean"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Predicate<T> evalúa una condición: recibe un T y retorna un boolean.",
+        "Eso es Function<T,R>.",
+        "Eso es Supplier<T>.",
+        "Eso sería un BiPredicate<T,T>."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es Function<T,R>?",
+      "options": [
+        "Una función que recibe T y retorna R",
+        "Una función que recibe T y retorna boolean",
+        "Una función que no recibe nada",
+        "Una función que recibe R y retorna T"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Function<T,R> transforma un valor de tipo T en un valor de tipo R.",
+        "Eso es Predicate<T>.",
+        "Eso es Supplier<T>.",
+        "Eso sería Function<R,T>."
+      ]
+    }
+  ]
+}

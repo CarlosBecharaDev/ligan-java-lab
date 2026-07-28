@@ -1,0 +1,46 @@
+---
+import AppLayout from '@layouts/AppLayout.astro';
+import Window from '@components/desktop/Window.astro';
+import Button from '@components/ui/Button.astro';
+---
+
+<AppLayout title="JAVA_WORKSPACE" description="Escritorio interactivo de aprendizaje Java">
+  <Window
+    id="welcome"
+    title="Bienvenido.java"
+    isOpen={true}
+    isMaximized={false}
+    zIndex={10}
+  >
+    <div style="display:flex;flex-direction:column;gap:var(--space-md);background:var(--win-bg);color:var(--win-text);padding:var(--space-md);height:100%;font-family:var(--font-ui)">
+      <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-md)">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+        <div>
+          <h1 data-i18n="home.heading" style="margin:0;font-family:var(--font-pixel);font-size:var(--text-xl);color:var(--win-text)">Ligan Java Lab</h1>
+          <p data-i18n="home.subtitle" style="color:var(--win-muted);margin:0;font-family:var(--font-ui)">Tu laboratorio interactivo para aprender Java 21 LTS</p>
+        </div>
+      </div>
+
+      <p><span data-i18n="home.welcome">¡Bienvenido a <strong>JAVA_WORKSPACE</strong>! Este escritorio interactivo es tu espacio de aprendizaje. Cada carpeta en la cuadrícula representa un módulo del curso.</span></p>
+
+      <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-md);margin:var(--space-md) 0;box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
+        <h3 data-i18n="home.how-to" style="font-family:var(--font-pixel);font-size:var(--text-sm);margin-bottom:var(--space-sm);color:var(--win-text)">📚 Cómo empezar</h3>
+        <ol style="padding-left:var(--space-lg);list-style:decimal;color:var(--win-muted);font-family:var(--font-ui)">
+          <li data-i18n="home.step1-4">Haz clic en <strong>01_Fundamentos</strong> para abrir el primer módulo</li>
+          <li>Sigue la <a href="/ruta" data-i18n="home.btn-path" style="color:var(--win-link)">ruta de aprendizaje</a> para un progreso guiado</li>
+          <li>Practica en el <a href="/practica" data-i18n="home.btn-codelab" style="color:var(--win-link)">Code Lab</a> con ejercicios interactivos</li>
+          <li>Revisa tu <a href="/progreso" data-i18n="home.btn-first" style="color:var(--win-link)">progreso</a> para ver qué has completado</li>
+        </ol>
+      </div>
+
+      <div style="display:flex;gap:var(--space-md);flex-wrap:wrap">
+        <Button as="a" href="/ruta" variant="primary"><span data-i18n="home.btn-path">Abrir ruta de aprendizaje</span></Button>
+        <Button as="a" href="/tema/variables-y-tipos" variant="secondary"><span data-i18n="home.btn-first">Primera lección</span></Button>
+        <Button as="a" href="/practica" variant="ghost"><span data-i18n="home.btn-codelab">Ir al Code Lab</span></Button>
+      </div>
+    </div>
+  </Window>
+</AppLayout>

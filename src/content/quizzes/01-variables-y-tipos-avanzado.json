@@ -1,0 +1,58 @@
+{
+  "id": "quiz-avanzado-variables",
+  "lessonSlug": "variables-y-tipos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué valor tiene `var x = 5;` en el bytecode generado?",
+      "options": [
+        "Es una variable dinámica como en JavaScript",
+        "Se convierte en `int x = 5;`",
+        "Se convierte en `Integer x = 5;`",
+        "Genera un error porque var no tiene tipo"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java es tipado estático; var no cambia eso.",
+        "Correcto. var es azúcar sintáctico: el compilador infiere int y genera el mismo bytecode.",
+        "var infiere el tipo primitivo, no el wrapper.",
+        "var sí tiene tipo; el compilador lo deduce del valor asignado."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué sucede cuando pasas un tipo primitivo como argumento a un método?",
+      "options": [
+        "Se pasa la referencia al valor original",
+        "Se pasa una copia del valor; los cambios no afectan al original",
+        "Se pasa un puntero al Stack",
+        "Java lanza una excepción si el tipo no coincide"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los primitivos no tienen referencias; se copian directamente.",
+        "Correcto. Java pasa siempre por valor; para primitivos es una copia literal.",
+        "Java no maneja punteros directamente como C/C++.",
+        "El tipo debe coincidir, pero eso es una regla de compilación, no de runtime."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es la diferencia entre `==` y `.equals()` al comparar Strings?",
+      "options": [
+        "Son exactamente iguales",
+        "== compara contenido, .equals() compara referencias",
+        "== compara referencias, .equals() compara contenido (por defecto)",
+        "No se puede comparar Strings con =="
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Son diferentes; cada uno tiene un comportamiento distinto.",
+        "Es al revés: == compara referencias, .equals() compara contenido.",
+        "Correcto. == verifica si apuntan al mismo objeto en memoria. .equals() compara el contenido del String.",
+        "Sí se puede, pero compara direcciones de memoria, no contenido."
+      ]
+    }
+  ]
+}

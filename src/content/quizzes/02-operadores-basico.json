@@ -1,0 +1,43 @@
+{
+  "id": "quiz-basico-operadores",
+  "lessonSlug": "operadores",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es el resultado de `17 % 5` en Java?",
+      "options": ["3", "3.4", "2", "5"],
+      "correctIndex": 2,
+      "explanations": [
+        "3 es el cociente de 17/5, no el residuo.",
+        "La división entera no produce decimales.",
+        "Correcto. 17 = 5×3 + 2, el residuo es 2.",
+        "5 es el divisor, no el resultado."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué imprime este código?\n```java\nint a = 5;\nint b = a++;\nSystem.out.println(b);\n```",
+      "options": ["5", "6", "4", "Error de compilación"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Es postincremento: primero asigna el valor actual (5) a b, luego incrementa a.",
+        "El incremento ocurre después de la asignación.",
+        "Postincremento no decrementa.",
+        "El código es válido."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es el resultado de `true && false`?",
+      "options": ["true", "false", "null", "Error"],
+      "correctIndex": 1,
+      "explanations": [
+        "AND solo es true cuando AMBOS operandos son true.",
+        "Correcto. AND requiere que ambos valores sean true.",
+        "null no es un resultado de operaciones booleanas.",
+        "La expresión es válida."
+      ]
+    }
+  ]
+}

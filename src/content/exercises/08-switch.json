@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-switch-facil",
+    "lessonSlug": "switch",
+    "title": "Traductor de números a días",
+    "difficulty": "facil",
+    "description": "Crea un programa que reciba un número del 1 al 7 y muestre el día de la semana correspondiente usando switch.",
+    "template": "public class DiaSemanaSwitch {\n    public static void main(String[] args) {\n        int dia = 4;\n\n        // TODO: Usa switch para mostrar:\n        // 1 → \"Lunes\", 2 → \"Martes\", 3 → \"Miércoles\",\n        // 4 → \"Jueves\", 5 → \"Viernes\",\n        // 6 → \"Sábado\", 7 → \"Domingo\"\n        // default → \"Número inválido\"\n        // No olvides los break\n\n    }\n}",
+    "hints": [
+      "Cada case necesita su break para evitar fall-through",
+      "El default cubre los números fuera del 1-7"
+    ],
+    "solution": "public class DiaSemanaSwitch {\n    public static void main(String[] args) {\n        int dia = 4;\n\n        switch (dia) {\n            case 1:\n                System.out.println(\"Lunes\");\n                break;\n            case 2:\n                System.out.println(\"Martes\");\n                break;\n            case 3:\n                System.out.println(\"Miércoles\");\n                break;\n            case 4:\n                System.out.println(\"Jueves\");\n                break;\n            case 5:\n                System.out.println(\"Viernes\");\n                break;\n            case 6:\n                System.out.println(\"Sábado\");\n                break;\n            case 7:\n                System.out.println(\"Domingo\");\n                break;\n            default:\n                System.out.println(\"Número inválido\");\n        }\n    }\n}",
+    "solutionExplanation": "Cada case imprime su día y termina con break para evitar el fall-through. El default maneja entradas fuera del rango 1-7.",
+    "expectedOutput": "Jueves"
+  },
+  {
+    "id": "ex-switch-normal",
+    "lessonSlug": "switch",
+    "title": "Calculadora con switch expression",
+    "difficulty": "normal",
+    "description": "Usa una switch expression (Java 14+) para implementar una calculadora que recibe una operación String y dos números, y devuelve el resultado.",
+    "template": "public class CalculadoraSwitch {\n    public static void main(String[] args) {\n        String operacion = \"multiplicar\";\n        double a = 8.0;\n        double b = 3.0;\n\n        // TODO: Usa switch expression con sintaxis de flecha (->)\n        // para asignar el resultado según:\n        // \"sumar\" → a + b\n        // \"restar\" → a - b\n        // \"multiplicar\" → a * b\n        // \"dividir\" → si b != 0, a / b; si no, muestra error y usa 0\n        // default → 0\n        // Usa yield para la división (necesita un bloque)\n        // Imprime: \"8.0 multiplicar 3.0 = 24.0\"\n\n    }\n}",
+    "hints": [
+      "La sintaxis de flecha no necesita break",
+      "Para la división usa un bloque { } y yield para devolver el valor",
+      "Formato: %.1f %s %.1f = %.1f"
+    ],
+    "solution": "public class CalculadoraSwitch {\n    public static void main(String[] args) {\n        String operacion = \"multiplicar\";\n        double a = 8.0;\n        double b = 3.0;\n\n        double resultado = switch (operacion) {\n            case \"sumar\" -> a + b;\n            case \"restar\" -> a - b;\n            case \"multiplicar\" -> a * b;\n            case \"dividir\" -> {\n                if (b == 0) {\n                    System.out.println(\"Error: no se puede dividir entre cero\");\n                    yield 0;\n                }\n                yield a / b;\n            }\n            default -> 0;\n        };\n\n        System.out.printf(\"%.1f %s %.1f = %.1f%n\", a, operacion, b, resultado);\n    }\n}",
+    "solutionExplanation": "La switch expression asigna el resultado directamente. Los casos simples usan flecha; el caso de división usa un bloque con yield porque necesita validar b != 0 antes de devolver un valor.",
+    "expectedOutput": "8.0 multiplicar 3.0 = 24.0"
+  },
+  {
+    "id": "ex-switch-dificil",
+    "lessonSlug": "switch",
+    "title": "Sistema de tarifas con enum y switch",
+    "difficulty": "dificil",
+    "description": "Define un enum TipoVehiculo (COCHE, MOTO, CAMION, AUTOBUS) con una tarifa base. Usa switch expression para calcular el peaje según el tipo y un factor, con gestión de descuentos premium.",
+    "template": "public class Peaje {\n    enum TipoVehiculo { COCHE, MOTO, CAMION, AUTOBUS }\n\n    public static void main(String[] args) {\n        TipoVehiculo tipo = TipoVehiculo.CAMION;\n        boolean esPremium = true;\n\n        // TODO: Tarifa base por tipo (usa switch expression):\n        //   COCHE → 5.0, MOTO → 2.5, CAMION → 10.0, AUTOBUS → 15.0\n        // Si esPremium, aplica 20% de descuento sobre la tarifa\n        // Imprime: \"CAMION - Tarifa: $10.0 - Premium: true - Total: $8.0\"\n\n    }\n}",
+    "hints": [
+      "Primero usa switch expression para obtener la tarifa base según el enum",
+      "Luego aplica el descuento con un if o ternario",
+      "Los cases de enum no necesitan cualificar: case COCHE (no TipoVehiculo.COCHE)"
+    ],
+    "solution": "public class Peaje {\n    enum TipoVehiculo { COCHE, MOTO, CAMION, AUTOBUS }\n\n    public static void main(String[] args) {\n        TipoVehiculo tipo = TipoVehiculo.CAMION;\n        boolean esPremium = true;\n\n        double tarifaBase = switch (tipo) {\n            case COCHE -> 5.0;\n            case MOTO -> 2.5;\n            case CAMION -> 10.0;\n            case AUTOBUS -> 15.0;\n        };\n\n        double total = esPremium ? tarifaBase * 0.8 : tarifaBase;\n\n        System.out.printf(\"%s - Tarifa: $%.1f - Premium: %s - Total: $%.1f%n\",\n                tipo, tarifaBase, esPremium, total);\n    }\n}",
+    "solutionExplanation": "La switch expression sobre el enum obtiene la tarifa base. Como cubrimos todos los valores del enum, no necesitamos default. Luego aplicamos un 20% de descuento con el operador ternario si esPremium es true.",
+    "expectedOutput": "CAMION - Tarifa: $10.0 - Premium: true - Total: $8.0"
+  }
+]

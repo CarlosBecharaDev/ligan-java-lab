@@ -1,0 +1,43 @@
+{
+  "id": "quiz-basico-casting",
+  "lessonSlug": "casting",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué resultado produce `(int) 3.99`?",
+      "options": ["4", "3.99", "3", "4.0"],
+      "correctIndex": 2,
+      "explanations": [
+        "Java trunca, no redondea.",
+        "El resultado es un int, no tiene decimales.",
+        "Correcto. (int) trunca la parte decimal, 3.99 → 3.",
+        "El resultado es int, que no tiene parte decimal."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál de estas conversiones NO requiere casting explícito?",
+      "options": ["double → int", "int → byte", "long → int", "int → double"],
+      "correctIndex": 3,
+      "explanations": [
+        "double → int es narrowing, requiere casting.",
+        "int → byte es narrowing, requiere casting.",
+        "long → int es narrowing, requiere casting.",
+        "Correcto. int → double es widening (implícito, seguro)."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué método convierte un String a int?",
+      "options": ["String.toInt()", "Integer.parseInt()", "int.valueOf()", "String.getInt()"],
+      "correctIndex": 1,
+      "explanations": [
+        "String no tiene método toInt().",
+        "Correcto. Integer.parseInt(str) convierte un String a int primitivo.",
+        "int.valueOf no existe; Integer.valueOf() devuelve Integer (wrapper).",
+        "String no tiene método getInt()."
+      ]
+    }
+  ]
+}

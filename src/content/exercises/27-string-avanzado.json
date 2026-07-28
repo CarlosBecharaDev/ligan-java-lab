@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-string-avanzado-facil",
+    "title": "Contar palabras",
+    "difficulty": "facil",
+    "description": "Cuenta el número de palabras en un String usando el método split(). El separador es el espacio en blanco.",
+    "template": "public class ContarPalabras {\n    public static void main(String[] args) {\n        String texto = \"Java es un lenguaje de programacion muy poderoso\";\n        // TODO: Divide el String en palabras con split(\" \")\n        int cantidad = 0;\n        System.out.println(\"Número de palabras: \" + cantidad);\n    }\n}",
+    "hints": [
+      "Usa texto.split(\" \") para obtener un array de palabras",
+      "El array resultado tiene una palabra por cada posición",
+      "Usa .length del array para contar"
+    ],
+    "solution": "public class ContarPalabras {\n    public static void main(String[] args) {\n        String texto = \"Java es un lenguaje de programacion muy poderoso\";\n        String[] palabras = texto.split(\" \");\n        int cantidad = palabras.length;\n        System.out.println(\"Número de palabras: \" + cantidad);\n    }\n}",
+    "solutionExplanation": "El método split(\" \") divide el String en un array usando el espacio como separador. La cantidad de elementos del array corresponde al número de palabras.",
+    "expectedOutput": "Número de palabras: 7",
+    "lessonSlug": "string-avanzado"
+  },
+  {
+    "id": "ex-string-avanzado-normal",
+    "title": "Capitalizar título",
+    "difficulty": "normal",
+    "description": "Dado un String en minúsculas, capitaliza la primera letra de cada palabra para formar un título. Ejemplo: 'hola mundo java' → 'Hola Mundo Java'.",
+    "template": "public class CapitalizarTitulo {\n    public static void main(String[] args) {\n        String texto = \"hola mundo java desde cero\";\n        // TODO: Divide en palabras con split(\" \")\n        // TODO: Para cada palabra, capitaliza la primera letra\n        // TODO: Concatena las palabras capitalizadas\n        System.out.println(texto);\n    }\n}",
+    "hints": [
+      "Usa substring(0,1).toUpperCase() para la primera letra",
+      "Usa substring(1) para el resto de la palabra",
+      "Usa String.join(\" \", palabras) para reconstruir el texto"
+    ],
+    "solution": "public class CapitalizarTitulo {\n    public static void main(String[] args) {\n        String texto = \"hola mundo java desde cero\";\n        String[] palabras = texto.split(\" \");\n        StringBuilder resultado = new StringBuilder();\n        for (int i = 0; i < palabras.length; i++) {\n            if (i > 0) resultado.append(\" \");\n            String palabra = palabras[i];\n            resultado.append(palabra.substring(0, 1).toUpperCase());\n            resultado.append(palabra.substring(1));\n        }\n        System.out.println(resultado.toString());\n    }\n}",
+    "solutionExplanation": "Se divide el texto en palabras con split(). Para cada palabra, se toma la primera letra con substring(0,1), se convierte a mayúscula con toUpperCase(), y se concatena con el resto de la palabra (substring(1)). Se usa StringBuilder para construir el resultado eficientemente.",
+    "expectedOutput": "Hola Mundo Java Desde Cero",
+    "lessonSlug": "string-avanzado"
+  },
+  {
+    "id": "ex-string-avanzado-dificil",
+    "title": "Invertir palabras",
+    "difficulty": "dificil",
+    "description": "Invierte el orden de las palabras en un String sin usar Collections.reverse(). Ejemplo: 'uno dos tres' → 'tres dos uno'.",
+    "template": "public class InvertirPalabras {\n    public static void main(String[] args) {\n        String texto = \"aprende java paso a paso\";\n        // TODO: Divide en palabras con split(\" \")\n        // TODO: Invierte el array manualmente con dos índices\n        // TODO: Reconstruye el String\n        System.out.println(texto);\n    }\n}",
+    "hints": [
+      "Crea un array de String con split(\" \")",
+      "Intercambia palabras[i] con palabras[j] usando temp",
+      "Usa String.join(\" \", palabras) para unir de nuevo"
+    ],
+    "solution": "public class InvertirPalabras {\n    public static void main(String[] args) {\n        String texto = \"aprende java paso a paso\";\n        String[] palabras = texto.split(\" \");\n        for (int i = 0, j = palabras.length - 1; i < j; i++, j--) {\n            String temp = palabras[i];\n            palabras[i] = palabras[j];\n            palabras[j] = temp;\n        }\n        System.out.println(String.join(\" \", palabras));\n    }\n}",
+    "solutionExplanation": "Se divide el texto en un array de palabras. Se intercambian elementos usando dos índices desde los extremos hacia el centro (mismo algoritmo que invertir un array). Finalmente se usa String.join() para reconstruir el String con las palabras en orden invertido.",
+    "expectedOutput": "paso a paso java aprende",
+    "lessonSlug": "string-avanzado"
+  }
+]

@@ -1,0 +1,58 @@
+{
+  "id": "quiz-13-metodos-avanzados-avanzado",
+  "lessonSlug": "metodos-avanzados",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime mystery(5)?\nstatic int mystery(int n) {\n    if (n <= 1) return n;\n    return mystery(n-1) + mystery(n-2);\n}",
+      "options": [
+        "3",
+        "5",
+        "8",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El resultado no es 3.",
+        "Correcto. Esto es Fibonacci: mystery(5) = 5.",
+        "8 es mystery(6).",
+        "13 es mystery(7)."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuándo es mejor usar recursión sobre iteración?",
+      "options": [
+        "Siempre es mejor recursión",
+        "Para recorrer arreglos simples",
+        "Para problemas jerárquicos como árboles o fractales",
+        "Cuando no se conocen los tipos de datos"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "La recursión tiene costo de memoria.",
+        "Para arreglos simples, un for es más eficiente.",
+        "Correcto. Los árboles y problemas de división y conquista se expresan naturalmente con recursión.",
+        "Los tipos no determinan la estrategia."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué sucedería si eliminas el caso base de un método recursivo?",
+      "options": [
+        "El método retorna 0",
+        "El compilador da error",
+        "StackOverflowError porque nunca para de llamarse",
+        "El método retorna null"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "No retorna 0; entra en recursión infinita.",
+        "El compilador no siempre detecta esto.",
+        "Correcto. Sin caso base, el método se llama a sí mismo indefinidamente hasta llenar la pila.",
+        "No retorna null; nunca termina."
+      ]
+    }
+  ]
+}

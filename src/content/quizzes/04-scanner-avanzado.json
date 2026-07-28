@@ -1,0 +1,58 @@
+{
+  "id": "quiz-avanzado-scanner",
+  "lessonSlug": "entrada-datos-scanner",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cómo leerías un número decimal de forma segura sin que el programa crashee si el usuario escribe texto?",
+      "options": [
+        "Usar nextDouble() directamente",
+        "Usar hasNextDouble() antes de nextDouble()",
+        "Usar try-catch con NumberFormatException",
+        "Usar Integer.parseInt()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "nextDouble() lanza InputMismatchException si la entrada no es un número.",
+        "Correcto. hasNextDouble() verifica antes de leer, evitando excepciones.",
+        "try-catch funciona pero hasNextXxx() es la forma idiomática de Scanner.",
+        "Integer.parseInt() es para strings, no para entrada de consola."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre `next()` y `nextLine()`?",
+      "options": [
+        "Son exactamente iguales",
+        "next() lee una palabra, nextLine() lee toda la línea",
+        "next() lee una línea, nextLine() lee una palabra",
+        "next() es para enteros, nextLine() para texto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Tienen comportamientos diferentes.",
+        "Correcto. next() lee hasta el primer espacio en blanco. nextLine() lee hasta el fin de línea.",
+        "Es al revés.",
+        "Ambos leen texto; nextInt() es para enteros."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Por qué se recomienda cerrar Scanner con `sc.close()`?",
+      "options": [
+        "Para que el programa no crashee",
+        "Para liberar el recurso de System.in",
+        "Es obligatorio en Java",
+        "Para borrar los datos leídos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El programa no crashea sin close(), pero es mala práctica.",
+        "Correcto. close() libera el recurso subyacente de System.in y evita fugas de memoria.",
+        "No es estrictamente obligatorio, pero es una buena práctica.",
+        "No borra datos; libera recursos del sistema."
+      ]
+    }
+  ]
+}

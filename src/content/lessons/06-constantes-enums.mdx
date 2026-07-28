@@ -1,0 +1,493 @@
+---
+title: "Constantes y Enums"
+slug: "constantes-enums"
+module: "01-fundamentos"
+level: "Intermedio"
+objectives:
+  - "Declarar constantes con final y aplicar la convención de nomenclatura"
+  - "Diferenciar entre constantes de clase (static final) y de instancia (final)"
+  - "Definir enums con propiedades, constructores y métodos"
+  - "Usar enums en switch y switch expression"
+  - "Aplicar constantes y enums en situaciones del mundo real"
+prerequisites:
+  - "Haber completado Lección 02: Operadores"
+  - "Conocer la sintaxis de clases y métodos en Java"
+  - "Haber completado Lección 05: Casting"
+history:
+  introducedIn: "final desde Java 1.0; enum desde Java 5"
+  context: "La palabra clave final existió desde el inicio de Java para crear constantes. Sin embargo, los enums se introdujeron en JDK 5 (2004) para reemplazar el patrón inseguro de 'int enum' (constantes enteras sin tipo). Un enum en Java es mucho más poderoso que en otros lenguajes: puede tener campos, métodos y constructores."
+  evolution: "Java 8 permitió métodos default en interfaces. Java 12 introdujo switch expressions con enums. Java 14 añadió sintaxis de switch con flecha (->) para trabajar con enums de forma más concisa. Java 17 selló las clases (sealed classes) que complementan el diseño de enums."
+realWorldExamples:
+  - domain: "Configuración de aplicación"
+    description: "Una aplicación usa constantes para valores fijos como tiempos de espera, rutas, y umbrales que no deben cambiar durante la ejecución."
+    code: |
+      public class ConfigApp {
+          public static final int MAX_INTENTOS = 3;
+          public static final int TIMEOUT_SEGUNDOS = 30;
+          public static final String URL_API =
+              "https://api.ejemplo.com/v1";
+          public static final double IVU = 0.16;
+          public static final String[] DIAS_LABORALES =
+              {"Lun", "Mar", "Mié", "Jue", "Vie"};
+
+          public static void main(String[] args) {
+              System.out.println("Configuración de la aplicación:");
+              System.out.println("- Intentos máximos: " + MAX_INTENTOS);
+              System.out.println("- Timeout: " + TIMEOUT_SEGUNDOS + "s");
+              System.out.println("- API: " + URL_API);
+              System.out.println("- IVU: " + (IVU * 100) + "%");
+
+              double precio = 100.0;
+              double total = precio + (precio * IVU);
+              System.out.printf("Precio + IVU: $%.2f%n", total);
+          }
+      }
+    result: |
+      Configuración de la aplicación:
+      - Intentos máximos: 3
+      - Timeout: 30s
+      - API: https://api.ejemplo.com/v1
+      - IVU: 16.0%
+      Precio + IVU: $116.00
+  - domain: "Estado de pedido con Enum"
+    description: "Un sistema de e-commerce usa un enum para representar los estados de un pedido, con propiedades como descripción y tiempo estimado."
+    code: |
+      public enum EstadoPedido {
+          PENDIENTE("Recibido", "1 hora"),
+          CONFIRMADO("En preparación", "2 horas"),
+          ENVIADO("En camino", "3-5 días"),
+          ENTREGADO("Completado", "-"),
+          CANCELADO("Cancelado", "-");
+
+          private final String descripcion;
+          private final String tiempoEstimado;
+
+          EstadoPedido(String descripcion, String tiempoEstimado) {
+              this.descripcion = descripcion;
+              this.tiempoEstimado = tiempoEstimado;
+          }
+
+          public String getDescripcion() { return descripcion; }
+          public String getTiempoEstimado() { return tiempoEstimado; }
+
+          public boolean esTerminal() {
+              return this == ENTREGADO || this == CANCELADO;
+          }
+      }
+
+      public class PedidoEjemplo {
+          public static void main(String[] args) {
+              EstadoPedido estado = EstadoPedido.CONFIRMADO;
+              System.out.println("Estado: " + estado);
+              System.out.println("Descripción: " + estado.getDescripcion());
+              System.out.println("Tiempo estimado: " + estado.getTiempoEstimado());
+              System.out.println("¿Es terminal?: " + estado.esTerminal());
+          }
+      }
+    result: |
+      Estado: CONFIRMADO
+      Descripción: En preparación
+      Tiempo estimado: 2 horas
+      ¿Es terminal?: false
+hasInteractive: false
+comparisons:
+  - title: "final (constante) vs enum"
+    items:
+      - name: "final (constante)"
+        features:
+          propósito: "Valor fijo inmutable"
+          tipo: "Cualquier tipo (int, String, double...)"
+          agrupación: "No agrupa — cada constante es independiente"
+          métodos: "No tiene métodos propios"
+          switch: "Soporta switch (Java 7+)"
+      - name: "enum"
+        features:
+          propósito: "Conjunto fijo de valores relacionados"
+          tipo: "Tipo propio con seguridad en compilación"
+          agrupación: "Agrupa valores relacionados"
+          métodos: "Puede tener constructores, métodos y campos"
+          switch: "Soporta switch y switch expression"
+    recommendation: "Usa final para valores individuales (PI, IVU, TIMEOUT). Usa enum para grupos de constantes relacionadas (días de la semana, estados de pedido, roles de usuario). Un enum es más expresivo y seguro que agrupar constantes final en una clase."
+videos:
+  - url: ""
+    title: "Constantes y Enums en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Cuál es la diferencia entre `final` y `static final`?"
+    answer: "final hace que una variable no pueda reasignarse. static final (constante de clase) pertenece a la clase, no a las instancias. static final se comparte entre todas las instancias y se accede mediante NombreClase.CONSTANTE. Es la forma correcta para constantes globales."
+  - question: "¿Los enums en Java son solo constantes?"
+    answer: "No. A diferencia de otros lenguajes, los enums en Java son clases completas. Pueden tener campos (finales o no), constructores, métodos, implementar interfaces, y cada constante enum puede tener su propio comportamiento si se declara como clase anónima."
+  - question: "¿Se puede comparar enums con `==`?"
+    answer: "Sí. A diferencia de los objetos normales, los enums tienen una instancia única por constante garantizada por la JVM, por lo que `==` es seguro y más eficiente que `.equals()`. De hecho, `==` es la forma idiomática de comparar enums en Java."
+sources:
+  - title: "Java 21 API — Enum"
+    url: "https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Enum Types"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Constantes con `final`
+
+Una **constante** es una variable cuyo valor no puede cambiar después de la inicialización. En Java, se declaran con `final`. Por convención, los nombres de constantes se escriben en `MAYÚSCULAS_CON_GUIONES_BAJOS`.
+
+### Constantes locales
+
+Dentro de un método, puedes declarar constantes locales:
+
+```java
+public void metodo() {
+    final double IVU = 0.16;
+    final int MAX_USUARIOS = 100;
+
+    // IVU = 0.18;    // ❌ Error: no se puede reasignar
+}
+```
+
+### Constantes de clase (static final)
+
+Para constantes accesibles desde toda la aplicación, usa `public static final`:
+
+```java
+public class Constantes {
+    public static final double PI = 3.14159265359;
+    public static final int DIAS_SEMANA = 7;
+    public static final String NOMBRE_APP = "Ligan Java Lab";
+}
+```
+
+Luego se acceden con `Constantes.PI`, `Constantes.DIAS_SEMANA`, etc.
+
+### Constantes de instancia (final sin static)
+
+Si cada instancia de una clase tiene un valor fijo que no cambia:
+
+```java
+public class TarjetaCredito {
+    private final String numeroTarjeta;   // fijo por instancia
+    private final String titular;
+
+    public TarjetaCredito(String numero, String titular) {
+        this.numeroTarjeta = numero;      // se asigna una vez
+        this.titular = titular;
+    }
+}
+```
+
+<CodeBlock lang="java" title="Constantes en Java">
+{`public class EjemploConstantes {
+    // Constantes de clase
+    public static final String APP = "MiApp";
+    public static final int MAX_CONEXIONES = 10;
+    public static final double INTERES_ANUAL = 0.045;
+
+    // Constante de instancia
+    private final String nombreUsuario;
+
+    public EjemploConstantes(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public void mostrarInfo() {
+        final double DESCUENTO = 0.15;  // constante local
+
+        System.out.println("App: " + APP);
+        System.out.println("Usuario: " + nombreUsuario);
+        System.out.println("Interés anual: " + (INTERES_ANUAL * 100) + "%");
+        System.out.println("Descuento hoy: " + (DESCUENTO * 100) + "%");
+    }
+
+    public static void main(String[] args) {
+        EjemploConstantes ej = new EjemploConstantes("Carlos");
+        ej.mostrarInfo();
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+App: MiApp
+Usuario: Carlos
+Interés anual: 4.5%
+Descuento hoy: 15.0%
+```
+
+## Introducción a los Enums
+
+Un **enum** (enumeración) es un tipo de dato que define un conjunto fijo de constantes relacionadas. Es la forma correcta de representar grupos cerrados como días de la semana, estados de pedido o roles de usuario.
+
+```java
+public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+```
+
+### Usar un enum básico
+
+<CodeBlock lang="java" title="Enum básico">
+{`public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+
+public class UsarEnum {
+    public static void main(String[] args) {
+        DiaSemana hoy = DiaSemana.MIERCOLES;
+
+        System.out.println("Hoy es: " + hoy);
+        System.out.println("Ordinal: " + hoy.ordinal());
+        System.out.println("Nombre: " + hoy.name());
+
+        // Iterar todos los valores
+        System.out.println("\\nTodos los días:");
+        for (DiaSemana dia : DiaSemana.values()) {
+            System.out.println("  " + dia.ordinal() + " = " + dia);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Hoy es: MIERCOLES
+Ordinal: 2
+Nombre: MIERCOLES
+
+Todos los días:
+  0 = LUNES
+  1 = MARTES
+  2 = MIERCOLES
+  3 = JUEVES
+  4 = VIERNES
+  5 = SABADO
+  6 = DOMINGO
+```
+
+### Enums con switch
+
+<CodeBlock lang="java" title="Enum con switch">
+{`public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+
+public class EnumSwitch {
+    public static void main(String[] args) {
+        DiaSemana dia = DiaSemana.VIERNES;
+
+        // Switch tradicional
+        switch (dia) {
+            case LUNES:
+                System.out.println("Inicio de semana");
+                break;
+            case SABADO:
+            case DOMINGO:
+                System.out.println("¡Fin de semana!");
+                break;
+            default:
+                System.out.println("Día laboral");
+        }
+
+        // Switch expression (Java 14+) — sin break, más conciso
+        String tipoDia = switch (dia) {
+            case LUNES -> "Inicio de semana";
+            case MARTES, MIERCOLES, JUEVES -> "Día laboral";
+            case VIERNES -> "Víspera del finde";
+            case SABADO, DOMINGO -> "¡Fin de semana!";
+        };
+        System.out.println("Tipo de día: " + tipoDia);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Víspera del finde
+Tipo de día: Víspera del finde
+```
+
+## Enums con propiedades y métodos
+
+Los enums en Java son clases completas. Pueden tener:
+
+- **Campos** (normalmente final para que sean inmutables)
+- **Constructor privado** (no se puede instanciar desde fuera)
+- **Métodos** para obtener información adicional
+
+<CodeBlock lang="java" title="Enums con propiedades y métodos">
+{`public enum NivelAcceso {
+    INVITADO(0, "Sin acceso"),
+    LECTOR(1, "Solo lectura"),
+    EDITOR(2, "Lectura y escritura"),
+    ADMIN(3, "Acceso total");
+
+    private final int prioridad;
+    private final String descripcion;
+
+    // Constructor — siempre privado en un enum
+    NivelAcceso(int prioridad, String descripcion) {
+        this.prioridad = prioridad;
+        this.descripcion = descripcion;
+    }
+
+    public int getPrioridad() { return prioridad; }
+    public String getDescripcion() { return descripcion; }
+
+    public boolean puedeEditar() {
+        return this == EDITOR || this == ADMIN;
+    }
+
+    public boolean puedeAdministrar() {
+        return this == ADMIN;
+    }
+
+    // Método estático para buscar por prioridad
+    public static NivelAcceso desdePrioridad(int prioridad) {
+        for (NivelAcceso nivel : values()) {
+            if (nivel.prioridad == prioridad) {
+                return nivel;
+            }
+        }
+        return INVITADO;
+    }
+}
+
+public class DemoNivel {
+    public static void main(String[] args) {
+        NivelAcceso nivel = NivelAcceso.EDITOR;
+
+        System.out.println("Nivel: " + nivel);
+        System.out.println("Prioridad: " + nivel.getPrioridad());
+        System.out.println("Descripción: " + nivel.getDescripcion());
+        System.out.println("Puede editar: " + nivel.puedeEditar());
+        System.out.println("Puede administrar: " + nivel.puedeAdministrar());
+
+        // Buscar por prioridad
+        NivelAcceso buscado = NivelAcceso.desdePrioridad(3);
+        System.out.println("Prioridad 3: " + buscado);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Nivel: EDITOR
+Prioridad: 2
+Descripción: Lectura y escritura
+Puede editar: true
+Puede administrar: false
+Prioridad 3: ADMIN
+```
+
+## Métodos útiles de Enum
+
+Todo enum hereda automáticamente de `java.lang.Enum`, que provee:
+
+| Método | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `name()` | El nombre exacto de la constante | `Nivel.ADMIN.name()` → `"ADMIN"` |
+| `ordinal()` | Posición (0-based) | `Nivel.ADMIN.ordinal()` → `3` |
+| `values()` | Todas las constantes en array | `Nivel.values()` → `[INVITADO, LECTOR, EDITOR, ADMIN]` |
+| `valueOf(str)` | Constante desde String | `Nivel.valueOf("ADMIN")` → `Nivel.ADMIN` |
+
+<CodeBlock lang="java" title="Métodos heredados de Enum">
+{`public class MetodosEnum {
+    public static void main(String[] args) {
+        // valueOf: convertir String a enum
+        NivelAcceso nivel = NivelAcceso.valueOf("LECTOR");
+        System.out.println("valueOf('LECTOR'): " + nivel);
+
+        // name(): obtener el nombre exacto
+        String nombre = NivelAcceso.ADMIN.name();
+        System.out.println("ADMIN.name(): '" + nombre + "'");
+
+        // ordinal(): posición 0-based
+        System.out.println("INVITADO.ordinal(): " + NivelAcceso.INVITADO.ordinal());
+        System.out.println("ADMIN.ordinal(): " + NivelAcceso.ADMIN.ordinal());
+
+        // values(): iterar todas las constantes
+        System.out.println("\\nTodos los niveles:");
+        for (NivelAcceso n : NivelAcceso.values()) {
+            System.out.printf("  %d. %s%n", n.ordinal(), n.name());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Errores frecuentes
+
+### Error 1: Declarar constantes sin final
+```java
+// ❌ Esto no es una constante — puede modificarse
+double IVU = 0.16;
+
+// ✅ Constante verdadera
+public static final double IVU = 0.16;
+```
+
+### Error 2: No seguir la convención de nomenclatura
+```java
+// ❌ Las constantes deben ir en MAYÚSCULAS
+public static final double maximo = 100;
+
+// ✅ Convención estándar
+public static final double MAXIMO = 100;
+```
+
+### Error 3: Usar `ordinal()` en lógica de negocio
+```java
+// ❌ Si cambia el orden del enum, el código se rompe
+if (nivel.ordinal() >= 2) { puedeEditar = true; }
+
+// ✅ Usar un campo de prioridad explícito
+if (nivel.getPrioridad() >= 2) { puedeEditar = true; }
+```
+
+### Error 4: Enums fuera de su propio archivo
+```java
+// ❌ Un enum público necesita su propio archivo
+public class Ejemplo {
+    public enum Color { ROJO, VERDE, AZUL }  // ¡No!
+}
+
+// ✅ Cada enum público en su propio archivo .java
+// Color.java
+public enum Color { ROJO, VERDE, AZUL }
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

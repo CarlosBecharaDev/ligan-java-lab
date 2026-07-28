@@ -1,0 +1,58 @@
+{
+  "id": "quiz-21-polimorfismo-basico",
+  "lessonSlug": "polimorfismo",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Que es el polimorfismo en Java?",
+      "options": [
+        "Tener multiples atributos",
+        "Un mismo tipo de referencia con diferentes comportamientos en tiempo de ejecucion",
+        "Crear multiples constructores",
+        "Usar multiples clases"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No es sobre atributos.",
+        "Correcto. Polimorfismo permite que un tipo padre ejecute distintas versiones de un metodo segun el objeto real.",
+        "Eso es sobrecarga de constructores.",
+        "No se trata de crear multiples clases."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Cual es la diferencia entre sobrecarga y sobrescritura?",
+      "options": [
+        "Son lo mismo",
+        "Sobrecarga: mismos nombres diferentes parametros. Sobrescritura: misma firma en subclase.",
+        "Sobrecarga es en subclases, sobrescritura en la misma clase",
+        "Sobrecarga usa @Override, sobrescritura no"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No son lo mismo.",
+        "Correcto. Overloading = misma clase, diferentes parametros. Overriding = subclase, misma firma.",
+        "Es al reves: sobrecarga en la misma clase, sobrescritura en subclase.",
+        "Sobrescritura usa @Override, sobrecarga no."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Que operador verifica el tipo real de un objeto antes de un downcast?",
+      "options": [
+        "cast",
+        "instanceof",
+        "typeof",
+        "getClass"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "cast no es un operador de verificacion.",
+        "Correcto. instanceof retorna true si el objeto es del tipo especificado.",
+        "typeof no existe en Java.",
+        "getClass() retorna el tipo pero no verifica con un tipo dado directamente."
+      ]
+    }
+  ]
+}

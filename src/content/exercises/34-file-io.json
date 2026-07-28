@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-file-io-facil",
+    "title": "Leer archivo",
+    "difficulty": "facil",
+    "description": "Lee un archivo de texto línea por línea usando BufferedReader e imprime cada línea.",
+    "template": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Lee el archivo \"datos.txt\" línea por línea e imprímela\n    }\n}",
+    "hints": [
+      "Usa new BufferedReader(new FileReader(\"datos.txt\"))",
+      "Lee cada línea con br.readLine() en un bucle while",
+      "Cierra el BufferedReader en un bloque finally o try-with-resources"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (BufferedReader br = new BufferedReader(new FileReader(\"datos.txt\"))) {\n            String linea;\n            while ((linea = br.readLine()) != null) {\n                System.out.println(linea);\n            }\n        } catch (IOException e) {\n            System.out.println(\"Error leyendo archivo: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "BufferedReader envuelve FileReader y ofrece readLine() para leer cada línea. El try-with-resources cierra automáticamente el recurso.",
+    "expectedOutput": "[Contenido del archivo datos.txt línea por línea]",
+    "lessonSlug": "file-io"
+  },
+  {
+    "id": "ex-file-io-normal",
+    "title": "Contar líneas y palabras",
+    "difficulty": "normal",
+    "description": "Lee un archivo de texto y cuenta el total de líneas y palabras que contiene.",
+    "template": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Lee \"texto.txt\" y cuenta líneas y palabras\n    }\n}",
+    "hints": [
+      "Cada readLine() es una línea nueva, incrementa el contador de líneas",
+      "Para contar palabras, usa linea.split(\"\\\\s+\")",
+      "Las líneas vacías deben manejarse correctamente"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        int totalLineas = 0;\n        int totalPalabras = 0;\n        try (BufferedReader br = new BufferedReader(new FileReader(\"texto.txt\"))) {\n            String linea;\n            while ((linea = br.readLine()) != null) {\n                totalLineas++;\n                if (!linea.trim().isEmpty()) {\n                    String[] palabras = linea.split(\"\\\\s+\");\n                    totalPalabras += palabras.length;\n                }\n            }\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n        System.out.println(\"Líneas: \" + totalLineas);\n        System.out.println(\"Palabras: \" + totalPalabras);\n    }\n}",
+    "solutionExplanation": "Se incrementa un contador por cada línea leída. Las palabras se contaban usando split() con espacio en blanco como delimitador.",
+    "expectedOutput": "Líneas: 3\nPalabras: 12",
+    "lessonSlug": "file-io"
+  },
+  {
+    "id": "ex-file-io-dificil",
+    "title": "Copiar archivo",
+    "difficulty": "dificil",
+    "description": "Copia un archivo completo línea por línea a otro archivo, mostrando también el progreso.",
+    "template": "import java.io.BufferedReader;\nimport java.io.BufferedWriter;\nimport java.io.FileReader;\nimport java.io.FileWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Copia \"origen.txt\" a \"destino.txt\" línea por línea\n        // Muestra el progreso de cada línea copiada\n    }\n}",
+    "hints": [
+      "Usa BufferedReader para leer y BufferedWriter para escribir",
+      "Usa try-with-resources para ambos",
+      "Imprime el número de línea copiada mientras trabajas"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.BufferedWriter;\nimport java.io.FileReader;\nimport java.io.FileWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (\n            BufferedReader br = new BufferedReader(new FileReader(\"origen.txt\"));\n            BufferedWriter bw = new BufferedWriter(new FileWriter(\"destino.txt\"))\n        ) {\n            String linea;\n            int numLinea = 0;\n            while ((linea = br.readLine()) != null) {\n                bw.write(linea);\n                bw.newLine();\n                numLinea++;\n                System.out.println(\"Línea \" + numLinea + \" copiada: \" + linea);\n            }\n            System.out.println(\"Archivo copiado: \" + numLinea + \" líneas\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "Se abren ambos archivos con try-with-resources. Se lee cada línea del origen, se escribe en el destino con bw.write(), y se agrega un salto de línea con bw.newLine().",
+    "expectedOutput": "Línea 1 copiada: Hola mundo\nLínea 2 copiada: Esta es una prueba\nLínea 3 copiada: Copia exitosa\nArchivo copiado: 3 líneas",
+    "lessonSlug": "file-io"
+  }
+]

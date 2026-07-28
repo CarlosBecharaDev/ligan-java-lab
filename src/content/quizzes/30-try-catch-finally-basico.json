@@ -1,0 +1,92 @@
+{
+  "id": "quiz-30-try-catch-finally-basico",
+  "lessonSlug": "try-catch-finally",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuándo se ejecuta el bloque catch en Java?",
+      "options": [
+        "Siempre, antes del bloque try",
+        "Cuando se lanza una excepción dentro del bloque try",
+        "Solo cuando el programa termina sin errores",
+        "Después del bloque finally sin importar lo que pase"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El catch no se ejecuta antes del try; se ejecuta después cuando hay una excepción.",
+        "Correcto. El bloque catch se ejecuta únicamente cuando se lanza una excepción que coincide con el tipo declarado en el catch.",
+        "Si el programa termina sin errores, el catch no se ejecuta.",
+        "El finally se ejecuta después del catch, no al revés."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué hace el bloque finally?",
+      "options": [
+        "Se ejecuta solo si ocurre una excepción en el try",
+        "Se ejecuta siempre, tanto si hay excepción como si no la hay",
+        "Se ejecuta solo cuando no hay ningún catch definido",
+        "Se ejecuta solo la primera vez que se llama al método"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El finally no se limita a cuando hay excepción; siempre se ejecuta.",
+        "Correcto. El bloque finally se ejecuta siempre después del try-catch, independientemente de si se lanzó una excepción o no.",
+        "El finally se ejecuta siempre, no solo cuando no hay catch.",
+        "El finally se ejecuta en cada pasada por el try-catch, no solo la primera vez."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Se pueden tener múltiples bloques catch en Java?",
+      "options": [
+        "No, solo se puede tener un bloque catch por cada try",
+        "Sí, pero deben ir de más específica a más general",
+        "Solo si se usa la palabra clave multi-catch",
+        "Solo cuando se usan unchecked exceptions"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Es posible tener múltiples catch; la idea de uno solo es incorrecta.",
+        "Correcto. Se pueden tener múltiples catch, y deben ir ordenados de más específica (ej. FileNotFoundException) a más general (ej. IOException).",
+        "El multi-catch permite combinar tipos, pero no es la única forma de manejar múltiples excepciones.",
+        "El orden de múltiples catch no depende de si las excepciones son checked o unchecked."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué hace la sintaxis de multi-catch en Java?",
+      "options": [
+        "Permite ejecutar un solo catch para múltiples tipos de excepciones con la sintaxis catch(A | B e)",
+        "Permite lanzar múltiples excepciones a la vez",
+        "Permite tener múltiples bloques finally en un solo try",
+        "Permite que un método retorne múltiples tipos de error"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Multi-catch permite manejar múltiples tipos de excepciones en un solo bloque catch usando el operador |, por ejemplo: catch(IOException | SQLException e).",
+        "Multi-catch no lanza excepciones; las captura.",
+        "Solo se puede tener un bloque finally por cada try.",
+        "Multi-catch no afecta el retorno del método."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es try-with-resources en Java?",
+      "options": [
+        "Un try que consume menos memoria que un try normal",
+        "Una forma de declarar recursos que se cierran automáticamente al salir del bloque",
+        "Un patrón para reutilizar el mismo recurso en múltiples métodos",
+        "Una alternativa al uso de constructores para crear objetos"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El try-with-resources no tiene relación con el consumo de memoria.",
+        "Correcto. try-with-resources (try(Recurso r = ...) { }) declara un recurso que se cierra automáticamente al terminar el bloque, sin necesidad de llamar close() manualmente.",
+        "El try-with-resources cierra el recurso al salir, no lo reutiliza entre métodos.",
+        "El try-with-resources se usa para recursos (streams, conexiones), no para reemplazar constructores."
+      ]
+    }
+  ]
+}

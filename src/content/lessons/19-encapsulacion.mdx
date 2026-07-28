@@ -1,0 +1,611 @@
+---
+title: "Encapsulación"
+slug: "encapsulacion"
+description: "Protege los datos de tus clases con campos privados, getters, setters y modificadores de acceso."
+module: "04-poo"
+level: "Intermedio"
+order: 19
+estimatedMinutes: 30
+objectives:
+  - "Usar el modificador private para proteger atributos"
+  - "Crear getters y setters con validación"
+  - "Distinguir entre los modificadores de acceso: private, protected, public y default"
+  - "Aplicar principios de inmutabilidad básica"
+prerequisites:
+  - "clases-objetos"
+  - "constructores"
+realWorldExamples:
+  - domain: "Salud  Proteccin de Datos de Paciente"
+    description: "Ejemplo practico de Salud  Proteccin de Datos de Paciente"
+    code: "public class Paciente {\n    private String nombre;\n    private int edad;\n    private double temperatura;\n    private String diagnostico;\n    private boolean necesitaUrgencia;\n\n    Paciente(String nombre, int edad, double temperatura) {\n        this.nombre = nombre;\n        setEdad(edad);\n        setTemperatura(temperatura);\n        this.diagnostico = \"Por determinar\";\n        this.necesitaUrgencia = false;\n    }\n\n    public String getNombre() {\n        return nombre;\n    }\n\n    public int getEda..."
+    result: "Validación crítica: temperatura dentro de rango viable"
+  - domain: "Ecommerce  Validacin de Precios"
+    description: "Ejemplo practico de Ecommerce  Validacin de Precios"
+    code: "public class CarritoItem {\n    private String nombreProducto;\n    private double precioUnitario;\n    private int cantidad;\n    private double descuento;  // Porcentaje (0.0 a 1.0)\n\n    CarritoItem(String nombreProducto, double precioUnitario, int cantidad) {\n        this.nombreProducto = nombreProducto;\n        setPrecioUnitario(precioUnitario);\n        setCantidad(cantidad);\n        this.descuento = 0.0;\n    }\n\n    public String getNombreProducto() {\n        return nombreProducto;\n    }\n\n    pu..."
+    result: "Porcentaje (0.0 a 1.0)"
+hasInteractive: false
+comparisons:
+  - title: "Campos privados vs públicos"
+    items:
+      - name: "Campos privados (private)"
+        features:
+          seguridad: "Alta - protege datos"
+          validacion: "Posible via setters"
+          mantenimiento: "Facil de cambiar"
+      - name: "Campos públicos (public)"
+        features:
+          seguridad: "Baja - acceso libre"
+          validacion: "No posible"
+          mantenimiento: "Dificil - acoplamiento alto"
+    recommendation: "Usa la opcion que mejor se adapte a tu caso especifico"
+videos: []
+faqs:
+  - question: "¿Cuándo uso private vs public?"
+    answer: "Usa `private` para todos los atributos. Solo usa `public` para métodos que deben ser accesibles externamente. La regla general es: los datos siempre privados, la interfaz pública con métodos."
+  - question: "¿Qué pasa si no pongo un setter?"
+    answer: "Si solo defines el getter, el atributo es de solo lectura desde fuera de la clase. Esto es útil para valores que no deben cambiar (como un ID o fecha de creación)."
+  - question: "¿Puedo tener un setter sin getter?"
+    answer: "Sí, pero es poco común. Se usa cuando quieres permitir modificar un valor interno pero no exponer su valor actual."
+  - question: "¿Qué es la inmutabilidad y cuándo la uso?"
+    answer: "Un objeto inmutable no cambia después de creado (usando `final`). Es útil para fechas, coordenadas, valores de configuración y cualquier dato que no deba modificarse. Facilita la concurrencia y evita errores."
+sources:
+  - title: "Oracle - Controlling Access to Members of a Class"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    date: "2025-07-27"
+  - title: "Oracle - Providing Constructors for Your Classes"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Java Getters and Setters"
+    url: "https://www.baeldung.com/java-bean getters-setters"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Encapsulation in Java"
+    url: "https://www.geeksforgeeks.org/encapsulation-in-java/"
+    date: "2025-07-27"
+  - title: "Oracle - Creating Immutable Classes"
+    url: "https://docs.oracle.com/javase/tutorial/essential/concepts/immutability.html"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Objetivos de Aprendizaje
+
+Al finalizar esta lección, podrás:
+- Usar el modificador `private` para proteger atributos
+- Crear getters y setters con validación
+- Distinguir entre los modificadores de acceso: `private`, `protected`, `public` y default
+- Aplicar principios de inmutabilidad básica
+
+---
+
+## El Problema: Campos Públicos
+
+Cuando los atributos son públicos, cualquiera puede asignar cualquier valor sin control:
+
+```java
+public class CuentaBancaria {
+    public double saldo;  // ¡Cualquiera puede cambiar esto!
+
+    CuentaBancaria(double saldo) {
+        this.saldo = saldo;
+    }
+}
+
+// Problema: sin validación
+CuentaBancaria cuenta = new CuentaBancaria(1000);
+cuenta.saldo = -5000;  // ¡Saldo negativo! No debería ser posible
+cuenta.saldo = 999999999;  // ¡Saldo irreal!
+```
+
+Esto es peligroso porque no hay control sobre qué valores se asignan. La encapsulación resuelve este problema.
+
+---
+
+## Encapsulación con `private`
+
+La **encapsulación** es el principio de OOP que consiste en ocultar los detalles internos de una clase y exponer solo lo necesario a través de métodos controlados.
+
+```java
+public class CuentaBancaria {
+    private double saldo;  // Solo accesible dentro de la clase
+
+    CuentaBancaria(double saldoInicial) {
+        if (saldoInicial >= 0) {
+            this.saldo = saldoInicial;
+        } else {
+            this.saldo = 0;
+            System.out.println("El saldo no puede ser negativo. Se usa $0");
+        }
+    }
+
+    // Getter: obtener el saldo de forma segura
+    public double getSaldo() {
+        return saldo;
+    }
+
+    // Setter: modificar el saldo con validación
+    public void setSaldo(double nuevoSaldo) {
+        if (nuevoSaldo >= 0) {
+            this.saldo = nuevoSaldo;
+        } else {
+            System.out.println("Error: el saldo no puede ser negativo");
+        }
+    }
+}
+```
+
+Ahora el saldo siempre será válido:
+
+```java
+CuentaBancaria cuenta = new CuentaBancaria(1000);
+cuenta.setSaldo(-5000);  // Imprime error, saldo sigue en 1000
+System.out.println(cuenta.getSaldo());  // 1000.0 (protegido)
+```
+
+---
+
+## Getters y Setters
+
+**Getters** retornan el valor de un atributo. **Setters** modifican el valor con validación:
+
+<CodeBlock
+  title="Clase Persona encapsulada"
+  lang="java"
+  code={`public class Persona {
+    private String nombre;
+    private int edad;
+    private String email;
+
+    Persona(String nombre, int edad, String email) {
+        this.nombre = nombre;
+        setEdad(edad);        // Usamos el setter para validar
+        setEmail(email);      // Usamos el setter para validar
+    }
+
+    // --- Getters ---
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    // --- Setters con validación ---
+    public void setEdad(int edad) {
+        if (edad >= 0 && edad <= 150) {
+            this.edad = edad;
+        } else {
+            System.out.println("Edad inválida: " + edad);
+        }
+    }
+
+    public void setEmail(String email) {
+        if (email != null && email.contains("@")) {
+            this.email = email;
+        } else {
+            System.out.println("Email inválido: " + email);
+        }
+    }
+
+    public void mostrar() {
+        System.out.println(nombre + " | " + edad + " años | " + email);
+    }
+
+    public static void main(String[] args) {
+        Persona p = new Persona("María", 25, "maria@email.com");
+        p.mostrar();  // María | 25 años | maria@email.com
+
+        p.setEdad(200);   // Edad inválida: 200
+        p.setEmail("abc"); // Email inválido: abc
+        p.mostrar();      // María | 25 años | maria@email.com (sin cambios)
+    }
+}`}
+/>
+
+**Convención en Java:**
+- Getter: `getNombre()` retorna el valor
+- Setter: `setNombre(valor)` modifica el valor
+- Para booleanos: `isActivo()` en lugar de `getActivo()`
+
+---
+
+## Modificadores de Acceso
+
+Java tiene cuatro niveles de acceso para atributos y métodos:
+
+| Modificador | Misma clase | Mismo paquete | Subclase | Cualquier lugar |
+|-------------|:-----------:|:------------:|:--------:|:---------------:|
+| `private` | Si | No | No | No |
+| default (sin palabra) | Si | Si | No | No |
+| `protected` | Si | Si | Si | No |
+| `public` | Si | Si | Si | Si |
+
+<CodeBlock
+  title="Ejemplo de modificadores"
+  lang="java"
+  code={`public class Animal {
+    private String nombre;       // Solo dentro de Animal
+    protected int edad;          // Animal + subclases + mismo paquete
+    String especie;              // default: solo mismo paquete
+    public boolean activo;       // Accesible desde cualquier lugar
+
+    Animal(String nombre, int edad, String especie) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.especie = especie;
+        this.activo = true;
+    }
+
+    // nombre solo es accesible aquí (private)
+    //edad es accesible en subclases (protected)
+    // especie es accesible en el mismo paquete (default)
+    // activo es accesible en cualquier lugar (public)
+}`}
+/>
+
+**Regla general:** Usa `private` por defecto. Solo amplía el acceso cuando sea necesario.
+
+---
+
+## Validación en Setters
+
+Los setters permiten proteger la integridad de los datos con reglas de negocio:
+
+<CodeBlock
+  title="Setters con reglas de negocio"
+  lang="java"
+  code={`public class Producto {
+    private String nombre;
+    private double precio;
+    private int stock;
+
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        setPrecio(precio);  // Validar desde el constructor
+        setStock(stock);    // Validar desde el constructor
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public double getPrecio() {
+        return precio;
+    }
+
+    // Precio debe ser mayor a 0
+    public void setPrecio(double precio) {
+        if (precio > 0) {
+            this.precio = precio;
+        } else {
+            System.out.println("Error: el precio debe ser mayor a 0");
+        }
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    // Stock no puede ser negativo
+    public void setStock(int stock) {
+        if (stock >= 0) {
+            this.stock = stock;
+        } else {
+            System.out.println("Error: el stock no puede ser negativo");
+        }
+    }
+
+    // Método que modifica stock de forma controlada
+    public boolean vender(int cantidad) {
+        if (cantidad <= 0) {
+            System.out.println("Cantidad inválida");
+            return false;
+        }
+        if (cantidad > stock) {
+            System.out.println("Stock insuficiente. Disponible: " + stock);
+            return false;
+        }
+        this.stock -= cantidad;
+        return true;
+    }
+
+    public void mostrar() {
+        System.out.println(nombre + " - $" + precio + " | Stock: " + stock);
+    }
+
+    public static void main(String[] args) {
+        Producto laptop = new Producto("Laptop", 1200.00, 10);
+        laptop.mostrar();  // Laptop - $1200.0 | Stock: 10
+
+        laptop.setPrecio(-50);  // Error: el precio debe ser mayor a 0
+        laptop.setStock(-3);    // Error: el stock no puede ser negativo
+
+        laptop.vender(3);       // Venta exitosa
+        laptop.vender(20);      // Stock insuficiente. Disponible: 7
+        laptop.mostrar();       // Laptop - $1200.0 | Stock: 7
+    }
+}`}
+/>
+
+---
+
+## Inmutabilidad Básica
+
+Un objeto **inmutable** es aquel cuyo estado no puede cambiar después de creado. Se logra con campos `private final` y sin setters:
+
+<CodeBlock
+  title="Clase inmutable: Fecha"
+  lang="java"
+  code={`public class Fecha {
+    private final int dia;     // final = no cambia después de creado
+    private final int mes;
+    private final int anio;
+
+    Fecha(int dia, int mes, int anio) {
+        // Validación en el constructor
+        if (dia < 1 || dia > 31) {
+            throw new IllegalArgumentException("Día inválido: " + dia);
+        }
+        if (mes < 1 || mes > 12) {
+            throw new IllegalArgumentException("Mes inválido: " + mes);
+        }
+        this.dia = dia;
+        this.mes = mes;
+        this.anio = anio;
+    }
+
+    // Solo getters (no hay setters, no se puede modificar)
+    public int getDia() { return dia; }
+    public int getMes() { return mes; }
+    public int getAnio() { return anio; }
+
+    public String mostrar() {
+        return dia + "/" + mes + "/" + anio;
+    }
+
+    public static void main(String[] args) {
+        Fecha hoy = new Fecha(15, 7, 2024);
+        System.out.println(hoy.mostrar());  // 15/7/2024
+
+        // No se puede modificar:
+        // hoy.dia = 20;  // Error: campo final
+        // No hay setters definidos
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: Salud - Protección de Datos de Paciente
+
+<CodeBlock
+  title="Paciente con datos protegidos"
+  lang="java"
+  code={`public class Paciente {
+    private String nombre;
+    private int edad;
+    private double temperatura;
+    private String diagnostico;
+    private boolean necesitaUrgencia;
+
+    Paciente(String nombre, int edad, double temperatura) {
+        this.nombre = nombre;
+        setEdad(edad);
+        setTemperatura(temperatura);
+        this.diagnostico = "Por determinar";
+        this.necesitaUrgencia = false;
+    }
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        if (edad >= 0 && edad <= 150) {
+            this.edad = edad;
+        } else {
+            System.out.println("Edad inválida para paciente: " + edad);
+        }
+    }
+
+    public double getTemperatura() {
+        return temperatura;
+    }
+
+    // Validación crítica: temperatura dentro de rango viable
+    public void setTemperatura(double temperatura) {
+        if (temperatura >= 30.0 && temperatura <= 45.0) {
+            this.temperatura = temperatura;
+            this.necesitaUrgencia = temperatura >= 39.0;
+        } else {
+            System.out.println("Temperatura fuera de rango: " + temperatura);
+        }
+    }
+
+    public String getDiagnostico() {
+        return diagnostico;
+    }
+
+    public void setDiagnostico(String diagnostico) {
+        if (diagnostico != null && !diagnostico.isEmpty()) {
+            this.diagnostico = diagnostico;
+        }
+    }
+
+    public boolean isNecesitaUrgencia() {
+        return necesitaUrgencia;
+    }
+
+    void mostrarFicha() {
+        String urgencia = necesitaUrgencia ? " [URGENCIA]" : "";
+        System.out.println("Paciente: " + nombre + " | Edad: " + edad);
+        System.out.println("Temperatura: " + temperatura + "°C" + urgencia);
+        System.out.println("Diagnóstico: " + diagnostico);
+    }
+
+    public static void main(String[] args) {
+        Paciente p = new Paciente("Carlos", 45, 36.8);
+        p.mostrarFicha();
+        // Paciente: Carlos | Edad: 45
+        // Temperatura: 36.8°C
+        // Diagnóstico: Por determinar
+
+        p.setTemperatura(39.5);  // Activa urgencia
+        p.setDiagnostico("Fiebre alta");
+        p.mostrarFicha();
+        // Paciente: Carlos | Edad: 45
+        // Temperatura: 39.5°C [URGENCIA]
+        // Diagnóstico: Fiebre alta
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: E-commerce - Validación de Precios
+
+<CodeBlock
+  title="Producto con validación estricta"
+  lang="java"
+  code={`public class CarritoItem {
+    private String nombreProducto;
+    private double precioUnitario;
+    private int cantidad;
+    private double descuento;  // Porcentaje (0.0 a 1.0)
+
+    CarritoItem(String nombreProducto, double precioUnitario, int cantidad) {
+        this.nombreProducto = nombreProducto;
+        setPrecioUnitario(precioUnitario);
+        setCantidad(cantidad);
+        this.descuento = 0.0;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public double getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    // Precio debe ser positivo
+    public void setPrecioUnitario(double precio) {
+        if (precio > 0) {
+            this.precioUnitario = precio;
+        } else {
+            System.out.println("Error: precio inválido para " + nombreProducto);
+        }
+    }
+
+    public int getCantidad() {
+        return cantidad;
+    }
+
+    // Cantidad mínima 1, máxima 99
+    public void setCantidad(int cantidad) {
+        if (cantidad >= 1 && cantidad <= 99) {
+            this.cantidad = cantidad;
+        } else {
+            System.out.println("Cantidad fuera de rango: " + cantidad);
+        }
+    }
+
+    public double getDescuento() {
+        return descuento;
+    }
+
+    // Descuento entre 0% y 50%
+    public void setDescuento(double descuento) {
+        if (descuento >= 0.0 && descuento <= 0.5) {
+            this.descuento = descuento;
+        } else {
+            System.out.println("Descuento inválido: " + (descuento * 100) + "%");
+        }
+    }
+
+    double calcularSubtotal() {
+        double precioConDescuento = precioUnitario * (1 - descuento);
+        return precioConDescuento * cantidad;
+    }
+
+    void mostrarItem() {
+        System.out.println(nombreProducto + " x" + cantidad + " - $" + precioUnitario);
+        if (descuento > 0) {
+            System.out.println("  Descuento: " + (descuento * 100) + "% | Subtotal: $" + calcularSubtotal());
+        }
+    }
+
+    public static void main(String[] args) {
+        CarritoItem item1 = new CarritoItem("Laptop", 1200.00, 1);
+        item1.setDescuento(0.10);  // 10% descuento
+
+        CarritoItem item2 = new CarritoItem("Mouse", 25.00, 3);
+        item2.setDescuento(0.60);  // Error: descuento máximo 50%
+
+        CarritoItem item3 = new CarritoItem("Teclado", -50.00, 1);  // Error: precio inválido
+
+        item1.mostrarItem();
+        item2.mostrarItem();
+    }
+}`}
+/>
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Encapsulación** | Ocultar datos internos y controlar el acceso |
+| **private** | Accesible solo dentro de la misma clase |
+| **protected** | Accesible en subclases y mismo paquete |
+| **public** | Accesible desde cualquier lugar |
+| **default** | Accesible solo en el mismo paquete (sin palabra clave) |
+| **Getter** | Método que retorna el valor de un atributo |
+| **Setter** | Método que modifica el valor con validación |
+| **Inmutabilidad** | Objeto cuyo estado no cambia después de creado (`final`) |
+
+---
+
+## Preguntas Frecuentes
+
+<details>
+<summary>¿Cuándo uso private vs public?</summary>
+Usa `private` para todos los atributos. Solo usa `public` para métodos que deben ser accesibles externamente. La regla general es: los datos siempre privados, la interfaz pública con métodos.
+</details>
+
+<details>
+<summary>¿Qué pasa si no pongo un setter?</summary>
+Si solo defines el getter, el atributo es de solo lectura desde fuera de la clase. Esto es útil para valores que no deben cambiar (como un ID o fecha de creación).
+</details>
+
+<details>
+<summary>¿Puedo tener un setter sin getter?</summary>
+Sí, pero es poco común. Se usa cuando quieres permitir modificar un valor interno pero no exponer su valor actual.
+</details>
+
+<details>
+<summary>¿Qué es la inmutabilidad y cuándo la uso?</summary>
+Un objeto inmutable no cambia después de creado (usando `final`). Es útil para fechas, coordenadas, valores de configuración y cualquier dato que no deba modificarse. Facilita la concurrencia y evita errores.
+</details>
+
+---
+
+## Fuentes y Referencias
+
+- [Oracle - Controlling Access to Members of a Class](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)
+- [Oracle - Providing Constructors for Your Classes](https://docs.oracle.com/javase/tutorial/java/javaOO/constructors.html)
+- [Baeldung - Java Getters and Setters](https://www.baeldung.com/java-bean getters-setters)
+- [GeeksforGeeks - Encapsulation in Java](https://www.geeksforgeeks.org/encapsulation-in-java/)
+- [Oracle - Creating Immutable Classes](https://docs.oracle.com/javase/tutorial/essential/concepts/immutability.html)

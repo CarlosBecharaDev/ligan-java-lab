@@ -1,0 +1,92 @@
+{
+  "id": "quiz-39-streams-basico",
+  "lessonSlug": "streams",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es un Stream en Java?",
+      "options": [
+        "Una secuencia de elementos que soporta operaciones funcionales",
+        "Un flujo de bytes para leer archivos",
+        "Una conexión a una base de datos",
+        "Un tipo de bucle"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un Stream es una secuencia de elementos que permite operaciones funcionales como filter, map y reduce.",
+        "Eso describe InputStream/OutputStream, no Stream de la API de streams.",
+        "No es una conexión a base de datos.",
+        "Un Stream no es un bucle."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué operación intermedia convierte Strings a mayúsculas?",
+      "options": [
+        "map(String::toUpperCase)",
+        "filter(s -> s.length() > 0)",
+        "forEach(System.out::println)",
+        "reduce((a, b) -> a + b)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. map(String::toUpperCase) aplica la transformación a cada elemento del stream.",
+        "filter selecciona elementos según una condición, no transforma.",
+        "forEach es una operación terminal que imprime, no transforma.",
+        "reduce combina elementos en uno solo."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué operación terminal imprime cada elemento del stream?",
+      "options": [
+        "forEach(System.out::println)",
+        "map(System.out::println)",
+        "filter(System.out::println)",
+        "reduce(System.out::println)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. forEach ejecuta una acción (Consumer) para cada elemento del stream.",
+        "map es una operación intermedia, no terminal.",
+        "filter es una operación intermedia, no terminal.",
+        "reduce combina elementos, no imprime."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué operación filtra elementos de un stream según una condición?",
+      "options": [
+        "filter()",
+        "map()",
+        "flatMap()",
+        "sorted()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. filter() recibe un Predicate y selecciona solo los elementos que cumplen la condición.",
+        "map() transforma elementos, no filtra.",
+        "flatMap() aplana streams anidados.",
+        "sorted() ordena los elementos."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué operación reduce un stream a un solo valor?",
+      "options": [
+        "reduce() o collect()",
+        "map()",
+        "filter()",
+        "forEach()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. reduce() combina todos los elementos en uno solo; collect() acumula en una colección o resultado.",
+        "map() transforma pero no reduce.",
+        "filter() selecciona pero no reduce.",
+        "forEach() ejecuta una acción pero no retorna un valor reducido."
+      ]
+    }
+  ]
+}

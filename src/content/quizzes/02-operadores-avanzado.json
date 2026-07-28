@@ -1,0 +1,48 @@
+{
+  "id": "quiz-avanzado-operadores",
+  "lessonSlug": "operadores",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué imprime este código?\n```java\nint x = 10;\nint y = ++x * 2;\nSystem.out.println(y);\n```",
+      "options": ["20", "22", "21", "Error"],
+      "correctIndex": 1,
+      "explanations": [
+        "++x incrementa primero (x=11), luego 11*2=22.",
+        "Correcto. Preincremento: x se convierte en 11 antes de multiplicar.",
+        "21 sería el resultado de x++ * 2 + algo más.",
+        "El código es válido."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuál es la diferencia entre `&&` y `&` en expresiones booleanas?",
+      "options": [
+        "Son exactamente iguales",
+        "&& tiene cortocircuito, & evalúa ambos lados siempre",
+        "& tiene cortocircuito, && evalúa ambos lados siempre",
+        "& solo funciona con enteros"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Son diferentes en su comportamiento de evaluación.",
+        "Correcto. && evalúa el segundo operando solo si el primero es true. & siempre evalúa ambos.",
+        "Es al revés: && tiene cortocircuito.",
+        "& funciona tanto como bit-a-bita como lógico."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué resultado produce `System.out.println(2 + 3 * 4);`?",
+      "options": ["20", "14", "24", "32"],
+      "correctIndex": 1,
+      "explanations": [
+        "Para obtener 20 necesitarías paréntesis: (2+3)*4.",
+        "Correcto. La multiplicación tiene mayor precedencia: 3*4=12, luego 2+12=14.",
+        "24 sería 2*3*4.",
+        "32 no corresponde a ninguna combinación."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,496 @@
+---
+title: "Clases y Objetos"
+slug: "clases-objetos"
+description: "Aprende a definir clases y crear objetos. Atributos, métodos, memoria y el operador new."
+module: "04-poo"
+level: "Inicial"
+order: 17
+estimatedMinutes: 35
+objectives:
+  - "Definir una clase con atributos y métodos"
+  - "Crear objetos usando el operador new"
+  - "Entender la diferencia entre referencia y valor"
+  - "Usar static para atributos y métodos de clase"
+prerequisites:
+  - "variables-y-tipos"
+  - "metodos"
+realWorldExamples:
+  - domain: "Salud"
+    description: "Ejemplo practico de Salud"
+    code: "public class Paciente {\n    static int totalPacientes = 0;\n\n    String nombre;\n    int edad;\n    double temperatura;\n    String sintoma;\n\n    Paciente(String nombre, int edad, double temperatura, String sintoma) {\n        this.nombre = nombre;\n        this.edad = edad;\n        this.temperatura = temperatura;\n        this.sintoma = sintoma;\n        totalPacientes++;\n    }\n\n    boolean tieneFiebre() {\n        return temperatura >= 37.5;\n    }\n\n    String clasificar() {\n        if (temperatura >= 3..."
+    result: ""
+  - domain: "Ecommerce"
+    description: "Ejemplo practico de Ecommerce"
+    code: "public class Producto {\n    static int totalProductos = 0;\n\n    String nombre;\n    double precio;\n    int stock;\n    boolean activo;\n\n    Producto(String nombre, double precio, int stock) {\n        this.nombre = nombre;\n        this.precio = precio;\n        this.stock = stock;\n        this.activo = stock > 0;\n        totalProductos++;\n    }\n\n    boolean hayStock() {\n        return stock > 0 && activo;\n    }\n\n    void vender(int cantidad) {\n        if (cantidad > stock) {\n            System.out.p..."
+    result: "Laptop - $1200.0 | Stock: 10 | Activo"
+hasInteractive: false
+comparisons:
+  - title: "Objetos vs Variables Primitivas"
+    items:
+      - name: "Objetos (clases)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso izquierdo"
+      - name: "Primitivos (int, double, etc.)"
+        features:
+          fortaleza: "Fortaleza principal del enfoque"
+          debilidad: "Limitacion a considerar"
+          mejor_para: "Caso ideal de uso derecho"
+    recommendation: "Usa la opcion que mejor se adapte a tu caso especifico"
+videos: []
+faqs:
+  - question: "¿Qué pasa si no inicializo un atributo?"
+    answer: "Java asigna valores por defecto: `0` para enteros, `0.0` para decimales, `null` para objetos, `false` para booleanos."
+  - question: "¿Puedo tener una clase sin métodos?"
+    answer: "Sí, pero no tiene sentido. Una clase sin métodos solo guarda datos sin comportamiento."
+  - question: "¿Cuándo uso static vs instance?"
+    answer: "- **static**: Compartido por todos (contadores, constantes, utilidades)\n- **instance**: Propio de cada objeto (nombre, edad, estado)"
+  - question: "¿Qué es el operador new exactamente?"
+    answer: "Reserva memoria en el heap para el objeto, inicializa sus atributos y retorna la dirección de memoria (referencia)."
+sources:
+  - title: "Oracle - Classes and Objects"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/"
+    date: "2025-07-27"
+  - title: "Oracle - Understanding Instance and Class Members"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Java Classes and Objects"
+    url: "https://www.baeldung.com/java-classes-objects"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Java OOPs Concepts"
+    url: "https://www.geeksforgeeks.org/introduction-to-object-oriented-programming-with-java/"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Objetivos de Aprendizaje
+
+Al finalizar esta lección, podrás:
+- Definir una clase con atributos y métodos
+- Crear objetos usando el operador `new`
+- Entender la diferencia entre referencia y valor
+- Usar `static` para atributos y métodos de clase
+
+---
+
+## ¿Qué es una Clase?
+
+Una **clase** es un molde o plantilla que define las características y comportamientos de un tipo de objeto. Es como el plano de una casa: define qué habitaciones tiene y cómo están conectadas, pero no es la casa en sí.
+
+```java
+// La clase es el molde
+public class Mascota {
+    // Atributos (características)
+    String nombre;
+    String especie;
+    int edad;
+    double peso;
+
+    // Métodos (comportamientos)
+    void comer() {
+        System.out.println(nombre + " está comiendo");
+    }
+
+    void presentarse() {
+        System.out.println("Soy " + nombre + ", un " + especie + " de " + edad + " años");
+    }
+}
+```
+
+**Anatomía de una clase:**
+- **Nombre**: Identifica el tipo de objeto (PascalCase)
+- **Atributos**: Variables que guardan datos del objeto
+- **Métodos**: Funciones que definen el comportamiento
+
+<CodeBlock
+  title="Clase completa: Persona"
+  lang="java"
+  code={`public class Persona {
+    // Atributos
+    String nombre;
+    int edad;
+    String email;
+
+    // Método
+    void saludar() {
+        System.out.println("Hola, soy " + nombre);
+    }
+
+    boolean esMayorDeEdad() {
+        return edad >= 18;
+    }
+
+    void hacerPedido(double monto) {
+        if (esMayorDeEdad()) {
+            System.out.println(nombre + " hace pedido por $" + monto);
+        } else {
+            System.out.println("Menores no pueden hacer pedidos");
+        }
+    }
+}`}
+/>
+
+---
+
+## Crear Objetos con `new`
+
+Un **objeto** es una instancia concreta de una clase. Para crearlo usamos `new`:
+
+```java
+public class CrearObjetos {
+    public static void main(String[] args) {
+        // Crear un objeto de Persona
+        Persona persona1 = new Persona();
+
+        // Asignar valores a atributos
+        persona1.nombre = "María";
+        persona1.edad = 25;
+        persona1.email = "maria@email.com";
+
+        // Llamar métodos
+        persona1.saludar();           // Hola, soy María
+        System.out.println(persona1.esMayorDeEdad());  // true
+
+        // Crear otro objeto (cada uno es independiente)
+        Persona persona2 = new Persona();
+        persona2.nombre = "Carlos";
+        persona2.edad = 15;
+        persona2.saludar();           // Hola, soy Carlos
+    }
+}
+```
+
+**Cada objeto tiene su propia copia de los atributos:**
+- `persona1` tiene nombre="María", edad=25
+- `persona2` tiene nombre="Carlos", edad=15
+- Cambiar `persona1.nombre` no afecta a `persona2`
+
+<CodeBlock
+  title="Múltiples objetos"
+  lang="java"
+  code={`public class Tienda {
+    public static void main(String[] args) {
+        // Crear productos
+        Producto laptop = new Producto();
+        laptop.nombre = "Laptop HP";
+        laptop.precio = 1500.00;
+        laptop.stock = 25;
+
+        Producto mouse = new Producto();
+        mouse.nombre = "Mouse Logitech";
+        mouse.precio = 45.99;
+        mouse.stock = 150;
+
+        // Cada objeto opera independientemente
+        laptop.mostrarInfo();
+        mouse.mostrarInfo();
+
+        laptop.vender(3);
+        System.out.println("Stock laptop: " + laptop.stock);  // 22
+        System.out.println("Stock mouse: " + mouse.stock);    // 150 (sin cambio)
+    }
+}`}
+/>
+
+---
+
+## Memoria y Referencias
+
+Cuando creas un objeto, Java asigna memoria en el **heap** y la variable guarda una **referencia** (dirección) a esa memoria:
+
+```java
+// Esto NO crea un segundo objeto
+Persona copia = persona1;  // copia apunta al MISMO objeto
+
+copia.nombre = "Ana";
+System.out.println(persona1.nombre);  // "Ana" - ¡ambas variables apuntan al mismo objeto!
+```
+
+Para crear un objeto independiente, necesitas uno nuevo:
+
+```java
+// Esto SÍ crea un segundo objeto
+Persona otra = new Persona();
+otra.nombre = "Luis";
+otra.edad = 30;
+// persona1 sigue siendo "Ana"
+```
+
+<CodeBlock
+  title="Referencias en memoria"
+  lang="java"
+  code={`public class Memoria {
+    public static void main(String[] args) {
+        // Dos variables, un solo objeto
+        Mascota a = new Mascota();
+        a.nombre = "Max";
+
+        Mascota b = a;  // b apunta al mismo objeto
+
+        b.nombre = "Rocky";
+        System.out.println(a.nombre);  // "Rocky" (¡mismo objeto!)
+
+        // Para un objeto independiente:
+        Mascota c = new Mascota();
+        c.nombre = "Luna";
+        System.out.println(a.nombre);  // "Rocky" (no afecta)
+
+        System.out.println("a: " + a.nombre);  // Rocky
+        System.out.println("b: " + b.nombre);  // Rocky (mismo que a)
+        System.out.println("c: " + c.nombre);  // Luna (objeto separado)
+    }
+}`}
+/>
+
+---
+
+## Atributos y Métodos Static
+
+Los miembros `static` pertenecen a la **clase**, no a un objeto específico:
+
+```java
+public class Contador {
+    // Atributo static: compartido entre TODOS los objetos
+    static int totalMascotas = 0;
+
+    // Atributo de instancia: único por objeto
+    String nombre;
+
+    Contador(String nombre) {
+        this.nombre = nombre;
+        totalMascotas++;  // Se suma al crear cada objeto
+    }
+
+    // Método static: se llama en la clase, no en el objeto
+    static int getTotal() {
+        return totalMascotas;
+    }
+
+    public static void main(String[] args) {
+        Contador c1 = new Contador("Max");
+        Contador c2 = new Contador("Luna");
+        Contador c3 = new Contador("Rocky");
+
+        System.out.println(Contador.getTotal());  // 3 (compartido)
+        System.out.println(c1.totalMascotas);     // 3 (mismo valor)
+    }
+}
+```
+
+<CodeBlock
+  title="Ejemplo práctico: Contador de pedidos"
+  lang="java"
+  code={`public class Pedido {
+    static int totalPedidos = 0;
+    static double totalVentas = 0;
+
+    int numero;
+    double monto;
+    String cliente;
+
+    Pedido(String cliente, double monto) {
+        totalPedidos++;
+        this.numero = totalPedidos;
+        this.monto = monto;
+        this.cliente = cliente;
+        totalVentas += monto;
+    }
+
+    void mostrar() {
+        System.out.println("Pedido #" + numero + " - " + cliente + " - $" + monto);
+    }
+
+    static double promedio() {
+        return totalVentas / totalPedidos;
+    }
+
+    public static void main(String[] args) {
+        Pedido p1 = new Pedido("Ana", 150.00);
+        Pedido p2 = new Pedido("Luis", 85.50);
+        Pedido p3 = new Pedido("María", 220.00);
+
+        p1.mostrar();  // Pedido #1 - Ana - $150.0
+        p2.mostrar();  // Pedido #2 - Luis - $85.5
+        p3.mostrar();  // Pedido #3 - María - $220.0
+
+        System.out.println("Total pedidos: " + Pedido.totalPedidos);  // 3
+        System.out.println("Promedio: $" + Pedido.promedio());  // $151.83
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: Salud 🏥
+
+<CodeBlock
+  title="Sistema de pacientes"
+  lang="java"
+  code={`public class Paciente {
+    static int totalPacientes = 0;
+
+    String nombre;
+    int edad;
+    double temperatura;
+    String sintoma;
+
+    Paciente(String nombre, int edad, double temperatura, String sintoma) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.temperatura = temperatura;
+        this.sintoma = sintoma;
+        totalPacientes++;
+    }
+
+    boolean tieneFiebre() {
+        return temperatura >= 37.5;
+    }
+
+    String clasificar() {
+        if (temperatura >= 39.0) return "URGENTE";
+        if (temperatura >= 37.5) return "FIEBRE";
+        return "NORMAL";
+    }
+
+    void mostrarFicha() {
+        System.out.println("Paciente: " + nombre + " | Edad: " + edad);
+        System.out.println("Temperatura: " + temperatura + "°C | Síntoma: " + sintoma);
+        System.out.println("Clasificación: " + clasificar());
+        System.out.println("---");
+    }
+
+    static void reporte() {
+        System.out.println("=== REPORTE: " + totalPacientes + " pacientes en el día ===");
+    }
+
+    public static void main(String[] args) {
+        Paciente p1 = new Paciente("Carlos", 45, 36.8, "Dolor de cabeza");
+        Paciente p2 = new Paciente("Ana", 32, 38.5, "Tos seca");
+        Paciente p3 = new Paciente("Pedro", 67, 39.2, "Fiebre alta");
+
+        p1.mostrarFicha();
+        p2.mostrarFicha();
+        p3.mostrarFicha();
+
+        Paciente.reporte();
+    }
+}`}
+/>
+
+---
+
+## Ejemplo Real: E-commerce 🛒
+
+<CodeBlock
+  title="Producto con estado"
+  lang="java"
+  code={`public class Producto {
+    static int totalProductos = 0;
+
+    String nombre;
+    double precio;
+    int stock;
+    boolean activo;
+
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+        this.activo = stock > 0;
+        totalProductos++;
+    }
+
+    boolean hayStock() {
+        return stock > 0 && activo;
+    }
+
+    void vender(int cantidad) {
+        if (cantidad > stock) {
+            System.out.println("Stock insuficiente: solo quedan " + stock);
+            return;
+        }
+        stock -= cantidad;
+        if (stock == 0) agotar();
+        System.out.println("Venta de " + cantidad + " x " + nombre);
+    }
+
+    void reabastecer(int cantidad) {
+        stock += cantidad;
+        activo = true;
+    }
+
+    void agotar() {
+        activo = false;
+    }
+
+    void mostrar() {
+        String estado = activo ? "Activo" : "Agotado";
+        System.out.println(nombre + " - $" + precio + " | Stock: " + stock + " | " + estado);
+    }
+
+    public static void main(String[] args) {
+        Producto laptop = new Producto("Laptop", 1200.00, 10);
+        Producto mouse = new Producto("Mouse", 25.00, 0);
+
+        laptop.mostrar();   // Laptop - $1200.0 | Stock: 10 | Activo
+        mouse.mostrar();    // Mouse - $25.0 | Stock: 0 | Agotado
+
+        laptop.vender(3);   // Venta de 3 x Laptop
+        laptop.mostrar();   // Laptop - $1200.0 | Stock: 7 | Activo
+
+        laptop.vender(10);  // Stock insuficiente: solo quedan 7
+    }
+}`}
+/>
+
+---
+
+## Resumen
+
+| Concepto | Descripción |
+|----------|-------------|
+| **Clase** | Molde que define atributos y métodos |
+| **Objeto** | Instancia concreta creada con `new` |
+| **Atributo** | Variable que pertenece a un objeto |
+| **Método** | Función que define comportamiento |
+| **Referencia** | Variable que apunta a un objeto en memoria |
+| **static** | Miembro que pertenece a la clase, no al objeto |
+| **new** | Operador que crea un objeto en memoria |
+
+---
+
+## Preguntas Frecuentes
+
+<details>
+<summary>¿Qué pasa si no inicializo un atributo?</summary>
+Java asigna valores por defecto: `0` para enteros, `0.0` para decimales, `null` para objetos, `false` para booleanos.
+</details>
+
+<details>
+<summary>¿Puedo tener una clase sin métodos?</summary>
+Sí, pero no tiene sentido. Una clase sin métodos solo guarda datos sin comportamiento.
+</details>
+
+<details>
+<summary>¿Cuándo uso static vs instance?</summary>
+- **static**: Compartido por todos (contadores, constantes, utilidades)
+- **instance**: Propio de cada objeto (nombre, edad, estado)
+</details>
+
+<details>
+<summary>¿Qué es el operador new exactamente?</summary>
+Reserva memoria en el heap para el objeto, inicializa sus atributos y retorna la dirección de memoria (referencia).
+</details>
+
+---
+
+## Fuentes y Referencias
+
+- [Oracle - Classes and Objects](https://docs.oracle.com/javase/tutorial/java/javaOO/)
+- [Oracle - Understanding Instance and Class Members](https://docs.oracle.com/javase/tutorial/java/javaOO/classvars.html)
+- [Baeldung - Java Classes and Objects](https://www.baeldung.com/java-classes-objects)
+- [GeeksforGeeks - Java OOPs Concepts](https://www.geeksforgeeks.org/introduction-to-object-oriented-programming-with-java/)

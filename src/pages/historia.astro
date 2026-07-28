@@ -1,0 +1,66 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import Card from '@components/ui/Card.astro';
+---
+
+<ContentLayout title="Historia de Java" description="Línea de tiempo de Java desde Oak (1991) hasta Java 21 LTS">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);" data-i18n="history.title">📜 Historia de Java</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:1.2rem;" data-i18n="history.desc">
+      La evolución del lenguaje que cambió la programación empresarial.
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.oak.title">Oak y los orígenes (1991–1995)</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.oak.desc">James Gosling, Mike Sheridan y Patrick Naughton de Sun Microsystems crearon "Oak" (nombre inicial de Java) como un lenguaje para dispositivos electrónicos inteligentes. En 1995, se renombró a Java y se lanzó oficialmente enfocado en la web emergente.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.java1.title">Java 1.0 y la JVM (1996)</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.java1.desc">El lema "Write Once, Run Anywhere" se hizo realidad con la Máquina Virtual de Java. Esto permitió que el mismo código corriera en Windows, Mac y Linux sin cambios.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.java5.title">Java 5 (2004) — Genéricos y anotaciones</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.java5.desc">Una de las actualizaciones más significativas. Introdujo genéricos, tipos enumerados, anotaciones y el bucle for-each.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.java8.title">Java 8 (2014) — El punto de inflexión</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.java8.desc">Lambdas, Stream API, Optional y la nueva API de fechas. Transformó a Java en un lenguaje funcional-moderno sin perder su esencia orientada a objetos.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.java11.title">Java 11 (2018 LTS) y el nuevo ciclo de releases</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.java11.desc">Oracle cambió a releases cada 6 meses con LTS cada 3 años. Java 11 fue el primer LTS después de Java 8. HTTP Client se volvió estándar.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;" data-i18n="history.j21.title">Java 21 LTS (2023) — Estado actual</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);" data-i18n="history.j21.desc">Records, Pattern Matching, Sealed Classes, Text Blocks, Virtual Threads (Project Loom). Es la versión más moderna recomendada para nuevos proyectos.</p>
+      </Card>
+    </div>
+
+    <div class="retro-card" style="margin-top:var(--space-xl);padding:var(--space-lg);">
+      <h3 style="margin-bottom:var(--space-sm);font-family:var(--font-pixel);font-size:1rem;" data-i18n="history.sources">🔗 Fuentes verificadas</h3>
+      <ul style="list-style:disc;padding-left:var(--space-lg);font-size:1.1rem;color:var(--win-text);">
+        <li><a href="https://www.oracle.com/java/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">Oracle Java Official Site</a></li>
+        <li><a href="https://openjdk.org/projects/jdk/21/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">OpenJDK — JDK 21</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/21/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">Java 21 Documentation</a></li>
+      </ul>
+    </div>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-card {
+    background-color: var(--win-bg) !important;
+    border: 2px solid var(--win-border) !important;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+  }
+</style>

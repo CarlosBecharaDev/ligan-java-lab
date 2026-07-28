@@ -1,0 +1,92 @@
+{
+  "id": "quiz-29-excepciones-tipos-avanzado",
+  "lessonSlug": "excepciones-tipos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuáles de las siguientes son checked exceptions en Java?",
+      "options": [
+        "NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException",
+        "IOException, SQLException, ClassNotFoundException",
+        "StackOverflowError, OutOfMemoryError",
+        "RuntimeException, ArithmeticException, NumberFormatException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Estas son unchecked exceptions (heredan de RuntimeException).",
+        "Correcto. IOException, SQLException y ClassNotFoundException son checked exceptions que deben ser manejadas o declaradas.",
+        "Los Errors no son checked exceptions; representan fallos graves del sistema.",
+        "Estas son unchecked exceptions que heredan de RuntimeException."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cuáles de las siguientes son unchecked exceptions?",
+      "options": [
+        "IOException, FileNotFoundException, ParseException",
+        "NullPointerException, ArrayIndexOutOfBoundsException",
+        "ClassNotFoundException, NoSuchMethodException",
+        "SocketException, ConnectException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Estas son checked exceptions del paquete java.io y java.text.",
+        "Correcto. NullPointerException y ArrayIndexOutOfBoundsException heredan de RuntimeException y no requieren manejo obligatorio.",
+        "Estas son checked exceptions que requieren try-catch o throws.",
+        "Estas son checked exceptions de red que requieren manejo explícito."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué hace el bloque finally en Java?",
+      "options": [
+        "Se ejecuta solo cuando no hay excepción en el bloque try",
+        "Se ejecuta siempre, haya excepción o no, después del bloque try-catch",
+        "Se ejecuta solo cuando se captura una excepción específica",
+        "Reemplaza al bloque catch y se usa para cerrar conexiones"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El bloque finally se ejecuta siempre, no solo cuando no hay excepción.",
+        "Correcto. El bloque finally se ejecuta siempre después del try-catch, sin importar si ocurrió una excepción o no.",
+        "El finally no depende de capturar excepciones; se ejecuta en cualquier caso.",
+        "El finally no reemplaza al catch; complementa al try-catch."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Se puede tener un bloque try sin catch en Java?",
+      "options": [
+        "No, siempre se debe tener al menos un catch",
+        "Sí, siempre que se incluya un bloque finally",
+        "Solo si se declara throws en la firma del método",
+        "No, el try sin catch genera error de compilación siempre"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No es correcto; try puede funcionar sin catch si tiene finally.",
+        "Correcto. En Java se puede usar try sin catch siempre que se incluya un bloque finally para manejar la limpieza de recursos.",
+        "Declarar throws no reemplaza la necesidad de catch o finally.",
+        "No genera error si se incluye finally."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es try-with-resources en Java?",
+      "options": [
+        "Un bloque try que usa menos memoria que un try normal",
+        "Un mecanismo que cierra automáticamente recursos que implementan AutoCloseable",
+        "Una forma de reutilizar excepciones en múltiples bloques try",
+        "Un patrón para crear recursos sin usar constructores"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "El try-with-resources no tiene relación con el consumo de memoria.",
+        "Correcto. try-with-resources cierra automáticamente cualquier recurso que implemente la interfaz AutoCloseable al salir del bloque, invocando el método close().",
+        "El try-with-resources no tiene relación con la reutilización de excepciones.",
+        "El try-with-resources se usa para declarar y cerrar recursos, no para crearlos sin constructores."
+      ]
+    }
+  ]
+}

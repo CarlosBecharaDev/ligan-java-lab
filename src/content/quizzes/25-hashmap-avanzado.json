@@ -1,0 +1,92 @@
+{
+  "id": "quiz-25-hashmap-avanzado",
+  "lessonSlug": "hashmap",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la complejidad temporal de get() y put() en HashMap?",
+      "options": [
+        "O(1) promedio, O(n) peor caso",
+        "O(n) siempre",
+        "O(log n) siempre",
+        "O(1) siempre"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. En promedio las operaciones son O(1) debido al hash, pero en peor caso (muchas colisiones) puede ser O(n).",
+        "No. No es O(n) siempre, es O(1) promedio.",
+        "No. No es O(log n), es O(1) promedio.",
+        "No. No es O(1) siempre, puede ser O(n) en el peor caso."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué tipo de objetos puede usar HashMap como claves?",
+      "options": [
+        "Cualquier objeto (usa hashCode y equals)",
+        "Solo Strings",
+        "Solo tipos primitivos",
+        "Solo objetos de tipo Number"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. HashMap puede usar cualquier objeto como clave, siempre que implemente hashCode() y equals() correctamente.",
+        "No. Puede usar cualquier objeto como clave, no solo Strings.",
+        "No. No puede usar tipos primitivos directamente, se usa autoboxing.",
+        "No. No se limita a objetos Number."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué sucede si dos claves tienen el mismo hashCode?",
+      "options": [
+        "Colision, se resuelve con encadenamiento",
+        "Se lanza una excepcion",
+        "Se ignora la segunda clave",
+        "Se sobrescribe la primera"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Cuando dos claves tienen el mismo hashCode ocurre una colision, y HashMap la resuelve usando encadenamiento (listas enlazadas).",
+        "No. No lanza excepcion por colisiones, las maneja internamente.",
+        "No. No ignora la clave, la almacena en la misma posicion usando encadenamiento.",
+        "No. No sobrescribe, simplemente almacena ambas en la misma posicion con encadenamiento."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se puede iterar sobre un HashMap?",
+      "options": [
+        "entrySet(), keySet(), values()",
+        "forEach() unicamente",
+        "keys() y values()",
+        "iterator() unicamente"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. entrySet() retorna pares clave-valor, keySet() solo claves, y values() solo valores.",
+        "No. Aunque forEach() es util, no es la unica forma de iterar.",
+        "No. Se usa keySet() (no keys()), values() y entrySet().",
+        "No. Si bien iterator() funciona, hay formas mas especificas como entrySet()."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué es LinkedHashMap?",
+      "options": [
+        "HashMap que mantiene el orden de insercion",
+        "HashMap con claves enlazadas",
+        "HashMap optimizado para hilos",
+        "HashMap con valores unicos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. LinkedHashMap extiende HashMap y mantiene el orden en que se insertaron los elementos.",
+        "No. No tiene relacion con claves enlazadas, sino con el orden de insercion.",
+        "No. No es para hilos, para eso esta ConcurrentHashMap.",
+        "No. No se trata de valores unicos, sino de mantener el orden de insercion."
+      ]
+    }
+  ]
+}

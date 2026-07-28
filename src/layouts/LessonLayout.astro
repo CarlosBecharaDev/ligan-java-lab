@@ -1,0 +1,184 @@
+---
+import BaseLayout from './BaseLayout.astro';
+import LessonNav from '@components/lesson/LessonNav.astro';
+
+export interface Props {
+  title: string;
+  moduleTitle?: string;
+  prevSlug?: string;
+  prevTitle?: string;
+  nextSlug?: string;
+  nextTitle?: string;
+  description?: string;
+}
+
+const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <div class="lesson-layout">
+    <aside class="lesson-layout__sidebar">
+      <slot name="sidebar" />
+    </aside>
+    <div class="lesson-layout__main">
+      <div class="lesson-layout__window">
+        <div class="lesson-layout__titlebar">
+          <span class="lesson-layout__title">{title}</span>
+          <div class="lesson-layout__controls">
+            <span class="lesson-layout__ctrl lesson-layout__ctrl--min"></span>
+            <span class="lesson-layout__ctrl lesson-layout__ctrl--max"></span>
+            <span class="lesson-layout__ctrl lesson-layout__ctrl--close"></span>
+          </div>
+        </div>
+        <div class="lesson-layout__body">
+          <article class="lesson-content">
+            <slot />
+          </article>
+          <LessonNav
+            prevSlug={prevSlug}
+            prevTitle={prevTitle}
+            nextSlug={nextSlug}
+            nextTitle={nextTitle}
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  .lesson-layout {
+    display: flex;
+    min-height: 100vh;
+    background-image: url('/wallpaper.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+  }
+
+  .lesson-layout__sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: rgba(26, 13, 46, 0.95);
+    border-right: 2px solid var(--line);
+    padding: var(--space-xl);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    backdrop-filter: blur(8px);
+  }
+
+  .lesson-layout__main {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    padding: var(--space-xl);
+    min-height: 100vh;
+  }
+
+  /* Retro window wrapper for lesson content */
+  .lesson-layout__window {
+    width: 100%;
+    max-width: var(--content-width-lg);
+    background: var(--win-bg);
+    border: 2px solid var(--win-border-dark);
+    border-top-color: #D0C0A0;
+    border-left-color: #D0C0A0;
+    box-shadow: var(--shadow-win);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+  }
+
+  .lesson-layout__titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 8px;
+    background: linear-gradient(90deg, var(--win-titlebar) 0%, #9898B0 50%, var(--win-titlebar) 100%);
+    min-height: 28px;
+  }
+
+  .lesson-layout__title {
+    font-family: var(--font-pixel);
+    font-size: 0.65rem;
+    color: var(--win-titlebar-text);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lesson-layout__controls {
+    display: flex;
+    gap: 6px;
+  }
+
+  .lesson-layout__ctrl {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .lesson-layout__ctrl--min {
+    background: var(--win-minimize);
+  }
+
+  .lesson-layout__ctrl--max {
+    background: var(--win-maximize);
+  }
+
+  .lesson-layout__ctrl--close {
+    background: var(--win-close);
+  }
+
+  .lesson-layout__body {
+    flex: 1;
+    padding: var(--space-2xl) var(--space-xl);
+    background: var(--win-bg);
+    color: var(--win-text);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .lesson-layout__body h1,
+  .lesson-layout__body h2,
+  .lesson-layout__body h3 {
+    color: var(--win-text);
+  }
+
+  .lesson-layout__body p {
+    color: var(--win-muted);
+  }
+
+  .lesson-layout__body a {
+    color: var(--win-link);
+  }
+
+  @media (max-width: 767px) {
+    .lesson-layout {
+      flex-direction: column;
+    }
+
+    .lesson-layout__sidebar {
+      display: none;
+    }
+
+    .lesson-layout__main {
+      padding: var(--space-md);
+    }
+
+    .lesson-layout__body {
+      padding: var(--space-lg) var(--space-md);
+    }
+  }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .lesson-layout__sidebar {
+      width: 200px;
+      padding: var(--space-lg);
+    }
+  }
+</style>

@@ -1,0 +1,112 @@
+/* ========================================================================
+   Tokens CSS — Ligan Java Lab (Retro Pixel-Art Theme)
+   Fuente única de verdad para colores, tipografía, spacing y efectos.
+   Todos los componentes consumen estos tokens. No usar valores crudos.
+   ======================================================================== */
+
+:root {
+  /* --- Paleta de colores: Desktop (dark context) --- */
+  --bg: #1A0D2E;
+  --bg-alt: #2D1B4E;
+  --surface: #2D1B4E;
+  --surface-raised: #3D2B5A;
+  --text: #F0E8FF;
+  --muted: #B0A0C0;
+  --line: #4D3B6E;
+  --line-subtle: #3D2B5A;
+
+  /* --- Paleta de colores: Acentos --- */
+  --accent: #FFD700;
+  --accent-hover: #FFC000;
+  --sky: #57B8FF;
+  --sky-strong: #278CE8;
+  --cyan: #00CED1;
+  --magenta: #C862A8;
+  --pink: #FF6EC7;
+  --lavender: #B794F6;
+
+  /* --- Paleta de colores: Window (light context) --- */
+  --win-bg: #F5E6C8;
+  --win-bg-alt: #EDD9A3;
+  --win-titlebar: #808098;
+  --win-titlebar-text: #F0E8FF;
+  --win-text: #1A1A1A;
+  --win-muted: #5A5040;
+  --win-border: #A09070;
+  --win-border-dark: #706050;
+  --win-link: #2B5BA8;
+  --win-link-hover: #1A3D78;
+
+  /* --- Window controls (macOS style) --- */
+  --win-close: #FF5F57;
+  --win-minimize: #FFBD2E;
+  --win-maximize: #28C840;
+
+  /* --- Estado --- */
+  --success: #28C840;
+  --danger: #FF5F57;
+  --warning: #FFBD2E;
+
+  /* --- Taskbar --- */
+  --taskbar-bg: #0A0A0A;
+  --taskbar-text: #C0C0C0;
+  --taskbar-active: #FFD700;
+  --taskbar-border: #333333;
+  --taskbar-separator: #FFD700;
+
+  /* --- Tipografía --- */
+  --font-ui: 'VT323', 'Courier New', monospace;
+  --font-pixel: 'Press Start 2P', 'VT323', monospace;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', ui-monospace, monospace;
+  --font-reading: 'VT323', 'Courier New', monospace;
+
+  /* --- Tamaños de fuente (ajustados para pixel fonts) --- */
+  --text-xs: 0.875rem;
+  --text-sm: 1rem;
+  --text-base: 1.125rem;
+  --text-lg: 1.25rem;
+  --text-xl: 1.5rem;
+  --text-2xl: 1.75rem;
+  --text-3xl: 2rem;
+  --text-4xl: 2.5rem;
+
+  /* --- Espaciado --- */
+  --space-xs: 0.25rem;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+  --space-3xl: 4rem;
+
+  /* --- Bordes redondeados (retro = less rounded) --- */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-full: 9999px;
+
+  /* --- Transiciones --- */
+  --transition: 150ms ease;
+  --transition-slow: 250ms ease;
+  --transition-bounce: 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  /* --- Sombras (retro/pixel style) --- */
+  --shadow-sm: 2px 2px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 3px 3px 0 rgba(0, 0, 0, 0.6);
+  --shadow-lg: 4px 4px 0 rgba(0, 0, 0, 0.7);
+  --shadow-glow: 0 0 20px rgba(200, 98, 168, 0.2);
+  --shadow-win: 4px 4px 0 rgba(0, 0, 0, 0.4), inset 1px 1px 0 rgba(255,255,255,0.3);
+
+  /* --- Z-index --- */
+  --z-desktop: 1;
+  --z-window: 10;
+  --z-taskbar: 100;
+  --z-modal: 200;
+  --z-toast: 300;
+
+  /* --- Anchos de contenedor --- */
+  --content-width: 760px;
+  --content-width-lg: 820px;
+  --sidebar-width: 280px;
+}

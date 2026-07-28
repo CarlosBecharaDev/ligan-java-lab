@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-encapsulacion-facil",
+    "title": "Cuenta bancaria con validacion",
+    "difficulty": "facil",
+    "description": "Crea una clase CuentaBancaria con campos privados titular y saldo. Implementa un constructor, getters y un setter para saldo que valide que no sea negativo.",
+    "template": "public class CuentaBancaria {\n    // TODO: Crear campos privados titular (String) y saldo (double)\n\n    // TODO: Constructor que reciba titular y saldo (validar saldo >= 0)\n\n    // TODO: Getter para titular\n\n    // TODO: Getter para saldo\n\n    // TODO: Setter para saldo que valide >= 0\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria(\"Maria\", 500);\n        c1.setSaldo(-100);\n        System.out.println(c1.getTitular() + \": $\" + c1.getSaldo());\n        c1.setSaldo(1000);\n        System.out.println(c1.getTitular() + \": $\" + c1.getSaldo());\n    }\n}",
+    "hints": [
+      "Usa private para ambos campos",
+      "En el constructor: if (saldo < 0) usar 0, sino asignar",
+      "En el setter: solo asignar si saldo >= 0, sino imprimir error"
+    ],
+    "solution": "public class CuentaBancaria {\n    private String titular;\n    private double saldo;\n\n    CuentaBancaria(String titular, double saldo) {\n        this.titular = titular;\n        if (saldo >= 0) {\n            this.saldo = saldo;\n        } else {\n            System.out.println(\"Saldo invalido, se usa $0\");\n            this.saldo = 0;\n        }\n    }\n\n    public String getTitular() { return titular; }\n    public double getSaldo() { return saldo; }\n\n    public void setSaldo(double saldo) {\n        if (saldo >= 0) {\n            this.saldo = saldo;\n        } else {\n            System.out.println(\"Error: el saldo no puede ser negativo\");\n        }\n    }\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria(\"Maria\", 500);\n        c1.setSaldo(-100);\n        System.out.println(c1.getTitular() + \": $\" + c1.getSaldo());\n        c1.setSaldo(1000);\n        System.out.println(c1.getTitular() + \": $\" + c1.getSaldo());\n    }\n}",
+    "solutionExplanation": "Los campos son private, accesibles solo via getters y setters. El setter valida antes de asignar.",
+    "expectedOutput": "Error: el saldo no puede ser negativo\nMaria: $500.0\nMaria: $1000.0",
+    "lessonSlug": "encapsulacion"
+  },
+  {
+    "id": "ex-encapsulacion-normal",
+    "title": "Clase Temperatura con rango",
+    "difficulty": "normal",
+    "description": "Crea una clase Temperatura con campo privado grados. Implementa getters/setters que validen que la temperatura este entre -273.15 y 1000 grados. Incluye metodos de conversion a Celsius y Fahrenheit.",
+    "template": "public class Temperatura {\n    private double grados;\n    private String unidad;\n\n    // TODO: Constructor con grados y unidad (validar rango)\n\n    // TODO: Getter para grados\n\n    // TODO: Setter que valide rango: -273.15 <= grados <= 1000\n\n    // TODO: Metodo aCelsius() - si es F convertir: (F-32)*5/9\n\n    // TODO: Metodo aFahrenheit() - si es C convertir: C*9/5+32\n\n    void mostrar() {\n        System.out.println(grados + \"°\" + unidad + \" | Celsius: \" + String.format(\"%.1f\", aCelsius()) + \"°C | Fahrenheit: \" + String.format(\"%.1f\", aFahrenheit()) + \"°F\");\n    }\n\n    public static void main(String[] args) {\n        Temperatura t1 = new Temperatura(100, \"C\");\n        Temperatura t2 = new Temperatura(212, \"F\");\n        Temperatura t3 = new Temperatura(-300, \"C\");\n        t1.mostrar();\n        t2.mostrar();\n        t3.mostrar();\n        t1.setGrados(5000);\n    }\n}",
+    "hints": [
+      "Valida: grados >= -273.15 && grados <= 1000",
+      "Conversion F a C: (f - 32) * 5.0 / 9.0",
+      "Conversion C a F: c * 9.0 / 5.0 + 32"
+    ],
+    "solution": "public class Temperatura {\n    private double grados;\n    private String unidad;\n\n    Temperatura(double grados, String unidad) {\n        this.unidad = unidad;\n        if (grados >= -273.15 && grados <= 1000) {\n            this.grados = grados;\n        } else {\n            System.out.println(\"Temperatura fuera de rango. Se usa 0\" + unidad);\n            this.grados = 0;\n        }\n    }\n\n    public double getGrados() { return grados; }\n\n    public void setGrados(double grados) {\n        if (grados >= -273.15 && grados <= 1000) {\n            this.grados = grados;\n        } else {\n            System.out.println(\"Error: temperatura fuera de rango (-273.15 a 1000)\");\n        }\n    }\n\n    public double aCelsius() {\n        if (unidad.equals(\"F\")) { return (grados - 32) * 5.0 / 9.0; }\n        return grados;\n    }\n\n    public double aFahrenheit() {\n        if (unidad.equals(\"C\")) { return grados * 9.0 / 5.0 + 32; }\n        return grados;\n    }\n\n    void mostrar() {\n        System.out.println(grados + \"°\" + unidad + \" | Celsius: \" + String.format(\"%.1f\", aCelsius()) + \"°C | Fahrenheit: \" + String.format(\"%.1f\", aFahrenheit()) + \"°F\");\n    }\n\n    public static void main(String[] args) {\n        Temperatura t1 = new Temperatura(100, \"C\");\n        Temperatura t2 = new Temperatura(212, \"F\");\n        Temperatura t3 = new Temperatura(-300, \"C\");\n        t1.mostrar();\n        t2.mostrar();\n        t3.mostrar();\n        t1.setGrados(5000);\n    }\n}",
+    "solutionExplanation": "Encapsulacion completa: campos privados, validacion en constructor y setter, conversion de unidades con getters calculados.",
+    "expectedOutput": "100.0°C | Celsius: 100.0°C | Fahrenheit: 212.0°F\n212.0°F | Celsius: 100.0°C | Fahrenheit: 212.0°F\nTemperatura fuera de rango. Se usa 0C\n0.0C | Celsius: 0.0°C | Fahrenheit: 32.0°F\nError: temperatura fuera de rango (-273.15 a 1000)",
+    "lessonSlug": "encapsulacion"
+  },
+  {
+    "id": "ex-encapsulacion-dificil",
+    "title": "Producto con stock privado y operaciones controladas",
+    "difficulty": "dificil",
+    "description": "Crea una clase Producto con campos privados (nombre, precio, stock). Implementa getters/setters con validacion, metodos vender() y reabastecer() que modifiquen stock de forma segura, y un metodo calcularValorTotal().",
+    "template": "public class Producto {\n    // TODO: Campos privados: nombre (String), precio (double), stock (int)\n\n    // TODO: Constructor con validacion: precio > 0, stock >= 0\n\n    // TODO: Getters para todos los campos\n\n    // TODO: Setter para precio que valide > 0\n\n    // TODO: Setter para stock que valide >= 0\n\n    // TODO: Metodo vender(int cantidad) que valide y reste stock\n\n    // TODO: Metodo reabastecer(int cantidad) que valide y sume stock\n\n    // TODO: Metodo calcularValorTotal() que retorne precio * stock\n\n    void mostrar() {\n        System.out.println(nombre + \" - $\" + precio + \" | Stock: \" + stock + \" | Total: $\" + calcularValorTotal());\n    }\n\n    public static void main(String[] args) {\n        Producto p = new Producto(\"Laptop\", 1200.00, 10);\n        p.mostrar();\n        p.vender(3);\n        p.mostrar();\n        p.vender(20);\n        p.reabastecer(5);\n        p.mostrar();\n        p.setPrecio(-50);\n        p.setStock(-10);\n    }\n}",
+    "hints": [
+      "El constructor debe usar if para validar precio y stock",
+      "vender(): verificar cantidad > 0 y cantidad <= stock antes de restar",
+      "reabastecer(): verificar cantidad > 0 antes de sumar"
+    ],
+    "solution": "public class Producto {\n    private String nombre;\n    private double precio;\n    private int stock;\n\n    Producto(String nombre, double precio, int stock) {\n        this.nombre = nombre;\n        if (precio > 0) { this.precio = precio; } else { System.out.println(\"Precio invalido, se usa $1.00\"); this.precio = 1.00; }\n        if (stock >= 0) { this.stock = stock; } else { System.out.println(\"Stock invalido, se usa 0\"); this.stock = 0; }\n    }\n\n    public String getNombre() { return nombre; }\n    public double getPrecio() { return precio; }\n    public int getStock() { return stock; }\n\n    public void setPrecio(double precio) {\n        if (precio > 0) { this.precio = precio; } else { System.out.println(\"Error: el precio debe ser mayor a 0\"); }\n    }\n\n    public void setStock(int stock) {\n        if (stock >= 0) { this.stock = stock; } else { System.out.println(\"Error: el stock no puede ser negativo\"); }\n    }\n\n    public boolean vender(int cantidad) {\n        if (cantidad <= 0) { System.out.println(\"Cantidad invalida\"); return false; }\n        if (cantidad > stock) { System.out.println(\"Stock insuficiente. Disponible: \" + stock); return false; }\n        stock -= cantidad;\n        System.out.println(\"Venta realizada: \" + cantidad + \" x \" + nombre);\n        return true;\n    }\n\n    public void reabastecer(int cantidad) {\n        if (cantidad > 0) { stock += cantidad; System.out.println(\"Reabastecido: \" + cantidad + \" unidades de \" + nombre);\n        } else { System.out.println(\"Cantidad invalida para reabastecer\"); }\n    }\n\n    public double calcularValorTotal() { return precio * stock; }\n\n    void mostrar() { System.out.println(nombre + \" - $\" + precio + \" | Stock: \" + stock + \" | Total: $\" + calcularValorTotal()); }\n\n    public static void main(String[] args) {\n        Producto p = new Producto(\"Laptop\", 1200.00, 10);\n        p.mostrar();\n        p.vender(3);\n        p.mostrar();\n        p.vender(20);\n        p.reabastecer(5);\n        p.mostrar();\n        p.setPrecio(-50);\n        p.setStock(-10);\n    }\n}",
+    "solutionExplanation": "Encapsulacion completa con multiples capas de validacion: constructor, setters y metodos de negocio.",
+    "expectedOutput": "Laptop - $1200.0 | Stock: 10 | Total: $12000.0\nVenta realizada: 3 x Laptop\nLaptop - $1200.0 | Stock: 7 | Total: $8400.0\nStock insuficiente. Disponible: 7\nReabastecido: 5 unidades de Laptop\nLaptop - $1200.0 | Stock: 12 | Total: $14400.0\nError: el precio debe ser mayor a 0\nError: el stock no puede ser negativo",
+    "lessonSlug": "encapsulacion"
+  }
+]

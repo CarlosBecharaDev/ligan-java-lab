@@ -1,0 +1,364 @@
+---
+title: "Expresiones Regulares con Pattern y Matcher"
+slug: "expresiones-regulares"
+module: "05-colecciones"
+level: "Intermedio"
+objectives:
+  - "Crear expresiones regulares básicas para validar y buscar texto"
+  - "Usar métodos de String: matches, split, replaceAll con regex"
+  - "Employ Pattern y Matcher para búsquedas complejas"
+  - "Validar emails, teléfonos y formatos de datos comunes"
+  - "Entender caracteres especiales y cuantificadores"
+prerequisites:
+  - "Haber completado Lección 27: Métodos Avanzados de String"
+  - "Entender el concepto de patrones de texto"
+history:
+  introducedIn: "java.util.regex desde Java 1.4"
+  context: "Java incluye soporte para expresiones regulares desde Java 1.4 con el paquete java.util.regex. Las regex son patrones que describen secuencias de caracteres y son fundamentales para validación, búsqueda y transformación de texto."
+  evolution: "Java 1.4 introdujo Pattern y Matcher. Java 5 añadió soporte mejorado para Unicode. Java 9 optimizó el rendimiento de Pattern. Las expresiones regulares son universales y se usan en casi todos los lenguajes de programación."
+realWorldExamples:
+  - domain: "E-commerce — validación de formularios"
+    description: "Un sistema de registro valida emails, teléfonos y códigos postales usando expresiones regulares antes de guardar en la base de datos."
+    code: |
+      import java.util.regex.Pattern;
+      import java.util.regex.Matcher;
+
+      public class ValidarFormulario {
+          static boolean esEmailValido(String email) {
+              String regex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+              return Pattern.matches(regex, email);
+          }
+
+          static boolean esTelefonoValido(String tel) {
+              String regex = "^\\+?\\d{10,13}$";
+              return Pattern.matches(regex, tel.replaceAll("[\\s()-]", ""));
+          }
+
+          static boolean esCodigoPostal(String cp) {
+              String regex = "^\\d{5}(-\\d{4})?$";
+              return Pattern.matches(regex, cp);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(esEmailValido("user@mail.com"));
+              System.out.println(esEmailValido("invalido@"));
+              System.out.println(esTelefonoValido("+57 310 123 4567"));
+              System.out.println(esTelefonoValido("123"));
+              System.out.println(esCodigoPostal("110111"));
+              System.out.println(esCodigoPostal("11011-0101"));
+          }
+      }
+    result: |
+      true
+      false
+      true
+      false
+      true
+      true
+
+  - domain: "Salud — extraer datos de notas clínicas"
+    description: "Un sistema extrae valores numéricos (presión arterial, temperatura, frecuencia cardíaca) de notas clínicas escritas en texto libre."
+    code: |
+      import java.util.regex.Pattern;
+      import java.util.regex.Matcher;
+
+      public class ExtraerSignos {
+          static String extraerPatron(String texto, String regex) {
+              Matcher m = Pattern.compile(regex).matcher(texto);
+              return m.find() ? m.group() : "No encontrado";
+          }
+
+          public static void main(String[] args) {
+              String nota = "Paciente: Juan, 45 años. "
+                  + "TA: 130/85 mmHg. Temp: 38.2°C. "
+                  + "FC: 78 lpm. SpO2: 95%.";
+
+              System.out.println("Presión: " +
+                  extraerPatron(nota, "\\d{2,3}/\\d{2,3}"));
+              System.out.println("Temperatura: " +
+                  extraerPatron(nota, "\\d{2}\\.\\d°C"));
+              System.out.println("Frecuencia: " +
+                  extraerPatron(nota, "\\d{2,3}\\s*lpm"));
+              System.out.println("Saturación: " +
+                  extraerPatron(nota, "\\d{2,3}%"));
+          }
+      }
+    result: |
+      Presión: 130/85
+      Temperatura: 38.2°C
+      Frecuencia: 78 lpm
+      Saturación: 95%
+
+hasInteractive: false
+comparisons:
+  - title: "String.matches vs Pattern.matcher"
+    items:
+      - name: "String.matches(regex)"
+        features:
+          complejidad: "Una sola llamada, rápido para validaciones simples"
+          rendimiento: "Crea Pattern cada vez — lento para uso repetido"
+          retorno: "boolean (true/false)"
+          ideal_para: "Validar un formato una sola vez"
+      - name: "Pattern.compile(regex).matcher(texto)"
+        features:
+          complejidad: "Reutiliza el Pattern compilado"
+          rendimiento: "Rápido para múltiples búsquedas con el mismo patrón"
+          retorno: "Matcher con acceso a grupos, posiciones, etc."
+          ideal_para: "Búsquedas complejas, extracción de datos"
+    recommendation: "Usa String.matches() para validaciones simples y únicas. Compila un Pattern cuando necesites el mismo regex múltiples veces o cuando necesites extraer grupos específicos del texto."
+videos:
+  - url: ""
+    title: "Expresiones regulares en Java"
+    channel: "Código Facilito"
+    summary: "Lección práctica de Java — explicación paso a paso con ejercicios"
+faqs:
+  - question: "¿Qué significan los caracteres especiales en regex?"
+    answer: ". (cualquier carácter), * (cero o más), + (uno o más), ? (cero o uno), \\d (dígito), \\w (letra/dígito/_), \\s (espacio en blanco). Para usar el carácter literal, escápalo con doble反斜杠: \\ para Java, \\\\ para el regex."
+  - question: "¿Cómo extraigo partes de un texto con regex?"
+    answer: "Usa grupos de captura con paréntesis: (\\d{2})/(\\d{2})/(\\d{4}). Matcher.group(1) retorna el primer grupo, group(2) el segundo, etc. Matcher.group(0) retorna la coincidencia completa."
+  - question: "¿Por qué doble反斜杠 en Java para regex?"
+    answer: "Java usa反斜杠 para escapes de String (\\n = nueva línea, \\t = tab). Para pasar un反斜杠 literal al regex, necesitas \\\\ en Java: \\\\d se convierte en \\d que el regex interpreta como 'dígito'."
+sources:
+  - title: "Java 21 API — java.util.regex"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/regex/package-summary.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Regular Expressions"
+    url: "https://docs.oracle.com/javase/tutorial/essential/regex/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué son las expresiones regulares?
+
+Una **expresión regular** (regex) es un patrón que describe secuencias de texto. Se usa para validar, buscar y reemplazar texto de forma flexible y potente.
+
+```java
+// Validar que un string sea solo díntos
+String regex = "\\d+";
+String texto = "12345";
+boolean valido = texto.matches(regex);  // true
+```
+
+## Caracteres especiales
+
+| Carácter | Significado | Ejemplo |
+|----------|-------------|---------|
+| `.` | Cualquier carácter | `"a.c"` matchea `"abc"`, `"aXc"` |
+| `\\d` | Dígito (0-9) | `"\\d"` matchea `"3"` |
+| `\\w` | Letra, dígito o _ | `"\\w"` matchea `"a"`, `"3"`, `"_"` |
+| `\\s` | Espacio en blanco | `"\\s"` matchea `" "`, `"\t"` |
+| `\\b` | Límite de palabra | `"\\bJava\\b"` matchea "Java" en "Java es genial" |
+
+## Cuantificadores
+
+| Cuantificador | Significado | Ejemplo |
+|---------------|-------------|---------|
+| `*` | Cero o más | `"\\d*"` — cero o más dígitos |
+| `+` | Uno o más | `"\\d+"` — uno o más dígitos |
+| `?` | Cero o uno | `"\\d?"` — opcional |
+| `{n}` | Exactamente n | `"\\d{3}"` — exactamente 3 dígitos |
+| `{n,m}` | Entre n y m | `"\\d{2,4}"` — entre 2 y 4 dígitos |
+
+<CodeBlock lang="java" title="Cuantificadores en acción">
+{`public class Cuantificadores {
+    public static void main(String[] args) {
+        // + : uno o más dígitos
+        System.out.println("123".matches("\\d+"));       // true
+        System.out.println("".matches("\\d+"));           // false
+
+        // * : cero o más dígitos
+        System.out.println("".matches("\\d*"));           // true
+        System.out.println("123".matches("\\d*"));        // true
+
+        // {n} : exactamente n dígitos
+        System.out.println("123".matches("\\d{3}"));     // true
+        System.out.println("12".matches("\\d{3}"));      // false
+
+        // {n,m} : entre n y m
+        System.out.println("12".matches("\\d{2,4}"));    // true
+        System.out.println("1234".matches("\\d{2,4}"));  // true
+        System.out.println("12345".matches("\\d{2,4}")); // false
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+true
+false
+true
+true
+true
+false
+true
+true
+false
+```
+
+## Validar con String.matches()
+
+<CodeBlock lang="java" title="Validar formatos comunes">
+{`public class ValidarConRegex {
+    public static void main(String[] args) {
+        // Email simple
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$";
+        System.out.println("user@mail.com".matches(emailRegex));
+        System.out.println("invalido@".matches(emailRegex));
+
+        // Teléfono (10 dígitos)
+        String telRegex = "^\\d{10}$";
+        System.out.println("3101234567".matches(telRegex));
+        System.out.println("310123".matches(telRegex));
+
+        // Código postal (5 dígitos)
+        String cpRegex = "^\\d{5}$";
+        System.out.println("110111".matches(cpRegex));
+
+        // Solo letras
+        String letraRegex = "^[a-zA-Záéíóúñ ]+$";
+        System.out.println("Carlos García".matches(letraRegex));
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+true
+false
+true
+false
+true
+true
+```
+
+## Pattern y Matcher — búsquedas avanzadas
+
+<CodeBlock lang="java" title="Pattern y Matcher para extraer datos">
+{`import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class PatternMatcher {
+    public static void main(String[] args) {
+        String texto = "Mi número es 310-123-4567 y mi email es user@test.com";
+
+        // Buscar todos los números de teléfono
+        Pattern patronTel = Pattern.compile("\\d{3}-\\d{3}-\\d{4}");
+        Matcher matcher = patronTel.matcher(texto);
+
+        System.out.println("Teléfonos encontrados:");
+        while (matcher.find()) {
+            System.out.println("  " + matcher.group());
+        }
+
+        // Buscar emails
+        Pattern patronEmail = Pattern.compile("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}");
+        Matcher mEmail = patronEmail.matcher(texto);
+
+        System.out.println("Emails encontrados:");
+        while (mEmail.find()) {
+            System.out.println("  " + mEmail.group());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Teléfonos encontrados:
+  310-123-4567
+Emails encontrados:
+  user@test.com
+```
+
+## Grupos de captura
+
+Los **grupos** permiten extraer partes específicas de una coincidencia:
+
+<CodeBlock lang="java" title="Grupos de captura">
+{`import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
+public class GruposCaptura {
+    public static void main(String[] args) {
+        String fecha = "2026-07-27";
+        Pattern patron = Pattern.compile("(\\d{4})-(\\d{2})-(\\d{2})");
+        Matcher m = patron.matcher(fecha);
+
+        if (m.matches()) {
+            System.out.println("Completo: " + m.group(0));
+            System.out.println("Año: " + m.group(1));
+            System.out.println("Mes: " + m.group(2));
+            System.out.println("Día: " + m.group(3));
+        }
+
+        // Extraer nombre y dominio de email
+        String email = "usuario@ejemplo.com";
+        Pattern pEmail = Pattern.compile("(.+)@(.+)\\.(.+)");
+        Matcher mEmail = pEmail.matcher(email);
+
+        if (mEmail.matches()) {
+            System.out.println("Usuario: " + mEmail.group(1));
+            System.out.println("Dominio: " + mEmail.group(2));
+            System.out.println("Extensión: " + mEmail.group(3));
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Completo: 2026-07-27
+Año: 2026
+Mes: 07
+Día: 27
+Usuario: usuario
+Dominio: ejemplo
+Extensión: com
+```
+
+## Reemplazar con regex
+
+```java
+String texto = "Precio: $100, $200, $300";
+
+// Reemplazar todos los números
+String sinNumeros = texto.replaceAll("\\d+", "X");
+System.out.println(sinNumeros);  // Precio: $X, $X, $X
+
+// Formatear teléfono
+String tel = "3101234567";
+String formateado = tel.replaceAll("(\\d{3})(\\d{3})(\\d{4})", "($1) $2-$3");
+System.out.println(formateado);  // (310) 123-4567
+```
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

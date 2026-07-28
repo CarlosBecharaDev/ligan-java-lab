@@ -1,0 +1,21 @@
+---
+import { ICONOS_PRINCIPALES } from '@features/desktop/desktopState';
+import DesktopIcon from './DesktopIcon.astro';
+import Window from './Window.astro';
+---
+
+<div class="desktop" role="application" aria-label="JAVA_WORKSPACE - Escritorio interactivo" data-i18n-aria="desktop.aria">
+  <div class="desktop__bg" aria-hidden="true"></div>
+  <nav class="desktop__grid" aria-label="Módulos del curso" data-i18n-aria="desktop.modules">
+    {ICONOS_PRINCIPALES.map((icono) => (
+      <DesktopIcon
+        label={icono.label}
+        icon={icono.icon}
+        route={icono.route}
+        moduleSlug={icono.moduleSlug}
+        action={icono.action}
+      />
+    ))}
+  </nav>
+  <slot />
+</div>

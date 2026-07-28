@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-records-facil",
+    "title": "Record Persona",
+    "difficulty": "facil",
+    "description": "Crea un record llamado Persona con dos campos: nombre (String) y edad (int). Luego crea instancias y usa los metodos automaticos toString, equals y componentN para imprimir la informacion.",
+    "template": "// TODO: Crear un record Persona con campos:\n// - String nombre\n// - int edad\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Crear dos instancias de Persona\n        Persona p1 = null; // new Persona(\"Ana\", 25)\n        Persona p2 = null; // new Persona(\"Luis\", 30)\n\n        // TODO: Imprimir ambas personas (usa toString automatico)\n        System.out.println(p1);\n        System.out.println(p2);\n\n        // TODO: Acceder a los componentes con nombre() y edad()\n        System.out.println(\"Nombre p1: \" + null);\n        System.out.println(\"Edad p2: \" + null);\n\n        // TODO: Usar equals para comparar\n        System.out.println(\"Son iguales: \" + p1.equals(p2));\n    }\n}",
+    "hints": [
+      "Syntax: record Persona(String nombre, int edad) {}",
+      "Los records generan automaticamente constructor, getters (nombre()), toString, equals, hashCode",
+      "Los getters se llaman igual que el campo: persona.nombre() no persona.getNombre()"
+    ],
+    "solution": "public class Main {\n    public static void main(String[] args) {\n        Persona p1 = new Persona(\"Ana\", 25);\n        Persona p2 = new Persona(\"Luis\", 30);\n\n        System.out.println(p1);\n        System.out.println(p2);\n\n        System.out.println(\"Nombre p1: \" + p1.nombre());\n        System.out.println(\"Edad p2: \" + p2.edad());\n\n        System.out.println(\"Son iguales: \" + p1.equals(p2));\n    }\n}\n\nrecord Persona(String nombre, int edad) {}\n",
+    "solutionExplanation": "El record reemplaza la necesidad de escribir constructor, toString, equals y hashCode. Los campos se acceden con nombre() y edad() (no getNombre). toString genera: Persona[nombre=Ana, edad=25].",
+    "expectedOutput": "Persona[nombre=Ana, edad=25]\nPersona[nombre=Luis, edad=30]\nNombre p1: Ana\nEdad p2: 30\nSon iguales: false",
+    "lessonSlug": "records"
+  },
+  {
+    "id": "ex-records-normal",
+    "title": "Record con validacion",
+    "difficulty": "normal",
+    "description": "Crea un record Producto con nombre (String) y precio (double). Usa un compact constructor para validar que el precio sea mayor a 0 y que el nombre no sea null o vacio. Lanza IllegalArgumentException si la validacion falla.",
+    "template": "// TODO: Crear record Producto con:\n// - String nombre\n// - double precio\n// Agregar compact constructor que valide:\n// - nombre no sea null ni vacio\n// - precio sea mayor a 0\n// Lanzar IllegalArgumentException en caso contrario\n\npublic class Main {\n    public static void main(String[] args) {\n        // TODO: Crear productos validos e imprimir\n        try {\n            Producto p1 = new Producto(\"Laptop\", 999.99);\n            Producto p2 = new Producto(\"Mouse\", 25.50);\n            System.out.println(p1);\n            System.out.println(p2);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n\n        // TODO: Crear producto con precio invalido\n        try {\n            Producto p3 = new Producto(\"Teclado\", -10.0);\n            System.out.println(p3);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error precio: \" + e.getMessage());\n        }\n\n        // TODO: Crear producto con nombre invalido\n        try {\n            Producto p4 = new Producto(\"\", 50.0);\n            System.out.println(p4);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error nombre: \" + e.getMessage());\n        }\n    }\n}",
+    "hints": [
+      "Compact constructor se escribe sin parametros: Producto { ... }",
+      "En el compact constructor se valida ANTES de que se asignen los campos",
+      "Usa: if (precio <= 0) throw new IllegalArgumentException(\"...\")"
+    ],
+    "solution": "record Producto(String nombre, double precio) {\n    Producto {\n        if (nombre == null || nombre.isEmpty()) {\n            throw new IllegalArgumentException(\"Nombre no puede ser null o vacio\");\n        }\n        if (precio <= 0) {\n            throw new IllegalArgumentException(\"Precio debe ser mayor a 0\");\n        }\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        try {\n            Producto p1 = new Producto(\"Laptop\", 999.99);\n            Producto p2 = new Producto(\"Mouse\", 25.50);\n            System.out.println(p1);\n            System.out.println(p2);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n\n        try {\n            Producto p3 = new Producto(\"Teclado\", -10.0);\n            System.out.println(p3);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error precio: \" + e.getMessage());\n        }\n\n        try {\n            Producto p4 = new Producto(\"\", 50.0);\n            System.out.println(p4);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Error nombre: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "El compact constructor se ejecuta antes de la asignacion de campos. Se valida nombre (no null ni vacio) y precio (mayor a 0). Si falla, lanza IllegalArgumentException antes de crear el record.",
+    "expectedOutput": "Producto[nombre=Laptop, precio=999.99]\nProducto[nombre=Mouse, precio=25.5]\nError precio: Precio debe ser mayor a 0\nError nombre: Nombre no puede ser null o vacio",
+    "lessonSlug": "records"
+  },
+  {
+    "id": "ex-records-dificil",
+    "title": "Records anidados",
+    "difficulty": "dificil",
+    "description": "Crea dos records: Direccion (String calle, String ciudad) y Persona (String nombre, int edad, Direccion direccion). Crea personas con diferentes direcciones, imprime la info completa y crea un metodo que retorne la ciudad de una Persona.",
+    "template": "// TODO: Crear record Direccion con:\n// - String calle\n// - String ciudad\n\n// TODO: Crear record Persona con:\n// - String nombre\n// - int edad\n// - Direccion direccion\n\npublic class Main {\n\n    // TODO: Crear metodo estatico obtenerCiudad(Persona p)\n    // que retorne p.direccion().ciudad()\n    static String obtenerCiudad(Persona p) {\n        return null; // implementar\n    }\n\n    public static void main(String[] args) {\n        // TODO: Crear dos personas con distintas direcciones\n        // Persona(\"Ana\", 25, new Direccion(\"Av. Principal\", \"Lima\"))\n        // Persona(\"Luis\", 30, new Direccion(\"Calle 5\", \"Cusco\"))\n        Persona p1 = null;\n        Persona p2 = null;\n\n        // TODO: Imprimir ambas personas\n        System.out.println(p1);\n        System.out.println(p2);\n\n        // TODO: Usar obtenerCiudad para cada persona\n        System.out.println(\"Ciudad de Ana: \" + obtenerCiudad(p1));\n        System.out.println(\"Ciudad de Luis: \" + obtenerCiudad(p2));\n\n        // TODO: Acceder a datos anidados: nombre de la calle de Luis\n        System.out.println(\"Calle de Luis: \" + null);\n    }\n}",
+    "hints": [
+      "Los records se anidan: Persona tiene un campo tipo Direccion",
+      "Para acceder a datos anidados: persona.direccion().ciudad()",
+      "El toString anidado muestra: Persona[nombre=..., direccion=Direccion[calle=..., ciudad=...]]"
+    ],
+    "solution": "record Direccion(String calle, String ciudad) {}\n\nrecord Persona(String nombre, int edad, Direccion direccion) {}\n\npublic class Main {\n\n    static String obtenerCiudad(Persona p) {\n        return p.direccion().ciudad();\n    }\n\n    public static void main(String[] args) {\n        Persona p1 = new Persona(\"Ana\", 25, new Direccion(\"Av. Principal\", \"Lima\"));\n        Persona p2 = new Persona(\"Luis\", 30, new Direccion(\"Calle 5\", \"Cusco\"));\n\n        System.out.println(p1);\n        System.out.println(p2);\n\n        System.out.println(\"Ciudad de Ana: \" + obtenerCiudad(p1));\n        System.out.println(\"Ciudad de Luis: \" + obtenerCiudad(p2));\n\n        System.out.println(\"Calle de Luis: \" + p2.direccion().calle());\n    }\n}",
+    "solutionExplanation": "Los records anidados permiten componer estructuras de datos. Persona contiene Direccion como campo. Para acceder a datos anidados se encadenan los metodos getter: p.direccion().ciudad(). El toString se genera automaticamente para ambos records.",
+    "expectedOutput": "Persona[nombre=Ana, edad=25, direccion=Direccion[calle=Av. Principal, ciudad=Lima]]\nPersona[nombre=Luis, edad=30, direccion=Direccion[calle=Calle 5, ciudad=Cusco]]\nCiudad de Ana: Lima\nCiudad de Luis: Cusco\nCalle de Luis: Calle 5",
+    "lessonSlug": "records"
+  }
+]

@@ -1,0 +1,115 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import Card from '@components/ui/Card.astro';
+---
+
+<ContentLayout title="Recursos" description="Recursos externos verificados para aprender Java">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);" data-i18n="resources.title">🔗 Recursos</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:1.2rem;" data-i18n="resources.desc">
+      Herramientas, documentación y sitios verificados para complementar tu aprendizaje.
+    </p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-bottom:1rem;" data-i18n="resources.docs">📖 Documentación oficial</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.docs-j21">Java 21 API Docs</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.docs-j21-desc">Documentación oficial de la API de Java 21 LTS</p>
+        <a href="https://docs.oracle.com/en/java/javase/21/docs/api/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.docs-openjdk">OpenJDK</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.docs-openjdk-desc">Implementación de referencia de Java</p>
+        <a href="https://openjdk.org/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">openjdk.org ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.docs-jls">Java Language Spec</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.docs-jls-desc">Especificación completa del lenguaje Java</p>
+        <a href="https://docs.oracle.com/javase/specs/jls/se21/html/index.html" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;" data-i18n="resources.tools">🛠️ Herramientas</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.tools-idea">IntelliJ IDEA Community</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.tools-idea-desc">IDE gratuito recomendado para Java</p>
+        <a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">jetbrains.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.tools-jdk">JDK 21 — Adoptium</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.tools-jdk-desc">Descarga del JDK 21 LTS (Temurin)</p>
+        <a href="https://adoptium.net/temurin/releases/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">adoptium.net ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.tools-vscode">Visual Studio Code</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.tools-vscode-desc">Editor ligero con soporte para Java (Extension Pack)</p>
+        <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">code.visualstudio.com ↗</a>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;" data-i18n="resources.learning">📚 Aprendizaje</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.learning-oracle">Oracle Java Tutorials</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.learning-oracle-desc">Tutoriales oficiales de Oracle para aprender Java</p>
+        <a href="https://docs.oracle.com/javase/tutorial/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.learning-devjava">Dev.java</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.learning-devjava-desc">Portal oficial de Oracle para la comunidad Java</p>
+        <a href="https://dev.java/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">dev.java ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.learning-more">Más vídeos próximamente</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;" data-i18n="resources.learning-more-desc">Se están verificando canales de YouTube en español recomendados</p>
+        <p style="color:var(--win-muted);font-size:1.1rem;">⚪ Pendiente de verificación</p>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;" data-i18n="resources.youtube">🎥 Canales de YouTube recomendados</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.pildoras">Píldoras Informáticas</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.pildoras-desc">Curso Java completo desde cero hasta avanzado. Más de 100 vídeos en español de España. Incluye POO, bases de datos y Swing.</p>
+        <a href="https://www.youtube.com/playlist?list=PLU8oAlHdN5BktAXdEVCLhLq3E1M7F3C7l" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Ver playlist en YouTube ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.holamundo">HolaMundo — Santiago</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.holamundo-desc">Canal latinoamericano con tutoriales Java modernos. Explicaciones claras y ejemplos prácticos orientados a principiantes.</p>
+        <a href="https://www.youtube.com/@HolaMundo" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visitar canal ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.mouredev">MoureDev — Brais Moure</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.mouredev-desc">Desarrollador senior español con contenido Java/Spring moderno. Proyectos reales, buenas prácticas y código limpio.</p>
+        <a href="https://www.youtube.com/@mouredev" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visitar canal ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);" data-i18n="resources.codigofacilito">Código Facilito</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;" data-i18n="resources.codigofacilito-desc">Plataforma educativa en español con cursos Java, Spring Boot y testing. Incluye ejercicios prácticos y proyectos.</p>
+        <a href="https://www.youtube.com/@codigofacilito" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visitar canal ↗</a>
+      </Card>
+    </div>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-card {
+    background-color: var(--win-bg) !important;
+    border: 2px solid var(--win-border) !important;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+  }
+</style>

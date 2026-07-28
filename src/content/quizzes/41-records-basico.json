@@ -1,0 +1,75 @@
+{
+  "id": "quiz-41-records-basico",
+  "lessonSlug": "records",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué es un record en Java?",
+      "options": [
+        "Una clase inmutable diseñada para contener datos (Java 16+)",
+        "Un tipo de variable primitiva",
+        "Un método estático especial",
+        "Una interfaz con múltiples métodos"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un record es una clase especial, inmutable, introducida en Java 16 para representar datos de forma concisa.",
+        "No es una variable primitiva.",
+        "No es un método estático.",
+        "No es una interfaz."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué métodos genera automáticamente un record?",
+      "options": [
+        "Constructor, getters (métodos de acceso), equals, hashCode y toString",
+        "Solo constructor y getters",
+        "Solo equals y hashCode",
+        "Solo toString"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un record genera automáticamente el constructor, métodos de acceso (por componente), equals(), hashCode() y toString().",
+        "No solo constructor y getters; genera más métodos.",
+        "No solo equals y hashCode.",
+        "No solo toString."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se declara un record?",
+      "options": [
+        "record Persona(String nombre, int edad) {}",
+        "class Persona { String nombre; int edad; }",
+        "interface Persona(String nombre, int edad)",
+        "enum Persona(String nombre, int edad)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. La sintaxis es record NombreDelRecord(tipo1 campo1, tipo2 campo2) {}.",
+        "Eso es una clase normal.",
+        "Las interfaces no se declaran así y no tienen campos.",
+        "Los enums tienen sintaxis diferente."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Se pueden agregar métodos adicionales a un record?",
+      "options": [
+        "Sí, se pueden agregar métodos adicionales",
+        "No, un record solo tiene los métodos generados automáticamente",
+        "Solo métodos estáticos",
+        "Solo métodos privados"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Un record puede tener métodos adicionales, campos estáticos y constantes.",
+        "Sí se pueden agregar métodos.",
+        "No se limita solo a métodos estáticos.",
+        "No se limita solo a métodos privados."
+      ]
+    }
+  ]
+}

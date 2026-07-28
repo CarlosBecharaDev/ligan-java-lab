@@ -1,0 +1,56 @@
+---
+export interface Props {
+  code?: string;
+  lessonSlug?: string;
+  readOnly?: boolean;
+}
+
+const { code: initialCode, lessonSlug, readOnly = false } = Astro.props;
+const editorId = `cm-${Math.random().toString(36).slice(2, 8)}`;
+const storageKey = lessonSlug ?? 'codelab';
+const defaultCode = 'public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hola, Java!");\n    }\n}';
+---
+
+<div
+  class="codelab__editor"
+  id={editorId}
+  data-storage-key={storageKey}
+  data-initial-code={initialCode ?? defaultCode}
+></div>
+
+<script>
+  // NOTA: CodeMirror se carga bajo demanda con client:visible.
+  // El editor solo se activa cuando el componente está visible en pantalla.
+  import('@codemirror/view').then(async ({ EditorView, basicSetup }) => {
+    const { java } = await import('@codemirror/lang-java');
+    const { EditorState } = await import('@codemirror/state');
+
+    // Buscar el editor por data attribute en vez de ID dinámico
+    const el = document.querySelector('.codelab__editor[data-storage-key]');
+    if (!el) return;
+
+    const storageKey = el.getAttribute('data-storage-key') ?? 'codelab';
+    const savedCode = sessionStorage.getItem(`ljl_editor_${storageKey}`);
+    const defaultCode = el.getAttribute('data-initial-code') ?? '';
+    const initial = savedCode || defaultCode;
+
+    const view = new EditorView({
+      state: EditorState.create({
+        doc: initial,
+        extensions: [
+          basicSetup,
+          java(),
+          EditorView.updateListener.of((update) => {
+            if (update.docChanged) {
+              sessionStorage.setItem(`ljl_editor_${storageKey}`, update.state.doc.toString());
+            }
+          }),
+        ],
+      }),
+      parent: el,
+    });
+
+    // Exponer para que el botón Ejecutar pueda leer el contenido
+    (window as any).__editorView = view;
+  });
+</script>

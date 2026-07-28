@@ -1,0 +1,268 @@
+---
+title: "Proyecto: Calculadora CLI"
+slug: "calculadora-cli"
+module: "09-proyectos"
+level: "Intermedio"
+objectives:
+  - "Aplicar POO para estructurar una aplicación CLI completa"
+  - "Usar bucles, switch y entrada scanner para un menú interactivo"
+  - "Implementar operaciones aritméticas con manejo de errores"
+  - "Organizar el código en métodos separados por responsabilidad"
+  - "Mantener un historial de operaciones con ArrayList"
+prerequisites:
+  - "Haber completado Módulo 04: POO"
+  - "Conocer ArrayList, switch, manejo de excepciones"
+history:
+  introducedIn: "Proyecto guiado de aplicación Java CLI"
+  context: "Este proyecto integra múltiples conceptos: entrada/salida por consola, estructuras de control, métodos, colecciones y manejo de excepciones. Construir una calculadora CLI completa desde cero es el primer paso para entender cómo se estructuran aplicaciones Java."
+  evolution: "La versión final usa ArrayList para historial, switch para el menú, y métodos separados para cada operación. Puedes extenderla agregando más operaciones, persistencia o una interfaz gráfica."
+realWorldExamples:
+  - domain: "Educación — proyecto integrador para estudiantes"
+    description: "Una calculadora CLI que permite sumar, restar, multiplicar, dividir y ver historial. Ideal como primer proyecto integrador de conceptos Java."
+    code: |
+      import java.util.ArrayList;
+      import java.util.Scanner;
+
+      public class CalculadoraCLI {
+          static ArrayList<String> historial = new ArrayList<>();
+
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+              int opcion;
+
+              do {
+                  mostrarMenu();
+                  System.out.print("Elige una opción: ");
+                  opcion = sc.nextInt();
+
+                  switch (opcion) {
+                      case 1 -> realizarOperacion(sc, '+');
+                      case 2 -> realizarOperacion(sc, '-');
+                      case 3 -> realizarOperacion(sc, '*');
+                      case 4 -> realizarOperacion(sc, '/');
+                      case 5 -> mostrarHistorial();
+                      case 6 -> System.out.println("¡Hasta luego!");
+                      default -> System.out.println("Opción inválida");
+                  }
+              } while (opcion != 6);
+
+              sc.close();
+          }
+
+          static void mostrarMenu() {
+              System.out.println("\n=== CALCULADORA CLI ===");
+              System.out.println("1. Sumar");
+              System.out.println("2. Restar");
+              System.out.println("3. Multiplicar");
+              System.out.println("4. Dividir");
+              System.out.println("5. Ver historial");
+              System.out.println("6. Salir");
+          }
+
+          static void realizarOperacion(Scanner sc, char op) {
+              System.out.print("Primer número: ");
+              double a = sc.nextDouble();
+              System.out.print("Segundo número: ");
+              double b = sc.nextDouble();
+
+              try {
+                  double resultado = switch (op) {
+                      case '+' -> a + b;
+                      case '-' -> a - b;
+                      case '*' -> a * b;
+                      case '/' -> {
+                          if (b == 0) throw new ArithmeticException("División por cero");
+                          yield a / b;
+                      }
+                      default -> 0;
+                  };
+
+                  String entrada = a + " " + op + " " + b + " = " + resultado;
+                  System.out.println("Resultado: " + entrada);
+                  historial.add(entrada);
+              } catch (ArithmeticException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+
+          static void mostrarHistorial() {
+              System.out.println("\n--- Historial ---");
+              if (historial.isEmpty()) {
+                  System.out.println("No hay operaciones aún");
+              } else {
+                  for (int i = 0; i < historial.size(); i++) {
+                      System.out.printf("%d. %s%n", i + 1, historial.get(i));
+                  }
+              }
+          }
+      }
+    result: |
+      === CALCULADORA CLI ===
+      1. Sumar
+      2. Restar
+      3. Multiplicar
+      4. Dividir
+      5. Ver historial
+      6. Salir
+      Elige una opción: 1
+      Primer número: 10
+      Segundo número: 5
+      Resultado: 10.0 + 5.0 = 15.0
+
+hasInteractive: false
+comparisons: []
+videos:
+  - url: ""
+    title: "Proyecto: Calculadora CLI en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Por qué es útil separar el código en métodos?"
+    answer: "Cada método tiene una responsabilidad única: mostrarMenu() solo muestra el menú, realizarOperacion() maneja la lógica de una operación. Esto hace el código más legible, testeable y mantenible."
+  - question: "¿Cómo extender la calculadora con más operaciones?"
+    answer: "Agrega un nuevo case en el switch del menú y en el switch de operaciones. Por ejemplo, para potencias: case 7 -> realizarOperacion(sc, '^') y en el switch de operaciones: case '^' -> Math.pow(a, b)."
+  - question: "¿Cómo puedo guardar el historial entre ejecuciones?"
+    answer: "Usa serialización (ObjectOutputStream) para guardar el ArrayList en un archivo .dat al salir, y cargarlo al iniciar. O escribe el historial en un archivo de texto con PrintWriter."
+sources:
+  - title: "Java Tutorials — The while and do-while Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/while.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Descripción del proyecto
+
+Construirás una **calculadora interactiva en terminal** con las siguientes funcionalidades:
+
+- Menú interactivo con opciones numéricas
+- Suma, resta, multiplicación y división
+- Manejo de errores (división por cero)
+- Historial de operaciones realizadas
+- Salida limpia del programa
+
+## Paso 1: Estructura básica y menú
+
+<CodeBlock lang="java" title="Estructura del menú principal">
+{`import java.util.ArrayList;
+import java.util.Scanner;
+
+public class CalculadoraCLI {
+    static ArrayList<String> historial = new ArrayList<>();
+
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        do {
+            mostrarMenu();
+            System.out.print("Opción: ");
+            opcion = sc.nextInt();
+
+            switch (opcion) {
+                case 1 -> realizarOperacion(sc, '+');
+                case 2 -> realizarOperacion(sc, '-');
+                case 3 -> realizarOperacion(sc, '*');
+                case 4 -> realizarOperacion(sc, '/');
+                case 5 -> mostrarHistorial();
+                case 6 -> System.out.println("¡Adiós!");
+                default -> System.out.println("Opción no válida");
+            }
+        } while (opcion != 6);
+
+        sc.close();
+    }
+
+    static void mostrarMenu() { ... }
+    static void realizarOperacion(Scanner sc, char op) { ... }
+    static void mostrarHistorial() { ... }
+}`}
+</CodeBlock>
+
+## Paso 2: Implementar operaciones
+
+<CodeBlock lang="java" title="Método de operación con manejo de errores">
+{`static void realizarOperacion(Scanner sc, char op) {
+    System.out.print("Número 1: ");
+    double a = sc.nextDouble();
+    System.out.print("Número 2: ");
+    double b = sc.nextDouble();
+
+    try {
+        double resultado = switch (op) {
+            case '+' -> a + b;
+            case '-' -> a - b;
+            case '*' -> a * b;
+            case '/' -> {
+                if (b == 0)
+                    throw new ArithmeticException("División por cero");
+                yield a / b;
+            }
+            default -> 0;
+        };
+
+        String entrada = a + " " + op + " " + b + " = " + resultado;
+        System.out.println("→ " + entrada);
+        historial.add(entrada);
+    } catch (ArithmeticException e) {
+        System.out.println("⚠ Error: " + e.getMessage());
+    }
+}`}
+</CodeBlock>
+
+## Paso 3: Mostrar historial
+
+<CodeBlock lang="java" title="Historial de operaciones">
+{`static void mostrarHistorial() {
+    System.out.println("\\n📋 Historial:");
+    if (historial.isEmpty()) {
+        System.out.println("(vacío)");
+        return;
+    }
+    for (int i = 0; i < historial.size(); i++) {
+        System.out.printf("  %d. %s%n", i + 1, historial.get(i));
+    }
+}`}
+</CodeBlock>
+
+## Proyecto completo
+
+Puedes descargar el código completo desde los recursos de la lección.
+
+## Ejercicios de extensión
+
+1. **Agrega potencia y raíz cuadrada** como opciones adicionales
+2. **Persistencia**: guarda y carga el historial usando archivos de texto
+3. **Validación**: maneja entradas no numéricas con `InputMismatchException`
+4. **Colores**: usa códigos ANSI para colorear la salida
+5. **Modo científico**: agrega seno, coseno, logaritmo, factorial
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

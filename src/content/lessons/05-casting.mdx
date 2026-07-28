@@ -1,0 +1,453 @@
+---
+title: "Conversión de Tipos (Casting)"
+slug: "casting"
+module: "01-fundamentos"
+level: "Intermedio"
+objectives:
+  - "Distinguir entre conversión implícita (widening) y explícita (narrowing)"
+  - "Aplicar casting explícito entre tipos primitivos"
+  - "Convertir entre String y tipos numéricos con métodos de utilidad"
+  - "Manejar pérdida de precisión y valores fuera de rango en narrowing"
+  - "Usar Integer.parseInt, Double.parseDouble y String.valueOf"
+prerequisites:
+  - "Haber completado Lección 01: Variables y Tipos de Datos"
+  - "Haber completado Lección 02: Operadores"
+  - "Conocer los 8 tipos primitivos de Java y sus rangos"
+history:
+  introducedIn: "Java 1.0"
+  context: "El sistema de tipado estático de Java exige que las conversiones entre tipos sean explícitas para prevenir errores. A diferencia de lenguajes como JavaScript o Python, Java no realiza conversiones automáticas entre tipos incompatibles. Cada conversión debe estar justificada por el programador."
+  evolution: "Java 5 introdujo autoboxing/unboxing, convirtiendo automáticamente entre primitivos y sus wrappers (Integer, Double, etc.). Java 8 agregó métodos de utilidad opcionales como OptionalInt para evitar null en tipos numéricos."
+realWorldExamples:
+  - domain: "Cálculo financiero"
+    description: "En un sistema financiero, los montos se almacenan como enteros (centavos) para evitar errores de redondeo, pero se muestran como decimales. El casting entre enteros y decimales es esencial."
+    code: |
+      public class Finanzas {
+          public static void main(String[] args) {
+              long centavos = 150099L;
+              double dolares = centavos / 100.0;
+              int dolaresEnteros = (int) (centavos / 100);
+
+              System.out.println("Centavos: " + centavos);
+              System.out.println("Dólares: $" + dolares);
+              System.out.println("Dólares (sin decimales): $" + dolaresEnteros);
+
+              // Calcular IVU con casting
+              double precio = 29.99;
+              int precioEntero = (int) precio;  // trunca a 29
+              System.out.println("Precio original: $" + precio);
+              System.out.println("Precio truncado: $" + precioEntero);
+          }
+      }
+    result: |
+      Centavos: 150099
+      Dólares: $1500.99
+      Dólares (sin decimales): $1500
+      Precio original: $29.99
+      Precio truncado: $29
+  - domain: "Conversión de entrada de usuario"
+    description: "Cuando un usuario ingresa datos por consola, estos llegan como String. Para hacer cálculos, debes convertirlos a números con métodos de parsing."
+    code: |
+      import java.util.Scanner;
+
+      public class EntradaNumerica {
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+
+              System.out.print("Precio del producto: ");
+              String precioStr = sc.nextLine();
+              double precio = Double.parseDouble(precioStr);
+
+              System.out.print("Cantidad: ");
+              int cantidad = Integer.parseInt(sc.nextLine());
+
+              double total = precio * cantidad;
+              System.out.printf("Total: $%.2f%n", total);
+
+              // Convertir número a String para mostrar
+              String totalStr = String.valueOf(total);
+              System.out.println("Total (como String): " + totalStr);
+
+              sc.close();
+          }
+      }
+    result: |
+      Precio del producto: 49.99
+      Cantidad: 3
+      Total: $149.97
+      Total (como String): 149.97
+hasInteractive: false
+comparisons:
+  - title: "Widening (implícito) vs Narrowing (explícito)"
+    items:
+      - name: "Widening (ampliación)"
+        features:
+          dirección: "Tipo pequeño → tipo grande"
+          sintaxis: "Automático, no requiere operador"
+          pérdida: "Sin pérdida de datos"
+          ejemplos: "byte → short → int → long → float → double"
+      - name: "Narrowing (reducción)"
+        features:
+          dirección: "Tipo grande → tipo pequeño"
+          sintaxis: "Requiere operador (tipo)"
+          pérdida: "Puede truncar o perder precisión"
+          ejemplos: "double → float → long → int → short → byte"
+    recommendation: "Usa widening siempre que puedas. Para narrowing, verifica que el valor no exceda el rango del tipo destino y documenta por qué es seguro."
+videos:
+  - url: ""
+    title: "Conversión de tipos en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿Se pierden datos al convertir de `double` a `int`?"
+    answer: "Sí. Al hacer casting de double a int, Java trunca la parte decimal (no redondea). Por ejemplo, (int) 3.99 da 3, no 4. Si necesitas redondeo, usa Math.round() que devuelve un long."
+  - question: "¿Qué pasa si el valor excede el rango del tipo destino al hacer narrowing?"
+    answer: "Java no lanza una excepción. En su lugar, el valor se trunca a los bits inferiores, lo que produce resultados inesperados. Por ejemplo, (byte) 128 da -128. Siempre verifica el rango antes de hacer narrowing."
+  - question: "¿Es seguro convertir entre `int` y `float`?"
+    answer: "La conversión de int → float es técnicamente widening (32 bits a 32 bits), pero puede perder precisión. Un int como 16777217 puede redondearse a 16777216f porque float tiene solo 23 bits de mantisa. Para valores grandes, usa double."
+sources:
+  - title: "Java 21 Language Specification — Type Conversions"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-5.html"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Primitive Type Conversions"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/datatypes.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es el casting?
+
+El **casting** (conversión de tipos) es el proceso de transformar un valor de un tipo de dato a otro. En Java, hay dos formas de conversión:
+
+1. **Widening (implícito / automático):** De un tipo pequeño a uno más grande. Java lo hace solo.
+2. **Narrowing (explícito / manual):** De un tipo grande a uno más pequeño. Debes indicarlo con `(tipo)`.
+
+```java
+int numero = 100;
+
+// Widening: int → double (automático, seguro)
+double decimal = numero;
+
+// Narrowing: double → int (explícito, puede perder datos)
+int entero = (int) decimal;
+```
+
+## Jerarquía de tipos primitivos
+
+```
+byte → short → int → long → float → double
+         ↑
+        char
+```
+
+- **→** indica dirección de widening (seguro, automático)
+- **←** indica dirección de narrowing (requiere casting explícito)
+
+## Widening: conversión implícita
+
+Java convierte automáticamente cuando el tipo destino es **más grande** o **más preciso**:
+
+<CodeBlock lang="java" title="Widening automático">
+{`public class Widening {
+    public static void main(String[] args) {
+        // Todos son widening — no requieren casting
+        byte b = 50;
+        short s = b;      // byte → short (OK)
+        int i = s;        // short → int (OK)
+        long l = i;       // int → long (OK)
+        float f = l;      // long → float (OK, posible pérdida de precisión)
+        double d = f;     // float → double (OK)
+
+        // char a int (el char es numérico internamente)
+        char c = 'A';
+        int valorUnicode = c;  // 65 (Unicode de 'A')
+
+        System.out.println("byte: " + b);
+        System.out.println("short: " + s);
+        System.out.println("int: " + i);
+        System.out.println("long: " + l);
+        System.out.println("float: " + f);
+        System.out.println("double: " + d);
+        System.out.println("char 'A' como int: " + valorUnicode);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+byte: 50
+short: 50
+int: 50
+long: 50
+float: 50.0
+double: 50.0
+char 'A' como int: 65
+```
+
+## Narrowing: casting explícito
+
+Cuando conviertes de un tipo más grande a uno más pequeño, debes hacer casting explícito. **Puede perder datos:**
+
+<CodeBlock lang="java" title="Narrowing con pérdida de datos">
+{`public class Narrowing {
+    public static void main(String[] args) {
+        double grande = 123.456;
+
+        // double → int: trunca los decimales
+        int truncado = (int) grande;
+        System.out.println("double original: " + grande);
+        System.out.println("(int) double: " + truncado);  // 123
+
+        // int → byte: valor fuera de rango
+        int desbordado = 128;
+        byte muyPequeno = (byte) desbordado;
+        System.out.println("int 128 → byte: " + muyPequeno);  // -128
+
+        // long → int: trunca bits superiores
+        long largo = 3_000_000_000L;
+        int truncadoLong = (int) largo;
+        System.out.println("long 3B → int: " + truncadoLong);  // -1294967296
+
+        // double → float: pierde precisión
+        double precisa = 3.14159265358979;
+        float menosPrecisa = (float) precisa;
+        System.out.println("double: " + precisa);
+        System.out.println("float: " + menosPrecisa);  // 3.1415927
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+double original: 123.456
+(int) double: 123
+int 128 → byte: -128
+long 3B → int: -1294967296
+double: 3.14159265358979
+float: 3.1415927
+```
+
+## Promoción aritmética
+
+Cuando realizas operaciones con tipos mixtos, Java **promueve** automáticamente los tipos más pequeños a `int` o al tipo más grande de la expresión:
+
+<CodeBlock lang="java" title="Promoción aritmética">
+{`public class Promocion {
+    public static void main(String[] args) {
+        byte a = 10;
+        byte b = 20;
+        // ¡byte + byte se promueve a int!
+        int suma = a + b;  // necesario, no byte c = a + b;
+
+        // Promoción al tipo más grande
+        int entero = 5;
+        double dec = 2.5;
+        double resultado = entero + dec;  // int → double
+
+        System.out.println("byte+byte como int: " + suma);
+        System.out.println("int+double como double: " + resultado);
+
+        // División entera vs decimal
+        int x = 7, y = 2;
+        int divEntera = x / y;               // 3
+        double divDecimal = (double) x / y;  // 3.5
+
+        System.out.println("División entera: " + divEntera);
+        System.out.println("División decimal: " + divDecimal);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+byte+byte como int: 30
+int+double como double: 7.5
+División entera: 3
+División decimal: 3.5
+```
+
+## Conversión entre String y números
+
+Una de las tareas más comunes: convertir texto ingresado por el usuario a números, y viceversa.
+
+### String → número
+
+| Método | Tipo | Uso |
+|--------|------|-----|
+| `Integer.parseInt(str)` | `int` | `int n = Integer.parseInt("42");` |
+| `Double.parseDouble(str)` | `double` | `double d = Double.parseDouble("3.14");` |
+| `Long.parseLong(str)` | `long` | `long l = Long.parseLong("1000000");` |
+| `Float.parseFloat(str)` | `float` | `float f = Float.parseFloat("2.5f");` |
+| `Boolean.parseBoolean(str)` | `boolean` | `boolean b = Boolean.parseBoolean("true");` |
+
+### Número → String
+
+| Método | Ejemplo | Resultado |
+|--------|---------|-----------|
+| `String.valueOf(n)` | `String.valueOf(42)` | `"42"` |
+| `Integer.toString(n)` | `Integer.toString(255, 16)` | `"ff"` |
+| `String.format()` | `String.format("%.2f", 3.14159)` | `"3.14"` |
+
+<CodeBlock lang="java" title="String ↔ números">
+{`public class StringNumero {
+    public static void main(String[] args) {
+        // String → int
+        String edadStr = "25";
+        int edad = Integer.parseInt(edadStr);
+
+        // String → double
+        String precioStr = "19.99";
+        double precio = Double.parseDouble(precioStr);
+
+        // String → boolean
+        String activoStr = "true";
+        boolean activo = Boolean.parseBoolean(activoStr);
+
+        System.out.println("Edad: " + edad + " (tipo: int)");
+        System.out.println("Precio: " + (precio + 5));
+        System.out.println("Activo: " + activo);
+
+        // Número → String
+        int total = 150;
+        String totalStr = String.valueOf(total);
+        String conFormato = String.format("Total: $%,.2f", 1500.5);
+
+        System.out.println("String.valueOf: " + totalStr);
+        System.out.println("String.format: " + conFormato);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Edad: 25 (tipo: int)
+Precio: 24.99
+Activo: true
+String.valueOf: 150
+String.format: Total: $1,500.50
+```
+
+## Autoboxing y Unboxing
+
+Desde Java 5, los tipos primitivos se convierten automáticamente a sus **wrappers** (clases envolventes) y viceversa:
+
+| Primitivo | Wrapper |
+|-----------|---------|
+| `int` | `Integer` |
+| `double` | `Double` |
+| `boolean` | `Boolean` |
+| `char` | `Character` |
+| `long` | `Long` |
+| `byte` | `Byte` |
+| `short` | `Short` |
+| `float` | `Float` |
+
+<CodeBlock lang="java" title="Autoboxing y Unboxing">
+{`import java.util.ArrayList;
+
+public class Boxing {
+    public static void main(String[] args) {
+        // Autoboxing: int → Integer (automático)
+        int primitivo = 42;
+        Integer wrapper = primitivo;  // Java crea el objeto Integer
+
+        // Unboxing: Integer → int (automático)
+        Integer objeto = Integer.valueOf(100);
+        int resultado = objeto + 50;  // Java extrae el valor
+
+        System.out.println("Primitivo: " + primitivo);
+        System.out.println("Wrapper: " + wrapper);
+        System.out.println("Unboxing: " + resultado);
+
+        // Útil para colecciones
+        ArrayList<Integer> numeros = new ArrayList<>();
+        numeros.add(10);  // autoboxing
+        numeros.add(20);
+        int primero = numeros.get(0);  // unboxing
+        System.out.println("Primero de la lista: " + primero);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Primitivo: 42
+Wrapper: 42
+Unboxing: 150
+Primero de la lista: 10
+```
+
+## Errores frecuentes
+
+### Error 1: NumberFormatException
+```java
+// ❌ Lanza NumberFormatException
+int numero = Integer.parseInt("abc");
+int numero2 = Integer.parseInt("12.5");  // punto decimal no válido para int
+
+// ✅ Manejar con try-catch o validar antes
+try {
+    int numero = Integer.parseInt("abc");
+} catch (NumberFormatException e) {
+    System.out.println("No es un número válido");
+}
+```
+
+### Error 2: Olvidar el casting en división
+```java
+// ❌ Resultado: 2 (división entera)
+int a = 7, b = 3;
+double resultado = a / b;
+
+// ✅ Al menos un operando debe ser double
+double resultado = (double) a / b;
+```
+
+### Error 3: Casting de long a int sin verificar rango
+```java
+// ❌ Resultado inesperado: -1294967296
+long valorGrande = 3_000_000_000L;
+int truncado = (int) valorGrande;
+
+// ✅ Verificar el rango
+if (valorGrande >= Integer.MIN_VALUE && valorGrande <= Integer.MAX_VALUE) {
+    int seguro = (int) valorGrande;
+} else {
+    System.out.println("Valor fuera del rango int");
+}
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

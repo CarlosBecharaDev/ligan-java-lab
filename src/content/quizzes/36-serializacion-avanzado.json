@@ -1,0 +1,87 @@
+{
+  "id": "quiz-36-serializacion-avanzado",
+  "lessonSlug": "serializacion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué palabra clave se usa para excluir un campo de la serialización?",
+      "options": ["exclude", "transient", "volatile", "static"],
+      "correctIndex": 1,
+      "explanations": [
+        "exclude no es una palabra clave de Java.",
+        "Correcto. transient indica que el campo NO debe ser serializado y mantendrá su valor por defecto al deserializar.",
+        "volatile asegura visibilidad entre hilos, no afecta la serialización.",
+        "static pertenece a la clase, no a la instancia, y no se serializa de todas formas."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Cómo funciona la serialización con herencia?",
+      "options": [
+        "Solo se serializa la clase hija",
+        "Se serializa toda la jerarquía de clases si todas implementan Serializable",
+        "Se debe implementar writeObject() en cada clase padre",
+        "Java no permite serializar clases que heredan de otras"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "No solo se serializa la clase hija; incluye los campos de las clases padre.",
+        "Correcto. La serialización incluye todos los campos de toda la jerarquía de clases, siempre que cada clase en la cadena implemente Serializable.",
+        "writeObject() es opcional y no es necesario en cada clase padre.",
+        "Java sí permite serializar clases que heredan de otras."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es la serialización parcial (custom serialization)?",
+      "options": [
+        "Serializar solo los campos estáticos",
+        "Implementar writeObject() y readObject() para controlar qué se guarda y cómo",
+        "Usar una librería externa para serializar",
+        "Serializar solo la primera mitad del objeto"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Los campos estáticos no se serializan de todas formas.",
+        "Correcto. Al implementar writeObject() y readObject() en la clase, se puede controlar exactamente qué campos se guardan y cómo se transforman.",
+        "La serialización parcial no requiere librerías externas.",
+        "No tiene relación con dividir el objeto en partes."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cuál es la principal ventaja de usar JSON sobre la serialización nativa de Java?",
+      "options": [
+        "JSON es más rápido que Serializable",
+        "JSON es portable entre lenguajes, Serializable solo funciona en Java",
+        "JSON puede serializar objetos sin implementar interfaz",
+        "JSON no requiere bibliotecas externas"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "La velocidad no es necesariamente la principal ventaja.",
+        "Correcto. JSON es un formato de texto legible y portable que puede leerse desde cualquier lenguaje de programación, mientras que la serialización nativa de Java solo puede deserializarse en Java.",
+        "JSON también requiere configuración o interfaz en muchos casos.",
+        "JSON sí requiere bibliotecas como Gson, Jackson o similar."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cómo se deserializa un objeto en Java?",
+      "options": [
+        "ObjectOutputStream.readObject()",
+        "ObjectInputStream.readObject()",
+        "ObjectDeserializer.deserialize()",
+        "File.readObject()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "ObjectOutputStream escribe objetos, no los lee.",
+        "Correcto. ObjectInputStream lee bytes de un stream y los convierte de nuevo en objetos usando readObject().",
+        "ObjectDeserializer no existe en el API estándar de Java.",
+        "File no tiene un método readObject()."
+      ]
+    }
+  ]
+}

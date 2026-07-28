@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-casting-facil",
+    "lessonSlug": "casting",
+    "title": "Conversiones básicas",
+    "difficulty": "facil",
+    "description": "Crea variables con diferentes tipos y practica conversiones widening y narrowing. Muestra los resultados antes y después de cada conversión.",
+    "template": "public class ConversionesBasicas {\n    public static void main(String[] args) {\n        int entero = 250;\n\n        // TODO: Convierte int a double (widening)\n        // Convierte double de vuelta a int (narrowing)\n        // Convierte int a byte (narrowing, prueba con 130)\n        // Convierte char 'Z' a int\n        // Imprime cada conversión con una descripción\n\n    }\n}",
+    "hints": [
+      "Widening no necesita operador: double d = entero",
+      "Narrowing necesita (tipo): byte b = (byte) entero",
+      "Un char se puede asignar directamente a int"
+    ],
+    "solution": "public class ConversionesBasicas {\n    public static void main(String[] args) {\n        int entero = 250;\n\n        // Widening: int → double\n        double decimal = entero;\n        System.out.println(\"int \" + entero + \" → double: \" + decimal);\n\n        // Narrowing: double → int\n        double pi = 3.14159;\n        int truncado = (int) pi;\n        System.out.println(\"double \" + pi + \" → int: \" + truncado);\n\n        // Narrowing: int → byte (desbordamiento)\n        int grande = 130;\n        byte pequeno = (byte) grande;\n        System.out.println(\"int \" + grande + \" → byte: \" + pequeno);\n\n        // char → int (valor Unicode)\n        char letra = 'Z';\n        int valorUnicode = letra;\n        System.out.println(\"char '\" + letra + \"' → int: \" + valorUnicode);\n    }\n}",
+    "solutionExplanation": "Widening es automático y seguro. Narrowing requiere (tipo) y puede truncar (3.14159→3) o desbordar (130→-126). char se asigna a int sin casting porque es widening.",
+    "expectedOutput": "int 250 → double: 250.0\ndouble 3.14159 → int: 3\nint 130 → byte: -126\nchar 'Z' → int: 90"
+  },
+  {
+    "id": "ex-casting-normal",
+    "lessonSlug": "casting",
+    "title": "Calculadora de propinas con conversión",
+    "difficulty": "normal",
+    "description": "Pide el total de la cuenta como String, conviértelo a double, calcula la propina (15% y 20%), y muestra los resultados con dos decimales. Al final, convierte cada total a int (truncado) para mostrar la versión sin centavos.",
+    "template": "import java.util.Scanner;\n\npublic class CalculadoraPropinas {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        // TODO: Pide el total como String\n        // Convierte a double con Double.parseDouble\n        // Calcula propina de 15% y 20%\n        // Muestra resultados con printf (2 decimales)\n        // Convierte cada total a int (truncado)\n        // Muestra versión truncada\n\n    }\n}",
+    "hints": [
+      "Usa Double.parseDouble() para convertir String a double",
+      "Usa printf con %.2f para 2 decimales",
+      "Usa (int) para truncar la parte decimal"
+    ],
+    "solution": "import java.util.Scanner;\n\npublic class CalculadoraPropinas {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n\n        System.out.print(\"Total de la cuenta: \");\n        String totalStr = sc.nextLine();\n        double total = Double.parseDouble(totalStr);\n\n        double propina15 = total * 0.15;\n        double total15 = total + propina15;\n\n        double propina20 = total * 0.20;\n        double total20 = total + propina20;\n\n        System.out.println(\"\\n--- Opciones de propina ---\");\n        System.out.printf(\"Total original: $%.2f%n\", total);\n        System.out.printf(\"15%%: +$%.2f = $%.2f%n\", propina15, total15);\n        System.out.printf(\"20%%: +$%.2f = $%.2f%n\", propina20, total20);\n\n        System.out.println(\"\\n--- Versión truncada (sin decimales) ---\");\n        System.out.println(\"Total original: $\" + (int) total);\n        System.out.println(\"Con 15%: $\" + (int) total15);\n        System.out.println(\"Con 20%: $\" + (int) total20);\n\n        sc.close();\n    }\n}",
+    "solutionExplanation": "Convertimos el String ingresado a double con parseDouble. Usamos printf(%n.2f) para formatear a 2 decimales. Al truncar cada total con (int) se pierde la parte decimal sin redondear.",
+    "expectedOutput": "Total de la cuenta: 47.50\n\n--- Opciones de propina ---\nTotal original: $47.50\n15%: +$7.12 = $54.62\n20%: +$9.50 = $57.00\n\n--- Versión truncada (sin decimales) ---\nTotal original: $47\nCon 15%: $54\nCon 20%: $57"
+  },
+  {
+    "id": "ex-casting-dificil",
+    "lessonSlug": "casting",
+    "title": "Convertidor de unidades con validación",
+    "difficulty": "dificil",
+    "description": "Crea un conversor de temperatura que reciba la entrada como String, la convierta a double, valide que sea un número válido, y convierta entre Celsius, Fahrenheit y Kelvin usando fórmulas precisas.",
+    "template": "public class ConvertidorTemperatura {\n    public static void main(String[] args) {\n        // TODO: Define temperaturas como String: \"37.5\", \"-10\", \"abc\"\n        // Para cada una:\n        //   1. Intenta convertir a double con Double.parseDouble\n        //   2. Si falla, muestra mensaje de error y continúa\n        //   3. Si funciona, convierte:\n        //      - Celsius → Fahrenheit: C * 9/5 + 32\n        //      - Celsius → Kelvin: C + 273.15\n        //   4. Muestra resultado formateado con 2 decimales\n        //   5. Muestra también la versión truncada a int\n\n    }\n}",
+    "hints": [
+      "Usa try-catch alrededor de Double.parseDouble()",
+      "Usa 9.0/5.0 en lugar de 9/5 para evitar división entera",
+      "Usa (int) para truncar, Math.round() para redondear"
+    ],
+    "solution": "public class ConvertidorTemperatura {\n    public static void main(String[] args) {\n        String[] temperaturas = {\"37.5\", \"-10\", \"abc\", \"100\"};\n        int exitosas = 0;\n\n        for (String tempStr : temperaturas) {\n            System.out.print(\"Convirtiendo '\" + tempStr + \"'... \");\n\n            try {\n                double celsius = Double.parseDouble(tempStr);\n\n                double fahrenheit = celsius * 9.0 / 5.0 + 32;\n                double kelvin = celsius + 273.15;\n\n                System.out.println(\"✅ OK\");\n                System.out.printf(\"  %.1f°C = %.1f°F = %.2fK%n\",\n                    celsius, fahrenheit, kelvin);\n                System.out.printf(\"  Truncado: %d°C, %d°F, %dK%n\",\n                    (int) celsius, (int) fahrenheit, (int) kelvin);\n\n                exitosas++;\n            } catch (NumberFormatException e) {\n                System.out.println(\"❌ No es un número válido\");\n            }\n            System.out.println();\n        }\n\n        System.out.println(\"Conversiones exitosas: \" + exitosas + \"/\" + temperaturas.length);\n    }\n}",
+    "solutionExplanation": "Usamos Double.parseDouble() dentro de try-catch para manejar entradas no numéricas sin crashear. El for-each procesa un array de strings. Usamos (int) para truncar y printf para formatear.",
+    "expectedOutput": "Convirtiendo '37.5'... ✅ OK\\n  37.5°C = 99.5°F = 310.65K\\n  Truncado: 37°C, 99°F, 310K\\n\\nConvirtiendo '-10'... ✅ OK\\n  -10.0°C = 14.0°F = 263.15K\\n  Truncado: -10°C, 14°F, 263K\\n\\nConvirtiendo 'abc'... ❌ No es un número válido\\n\\nConvirtiendo '100'... ✅ OK\\n  100.0°C = 212.0°F = 373.15K\\n  Truncado: 100°C, 212°F, 373K\\n\\nConversiones exitosas: 3/4"
+  }
+]

@@ -1,0 +1,92 @@
+{
+  "id": "quiz-28-expresiones-regulares-avanzado",
+  "lessonSlug": "expresiones-regulares",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué hace .* en una expresion regular?",
+      "options": [
+        "Cualquier caracter (0 o mas veces)",
+        "Exactamente un caracter",
+        "Un digito o letra",
+        "Un espacio en blanco"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. . coincide con cualquier caracter y * significa 0 o mas veces, juntos buscan cualquier secuencia.",
+        "No. Para exactamente un caracter seria solo el punto (.).",
+        "No. Para digitos o letras seria \\w.",
+        "No. Para espacios seria \\s."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué es greedy vs lazy en expresiones regulares?",
+      "options": [
+        "Greedy toma lo maximo, lazy toma lo minimo",
+        "Greedy es rapido, lazy es lento",
+        "Greedy busca todo, lazy busca nada",
+        "No hay diferencia"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Greedy (voraz) intenta coincidir con la mayor cantidad posible, lazy (perezoso) intenta coincidir con la menor cantidad posible.",
+        "No. La velocidad no es la diferencia, es la cantidad de texto que intentan coincidir.",
+        "No. Lazy no busca nada, busca la menor cantidad posible.",
+        "No. Si hay diferencia, greedy usa * y lazy usa *?."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo verificar si un email es válido usando regex?",
+      "options": [
+        "Pattern con regex de email",
+        "Usar el metodo isEmail()",
+        "Validar con contains(@)",
+        "No se puede validar"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Se crea un Pattern con una expresion regular que defina el formato de email y se valida con Matcher.",
+        "No. No existe el metodo isEmail() en Java.",
+        "No. contains(@) solo verifica que tenga @, no valida el formato completo.",
+        "No. Si se puede validar usando expresiones regulares."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué es un grupo de captura en expresiones regulares?",
+      "options": [
+        "Parentesis que agrupan parte del patron",
+        "Llaves que definen un conjunto",
+        "Corchetes que buscan caracteres",
+        "Angulares que marcan inicio y fin"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Los parentesis () crean grupos de captura que permiten extraer partes especificas del texto coincidente.",
+        "No. Las llaves {} se usan para cuantificadores, no para captura.",
+        "No. Los corchetes [] definen clases de caracteres.",
+        "No. Los angulares <> no se usan en regex."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué hace \\b en una expresion regular?",
+      "options": [
+        "Limite de palabra",
+        "Un espacio en blanco",
+        "Un salto de linea",
+        "Un retroceso"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. \\b representa un limite entre una palabra y un espacio en blanco, util para buscar palabras completas.",
+        "No. Para espacios se usa \\s, no \\b.",
+        "No. Para saltos de linea se usa \\n, no \\b.",
+        "No. No es un retroceso, es un limite de palabra."
+      ]
+    }
+  ]
+}

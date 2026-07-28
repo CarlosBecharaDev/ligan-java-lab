@@ -1,0 +1,280 @@
+---
+title: "Variables y tipos de datos"
+slug: "variables-y-tipos"
+module: "01-fundamentos"
+level: "Inicial"
+objectives:
+  - "Declarar e inicializar variables de diferentes tipos en Java"
+  - "Diferenciar entre tipos primitivos y tipos de referencia"
+  - "Explicar cómo Java gestiona la memoria con Stack y Heap"
+  - "Usar `var` para inferencia de tipos y `final` para constantes"
+prerequisites:
+  - "Haber instalado el JDK 21 y un IDE (IntelliJ IDEA o VS Code)"
+  - "Haber completado la lección de instalación del entorno"
+history:
+  introducedIn: "Java 1.0"
+  context: "Desde sus orígenes en 1996, Java implementó un sistema de tipado estático fuerte para garantizar seguridad y prevenir errores en tiempo de compilación. A diferencia de lenguajes dinámicos como Python o JavaScript, Java exige que cada variable declare su tipo explícitamente."
+  evolution: "En Java 10 (2018) se introdujo la palabra clave `var` para inferencia de tipos locales, reduciendo la verbosidad sin sacrificar el tipado estático."
+realWorldExamples:
+  - domain: "E-commerce"
+    description: "En una tienda online, las variables almacenan datos de productos: nombre, precio, disponibilidad y categoría. Cada dato necesita el tipo correcto para evitar errores de redondeo o truncamiento."
+    code: |
+      String nombreProducto = "Auriculares Bluetooth";
+      double precio = 79.99;
+      int stock = 150;
+      boolean disponible = stock > 0;
+      System.out.println(nombreProducto + " — $" + precio);
+      System.out.println("Disponible: " + disponible);
+    result: |
+      Auriculares Bluetooth — $79.99
+      Disponible: true
+  - domain: "Banca"
+    description: "En una app bancaria, las variables manejan saldos, tasas de interés y datos de clientes. El uso correcto de tipos evita errores financieros críticos."
+    code: |
+      String titular = "María García";
+      double saldo = 12500.75;
+      final double TASA_INTERES = 0.045;
+      double interesMensual = saldo * TASA_INTERES / 12;
+      System.out.printf("Saldo: $%.2f%n", saldo);
+      System.out.printf("Interés mensual: $%.2f%n", interesMensual);
+    result: |
+      Saldo: $12500.75
+      Interés mensual: $46.88
+hasInteractive: true
+comparisons:
+  - title: "tipos primitivos vs. tipos de referencia"
+    items:
+      - name: "Primitivos"
+        features:
+          almacenamiento: "Directamente en Stack"
+          velocidad: "Muy rápido"
+          valores: "Valores puros (número, carácter, booleano)"
+          ejemplos: "int, double, boolean, char"
+      - name: "Referencias"
+        features:
+          almacenamiento: "Referencia en Stack, objeto en Heap"
+          velocidad: "Depende del objeto"
+          valores: "Objetos complejos (String, arrays, instancias)"
+          ejemplos: "String, ArrayList, cualquier clase"
+    recommendation: "Usa tipos primitivos cuando necesitas rendimiento máximo y almacenas valores simples. Usa tipos de referencia cuando necesitas objetos con métodos, colecciones o datos complejos."
+videos:
+  - url: ""
+    title: "Variables y tipos de datos en Java"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero por Juan Carlos — explicación detallada con ejemplos prácticos"
+faqs:
+  - question: "¿`String` es un tipo primitivo en Java?"
+    answer: "No. `String` es una clase (tipo de referencia) que forma parte de la librería estándar de Java. A diferencia de los primitivos, `String` almacena objetos en el Heap y tiene métodos propios como `.length()`, `.charAt()` y `.substring()`."
+  - question: "¿Qué pasa si uso una variable sin inicializarla?"
+    answer: "Las variables locales dentro de un método no tienen valor por defecto. Si intentas usar una variable sin inicializarla, Java genera un error de compilación. Esto es una protección para evitar valores inesperados."
+  - question: "¿Cuándo debo usar `var` en vez del tipo explícito?"
+    answer: "Usa `var` cuando el tipo es evidente de inmediato para quien lee el código. Por ejemplo, `var scanner = new Scanner(System.in)` es claro porque el tipo se deduce del lado derecho. No lo uses cuando el tipo no es obvio, como `var resultado = calcular(a, b)`."
+  - question: "¿Qué diferencia hay entre `final` y una constante de otro lenguaje?"
+    answer: "En Java, `final` declara una variable cuyo valor no puede cambiarse después de la inicialización. Es la forma estándar de crear constantes. Se nombra en `MAYÚSCULAS_CON_GUIONES_BAJOS` por convención."
+  - question: "¿Cómo afecta `var` al rendimiento?"
+    answer: "No afecta en absoluto. `var` es solo azúcar sintáctico: el compilador reemplaza `var` por el tipo real antes de generar el bytecode. El código resultante es idéntico a declarar el tipo explícitamente."
+sources:
+  - title: "Java 21 Language Specification — Primitive Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    date: "2026-07-26"
+  - title: "OpenJDK — Local Variable Type Inference (JEP 286)"
+    url: "https://openjdk.org/jeps/286"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import InteractiveExample from '@components/lesson/InteractiveExample.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es una variable?
+
+Una **variable** es un espacio con nombre en la memoria que almacena un valor durante la ejecución de un programa. Piensa en ella como una caja etiquetada: la etiqueta es el nombre de la variable, y lo que guardas dentro es el valor.
+
+En Java, cada variable debe declararse con un **tipo de dato específico** que no puede cambiar después de su declaración. Esto se llama **tipado estático fuerte** y es una de las razones por las que Java es robusto y confiable.
+
+## Analogía: la oficina de correos
+
+Imagina la memoria RAM de tu computadora como una gran oficina de correos con casilleros de distintos tamaños:
+
+- **Casilleros pequeños** (`int`, `boolean`, `char`): Guardan el valor directamente dentro del casillero. Son los **tipos primitivos**.
+- **Casilleros gigantes** (`String`, `ArrayList`): Son demasiado grandes para guardar el valor real. En su lugar, contienen una nota con la dirección de donde está el paquete. Esta nota es una **referencia**.
+
+Los casilleros pequeños están en la zona rápida (**Stack**), y los paquetes grandes están en el almacén (**Heap**).
+
+## Los 8 tipos primitivos de Java
+
+Java tiene exactamente 8 tipos primitivos:
+
+| Tipo | Tamaño | Rango / Descripción | Ejemplo |
+|------|--------|---------------------|---------|
+| `byte` | 8 bits | -128 a 127 | `byte nivel = 5;` |
+| `short` | 16 bits | -32,768 a 32,767 | `short año = 2026;` |
+| `int` | 32 bits | -2,147M a 2,147M | `int edad = 30;` |
+| `long` | 64 bits | Muy grande | `long poblacion = 8_000_000_000L;` |
+| `float` | 32 bits | Decimal (precisión limitada) | `float temperatura = 36.5f;` |
+| `double` | 64 bits | Decimal (alta precisión) | `double salario = 1500.50;` |
+| `char` | 16 bits | Un carácter Unicode | `char genero = 'M';` |
+| `boolean` | 1 bit | `true` o `false` | `boolean activo = true;` |
+
+<CodeBlock lang="java" title="Los 8 tipos primitivos">
+{`public class TiposPrimitivos {
+    public static void main(String[] args) {
+        byte nivel = 5;
+        short año = 2026;
+        int edad = 30;
+        long poblacion = 8_000_000_000L;
+        float temperatura = 36.5f;
+        double salario = 1500.50;
+        char genero = 'M';
+        boolean activo = true;
+
+        System.out.println("Nivel: " + nivel);
+        System.out.println("Año: " + año);
+        System.out.println("Edad: " + edad);
+        System.out.println("Población: " + poblacion);
+        System.out.println("Temperatura: " + temperatura);
+        System.out.println("Salario: " + salario);
+        System.out.println("Género: " + genero);
+        System.out.println("Activo: " + activo);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Nivel: 5
+Año: 2026
+Edad: 30
+Población: 8000000000
+Temperatura: 36.5
+Salario: 1500.5
+Género: M
+Activo: true
+```
+
+## Tipos de referencia: String y más allá
+
+Los **tipos de referencia** son objetos que almacenan una dirección de memoria (referencia) que apunta al objeto real en el Heap. El más usado es `String`:
+
+<CodeBlock lang="java" title="String y tipos de referencia">
+{`public class TiposReferencia {
+    public static void main(String[] args) {
+        String nombre = "Carlos";
+        String apellido = "Bechara";
+        String nombreCompleto = nombre + " " + apellido;
+
+        System.out.println("Nombre completo: " + nombreCompleto);
+        System.out.println("Longitud: " + nombreCompleto.length());
+        System.out.println("En mayúsculas: " + nombreCompleto.toUpperCase());
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Nombre completo: Carlos Bechara
+Longitud: 14
+En mayúsculas: CARLOS BECHARA
+```
+
+Nota cómo `String` tiene métodos como `.length()` y `.toUpperCase()` — los tipos primitivos no tienen métodos porque no son objetos.
+
+## Declaración e inicialización
+
+La sintaxis para declarar una variable sigue un patrón claro:
+
+```java
+// [Tipo] [nombre] = [valor];
+int edad = 25;
+String nombre = "Ana";
+
+// Declaración sin valor (inicialización posterior)
+double salario;
+salario = 1500.50;
+
+// En Java 10+, var infiere el tipo automáticamente
+var precio = 99.99;    // infiere double
+var mensaje = "Hola";  // infiere String
+```
+
+<InteractiveExample type="memory-diagram" />
+
+## Constantes con `final`
+
+Cuando un valor no debe cambiar durante la ejecución, se declara con `final`. Por convención, las constantes se nombran en `MAYÚSCULAS_CON_GUIONES_BAJOS`:
+
+```java
+final double PI = 3.14159;
+final int MAX_INTENTOS = 3;
+final String PAIS = "México";
+
+// PI = 3.14;  // Error de compilación: no se puede reasignar
+```
+
+## Errores frecuentes
+
+### Error 1: Tipo incorrecto en la asignación
+```java
+// ❌ Error: no se puede asignar un double a un int directamente
+int precio = 19.99;
+
+// ✅ Corrección: usar double o casting explícito
+double precio = 19.99;
+int precioEntero = (int) 19.99;  // resultado: 19 (pierde decimales)
+```
+
+### Error 2: Variable local sin inicializar
+```java
+// ❌ Error de compilación
+int resultado;
+System.out.println(resultado);  // variable might not have been initialized
+
+// ✅ Corrección: inicializar antes de usar
+int resultado = 0;
+System.out.println(resultado);
+```
+
+### Error 3: Confundir `=` con `==`
+```java
+// = es asignación (guarda un valor)
+int x = 10;
+
+// == es comparación (compara dos valores)
+if (x == 10) {
+    System.out.println("x es igual a 10");
+}
+```
+
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

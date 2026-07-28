@@ -1,0 +1,11 @@
+{
+  "id": "mod-02",
+  "slug": "02-control-de-flujo",
+  "number": 2,
+  "title": "Control de Flujo",
+  "description": "Enseña a tu programa a tomar decisiones y repetir acciones con condicionales y bucles.",
+  "icon": "GitBranch",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["if-else", "switch", "while-do-while", "for", "break-continue-return"]
+}

@@ -1,0 +1,243 @@
+---
+import type { QuizQuestion } from '@lib/quiz';
+
+export interface Props {
+  quiz: {
+    id: string;
+    level: string;
+    questions: QuizQuestion[];
+  };
+}
+
+const { quiz } = Astro.props;
+const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
+---
+
+<div class="quiz-card" role="region" aria-label={`Quiz ${quiz.level}`} data-quiz-id={quizId}>
+  <div class="quiz-card__header">
+    <span class="quiz-card__level">{quiz.level === 'basico' ? '🟢 Comprensión básica' : '🔴 Razonamiento avanzado'}</span>
+    <span class="quiz-card__count">{quiz.questions.length} preguntas</span>
+  </div>
+
+  {quiz.questions.map((q, idx) => (
+    <div class="quiz-card__question" data-question-id={q.id} data-explanations={JSON.stringify(q.explanations)}>
+      <p class="quiz-card__question-text">
+        <strong>{idx + 1}.</strong> {q.question}
+      </p>
+      <div class="quiz-card__options">
+        {q.options.map((opt, optIdx) => (
+          <label class="quiz-card__option" data-option>
+            <input
+              type="radio"
+              name={`${quizId}-${q.id}`}
+              value={optIdx}
+              class="sr-only"
+              data-correct={optIdx === q.correctIndex}
+            />
+            <span class="quiz-card__option-indicator"></span>
+            <span class="quiz-card__option-text">{opt}</span>
+          </label>
+        ))}
+      </div>
+      <div class="quiz-card__feedback" role="alert" hidden></div>
+    </div>
+  ))}
+
+  <div class="quiz-card__result" hidden role="region" aria-live="polite">
+    <p class="quiz-card__score">Puntaje: <span class="quiz-card__score-value">0</span>/<span class="quiz-card__score-total">{quiz.questions.length}</span></p>
+  </div>
+</div>
+
+<style>
+  .quiz-card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-md);
+    padding: var(--space-lg);
+    margin-bottom: var(--space-xl);
+  }
+
+  .quiz-card__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-md);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .quiz-card__level {
+    font-weight: 600;
+    font-size: var(--text-sm);
+  }
+
+  .quiz-card__count {
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  .quiz-card__question {
+    margin-bottom: var(--space-lg);
+    padding: var(--space-md);
+    background: var(--bg);
+    border-radius: var(--radius-sm);
+  }
+
+  .quiz-card__question-text {
+    margin-bottom: var(--space-md);
+    line-height: 1.6;
+  }
+
+  .quiz-card__option {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: border-color var(--transition), background var(--transition);
+    margin-bottom: var(--space-xs);
+  }
+
+  .quiz-card__option:hover {
+    border-color: var(--sky);
+    background: var(--surface-raised);
+  }
+
+  .quiz-card__option--selected {
+    border-color: var(--sky);
+    background: rgba(87, 184, 255, 0.1);
+  }
+
+  .quiz-card__option--correct {
+    border-color: var(--success);
+    background: rgba(85, 214, 161, 0.1);
+  }
+
+  .quiz-card__option--incorrect {
+    border-color: var(--danger);
+    background: rgba(255, 112, 112, 0.1);
+  }
+
+  .quiz-card__option-indicator {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--muted);
+    border-radius: 50%;
+    flex-shrink: 0;
+    transition: border-color var(--transition);
+  }
+
+  .quiz-card__option--selected .quiz-card__option-indicator {
+    border-color: var(--sky);
+    background: var(--sky);
+  }
+
+  .quiz-card__option--correct .quiz-card__option-indicator {
+    border-color: var(--success);
+    background: var(--success);
+  }
+
+  .quiz-card__option--incorrect .quiz-card__option-indicator {
+    border-color: var(--danger);
+    background: var(--danger);
+  }
+
+  .quiz-card__feedback {
+    margin-top: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-sm);
+    color: var(--text);
+  }
+
+  .quiz-card__feedback--show {
+    display: block;
+  }
+
+  .quiz-card__feedback--correct {
+    background: rgba(85, 214, 161, 0.1);
+    border: 1px solid rgba(85, 214, 161, 0.3);
+  }
+
+  .quiz-card__feedback--incorrect {
+    background: rgba(255, 112, 112, 0.1);
+    border: 1px solid rgba(255, 112, 112, 0.3);
+  }
+
+  .quiz-card__result {
+    background: var(--surface-raised);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    padding: var(--space-lg);
+    text-align: center;
+    margin-top: var(--space-lg);
+  }
+
+  .quiz-card__score {
+    font-size: var(--text-lg);
+    font-weight: 600;
+  }
+</style>
+
+<script>
+  // Los scripts de Astro son module-scoped; buscamos por data attributes
+  document.querySelectorAll('.quiz-card').forEach((container) => {
+    const preguntas = container.querySelectorAll('.quiz-card__question');
+    const resultSection = container.querySelector('.quiz-card__result');
+    const scoreValue = resultSection?.querySelector('.quiz-card__score-value');
+
+    preguntas.forEach((pregunta) => {
+      const radios = pregunta.querySelectorAll('input[type="radio"]');
+      const feedback = pregunta.querySelector('.quiz-card__feedback');
+
+      radios.forEach((radio) => {
+        radio.addEventListener('change', () => {
+          const optionsContainer = pregunta.querySelector('.quiz-card__options');
+          const opciones = optionsContainer?.querySelectorAll('.quiz-card__option');
+
+          opciones?.forEach((opt) => {
+            const input = opt.querySelector('input');
+            if (input) {
+              const isCorrect = input.dataset.correct === 'true';
+              const isSelected = input.checked;
+              opt.classList.remove(
+                'quiz-card__option--selected',
+                'quiz-card__option--correct',
+                'quiz-card__option--incorrect'
+              );
+              if (isSelected) {
+                opt.classList.add(isCorrect ? 'quiz-card__option--correct' : 'quiz-card__option--incorrect');
+              } else if (isCorrect) {
+                opt.classList.add('quiz-card__option--correct');
+              }
+            }
+          });
+
+          const selectedRadio = pregunta.querySelector('input[type="radio"]:checked');
+          if (selectedRadio && feedback) {
+            const isCorrect = selectedRadio.dataset.correct === 'true';
+            const idx = parseInt(selectedRadio.value);
+            // Las explicaciones se almacenan como data attribute en cada pregunta
+            const explanationsRaw = pregunta.getAttribute('data-explanations') || '[]';
+            const explanations = JSON.parse(explanationsRaw);
+            feedback.hidden = false;
+            feedback.className = `quiz-card__feedback quiz-card__feedback--show ${isCorrect ? 'quiz-card__feedback--correct' : 'quiz-card__feedback--incorrect'}`;
+            feedback.textContent = explanations[idx] || 'Sin explicación disponible.';
+
+            // Deshabilitar opciones después de responder
+            radios.forEach((r) => { (r as HTMLInputElement).disabled = true; });
+
+            // Mostrar resultado
+            if (resultSection && scoreValue) {
+              const correctas = container.querySelectorAll('.quiz-card__option--correct input[type="radio"]:checked').length;
+              scoreValue.textContent = correctas.toString();
+              resultSection.hidden = false;
+            }
+          }
+        });
+      });
+    });
+  });
+</script>
