@@ -23,29 +23,27 @@ modules.sort((a, b) => a.data.number - b.data.number);
           : null;
         const firstLessonSlug = firstSlug ?? 'variables-y-tipos';
         return (
-          <div style="display:flex;gap:var(--space-lg);padding:var(--space-lg);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5);cursor:pointer;transition:transform 0.1s;align-items:center"
+          <div class="path__card" style="display:flex;gap:var(--space-lg);padding:var(--space-lg);background:var(--win-bg);border:2px solid var(--win-border);box-shadow:2px 2px 0 rgba(0,0,0,0.5);cursor:pointer;align-items:center"
                onclick={`window.location.href='/tema/${firstLessonSlug}'`}
                role="button"
                tabindex="0"
-               aria-label={`Módulo ${mod.data.number}: ${mod.data.title}`}
-               onmouseover="this.style.transform='translate(-2px, -2px)';this.style.boxShadow='4px 4px 0 rgba(0,0,0,0.5)'"
-               onmouseout="this.style.transform='none';this.style.boxShadow='2px 2px 0 rgba(0,0,0,0.5)'">
-            <div style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;background:#E8D8B0;border:2px solid var(--win-border);flex-shrink:0;color:var(--win-text)">
-              <span style="font-family:var(--font-pixel);font-size:20px;margin-top:4px">{mod.data.number}</span>
+               aria-label={`Módulo ${mod.data.number}: ${mod.data.title}`}>
+            <div class="path__num-box" style="display:flex;align-items:center;justify-content:center;width:64px;height:64px;background:#E8D8B0;border:2px solid var(--win-border);flex-shrink:0;color:var(--win-text)">
+              <span class="path__num" style="font-family:var(--font-pixel);font-size:20px;margin-top:4px">{mod.data.number}</span>
             </div>
             <div style="flex:1">
-              <div style="display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-xs);flex-wrap:wrap">
+              <div class="path__title-row" style="display:flex;align-items:center;gap:var(--space-sm);margin-bottom:var(--space-xs);flex-wrap:wrap">
                 <h2 style="font-family:var(--font-pixel);font-size:14px;margin:0;color:var(--win-text)">{mod.data.title}</h2>
-                {mod.data.status === 'disponible' && <span data-i18n="path.available" style="font-size:10px;padding:4px 6px;background:#28C840;color:black;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">Disponible</span>}
-                {mod.data.status === 'en-progreso' && <span data-i18n="path.in-progress" style="font-size:10px;padding:4px 6px;background:var(--taskbar-active);color:black;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">En progreso</span>}
-                {mod.data.status === 'proximamente' && <span data-i18n="path.coming-soon" style="font-size:10px;padding:4px 6px;background:#A09070;color:white;border:1px solid black;box-shadow:1px 1px 0 rgba(0,0,0,0.5);font-family:var(--font-pixel)">Próximamente</span>}
+                {mod.data.status === 'disponible' && <span class="path__badge path__badge--available" data-i18n="path.available">Disponible</span>}
+                {mod.data.status === 'en-progreso' && <span class="path__badge path__badge--progress" data-i18n="path.in-progress">En progreso</span>}
+                {mod.data.status === 'proximamente' && <span class="path__badge path__badge--soon" data-i18n="path.coming-soon">Próximamente</span>}
               </div>
-              <p style="color:var(--win-muted);margin:0;font-size:18px;margin-top:8px">{mod.data.description}</p>
+              <p class="path__desc" style="color:var(--win-muted);margin:0;margin-top:8px">{mod.data.description}</p>
             </div>
             {mod.data.status !== 'proximamente' && (
-              <div style="min-width:150px">
-                <div style="border:2px solid black;background:white;height:16px;width:100%;position:relative;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.2)">
-                  <div style="height:100%;width:0%;background:var(--win-link);border-right:2px solid black"></div>
+              <div class="path__progress">
+                <div class="path__progress-bar">
+                  <div class="path__progress-fill"></div>
                 </div>
               </div>
             )}
@@ -67,3 +65,87 @@ modules.sort((a, b) => a.data.number - b.data.number);
     </div>
   </div>
 </ContentLayout>
+
+<style>
+  .path__card {
+    transition: transform 0.1s, box-shadow 0.1s;
+  }
+  .path__title-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  .path__card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
+  }
+  .path__desc {
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+  .path__progress {
+    min-width: 180px;
+  }
+  .path__progress-bar {
+    border: 2px solid black;
+    background: white;
+    height: 16px;
+    width: 100%;
+    position: relative;
+    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.2);
+  }
+  .path__progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--win-link);
+    border-right: 2px solid black;
+  }
+  .path__badge {
+    font-size: 10px;
+    padding: 4px 6px;
+    border: 1px solid black;
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.5);
+    font-family: var(--font-pixel);
+  }
+  .path__badge--available {
+    background: #28C840;
+    color: black;
+  }
+  .path__badge--progress {
+    background: var(--taskbar-active);
+    color: black;
+  }
+  .path__badge--soon {
+    background: #A09070;
+    color: white;
+  }
+
+  @media (max-width: 767px) {
+    .path__card {
+      flex-direction: column !important;
+      gap: var(--space-md);
+    }
+    .path__num-box {
+      width: 40px !important;
+      height: 40px !important;
+    }
+    .path__num {
+      font-size: 14px !important;
+    }
+    .path__progress {
+      min-width: 100% !important;
+    }
+    .path__title-row {
+      justify-content: center !important;
+      flex-direction: column !important;
+      align-items: center !important;
+      gap: var(--space-xs) !important;
+    }
+    .path__title-row h2 {
+      text-align: center;
+    }
+    .path__desc {
+      text-align: center;
+    }
+  }
+</style>

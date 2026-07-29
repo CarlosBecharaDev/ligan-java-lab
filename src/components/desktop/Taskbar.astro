@@ -1,25 +1,18 @@
 ---
-import { ICONOS_PRINCIPALES } from '@features/desktop/desktopState';
+export interface Props {
+  brand?: string;
+}
+const { brand = 'Ligan Java Lab' } = Astro.props;
 ---
 
 <footer class="taskbar" role="toolbar" aria-label="Barra de tareas" data-i18n-aria="taskbar.aria">
   <div class="taskbar__left">
-    <a href="/" class="taskbar__logo" aria-label="Ligan Java Lab - Inicio" data-i18n-aria="taskbar.logo-aria">
+    <a href="/" class="taskbar__logo" aria-label={`${brand} - Inicio`}>
       <span>☕</span>
-      <span>Ligan Java Lab</span>
+      <span>{brand}</span>
     </a>
   </div>
-  <div class="taskbar__center">
-    {ICONOS_PRINCIPALES.slice(0, 7).map((icono) => (
-      <a
-        href={icono.route ?? '/ruta'}
-        class="taskbar__window-btn"
-        aria-label={icono.label}
-      >
-        {icono.label}
-      </a>
-    ))}
-  </div>
+  
   <div class="taskbar__right">
     <div class="taskbar__lang">
       <button class="taskbar__lang-btn" data-lang-btn="en" onclick="window.__i18n && window.__i18n.setLang('en')">EN</button>
@@ -31,6 +24,32 @@ import { ICONOS_PRINCIPALES } from '@features/desktop/desktopState';
     </span>
   </div>
 </footer>
+
+<style>
+  @media (max-width: 767px) {
+    .taskbar {
+      transition: transform 0.3s ease;
+      height: 38px;
+    }
+    .taskbar--hidden {
+      transform: translateY(100%);
+    }
+    .taskbar__logo {
+      font-size: 0.45rem !important;
+      padding: 2px 6px !important;
+    }
+    .taskbar__right {
+      font-size: 0.5rem !important;
+    }
+    .taskbar__lang-btn {
+      font-size: 0.45rem !important;
+      padding: 2px 4px !important;
+    }
+    .taskbar__clock {
+      font-size: 0.45rem !important;
+    }
+  }
+</style>
 
 <script>
   function actualizarReloj() {
@@ -44,4 +63,20 @@ import { ICONOS_PRINCIPALES } from '@features/desktop/desktopState';
   }
   setInterval(actualizarReloj, 60000);
   actualizarReloj();
+
+  // Auto-hide taskbar on scroll for mobile
+  var taskbarEl = document.querySelector('.taskbar');
+  if (taskbarEl && window.innerWidth <= 767) {
+    var lastScroll = 0;
+    var hideTimer = null;
+    window.addEventListener('scroll', function() {
+      var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+      if (currentScroll > lastScroll && currentScroll > 50) {
+        taskbarEl.classList.add('taskbar--hidden');
+      } else {
+        taskbarEl.classList.remove('taskbar--hidden');
+      }
+      lastScroll = currentScroll;
+    });
+  }
 </script>

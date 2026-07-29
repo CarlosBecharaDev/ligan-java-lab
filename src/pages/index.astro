@@ -36,7 +36,7 @@ import Button from '@components/ui/Button.astro';
         </ol>
       </div>
 
-      <div style="display:flex;gap:var(--space-md);flex-wrap:wrap">
+      <div class="home__btns" style="display:flex;gap:var(--space-md);flex-wrap:wrap">
         <Button as="a" href="/ruta" variant="primary"><span data-i18n="home.btn-path">Abrir ruta de aprendizaje</span></Button>
         <Button as="a" href="/tema/variables-y-tipos" variant="secondary"><span data-i18n="home.btn-first">Primera lección</span></Button>
         <Button as="a" href="/practica" variant="ghost"><span data-i18n="home.btn-codelab">Ir al Code Lab</span></Button>
@@ -44,3 +44,15 @@ import Button from '@components/ui/Button.astro';
     </div>
   </Window>
 </AppLayout>
+
+<style>
+  @media (max-width: 767px) {
+    .home__btns {
+      flex-direction: column;
+    }
+    .home__btns > a,
+    .home__btns > button {
+      width: 100%;
+    }
+  }
+</style>

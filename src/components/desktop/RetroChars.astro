@@ -1,301 +1,338 @@
-<div id="retro-chars" class="retro-chars" aria-hidden="true"></div>
+<div id="retro-chars" class="rc-stage" aria-hidden="true"></div>
 
-<style>
-  .retro-chars {
+<style is:global>
+  .rc-stage {
     position: fixed;
-    bottom: 0;
+    bottom: 48px;
     left: 0;
     right: 0;
-    height: 100px;
-    z-index: 45;
+    height: 150px;
+    z-index: 9999;
     pointer-events: none;
-    overflow: hidden;
+    overflow: visible;
   }
 
   .rc-char {
     position: absolute;
     bottom: 0;
     pointer-events: none;
-    animation: rc-patrol linear infinite;
   }
 
   .rc-sprite {
-    width: 48px;
-    height: 64px;
+    width: 56px;
+    height: 80px;
     position: relative;
-    animation: rc-walk 0.4s ease-in-out infinite alternate;
+    animation: rc-bounce var(--bounce-dur, 0.3s) ease-in-out infinite alternate;
   }
 
-  .rc-head {
-    width: 28px;
-    height: 28px;
-    border-radius: 50%;
+  .rc-pixel {
     position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 2;
-    box-shadow: 0 0 0 2px rgba(0,0,0,0.3);
+    width: 4px;
+    height: 4px;
+    image-rendering: pixelated;
   }
 
-  .rc-hat {
+  .rc-arm {
     position: absolute;
-    top: -4px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 10px;
-    border-radius: 2px;
-    z-index: 3;
+    width: 8px;
+    height: 18px;
+    top: 28px;
+    border-radius: 3px;
+    animation: rc-arm-swing var(--swing-dur, 0.3s) ease-in-out infinite alternate;
   }
-
-  .rc-body {
-    width: 30px;
-    height: 24px;
-    position: absolute;
-    top: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 4px 4px 0 0;
-    z-index: 1;
-  }
-
-  .rc-legs {
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 2px;
-  }
-
-  .rc-leg {
-    width: 10px;
-    height: 14px;
-    border-radius: 0 0 3px 3px;
-    animation: rc-leg-move 0.4s ease-in-out infinite alternate;
-  }
-
-  .rc-leg:nth-child(2) {
-    animation-delay: 0.2s;
-  }
+  .rc-arm--l { left: -6px; transform-origin: top center; }
+  .rc-arm--r { right: -6px; transform-origin: top center; animation-delay: calc(var(--swing-dur, 0.3s) / 2); }
 
   .rc-bubble {
     position: absolute;
-    bottom: 78px;
+    bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
-    background: #fff;
-    color: #1a1a1a;
-    padding: 6px 12px;
-    border-radius: 12px;
+    background: #FFF8E0;
+    color: #1A1A2E;
+    padding: 8px 16px;
+    border-radius: 16px;
     font-family: var(--font-ui);
-    font-size: 0.75rem;
+    font-size: 0.9rem;
     white-space: nowrap;
-    box-shadow: 2px 2px 0 rgba(0,0,0,0.3);
-    border: 2px solid #333;
+    box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+    border: 2px solid #2A1A3E;
+    border-top-color: #D0C0A0;
+    border-left-color: #D0C0A0;
     opacity: 0;
-    transition: opacity 0.3s;
+    transition: opacity 0.4s;
     pointer-events: none;
-    z-index: 5;
-    max-width: 160px;
+    z-index: 10;
+    white-space: nowrap;
     text-align: center;
+    line-height: 1.4;
+    text-shadow: none;
+    image-rendering: pixelated;
   }
 
   .rc-bubble::after {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: -10px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 8px solid transparent;
-    border-right: 8px solid transparent;
-    border-top: 8px solid #fff;
-    filter: drop-shadow(0 2px 0 #333);
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 10px solid #FFF8E0;
+    filter: drop-shadow(0 3px 0 #2A1A3E);
   }
 
-  .rc-bubble--visible {
-    opacity: 1;
+  .rc-bubble--visible { opacity: 1; }
+
+  @media (max-width: 767px) {
+    .rc-stage { display: none; }
   }
 
   @keyframes rc-patrol {
     0% { transform: translateX(0); }
-    25% { transform: translateX(calc(100vw - 80px)); }
-    50% { transform: translateX(calc(100vw - 80px)); }
-    75% { transform: translateX(0); }
+    48% { transform: translateX(var(--patrol-dist, 600px)); }
+    50% { transform: translateX(var(--patrol-dist, 600px)); }
+    98% { transform: translateX(0); }
     100% { transform: translateX(0); }
   }
 
-  @keyframes rc-walk {
+  @keyframes rc-bounce {
     0% { transform: translateY(0); }
-    100% { transform: translateY(-3px); }
+    100% { transform: translateY(-4px); }
   }
 
-  @keyframes rc-leg-move {
-    0% { transform: rotate(-8deg); }
-    100% { transform: rotate(8deg); }
+  @keyframes rc-arm-swing {
+    0% { transform: rotate(-18deg); }
+    100% { transform: rotate(18deg); }
   }
 </style>
 
 <script>
   (function() {
-    const MOTIVATIONAL_MESSAGES = [
-      '¡Sigue así! 🚀',
-      'Tú puedes 💪',
-      'Java te espera ☕',
-      'Nunca pares ✨',
-      'Cada línea cuenta 📝',
-      'El éxito es constancia 🎯',
-      'Código tras código 💻',
-      'Eres un crack 🔥',
-      'Masteriza Java 🏆',
-      'Sigue programando ⚡',
-      'Más fuerte que nunca 💥',
-      'Tú eres el mejor 🌟',
-      'No te rindas 🙌',
-      'A darle con todo 🤘',
-      'Programa sueños 🚀',
+    var MSGS = [
+      '¡Sigue así! 🚀', 'Tú puedes 💪', 'Java te espera ☕',
+      'Nunca pares ✨', 'Cada línea cuenta 📝', 'El éxito es constancia 🎯',
+      'Código tras código 💻', 'Eres un crack 🔥', 'Masteriza Java 🏆',
+      'Sigue programando ⚡', 'Más fuerte que nunca 💥', 'Tú eres el mejor 🌟',
+      'No te rindas 🙌', 'A darle con todo 🤘', 'Programa sueños 🚀',
+      'Java: write once, run anywhere ☕', 'JDK 21 LTS es la versión más reciente',
+      'Java tiene 9 tipos primitivos', 'int es el entero de 32 bits',
+      'double es el decimal de 64 bits', 'boolean solo es true o false',
+      'String es inmutable en Java', 'Java usa JIT compilation',
+      'JVM: Java Virtual Machine', 'Garbage collector limpia memoria 🗑️',
+      'ArrayList<T> es genérico desde Java 5', 'HashMap<K,V> almacena pares clave-valor',
+      'Java 8 trajo lambdas y streams', 'El método main es la entrada',
+      'public static void main(String[] args)', 'System.out.println para imprimir',
+      'Scanner lee entrada del usuario', 'extends es para herencia',
+      'implements es para interfaces', 'Polimorfismo: un objeto muchas formas',
+      'Encapsulación con private y getters', 'Overloading: mismo nombre dif. parámetros',
+      'Enum son constantes con tipo seguro', 'switch acepta String desde Java 7',
+      'break corta un bucle o switch', 'continue salta a la siguiente iteración',
+      'Arrays tienen tamaño fijo en Java', 'for-each itera colecciones fácilmente',
+      'while se ejecuta mientras condición true', 'do-while ejecuta al menos una vez',
+      'Métodos static pertenecen a la clase', 'this referencia al objeto actual',
+      'super llama al constructor padre', 'final evita herencia o reasignación',
+      '¡Nunca dejes de aprender! 📚', 'Un bug al día mantiene el estrés 💀',
     ];
 
-    const CHAR_TEMPLATES = [
-      {
-        name: 'Mario',
-        headColor: '#FDBF60',
-        hatColor: '#E52521',
-        hat: true,
-        bodyColor: '#1565C0',
-        legColor: '#8D6E63',
-        speed: 18,
-      },
-      {
-        name: 'Scorpion',
-        headColor: '#FDD835',
-        hatColor: '#333',
-        hat: true,
-        bodyColor: '#222',
-        legColor: '#555',
-        speed: 22,
-      },
-      {
-        name: 'Pac-Man',
-        headColor: '#FFD700',
-        hatColor: '#FFD700',
-        hat: false,
-        bodyColor: '#FFD700',
-        legColor: '#FFD700',
-        speed: 15,
-      },
-      {
-        name: 'Sonic',
-        headColor: '#1565C0',
-        hatColor: '#0D47A1',
-        hat: true,
-        bodyColor: '#0D47A1',
-        legColor: '#E53935',
-        speed: 20,
-      },
-      {
-        name: 'Megaman',
-        headColor: '#FF8A65',
-        hatColor: '#1565C0',
-        hat: true,
-        bodyColor: '#1565C0',
-        legColor: '#0D47A1',
-        speed: 25,
-      },
-    ];
+    var SPRITES = {
+      mario: [
+        '....RRRR....','...RRRRRR...','...RSSRSS...','..RSSRSSR..',
+        '...RRRRRR...','...SSSSSS...','..BBBKBBBB..','.BBBBKBBBBB.',
+        'BBBBBKBBBBBB','.BBBBKBBBBB.','..BBBBBBBB..','...BBBBBB...',
+        '..NN..NN...','..NN..NN...','.NNNNNNN...','............',
+      ],
+      scorpion: [
+        '....KKKK....','...KKKKKK...','..KYYYYYK..','..KYYYYYK..',
+        '..KYYYYYK..','..KYYKYYK..','..KKKKKKK..','.KKKKKKKKK.',
+        '.KKK.KK.KK.','KKKKKKKKKKK','KKKKKKKKKKK','.KKKKKKKKK.',
+        '..KKKKKKK..','..GG..GG...','.GGGGGGGG..','............',
+      ],
+      pacman: [
+        '....YYYY....','...YYYYYY...','..YYYYYYYY..','..YYYYYYYY..',
+        '.YYYYYYYYYY.','.YYYYKYYYYY.','.YYYYYYYYYY.','.YYYYYYYYYY.',
+        '..YYYYYYYY..','...YYYYYYY..','....YYYYYY..','.....YYYY...',
+        '......YY....','............','............','............',
+      ],
+      sonic: [
+        '....CCCC....','..CCCCCCCC..','.CCCCCCCCCC.','.CCCCCCCCCC.',
+        'CCKKCCCCKKCC','CCCCCCCCCCCC','.CCCCCCCCCC.','..CCCCCCCC..',
+        '.CCCCCCCCCC.','CCCCCCCCCCCC','.CCCCCCCCCC.','..CRRRRCCCC.',
+        '..W..W..W..','.RR..RR..RR.','.RRRRRRRRRR.','............',
+      ],
+      megaman: [
+        '....BBBB....','...BBBBBB...','..CCCCCCCC..','..CCCBCCCC..',
+        '..OOOOOOOO..','..OOOOOOOO..','..BBBBBBBB..','.BBBBBBBBBB.',
+        'BBBBBBBBBBBB','.BBBBBBBBBB.','..BBBBBBBB..','..DDD..DDD..',
+        '..DDD..DDD..','.DDDDDDDDD..','.DDDDDDDDD..','............',
+      ],
+      wizard: [
+        '....PPPP....','...PPPPPP...','..PPPPPPPP..','..PPPPPPPP..',
+        '..PPPPPPPP..','..SSSSSSSS..','..SSWWSSWW..','..SSSSSSSS..',
+        '..PPPPPPPP..','..PPPPPPPP..','..PPPPPPPP..','..PPPPPPPP..',
+        '..PPPPPPPP..','..GG....GG..','..GG....GG..','............',
+      ],
+    };
 
-    const container = document.getElementById('retro-chars');
-    if (!container) return;
+    function hex(c) {
+      var map = { R:'#E52521', B:'#1565C0', Y:'#FFD700', K:'#222', W:'#FFF',
+                  S:'#FDBF60', G:'#888', O:'#FF8A65', N:'#8D6E63', P:'#7B1FA2',
+                  C:'#00BCD4', L:'#64B5F6', D:'#0D47A1' };
+      return map[c] || 'transparent';
+    }
 
-    const chars = [];
-    const BUBBLE_INTERVAL = 4000;
-    const ACTIVE_BUBBLES = 3;
+    var c = document.getElementById('retro-chars');
+    if (!c) return;
 
-    CHAR_TEMPLATES.forEach((tpl, i) => {
-      const el = document.createElement('div');
+    var names = ['mario','scorpion','pacman','sonic','megaman','wizard'];
+    var bodyColors = { mario:'#1565C0', scorpion:'#222', pacman:'#FFD700', sonic:'#0D47A1', megaman:'#1565C0', wizard:'#7B1FA2' };
+    var chars = [];
+    var INT = 5000;
+    var ACT = 3;
+    var MIN_DIST = 350;
+    var usedMsgIds = [];
+
+    // Pre-assign unique starting messages to each char so no repeats at init
+    var shuffledMsgs = [];
+    for (var mi = 0; mi < MSGS.length; mi++) shuffledMsgs.push(mi);
+    for (var si = shuffledMsgs.length - 1; si > 0; si--) {
+      var sj = Math.floor(Math.random() * (si + 1));
+      var st = shuffledMsgs[si]; shuffledMsgs[si] = shuffledMsgs[sj]; shuffledMsgs[sj] = st;
+    }
+
+    // Spread from 10% to 88% of viewport width
+    var step = 78 / names.length;
+    var positions = [];
+    for (var pi = 0; pi < names.length; pi++) {
+      positions.push(10 + pi * step + (Math.random() * 5 - 2.5));
+    }
+
+    names.forEach(function(name, i) {
+      var el = document.createElement('div');
       el.className = 'rc-char';
-      el.style.animationDuration = tpl.speed + 's';
-      el.style.left = Math.random() * 60 + '%';
-      el.style.zIndex = String(40 + i);
 
-      const flip = Math.random() > 0.5;
-      if (flip) el.style.animationDirection = 'reverse';
+      el.style.left = positions[i] + '%';
 
-      const sprite = document.createElement('div');
-      sprite.className = 'rc-sprite';
+      // Moderate patrol range (covers area but won't reach neighbors)
+      var patrolDist = 50 + Math.random() * 90;
+      var patrolSpeed = 25 + Math.random() * 30;
+      var bounceDur = (0.2 + Math.random() * 0.25).toFixed(2);
+      var swingDur = (0.2 + Math.random() * 0.3).toFixed(2);
 
-      const head = document.createElement('div');
-      head.className = 'rc-head';
-      head.style.background = tpl.headColor;
+      el.style.setProperty('--patrol-dist', patrolDist + 'px');
+      el.style.animation = 'rc-patrol ' + patrolSpeed + 's linear infinite';
+      el.style.setProperty('--bounce-dur', bounceDur + 's');
+      el.style.setProperty('--swing-dur', swingDur + 's');
 
-      if (tpl.hat) {
-        const hat = document.createElement('div');
-        hat.className = 'rc-hat';
-        hat.style.background = tpl.hatColor;
-        head.appendChild(hat);
+      if (Math.random() > 0.5) el.style.animationDirection = 'reverse';
+
+      var sp = document.createElement('div');
+      sp.className = 'rc-sprite';
+
+      var map = SPRITES[name];
+      var px = 4;
+      for (var row = 0; row < map.length; row++) {
+        for (var col = 0; col < map[row].length; col++) {
+          var ch = map[row][col];
+          if (ch !== '.') {
+            var p = document.createElement('div');
+            p.className = 'rc-pixel';
+            p.style.left = (col * px) + 'px';
+            p.style.top = (row * px) + 'px';
+            p.style.background = hex(ch);
+            sp.appendChild(p);
+          }
+        }
       }
 
-      const body = document.createElement('div');
-      body.className = 'rc-body';
-      body.style.background = tpl.bodyColor;
+      var armL = document.createElement('div');
+      armL.className = 'rc-arm rc-arm--l';
+      var armR = document.createElement('div');
+      armR.className = 'rc-arm rc-arm--r';
+      armL.style.background = bodyColors[name] || '#1565C0';
+      armR.style.background = bodyColors[name] || '#1565C0';
+      sp.appendChild(armL);
+      sp.appendChild(armR);
 
-      const legs = document.createElement('div');
-      legs.className = 'rc-legs';
+      var bb = document.createElement('div');
+      bb.className = 'rc-bubble';
+      var msgId = shuffledMsgs[i];
+      bb.textContent = MSGS[msgId];
+      usedMsgIds.push(msgId);
 
-      for (let j = 0; j < 2; j++) {
-        const leg = document.createElement('div');
-        leg.className = 'rc-leg';
-        leg.style.background = tpl.legColor;
-        legs.appendChild(leg);
-      }
+      el.appendChild(sp);
+      el.appendChild(bb);
+      c.appendChild(el);
 
-      const bubble = document.createElement('div');
-      bubble.className = 'rc-bubble';
-      bubble.textContent = MOTIVATIONAL_MESSAGES[i % MOTIVATIONAL_MESSAGES.length];
-
-      sprite.appendChild(head);
-      sprite.appendChild(body);
-      sprite.appendChild(legs);
-      el.appendChild(sprite);
-      el.appendChild(bubble);
-
-      container.appendChild(el);
-
-      chars.push({
-        el,
-        bubble,
-        sprite,
-        name: tpl.name,
-        index: i,
-        hasBubble: false,
-        currentMsg: i % MOTIVATIONAL_MESSAGES.length,
-      });
+      chars.push({ el:el, bubble:bb, msgIdx:msgId, name:name, index:i });
     });
 
-    function pickActiveChars() {
-      const shuffled = [...chars].sort(() => Math.random() - 0.5);
-      return shuffled.slice(0, ACTIVE_BUBBLES);
+    function shuffle(a) {
+      for (var i = a.length - 1; i > 0; i--) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
+      }
+      return a;
     }
 
-    function updateBubbles() {
-      chars.forEach(c => {
-        c.bubble.classList.remove('rc-bubble--visible');
-        c.hasBubble = false;
-      });
+    function getOffset(ch) {
+      var rect = ch.el.getBoundingClientRect();
+      return rect.left + rect.width / 2;
+    }
 
-      const active = pickActiveChars();
-      active.forEach(c => {
-        c.currentMsg = (c.currentMsg + 1) % MOTIVATIONAL_MESSAGES.length;
-        c.bubble.textContent = MOTIVATIONAL_MESSAGES[c.currentMsg];
-        c.bubble.classList.add('rc-bubble--visible');
-        c.hasBubble = true;
+    function pickNonOverlapping() {
+      var pool = chars.slice();
+      var best = [];
+      for (var attempt = 0; attempt < 50; attempt++) {
+        var pick = shuffle(pool.slice()).slice(0, ACT);
+        var ok = true;
+        for (var a = 0; a < pick.length && ok; a++) {
+          for (var b = a + 1; b < pick.length && ok; b++) {
+            var dist = Math.abs(getOffset(pick[a]) - getOffset(pick[b]));
+            if (dist < MIN_DIST) ok = false;
+          }
+        }
+        if (ok) { best = pick; break; }
+        if (attempt === 0) best = pick;
+      }
+      if (best.length === 0) best = pool.slice(0, ACT);
+      return best;
+    }
+
+    function update() {
+      chars.forEach(function(ch) { ch.bubble.className = 'rc-bubble'; });
+
+      // Pick 3 non-overlapping chars
+      var active = pickNonOverlapping();
+
+      // Build an index pool of unused messages
+      var available = [];
+      for (var mi = 0; mi < MSGS.length; mi++) {
+        var taken = false;
+        for (var tc = 0; tc < chars.length; tc++) {
+          if (chars[tc].msgIdx === mi) { taken = true; break; }
+        }
+        if (!taken) available.push(mi);
+      }
+
+      // Assign a unique message to each active char
+      active.forEach(function(ch) {
+        if (available.length > 0) {
+          var ri = Math.floor(Math.random() * available.length);
+          ch.msgIdx = available[ri];
+          available.splice(ri, 1);
+        } else {
+          // Fallback: cycle if all messages are somehow taken
+          ch.msgIdx = (ch.msgIdx + 1) % MSGS.length;
+        }
+        ch.bubble.textContent = MSGS[ch.msgIdx];
+        ch.bubble.classList.add('rc-bubble--visible');
       });
     }
 
-    updateBubbles();
-    setInterval(updateBubbles, BUBBLE_INTERVAL);
+    update();
+    setInterval(update, INT);
   })();
 </script>
