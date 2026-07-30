@@ -1,0 +1,53 @@
+[
+  {
+    "id": "ex-genericos-facil",
+    "lessonSlug": "genericos",
+    "title": "Clase genérica simple",
+    "difficulty": "facil",
+    "description": "Crea una clase genérica llamada Contenedor que pueda almacenar un solo valor de cualquier tipo, con métodos guardar() y obtener().",
+    "template": "public class Contenedor<T> {\n    // TODO: Agrega un atributo privado de tipo T\n    // Crea los métodos guardar(T valor) y obtener()\n    // No olvides el main para probarlo\n}",
+    "hints": [
+      "Declara un atributo privado T contenido",
+      "guardar() asigna this.contenido = valor",
+      "obtener() retorna this.contenido",
+      "En el main crea Contenedor<String> y Contenedor<Integer>"
+    ],
+    "solution": "public class Contenedor<T> {\n    private T contenido;\n\n    public void guardar(T valor) {\n        this.contenido = valor;\n    }\n\n    public T obtener() {\n        return contenido;\n    }\n\n    public static void main(String[] args) {\n        Contenedor<String> c1 = new Contenedor<>();\n        c1.guardar(\"Hola mundo\");\n        System.out.println(c1.obtener());\n\n        Contenedor<Integer> c2 = new Contenedor<>();\n        c2.guardar(42);\n        System.out.println(c2.obtener());\n    }\n}",
+    "solutionExplanation": "La clase Contenedor<T> tiene un atributo de tipo T. Los métodos guardar() y obtener() trabajan con ese tipo genérico. En el main creamos instancias para String e Integer, demostrando que la misma clase funciona con cualquier tipo.",
+    "expectedOutput": "Hola mundo\n42"
+  },
+  {
+    "id": "ex-genericos-normal",
+    "lessonSlug": "genericos",
+    "title": "Método genérico para encontrar el máximo",
+    "difficulty": "normal",
+    "description": "Escribe un método genérico que encuentre el valor máximo en un arreglo de elementos comparables. Usa bounded type parameter.",
+    "template": "public class MaximoGenerico {\n    // TODO: Crea un método genérico estático\n    // <T extends Comparable<T>> T maximo(T[] arreglo)\n    // Que retorne el elemento máximo del arreglo\n\n    public static void main(String[] args) {\n        Integer[] numeros = {3, 7, 1, 9, 4};\n        String[] palabras = {\"Ana\", \"Carlos\", \"Beatriz\"};\n        // Prueba tu método aquí\n    }\n}",
+    "hints": [
+      "La firma es <T extends Comparable<T>> T maximo(T[] arr)",
+      "Inicializa una variable max con arr[0]",
+      "Compara cada elemento con max.compareTo()",
+      "Si compareTo > 0, actualiza max"
+    ],
+    "solution": "public class MaximoGenerico {\n    public static <T extends Comparable<T>> T maximo(T[] arreglo) {\n        if (arreglo == null || arreglo.length == 0) return null;\n        T max = arreglo[0];\n        for (int i = 1; i < arreglo.length; i++) {\n            if (arreglo[i].compareTo(max) > 0) {\n                max = arreglo[i];\n            }\n        }\n        return max;\n    }\n\n    public static void main(String[] args) {\n        Integer[] numeros = {3, 7, 1, 9, 4};\n        String[] palabras = {\"Ana\", \"Carlos\", \"Beatriz\"};\n\n        System.out.println(\"Máximo número: \" + maximo(numeros));\n        System.out.println(\"Máximo texto: \" + maximo(palabras));\n    }\n}",
+    "solutionExplanation": "El bounded type parameter <T extends Comparable<T>> garantiza que solo tipos comparables puedan usar el método. compareTo() devuelve positivo si el elemento actual es mayor. El mismo método funciona con Integer y String.",
+    "expectedOutput": "Máximo número: 9\nMáximo texto: Carlos"
+  },
+  {
+    "id": "ex-genericos-dificil",
+    "lessonSlug": "genericos",
+    "title": "Wildcards con ? extends y ? super",
+    "difficulty": "dificil",
+    "description": "Implementa el método copiar que usa PECS: copia elementos de una lista origen (? extends T) a una lista destino (? super T).",
+    "template": "import java.util.*;\npublic class CopiaPECS {\n    // TODO: Implementa un método estático copiar\n    // que use ? extends T para origen y ? super T para destino\n\n    public static void main(String[] args) {\n        List<Integer> origen = Arrays.asList(1, 2, 3);\n        List<Number> destino = new ArrayList<>();\n        // Llama a copiar(origen, destino)\n        System.out.println(destino);\n    }\n}",
+    "hints": [
+      "Firma: <T> void copiar(List<? extends T> src, List<? super T> dest)",
+      "Itera sobre src con for-each",
+      "Agrega cada elemento a dest con dest.add()",
+      "List<Number> puede recibir Integer porque Integer extends Number"
+    ],
+    "solution": "import java.util.*;\npublic class CopiaPECS {\n    public static <T> void copiar(List<? extends T> src, List<? super T> dest) {\n        for (T elemento : src) {\n            dest.add(elemento);\n        }\n    }\n\n    public static void main(String[] args) {\n        List<Integer> origen = Arrays.asList(1, 2, 3);\n        List<Number> destino = new ArrayList<>();\n        copiar(origen, destino);\n        System.out.println(destino);\n    }\n}",
+    "solutionExplanation": "El principio PECS: src produce elementos (? extends T), dest consume elementos (? super T). ? extends T permite leer Integer como Number. ? super T permite agregar Integer a List<Number>. Esto es exactamente cómo funciona Collections.copy().",
+    "expectedOutput": "[1, 2, 3]"
+  }
+]

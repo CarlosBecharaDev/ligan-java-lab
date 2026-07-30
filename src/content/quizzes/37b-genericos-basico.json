@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-genericos",
+  "lessonSlug": "genericos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué ventaja principal aportan los genéricos en Java?",
+      "options": ["Mayor rendimiento", "Seguridad de tipos en compilación", "Código más corto siempre", "Acceso a bases de datos"],
+      "correctIndex": 1,
+      "explanations": [
+        "Los genéricos no mejoran el rendimiento significativamente.",
+        "Correcto. Los genéricos permiten detectar errores de tipo en tiempo de compilación, eliminando ClassCastException en runtime.",
+        "No necesariamente; a veces hacen el código más verboso pero más seguro.",
+        "Los genéricos no están relacionados con bases de datos directamente."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué sintaxis es correcta para declarar una lista genérica de Strings?",
+      "options": ["List<String> lista = new List<String>()", "List<String> lista = new ArrayList<>()", "List<String> lista = new ArrayList<String>()", "B y C son correctas"],
+      "correctIndex": 3,
+      "explanations": [
+        "List es interfaz, no se puede instanciar directamente.",
+        "Correcta pero el operador diamante es opcional.",
+        "Correcta también, pero más verbosa.",
+        "Correcto. Ambas son válidas. El operador diamante <> (Java 7+) es la forma moderna."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué es type erasure?",
+      "options": ["La eliminación de archivos .class", "El borrado de tipos genéricos en compilación", "La limpieza de memoria del garbage collector", "La eliminación de código muerto"],
+      "correctIndex": 1,
+      "explanations": [
+        "Type erasure no elimina archivos.",
+        "Correcto. El compilador borra la información de tipos genéricos en el bytecode para compatibilidad hacia atrás.",
+        "No está relacionado con el garbage collector.",
+        "No elimina código, solo información de tipos."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué operador permite inferencia de tipos desde Java 7?",
+      "options": ["var", "<>", "auto", "infer"],
+      "correctIndex": 1,
+      "explanations": [
+        "var es de Java 10 para variables locales.",
+        "Correcto. El operador diamante <> permite al compilador inferir el tipo genérico en el constructor.",
+        "auto no existe en Java.",
+        "infer no existe en Java."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál de los siguientes NO es un nombre convencional para parámetros de tipo?",
+      "options": ["T", "E", "X", "K"],
+      "correctIndex": 2,
+      "explanations": [
+        "T (Type) es el nombre convencional más común.",
+        "E (Element) se usa para colecciones como List<E>.",
+        "Correcto. X no es un nombre convencional. Las convenciones son T, E, K, V, N.",
+        "K (Key) se usa en mapas como Map<K,V>."
+      ]
+    }
+  ]
+}

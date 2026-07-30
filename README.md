@@ -131,17 +131,18 @@ Cada `git push` a `main` activa un despliegue automático.
 
 | Módulo | Lecciones | Quizzes | Ejercicios | Estado |
 |--------|-----------|---------|------------|--------|
-| 01 — Fundamentos | 6 | 9 | 5 | ✅ |
-| 02 — Control de flujo | 6 | 8 | 5 | ✅ |
-| 03 — Métodos y Arrays | 4 | 7 | 4 | ✅ |
-| 04 — POO | 7 | 12 | 6 | ✅ |
-| 05 — Colecciones | 4 | 8 | 4 | ✅ |
+| 00 — Introducción | 1 | 2 | 1 | ✅ |
+| 01 — Fundamentos | 6 | 12 | 6 | ✅ |
+| 02 — Control de flujo | 5 | 10 | 5 | ✅ |
+| 03 — Métodos y Arrays | 6 | 12 | 6 | ✅ |
+| 04 — POO | 7 | 14 | 7 | ✅ |
+| 05 — Colecciones | 6 | 12 | 6 | ✅ |
 | 06 — Errores y Debug | 5 | 10 | 5 | ✅ |
 | 07 — Archivos y APIs | 4 | 8 | 4 | ✅ |
-| 08 — Java Moderno | 6 | 11 | 5 | ✅ |
+| 08 — Java Moderno | 6 | 12 | 6 | ✅ |
 | 09 — Proyectos | 4 | 8 | 4 | ✅ |
 
-**Total:** 46 lecciones · 84 quizzes · 42 ejercicios · 9 módulos
+**Total:** 50 lecciones · 100 quizzes · 50 ejercicios · 10 módulos
 
 ---
 

@@ -7,5 +7,6 @@
   "icon": "Layers",
   "status": "disponible",
   "lessonCount": 5,
-  "lessons": ["metodos", "metodos-avanzados", "sobrecarga", "arrays", "arrays-avanzados"]
+  "lessonCount": 6,
+  "lessons": ["metodos", "metodos-avanzados", "sobrecarga", "arrays", "arrays-avanzados", "matrices"]
 }

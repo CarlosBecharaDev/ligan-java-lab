@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-matrices",
+  "lessonSlug": "matrices",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué condición deben cumplir los índices para estar en la diagonal principal de una matriz cuadrada?",
+      "options": ["ren + col == n - 1", "ren == col", "ren * col == 0", "ren != col"],
+      "correctIndex": 1,
+      "explanations": [
+        "Esa es la condición de la diagonal secundaria o anti-diagonal.",
+        "Correcto. En la diagonal principal, el índice de fila es igual al índice de columna.",
+        "ren * col == 0 corresponde a la primera fila o primera columna.",
+        "ren != col son los elementos fuera de la diagonal principal."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué permite que las matrices en Java tengan filas de diferentes longitudes?",
+      "options": ["Herencia de clases", "Que son arreglos de arreglos", "El garbage collector", "Java no permite filas irregulares"],
+      "correctIndex": 1,
+      "explanations": [
+        "La herencia no está relacionada con la estructura de arreglos.",
+        "Correcto. Cada fila es un arreglo independiente, por lo que pueden tener diferentes longitudes.",
+        "El garbage collector libera memoria, no afecta la estructura de los arreglos.",
+        "Java sí permite filas irregulares (ragged arrays)."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es la complejidad temporal de acceder a un elemento matriz[i][j]?",
+      "options": ["O(n)", "O(1)", "O(n²)", "O(log n)"],
+      "correctIndex": 1,
+      "explanations": [
+        "No requiere recorrer elementos; el acceso es directo por índice.",
+        "Correcto. Al igual que los arreglos 1D, el acceso por índice a cualquier elemento es O(1).",
+        "No requiere recorrer todos los elementos.",
+        "No usa búsqueda binaria ni estructura de árbol."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Cómo se define una matriz irregular de 3 filas donde la primera tiene 2 columnas, la segunda 4 y la tercera 3?",
+      "options": ["int[][] m = {{2,4,3}}", "int[][] m = new int[3][]; m[0]=new int[2]; m[1]=new int[4]; m[2]=new int[3]", "int[3][] m = {{2},{4},{3}}", "int[][] m = new int[3][ ]{2,4,3}"],
+      "correctIndex": 1,
+      "explanations": [
+        "Esa sintaxis no es válida para matrices irregulares.",
+        "Correcto. Se declaran las filas sin especificar columnas, luego se asigna cada fila individualmente.",
+        "La sintaxis de declaración es incorrecta.",
+        "Esa sintaxis no existe en Java."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué importación se necesita para usar Arrays.deepToString()?",
+      "options": ["java.lang.Arrays", "java.util.Arrays", "java.io.Arrays", "Ninguna, está en java.lang"],
+      "correctIndex": 1,
+      "explanations": [
+        "java.lang no contiene Arrays.",
+        "Correcto. Arrays está en java.util.",
+        "java.io es para entrada/salida, no contiene Arrays.",
+        "Arrays está en java.util, no en java.lang."
+      ]
+    }
+  ]
+}

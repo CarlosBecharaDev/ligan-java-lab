@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-matrices-facil",
+    "lessonSlug": "matrices",
+    "title": "Declarar e imprimir una matriz",
+    "difficulty": "facil",
+    "description": "Declara una matriz de enteros de 3 filas y 3 columnas con valores a tu elección, e imprime el elemento en la posición [1][2].",
+    "template": "public class MatrizBasica {\n    public static void main(String[] args) {\n        // TODO: Declara una matriz 3x3 con valores\n        // e imprime el elemento en [1][2]\n\n    }\n}",
+    "hints": [
+      "Usa int[][] con valores entre llaves {{...}, {...}, {...}}",
+      "Recuerda que los índices empiezan en 0",
+      "System.out.println(matriz[1][2]) para imprimir"
+    ],
+    "solution": "public class MatrizBasica {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 2, 3},\n            {4, 5, 6},\n            {7, 8, 9}\n        };\n        System.out.println(\"Elemento en [1][2]: \" + matriz[1][2]);\n    }\n}",
+    "solutionExplanation": "Declaramos una matriz 3x3 con sintaxis simplificada. El índice [1][2] corresponde a la fila 1 (segunda fila) y columna 2 (tercera columna), que contiene el valor 6.",
+    "expectedOutput": "Elemento en [1][2]: 6"
+  },
+  {
+    "id": "ex-matrices-normal",
+    "lessonSlug": "matrices",
+    "title": "Suma de todos los elementos",
+    "difficulty": "normal",
+    "description": "Dada una matriz 3x4 con valores, calcula e imprime la suma total de todos sus elementos usando ciclos anidados.",
+    "template": "public class SumaMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {5, 8, 3, 2},\n            {7, 1, 9, 4},\n            {6, 3, 8, 5}\n        };\n        // TODO: Calcula la suma de todos los elementos e imprímela\n\n    }\n}",
+    "hints": [
+      "Usa un for externo para filas y uno interno para columnas",
+      "Acumula en una variable int suma = 0",
+      "matriz.length da las filas, matriz[i].length da las columnas"
+    ],
+    "solution": "public class SumaMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {5, 8, 3, 2},\n            {7, 1, 9, 4},\n            {6, 3, 8, 5}\n        };\n        int suma = 0;\n        for (int ren = 0; ren < matriz.length; ren++) {\n            for (int col = 0; col < matriz[ren].length; col++) {\n                suma += matriz[ren][col];\n            }\n        }\n        System.out.println(\"Suma total: \" + suma);\n    }\n}",
+    "solutionExplanation": "El ciclo externo recorre las 3 filas. El ciclo interno recorre las 4 columnas de cada fila. Sumamos cada elemento al acumulador suma. El total es 61.",
+    "expectedOutput": "Suma total: 61"
+  },
+  {
+    "id": "ex-matrices-dificil",
+    "lessonSlug": "matrices",
+    "title": "Transponer una matriz",
+    "difficulty": "dificil",
+    "description": "Dada una matriz 2x3, crea una nueva matriz de 3x2 que sea su transpuesta (intercambia filas por columnas) e imprime ambas.",
+    "template": "public class TransponerMatriz {\n    public static void main(String[] args) {\n        int[][] original = {\n            {1, 2, 3},\n            {4, 5, 6}\n        };\n        // TODO: Crea la matriz transpuesta (3x2)\n        // e imprime ambas matrices\n\n    }\n}",
+    "hints": [
+      "La transpuesta intercambia filas por columnas",
+      "Si original es 2x3, transpuesta será 3x2",
+      "transpuesta[col][ren] = original[ren][col]",
+      "Usa Arrays.deepToString() para imprimir"
+    ],
+    "solution": "public class TransponerMatriz {\n    public static void main(String[] args) {\n        int[][] original = {\n            {1, 2, 3},\n            {4, 5, 6}\n        };\n        int filas = original.length;\n        int cols = original[0].length;\n        int[][] transpuesta = new int[cols][filas];\n\n        for (int ren = 0; ren < filas; ren++) {\n            for (int col = 0; col < cols; col++) {\n                transpuesta[col][ren] = original[ren][col];\n            }\n        }\n\n        System.out.println(\"Original: \" + java.util.Arrays.deepToString(original));\n        System.out.println(\"Transpuesta: \" + java.util.Arrays.deepToString(transpuesta));\n    }\n}",
+    "solutionExplanation": "La transpuesta intercambia filas por columnas. Si original es 2x3, transpuesta debe ser 3x2. Asignamos transpuesta[col][ren] = original[ren][col]. Usamos Arrays.deepToString() para imprimir ambas matrices.",
+    "expectedOutput": "Original: [[1, 2, 3], [4, 5, 6]]\nTranspuesta: [[1, 4], [2, 5], [3, 6]]"
+  }
+]

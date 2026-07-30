@@ -1,0 +1,352 @@
+---
+title: "Genéricos en Java"
+slug: "genericos"
+module: "08-java-moderno"
+level: "Intermedio"
+objectives:
+  - "Entender qué son los genéricos y por qué existen en Java"
+  - "Crear clases y métodos genéricos con parámetros de tipo"
+  - "Usar bounded type parameters para restringir tipos"
+  - "Diferenciar entre ? extends T y ? super T (wildcards)"
+  - "Aplicar genéricos en colecciones de forma segura"
+prerequisites:
+  - "clases-objetos"
+  - "herencia"
+  - "arraylist"
+history:
+  introducedIn: "Java 5 (JDK 1.5, 2004)"
+  context: "Antes de Java 5, las colecciones almacenaban Object y requerían casting explícito al recuperar elementos. No había verificación de tipos en compilación, lo que causaba ClassCastException en tiempo de ejecución. Los genéricos fueron una de las adiciones más significativas de Java 5 junto con autoboxing y enums."
+  evolution: "Java 5: Genéricos con type erasure (los tipos genéricos se borran en runtime por compatibilidad hacia atrás). Java 7: Diamond operator <> para inferencia. Java 10: var con tipos genéricos. Java 14: Records con soporte genérico. La type erasure fue una decisión controvertida que permite que código Java 5+ sea compatible con librerías pre-Java 5."
+realWorldExamples:
+  - domain: "E-commerce — Repositorio genérico"
+    description: "Un repositorio genérico permite operaciones CRUD para cualquier tipo de entidad sin duplicar código."
+    code: |
+      import java.util.*;
+      public class Repositorio<T> {
+          private Map<String, T> almacen = new HashMap<>();
+
+          public void guardar(String id, T elemento) {
+              almacen.put(id, elemento);
+          }
+          public T obtener(String id) {
+              return almacen.get(id);
+          }
+          public List<T> listarTodos() {
+              return new ArrayList<>(almacen.values());
+          }
+          public static void main(String[] args) {
+              Repositorio<String> mensajes = new Repositorio<>();
+              mensajes.guardar("1", "Hola");
+              mensajes.guardar("2", "Mundo");
+              System.out.println(mensajes.listarTodos());
+          }
+      }
+    result: |
+      [Hola, Mundo]
+  - domain: "Matemáticas — Par ordenado genérico"
+    description: "Una clase Pair<T,U> modela un par de valores de tipos posiblemente diferentes."
+    code: |
+      public class Pair<T, U> {
+          private T first;
+          private U second;
+          public Pair(T first, U second) {
+              this.first = first;
+              this.second = second;
+          }
+          public T getFirst() { return first; }
+          public U getSecond() { return second; }
+
+          public static void main(String[] args) {
+              Pair<String, Integer> p = new Pair<>("Edad", 25);
+              System.out.println(p.getFirst() + ": " + p.getSecond());
+          }
+      }
+    result: |
+      Edad: 25
+hasInteractive: false
+comparisons:
+  - title: "Colecciones sin genéricos vs con genéricos"
+    items:
+      - name: "Sin genéricos (Java < 5)"
+        features:
+          declaracion: "List lista = new ArrayList()"
+          insercion: "lista.add(\"texto\") — acepta cualquier Object"
+          extraccion: "String s = (String) lista.get(0) — casting manual"
+          seguridad: "ClassCastException en runtime si el tipo no coincide"
+          legibilidad: "No sabes qué contiene la lista sin inspeccionar"
+      - name: "Con genéricos (Java 5+)"
+        features:
+          declaracion: "List<String> lista = new ArrayList<>()"
+          insercion: "lista.add(\"texto\") — solo acepta String"
+          extraccion: "String s = lista.get(0) — sin casting"
+          seguridad: "Error de compilación si el tipo no coincide"
+          legibilidad: "List<String> indica claramente el contenido"
+    recommendation: "Siempre usa genéricos en colecciones. El compilador te protege de errores de tipo en tiempo de compilación, eliminando ClassCastException en runtime."
+videos:
+  - url: ""
+    title: "Genéricos en Java - Curso completo"
+    channel: "MoureDev"
+    summary: "Explicación detallada de genéricos: clases, métodos y wildcards con ejemplos prácticos"
+faqs:
+  - question: "¿Qué es type erasure y por qué existe?"
+    answer: "Type erasure significa que los parámetros de tipo genérico se borran durante la compilación. List<String> y List<Integer> se convierten en List (raw type) en bytecode. Esto existe para mantener compatibilidad hacia atrás con código Java anterior a 5."
+  - question: "¿Cuál es la diferencia entre ? extends T y ? super T?"
+    answer: "? extends T (covarianza) permite leer elementos del tipo T o subtipos, pero no insertar. ? super T (contravarianza) permite insertar elementos del tipo T o subtipos, pero al leer solo obtienes Object. Es el principio PECS (Producer Extends, Consumer Super)."
+  - question: "¿Puedo usar genéricos con tipos primitivos?"
+    answer: "No directamente. List<int> no compila. Debes usar las clases wrapper: List<Integer>. Java 5 introdujo autoboxing/unboxing para que la conversión sea automática. Project Valhalla (futuro) podría añadir soporte para primitivos en genéricos."
+  - question: "¿Qué significa el operador diamante <>?"
+    answer: "El operador <> (Java 7+) permite al compilador inferir el tipo genérico del lado derecho: List<String> lista = new ArrayList<>();. Sin él, debías repetir el tipo: new ArrayList<String>();."
+  - question: "¿Puedo crear un arreglo genérico como new T[]?"
+    answer: "No. Java no permite crear arreglos de tipo genérico porque los arreglos tienen tipo reificado (conocen su tipo en runtime) y los genéricos usan type erasure. La solución es usar new Object[] con casting o usar ArrayList<T>."
+sources:
+  - title: "Java 21 Language Specification — Generics"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.5"
+    date: "2026-07-29"
+  - title: "Oracle Tutorial — Generics"
+    url: "https://docs.oracle.com/javase/tutorial/java/generics/"
+    date: "2026-07-29"
+  - title: "JEP 286 — Local-Variable Type Inference (var)"
+    url: "https://openjdk.org/jeps/286"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué son los genéricos?
+
+Los **genéricos** permiten definir clases, interfaces y métodos con un **parámetro de tipo** que se especifica al usarlos. El compilador usa ese tipo para verificar que los valores sean correctos, eliminando la necesidad de casting manual y previniendo `ClassCastException` en tiempo de ejecución.
+
+Antes de Java 5, las colecciones trabajaban con `Object`:
+
+```java
+// ❌ Java anterior a 5 — sin seguridad de tipos
+List lista = new ArrayList();
+lista.add("Hola");
+lista.add(123);           // ¡Esto compila pero es sospechoso!
+String s = (String) lista.get(1); // ClassCastException en runtime
+```
+
+Con genéricos, el compilador detecta el error:
+
+```java
+// ✅ Java 5+ — seguro en compilación
+List<String> lista = new ArrayList<>();
+lista.add("Hola");
+lista.add(123);  // Error de compilación: int no es String
+String s = lista.get(0); // Sin casting necesario
+```
+
+## Clases genéricas
+
+Una clase genérica se define con uno o más parámetros de tipo entre `<>`:
+
+```java
+public class Caja<T> {
+    private T contenido;
+
+    public void guardar(T valor) {
+        this.contenido = valor;
+    }
+
+    public T obtener() {
+        return contenido;
+    }
+}
+
+// Uso:
+Caja<String> caja = new Caja<>();
+caja.guardar("Libro");
+String item = caja.obtener(); // sin casting
+```
+
+Múltiples parámetros de tipo:
+
+```java
+public class Par<K, V> {
+    private K clave;
+    private V valor;
+
+    public Par(K clave, V valor) {
+        this.clave = clave;
+        this.valor = valor;
+    }
+
+    public K getClave() { return clave; }
+    public V getValor() { return valor; }
+}
+
+Par<Integer, String> p = new Par<>(1, "Uno");
+```
+
+## Métodos genéricos
+
+Los métodos pueden ser genéricos incluso si la clase no lo es:
+
+```java
+public class Util {
+    public static <T> T obtenerUltimo(List<T> lista) {
+        return lista.get(lista.size() - 1);
+    }
+
+    public static <T> void intercambiar(T[] arr, int i, int j) {
+        T temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+// El compilador infiere el tipo:
+String ultimo = Util.obtenerUltimo(List.of("A", "B", "C"));
+```
+
+## Bounded Type Parameters
+
+Restringe los tipos permitidos a aquellos que extienden una clase o implementan una interfaz:
+
+```java
+// Solo acepta tipos que implementen Comparable
+public static <T extends Comparable<T>> T maximo(T a, T b) {
+    return a.compareTo(b) > 0 ? a : b;
+}
+
+// Uso:
+System.out.println(maximo(10, 20));    // 20 (Integer implementa Comparable)
+System.out.println(maximo("Ana", "Carlos")); // Carlos (String implementa Comparable)
+```
+
+## Wildcards (?), ? extends y ? super
+
+### ? (wildcard ilimitado)
+
+Acepta cualquier tipo:
+
+```java
+public static void imprimirLista(List<?> lista) {
+    for (Object obj : lista) {
+        System.out.println(obj);
+    }
+}
+```
+
+### ? extends T (covarianza — Producer Extends)
+
+Puedes **leer** elementos como tipo `T`, pero no puedes **insertar**:
+
+```java
+// Acepta List<Integer>, List<Double>, etc.
+public static double sumar(List<? extends Number> numeros) {
+    double total = 0;
+    for (Number n : numeros) {
+        total += n.doubleValue();
+    }
+    return total;
+}
+
+// ✅ Puedes leer como Number
+// ❌ numeros.add(10) — no compila
+```
+
+### ? super T (contravarianza — Consumer Super)
+
+Puedes **insertar** elementos de tipo `T`, pero al leer obtienes `Object`:
+
+```java
+// Puedes agregar Integer o cualquier subtipo
+public static void llenar(List<? super Integer> lista) {
+    lista.add(10);
+    lista.add(20);
+    // Integer i = lista.get(0); // ❌ No compila
+    Object obj = lista.get(0);    // ✅ Solo Object
+}
+```
+
+### Principio PECS
+
+**P**roducer **E**xtends, **C**onsumer **S**uper:
+
+- Si un parámetro **produce** valores (los lees), usa `? extends T`
+- Si un parámetro **consume** valores (los escribes), usa `? super T`
+
+```java
+// Ejemplo real: Collections.copy()
+public static <T> void copy(
+    List<? super T> dest,   // consumer: escribe aquí
+    List<? extends T> src   // producer: lee de aquí
+) { ... }
+```
+
+## Type Erasure
+
+Java implementa genéricos mediante **type erasure**: el compilador borra la información de tipo genérico en el bytecode.
+
+```java
+// En código fuente:
+List<String> lista = new ArrayList<>();
+
+// Después de type erasure (en bytecode):
+List lista = new ArrayList();
+```
+
+Esto significa que en tiempo de ejecución **no puedes** saber si una lista es `List<String>` o `List<Integer>`.
+
+## Buenas prácticas
+
+1. **Usa genéricos siempre** en colecciones — nunca raw types como `List` sin parámetro
+2. **Nombra parámetros de tipo** con letras mayúsculas: `T` (type), `E` (element), `K`/`V` (key/value), `N` (number)
+3. **Prefiere `? extends T`** para parámetros de solo lectura
+4. **Usa el operador diamante `<>`** desde Java 7+
+5. **Evita casting** con genéricos — si necesitas casting, algo está mal diseñado
+
+## Errores frecuentes
+
+### Error 1: Raw types
+```java
+// ❌ Raw type — sin seguridad de tipos
+List lista = new ArrayList();
+
+// ✅ Genérico
+List<String> lista = new ArrayList<>();
+```
+
+### Error 2: Creer que `List<Integer>` es subclase de `List<Number>`
+```java
+// ❌ No compila — los genéricos son invariantes
+List<Integer> enteros = new ArrayList<>();
+List<Number> numeros = enteros; // Error
+
+// ✅ Usa wildcard si necesitas flexibilidad
+List<? extends Number> numeros = enteros;
+```
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

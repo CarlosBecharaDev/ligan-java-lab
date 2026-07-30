@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-matrices",
+  "lessonSlug": "matrices",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál es la sintaxis correcta para declarar una matriz de enteros con 3 filas y 4 columnas?",
+      "options": ["int matriz = new int[3][4]", "int[][] matriz = new int[3][4]", "int[] matriz = new int[3][4]", "int matriz[3][4]"],
+      "correctIndex": 1,
+      "explanations": [
+        "Falta un par de corchetes en el tipo.",
+        "Correcto. int[][] declara un arreglo bidimensional, new int[3][4] lo inicializa.",
+        "int[] es un arreglo unidimensional, no bidimensional.",
+        "Esa sintaxis es de C, no de Java."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué devuelve matriz.length para una matriz de 4 filas y 3 columnas?",
+      "options": ["3", "7", "4", "12"],
+      "correctIndex": 2,
+      "explanations": [
+        "matriz.length da filas, no columnas.",
+        "No suma filas y columnas.",
+        "Correcto. matriz.length devuelve el número de filas.",
+        "12 es filas * columnas, no length."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cómo se accede al elemento en la fila 2, columna 1?",
+      "options": ["matriz[2][1]", "matriz[1][2]", "matriz(2,1)", "matriz[2,1]"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correcto. Primer índice es fila, segundo es columna.",
+        "Eso sería fila 1, columna 2.",
+        "Java usa corchetes, no paréntesis.",
+        "Java no usa coma dentro de un solo par de corchetes."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué excepción ocurre al acceder a un índice fuera de rango en una matriz?",
+      "options": ["NullPointerException", "ArrayIndexOutOfBoundsException", "MatrixException", "IndexOutOfBoundsException"],
+      "correctIndex": 1,
+      "explanations": [
+        "NullPointerException ocurre al acceder a un objeto null.",
+        "Correcto. ArrayIndexOutOfBoundsException ocurre cuando el índice está fuera del rango válido.",
+        "MatrixException no existe en la API estándar de Java.",
+        "IndexOutOfBoundsException es la interfaz padre, pero la que se lanza es ArrayIndexOutOfBoundsException."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué método imprime una matriz completa en una sola línea?",
+      "options": ["println(matriz)", "Arrays.deepToString(matriz)", "matriz.toString()", "print(matriz[][])"],
+      "correctIndex": 1,
+      "explanations": [
+        "println(matriz) imprime la dirección de memoria.",
+        "Correcto. Arrays.deepToString() devuelve una representación en cadena de la matriz.",
+        "toString() de un arreglo no muestra los elementos completos.",
+        "Esa sintaxis no es válida en Java."
+      ]
+    }
+  ]
+}

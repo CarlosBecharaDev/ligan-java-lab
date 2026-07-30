@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-setmap",
+  "lessonSlug": "set-map-avanzados",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Cuál de las siguientes NO es una implementación de Set?",
+      "options": ["HashSet", "TreeSet", "ArrayList", "LinkedHashSet"],
+      "correctIndex": 2,
+      "explanations": [
+        "HashSet es una implementación de Set basada en tabla hash.",
+        "TreeSet es un Set ordenado basado en árbol rojo-negro.",
+        "Correcto. ArrayList implementa List, no Set.",
+        "LinkedHashSet es un Set con orden de inserción."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué implementación de Map mantiene las claves ordenadas?",
+      "options": ["HashMap", "LinkedHashMap", "TreeMap", "Hashtable"],
+      "correctIndex": 2,
+      "explanations": [
+        "HashMap no garantiza ningún orden.",
+        "LinkedHashMap mantiene orden de inserción, no orden de claves.",
+        "Correcto. TreeMap mantiene las claves ordenadas según su orden natural o Comparator.",
+        "Hashtable es legacy y no garantiza orden."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuántos elementos tiene un HashSet después de agregar 'A', 'B', 'A', 'C'?",
+      "options": ["4", "3", "2", "Depende de la implementación"],
+      "correctIndex": 1,
+      "explanations": [
+        "El duplicado 'A' se ignora, no se cuentan 4.",
+        "Correcto. HashSet ignora duplicados, así que solo quedan A, B y C.",
+        "No hay solo 2 elementos, hay 3 únicos.",
+        "No depende de la implementación; todos los Set ignoran duplicados."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué implementación de Map usarías para un LRU cache?",
+      "options": ["HashMap", "TreeMap", "LinkedHashMap con accessOrder=true", "Hashtable"],
+      "correctIndex": 2,
+      "explanations": [
+        "HashMap no tiene orden ni mecanismo de expulsión.",
+        "TreeMap ordena por clave, no por acceso.",
+        "Correcto. LinkedHashMap con accessOrder=true y removeEldestEntry() es ideal para LRU cache.",
+        "Hashtable es legacy y no tiene soporte para LRU."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Qué diferencia principal hay entre HashSet y TreeSet?",
+      "options": ["HashSet permite duplicados, TreeSet no", "TreeSet mantiene elementos ordenados, HashSet no", "TreeSet es más rápido que HashSet", "HashSet requiere Comparable"],
+      "correctIndex": 1,
+      "explanations": [
+        "Ninguno de los dos permite duplicados.",
+        "Correcto. TreeSet mantiene orden natural o por Comparator; HashSet no garantiza orden.",
+        "HashSet es O(1), TreeSet es O(log n). HashSet es más rápido.",
+        "TreeSet requiere Comparable o Comparator, no HashSet."
+      ]
+    }
+  ]
+}

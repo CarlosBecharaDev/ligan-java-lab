@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-introduccion",
+  "lessonSlug": "introduccion-java",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué herramienta necesitas instalar para poder compilar código Java?",
+      "options": ["JRE", "JVM", "JDK", "IDE"],
+      "correctIndex": 2,
+      "explanations": [
+        "El JRE solo ejecuta programas compilados, no tiene compilador.",
+        "La JVM es solo el intérprete de bytecode, no incluye javac.",
+        "Correcto. El JDK incluye el compilador javac, el JRE y herramientas de desarrollo.",
+        "Un IDE es un editor, no incluye el JDK por sí mismo."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué garantiza el bytecode de Java?",
+      "options": ["Mayor velocidad que C++", "Portabilidad multiplataforma", "Seguridad absoluta", "Que no haya errores de lógica"],
+      "correctIndex": 1,
+      "explanations": [
+        "Java no es más rápido que C++ en general.",
+        "Correcto. El bytecode se ejecuta en cualquier JVM, sin importar el sistema operativo.",
+        "Java es seguro, pero ningún lenguaje garantiza seguridad absoluta.",
+        "El bytecode no evita errores de lógica en el programa."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Cuál es la extensión del código fuente de Java?",
+      "options": [".class", ".jar", ".java", ".exe"],
+      "correctIndex": 2,
+      "explanations": [
+        "El archivo .class contiene bytecode, no código fuente.",
+        ".jar es un archivo comprimido con clases compiladas.",
+        "Correcto. El código fuente de Java se guarda en archivos .java.",
+        ".exe es un ejecutable de Windows, no de Java."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué comando compila un archivo Java?",
+      "options": ["java", "javac", "compile", "build"],
+      "correctIndex": 1,
+      "explanations": [
+        "java ejecuta archivos .class, no compila.",
+        "Correcto. javac es el compilador de Java.",
+        "compile no es un comando válido de Java.",
+        "build es genérico, no es el comando de Java para compilar."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es la firma correcta del método principal en Java?",
+      "options": ["static void main()", "public void main(String args)", "public static void main(String[] args)", "void main(String[] args)"],
+      "correctIndex": 2,
+      "explanations": [
+        "Falta public y String[] args.",
+        "Falta static y args debe ser String[].",
+        "Correcto. La JVM busca exactamente esta firma para iniciar la ejecución.",
+        "Falta public static."
+      ]
+    }
+  ]
+}

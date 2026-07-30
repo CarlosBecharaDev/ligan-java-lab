@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-genericos",
+  "lessonSlug": "genericos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué permite el wildcard ? extends T en un parámetro de método?",
+      "options": ["Insertar elementos de tipo T", "Leer elementos como tipo T", "Insertar y leer elementos de tipo T", "Solo trabajar con null"],
+      "correctIndex": 1,
+      "explanations": [
+        "Con ? extends T no puedes insertar (excepto null).",
+        "Correcto. ? extends T (covarianza) permite leer elementos como tipo T, pero no insertar.",
+        "No puedes insertar, solo leer.",
+        "Puedes leer elementos y trabajar con ellos."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Qué principio resume cuándo usar ? extends T vs ? super T?",
+      "options": ["DRY (Don't Repeat Yourself)", "PECS (Producer Extends, Consumer Super)", "SOLID", "KISS (Keep It Simple)"],
+      "correctIndex": 1,
+      "explanations": [
+        "DRY es sobre no repetir código, no sobre genéricos.",
+        "Correcto. PECS: Producer Extends (solo lectura), Consumer Super (solo escritura).",
+        "SOLID son principios de diseño POO.",
+        "KISS es sobre simplicidad general."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Por qué NO puedes crear un arreglo genérico como new T[10]?",
+      "options": ["Porque T no tiene constructor", "Por type erasure: los arreglos tienen tipo reificado", "Porque Java no soporta arreglos", "Porque new T[10] es sintaxis inválida"],
+      "correctIndex": 1,
+      "explanations": [
+        "No está relacionado con el constructor.",
+        "Correcto. Los arreglos conocen su tipo en runtime (reified), pero los genéricos usan type erasure, por lo que son incompatibles.",
+        "Java sí soporta arreglos.",
+        "La sintaxis new T[10] no es válida, pero la razón de fondo es type erasure."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué método de Collections.copy() demuestra el patrón PECS?",
+      "options": ["copy(List<?> src, List<?> dest)", "copy(List<? extends T> src, List<? super T> dest)", "copy(List<T> src, List<T> dest)", "copy(List<? super T> src, List<? extends T> dest)"],
+      "correctIndex": 1,
+      "explanations": [
+        "Sin parámetros de tipo no hay seguridad.",
+        "Correcto. src produce elementos (? extends T), dest consume elementos (? super T).",
+        "Solo permite copiar entre listas del mismo tipo exacto.",
+        "Invertido: src debe ser Producer Extends, dest Consumer Super."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es la principal crítica a la implementación de genéricos en Java?",
+      "options": ["Son demasiado lentos", "Usan type erasure en vez de reificación", "No permiten múltiples parámetros", "Solo funcionan con clases del JDK"],
+      "correctIndex": 1,
+      "explanations": [
+        "El rendimiento no es una crítica significativa.",
+        "Correcto. Type erasure impide reflection sobre tipos genéricos y crea incompatibilidad con arreglos. .NET implementa reificación, que preserva los tipos en runtime.",
+        "Sí permiten múltiples parámetros: Map<K, V>.",
+        "Funcionan con cualquier clase."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-introduccion",
+  "lessonSlug": "introduccion-java",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "¿Qué componente del JDK se encarga de convertir bytecode a instrucciones nativas del sistema operativo?",
+      "options": ["javac", "La JVM (Just-In-Time compiler)", "El classloader", "El garbage collector"],
+      "correctIndex": 1,
+      "explanations": [
+        "javac compila código fuente (.java) a bytecode (.class), no a instrucciones nativas.",
+        "Correcto. La JVM incluye el compilador JIT que convierte bytecode en código máquina nativo durante la ejecución.",
+        "El classloader carga las clases en memoria, no convierte bytecode.",
+        "El garbage collector libera memoria, no convierte instrucciones."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "¿Por qué se recomienda usar versiones LTS del JDK en proyectos empresariales?",
+      "options": ["Son las únicas que funcionan con IntelliJ", "Ofrecen soporte extendido y estabilidad a largo plazo", "Son más rápidas que las no-LTS", "Incluyen más características experimentales"],
+      "correctIndex": 1,
+      "explanations": [
+        "IntelliJ funciona con cualquier versión moderna del JDK.",
+        "Correcto. Las versiones LTS reciben actualizaciones de seguridad y parches durante años.",
+        "No necesariamente son más rápidas; la velocidad depende de la JVM, no del número de versión.",
+        "Las versiones no-LTS suelen tener más características experimentales, no las LTS."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "¿Qué contiene exactamente el JRE que no contiene la JVM?",
+      "options": ["El compilador javac", "Las librerías estándar de Java", "El debugger", "Todas las anteriores"],
+      "correctIndex": 1,
+      "explanations": [
+        "javac está en el JDK, no en el JRE.",
+        "Correcto. El JRE contiene la JVM más las librerías estándar (java.lang, java.util, java.io, etc.).",
+        "El debugger está en el JDK, no en el JRE.",
+        "javac y debugger son parte del JDK, no del JRE."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "¿Qué ocurre si ejecutas `java HolaMundo` sin compilar primero?",
+      "options": ["Se compila automáticamente y ejecuta", "Java muestra error: 'no se encontró la clase'", "Java compila y ejecuta en un solo paso", "Se crea HolaMundo.class automáticamente"],
+      "correctIndex": 1,
+      "explanations": [
+        "No hay compilación automática con el comando java.",
+        "Correcto. java espera un archivo .class. Si no existe, lanza ClassNotFoundException.",
+        "Java no compila automáticamente; debes usar javac primero.",
+        "No se crea ningún .class con el comando java."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "¿Cuál es el orden correcto del proceso desde escribir código hasta obtener salida?",
+      "options": ["Compilar → Ejecutar → Escribir código → Salida", "Escribir código → Ejecutar → Compilar → Salida", "Escribir código → Compilar → Ejecutar → Salida", "Ejecutar → Compilar → Escribir código → Salida"],
+      "correctIndex": 2,
+      "explanations": [
+        "Primero se escribe, luego se compila, después se ejecuta.",
+        "La ejecución ocurre después de compilar, no antes.",
+        "Correcto. El flujo es: 1) escribir .java, 2) compilar con javac a .class, 3) ejecutar con java, 4) ver la salida.",
+        "No se puede ejecutar código que no se ha escrito ni compilado."
+      ]
+    }
+  ]
+}

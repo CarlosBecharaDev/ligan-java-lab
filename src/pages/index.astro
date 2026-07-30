@@ -29,7 +29,8 @@ import Button from '@components/ui/Button.astro';
       <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-md);margin:var(--space-md) 0;box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
         <h3 data-i18n="home.how-to" style="font-family:var(--font-pixel);font-size:var(--text-sm);margin-bottom:var(--space-sm);color:var(--win-text)">📚 Cómo empezar</h3>
         <ol style="padding-left:var(--space-lg);list-style:decimal;color:var(--win-muted);font-family:var(--font-ui)">
-          <li data-i18n="home.step1-4">Haz clic en <strong>01_Fundamentos</strong> para abrir el primer módulo</li>
+          <li>Empieza con <strong>00_Introduccion</strong> para conocer qué es Java</li>
+          <li>Luego abre <strong>01_Fundamentos</strong> y escribe tu primer código</li>
           <li>Sigue la <a href="/ruta" data-i18n="home.btn-path" style="color:var(--win-link)">ruta de aprendizaje</a> para un progreso guiado</li>
           <li>Practica en el <a href="/practica" data-i18n="home.btn-codelab" style="color:var(--win-link)">Code Lab</a> con ejercicios interactivos</li>
           <li>Revisa tu <a href="/progreso" data-i18n="home.btn-first" style="color:var(--win-link)">progreso</a> para ver qué has completado</li>
@@ -38,7 +39,7 @@ import Button from '@components/ui/Button.astro';
 
       <div class="home__btns" style="display:flex;gap:var(--space-md);flex-wrap:wrap">
         <Button as="a" href="/ruta" variant="primary"><span data-i18n="home.btn-path">Abrir ruta de aprendizaje</span></Button>
-        <Button as="a" href="/tema/variables-y-tipos" variant="secondary"><span data-i18n="home.btn-first">Primera lección</span></Button>
+        <Button as="a" href="/tema/introduccion-java" variant="secondary"><span data-i18n="home.btn-first">Primera lección</span></Button>
         <Button as="a" href="/practica" variant="ghost"><span data-i18n="home.btn-codelab">Ir al Code Lab</span></Button>
       </div>
     </div>

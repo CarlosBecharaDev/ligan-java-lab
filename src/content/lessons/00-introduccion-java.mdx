@@ -1,0 +1,318 @@
+---
+title: "Introducción a Java: JDK, JRE y JVM"
+slug: "introduccion-java"
+module: "00-introduccion"
+level: "Inicial"
+objectives:
+  - "Entender qué es Java y su filosofía 'Write Once, Run Anywhere'"
+  - "Diferenciar entre JDK, JRE y JVM y explicar sus funciones"
+  - "Comprender el proceso de compilación y ejecución del bytecode"
+  - "Escribir, compilar y ejecutar tu primer programa Hola Mundo en Java"
+  - "Conocer las convenciones de nombrado y estructura de un proyecto Java"
+prerequisites: []
+history:
+  introducedIn: "Java 1.0 (1996)"
+  context: "Java fue creado por James Gosling en Sun Microsystems y lanzado en 1996. Su promesa original —'Write Once, Run Anywhere'— revolucionó la industria al permitir que un mismo programa corriera en Windows, Linux o Mac sin modificaciones. Esta portabilidad se logró mediante la JVM (Java Virtual Machine), una máquina virtual que interpreta bytecode."
+  evolution: "Java ha evolucionado desde JDK 1.0 (1996) con 212 clases hasta JDK 21 LTS (2023) con más de 6000 clases. En 2010 Oracle adquirió Sun Microsystems. Las versiones LTS (Long Term Support) como Java 8, 11, 17 y 21 son las recomendadas para producción."
+realWorldExamples:
+  - domain: "Empresarial — Sistema bancario"
+    description: "Un banco internacional usa Java para su core bancario. El mismo código compilado (bytecode) corre en servidores Linux en producción y en máquinas Windows de los desarrolladores, gracias a la JVM."
+    code: |
+      public class HolaBanco {
+          public static void main(String[] args) {
+              System.out.println("=== Sistema Bancario Java ===");
+              System.out.println("Transacción procesada con éxito");
+              System.out.println("Plataforma: " + System.getProperty("os.name"));
+          }
+      }
+    result: |
+      === Sistema Bancario Java ===
+      Transacción procesada con éxito
+      Plataforma: Linux
+  - domain: "Educación — Campus universitario"
+    description: "Una universidad enseña Java en sus laboratorios. Los estudiantes escriben código en Windows, lo compilan con javac y generan bytecode que funciona igual en los servidores Linux del campus."
+    code: |
+      public class CalculoNota {
+          public static void main(String[] args) {
+              double nota = 4.5;
+              System.out.printf("Tu nota final es: %.2f%n", nota);
+              System.out.println("¿Aprobaste?: " + (nota >= 3.0 ? "Sí" : "No"));
+          }
+      }
+    result: |
+      Tu nota final es: 4.50
+      ¿Aprobaste?: Sí
+hasInteractive: false
+comparisons:
+  - title: "JDK vs JRE vs JVM"
+    items:
+      - name: "JDK"
+        features:
+          contiene: "JRE + javac + debugger + herramientas"
+          usas: "Para DESARROLLAR"
+          ejemplo: "javac HolaMundo.java"
+          tamano: "Grande (300-500 MB)"
+      - name: "JRE"
+        features:
+          contiene: "JVM + librerías estándar"
+          usas: "Para EJECUTAR programas compilados"
+          ejemplo: "java HolaMundo"
+          tamano: "Mediano (150-200 MB)"
+      - name: "JVM"
+        features:
+          contiene: "Solo el intérprete de bytecode"
+          usas: "Para EJECUTAR bytecode en un SO específico"
+          ejemplo: "Interpreta HolaMundo.class"
+          tamano: "Pequeño (30-50 MB)"
+    recommendation: "Los desarrolladores instalan el JDK. Los usuarios finales solo necesitan el JRE. En servidores de producción modernos se usa el JDK completo por herramientas de monitoreo."
+videos:
+  - url: ""
+    title: "¿Qué es Java? - Introducción para principiantes"
+    channel: "Píldoras Informáticas"
+    summary: "Curso Java desde cero: explica JDK, JRE, JVM y cómo instalar el entorno de desarrollo"
+faqs:
+  - question: "¿Cuál es la diferencia entre JDK, JRE y JVM?"
+    answer: "El JDK (Java Development Kit) es todo lo que necesitas para desarrollar: incluye compilador (javac), debugger y el JRE. El JRE (Java Runtime Environment) solo ejecuta programas ya compilados. La JVM (Java Virtual Machine) es el corazón que interpreta el bytecode y lo ejecuta en el sistema operativo. El JDK contiene al JRE, y el JRE contiene a la JVM."
+  - question: "¿Por qué Java se considera multiplataforma?"
+    answer: "Porque compila a bytecode, no a código máquina nativo. Ese bytecode se ejecuta en cualquier JVM, sin importar el sistema operativo. Cada plataforma (Windows, Linux, macOS) tiene su propia JVM, pero todas ejecutan el mismo bytecode."
+  - question: "¿Qué significa LTS y por qué es importante?"
+    answer: "LTS (Long Term Support) son versiones con soporte extendido de actualizaciones de seguridad y parches durante años. Java 21 LTS es la versión recomendada para proyectos profesionales. Las versiones no-LTS tienen soporte de solo 6 meses."
+  - question: "¿Puedo tener varias versiones de Java instaladas?"
+    answer: "Sí. Puedes tener múltiples JDK en la misma máquina. Herramientas como SDKMAN (en Linux/Mac) o los instaladores de Adoptium permiten gestionar y cambiar entre versiones fácilmente."
+  - question: "¿Qué IDE me recomiendas para empezar?"
+    answer: "IntelliJ IDEA Community Edition es la opción más popular. VS Code con las extensiones de Java también es excelente. Ambos son gratuitos. NetBeans es otra alternativa incluida con el JDK."
+sources:
+  - title: "Java 21 Language Specification — Chapter 1: Introduction"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-1.html"
+    date: "2026-07-29"
+  - title: "OpenJDK — JDK 21 Releases"
+    url: "https://openjdk.org/projects/jdk/21/"
+    date: "2026-07-29"
+  - title: "Oracle — Java Concepts: Write Once, Run Anywhere"
+    url: "https://www.oracle.com/java/write-once-run-anywhere/"
+    date: "2026-07-29"
+  - title: "Adoptium — Descargar JDK 21 LTS"
+    url: "https://adoptium.net/temurin/releases/?version=21"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es Java?
+
+Java es un **lenguaje de programación orientado a objetos**, compilado a un código intermedio llamado *bytecode*. Fue creado por James Gosling en Sun Microsystems y lanzado en 1996. Su lema "**Write Once, Run Anywhere**" (WORA) significa que el mismo programa corre en Windows, Linux o macOS sin modificaciones.
+
+Java es uno de los lenguajes más utilizados en el mundo empresarial: sistemas bancarios, aplicaciones Android, big data, microservicios con Spring Boot, y más.
+
+## El ecosistema Java: JDK, JRE y JVM
+
+Para programar en Java necesitas tres componentes anidados:
+
+```
+┌────────────────────────────────────────────┐
+│                   JDK                        │
+│  (Lo necesitas para DESARROLLAR)              │
+│  ┌────────────────────────────────────────┐ │
+│  │               JRE                        │ │
+│  │  (Lo necesitas para EJECUTAR)            │ │
+│  │  ┌──────────────────────────────────┐   │ │
+│  │  │              JVM                   │   │ │
+│  │  │  (Interpreta y ejecuta bytecode)   │   │ │
+│  │  └──────────────────────────────────┘   │ │
+│  │  + Librerías estándar de Java            │ │
+│  └────────────────────────────────────────┘ │
+│  + javac, debugger, herramientas de dev      │
+└────────────────────────────────────────────┘
+```
+
+### JDK — Java Development Kit
+
+Es el kit completo para DESARROLLAR en Java. Incluye:
+
+- **`javac`**: el compilador que convierte `.java` a `.class` (bytecode)
+- **JRE**: el entorno de ejecución
+- **Debugger**: para depurar código paso a paso
+- **Herramientas**: `javadoc`, `jar`, `jlink`, etc.
+
+Lo instala un desarrollador en su máquina.
+
+### JRE — Java Runtime Environment
+
+Es el entorno para EJECUTAR programas Java ya compilados. Incluye:
+
+- **JVM**: la máquina virtual
+- **Librerías estándar**: `java.lang`, `java.util`, `java.io`, etc.
+
+Lo instala un usuario final que solo quiere ejecutar aplicaciones Java.
+
+### JVM — Java Virtual Machine
+
+Es el corazón de Java: interpreta y ejecuta el bytecode. Es específica para cada sistema operativo. La JVM es lo que hace posible WORA: el mismo `.class` funciona en cualquier SO que tenga su propia JVM.
+
+## El proceso de compilación y ejecución
+
+```
+┌─────────────────────┐      javac       ┌──────────────────┐      JVM       ┌──────────────────┐
+│  HolaMundo.java      │ ───────────────► │  HolaMundo.class  │ ─────────────► │  Salida en consola │
+│ (código fuente)      │   (compilador)   │   (bytecode)       │  (intérprete)  │                    │
+└─────────────────────┘                  └──────────────────┘                └──────────────────┘
+```
+
+1. **Escribes** el código en un archivo `.java`
+2. **`javac`** compila a bytecode en un archivo `.class`
+3. **La JVM** interpreta ese bytecode y lo ejecuta
+
+El bytecode NO es código máquina nativo. Es un formato intermedio que la JVM interpreta. Por eso el mismo `.class` funciona en cualquier sistema operativo que tenga JVM.
+
+## Tu primer programa: Hola Mundo
+
+<CodeBlock lang="java" title="HolaMundo.java">
+{`public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("¡Hola Mundo con Java!");
+    }
+}`}
+</CodeBlock>
+
+### Analizando línea por línea
+
+| Línea | Explicación |
+|-------|------------|
+| `public class HolaMundo` | Declara una clase pública. El nombre debe coincidir EXACTAMENTE con el nombre del archivo: `HolaMundo.java` |
+| `public static void main(String[] args)` | Método de entrada. La JVM busca esta firma exacta para empezar a ejecutar |
+| `System.out.println(...)` | Imprime texto en consola seguido de un salto de línea |
+| `;` | Cada sentencia termina con punto y coma (obligatorio) |
+
+### Desglose de `public static void main(String[] args)`
+
+| Palabra | Significado |
+|---------|------------|
+| `public` | Accesible desde fuera de la clase (la JVM necesita llamarlo) |
+| `static` | No requiere crear un objeto para ejecutarse |
+| `void` | No retorna ningún valor |
+| `main` | Nombre del método — debe ser exactamente `main` en minúscula |
+| `String[] args` | Parámetro que recibe argumentos de línea de comandos |
+
+### Compilar y ejecutar paso a paso
+
+```bash
+# 1. Compilar: genera HolaMundo.class
+javac HolaMundo.java
+
+# 2. Ejecutar: la JVM interpreta el bytecode
+java HolaMundo
+```
+
+**Salida esperada:**
+```
+¡Hola Mundo con Java!
+```
+
+## Convenciones de nombrado
+
+| Elemento | Convención | Ejemplo |
+|----------|-----------|---------|
+| Clase | **PascalCase** | `MiPrimerPrograma` |
+| Método | **camelCase** | `calcularPromedio()` |
+| Variable | **camelCase** | `nombreUsuario` |
+| Constante | **MAYÚSCULAS** | `MAX_INTENTOS` |
+| Paquete | **minúsculas** | `com.miempresa.app` |
+| Archivo `.java` | = clase pública | `MiClase.java` |
+
+## Estructura de un proyecto real
+
+```
+mi-proyecto/
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/empresa/app/
+│               ├── Main.java
+│               ├── modelo/
+│               └── servicios/
+├── pom.xml (o build.gradle)
+└── README.md
+```
+
+En proyectos profesionales el código se organiza en **paquetes** (carpetas que reflejan el dominio del negocio) y se gestiona con herramientas de build como Maven o Gradle.
+
+## Errores frecuentes
+
+### Error 1: Nombre de archivo no coincide con la clase
+```java
+// Archivo: holamundo.java
+public class HolaMundo {  // ❌ Error de compilación
+}
+// ✅ Archivo debe llamarse HolaMundo.java (exactamente igual)
+```
+
+### Error 2: `main` mal escrito
+```java
+public static void Main(String[] args) {  // ❌ Error: debe ser main (minúscula)
+public static void main(String[] args) {   // ✅ Correcto
+}
+```
+
+### Error 3: Olvidar el punto y coma
+```java
+System.out.println("Hola")  // ❌ Error de compilación: falta ;
+System.out.println("Hola"); // ✅ Correcto
+```
+
+### Error 4: Confundir JDK con JRE
+```bash
+# Intentar compilar con solo JRE
+java HolaMundo.java    # ❌ java ejecuta .class, no compila
+javac HolaMundo.java   # ✅ javac compila (solo en JDK)
+```
+
+## Cómo instalar el JDK
+
+1. Ve a [adoptium.net](https://adoptium.net) y descarga **JDK 21 LTS** para tu sistema operativo
+2. Ejecuta el instalador (siguiente, siguiente, finalizar)
+3. Verifica la instalación:
+   ```bash
+   java -version
+   javac -version
+   ```
+4. Opcional: instala **IntelliJ IDEA Community** o **VS Code** con las extensiones de Java
+
+## Buenas prácticas
+
+1. **PascalCase para clases**: `MiClase`, no `miclase` ni `mi_clase`
+2. **Un archivo `.java` por clase pública** con el mismo nombre
+3. **Usa versiones LTS del JDK** (21 es la más reciente)
+4. **Aprende a usar un IDE** desde el inicio: autocompletado, refactorización y depuración aceleran el aprendizaje
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

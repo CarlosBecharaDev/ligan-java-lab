@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-introduccion-facil",
+    "lessonSlug": "introduccion-java",
+    "title": "Tu primer Hola Mundo",
+    "difficulty": "facil",
+    "description": "Escribe un programa que imprima '¡Hola Mundo desde Java!' en la consola. Asegúrate de que la clase se llame exactamente 'HolaMundo'.",
+    "template": "public class HolaMundo {\n    public static void main(String[] args) {\n        // TODO: Imprime un mensaje en consola\n\n    }\n}",
+    "hints": [
+      "Usa System.out.println() para imprimir texto",
+      "El texto debe ir entre comillas dobles",
+      "No olvides el punto y coma al final de cada sentencia"
+    ],
+    "solution": "public class HolaMundo {\n    public static void main(String[] args) {\n        System.out.println(\"¡Hola Mundo desde Java!\");\n    }\n}",
+    "solutionExplanation": "Declaramos la clase HolaMundo con el método main (punto de entrada). Usamos System.out.println() para imprimir el mensaje en consola. Cada instrucción termina con punto y coma.",
+    "expectedOutput": "¡Hola Mundo desde Java!"
+  },
+  {
+    "id": "ex-introduccion-normal",
+    "lessonSlug": "introduccion-java",
+    "title": "Presentación personal con Java",
+    "difficulty": "normal",
+    "description": "Crea un programa que imprima tu nombre, la materia que estudias y por qué te gusta programar, usando tres líneas separadas.",
+    "template": "public class Presentacion {\n    public static void main(String[] args) {\n        // TODO: Imprime tres líneas con tu presentación\n\n    }\n}",
+    "hints": [
+      "Usa System.out.println() para cada línea",
+      "Cada llamada a println() genera un salto de línea automático"
+    ],
+    "solution": "public class Presentacion {\n    public static void main(String[] args) {\n        System.out.println(\"Me llamo Carlos\");\n        System.out.println(\"Estudio Ingeniería de Sistemas\");\n        System.out.println(\"Me gusta programar porque puedo crear soluciones\");\n    }\n}",
+    "solutionExplanation": "Cada System.out.println() imprime una línea diferente. El método println agrega automáticamente un salto de línea al final, por lo que cada mensaje aparece en su propia línea.",
+    "expectedOutput": "Me llamo Carlos\nEstudio Ingeniería de Sistemas\nMe gusta programar porque puedo crear soluciones"
+  },
+  {
+    "id": "ex-introduccion-dificil",
+    "lessonSlug": "introduccion-java",
+    "title": "Información del sistema con propiedades de Java",
+    "difficulty": "dificil",
+    "description": "Crea un programa que use System.getProperty() para obtener y mostrar: el nombre del sistema operativo, la versión de Java, y el usuario actual.",
+    "template": "public class InfoSistema {\n    public static void main(String[] args) {\n        // TODO: Usa System.getProperty() para obtener:\n        // os.name, java.version, user.name\n        // Imprime cada valor con una etiqueta descriptiva\n\n    }\n}",
+    "hints": [
+      "System.getProperty(\"os.name\") devuelve el nombre del SO",
+      "System.getProperty(\"java.version\") devuelve la versión de Java",
+      "System.getProperty(\"user.name\") devuelve el nombre del usuario",
+      "Concatena con + para crear mensajes descriptivos"
+    ],
+    "solution": "public class InfoSistema {\n    public static void main(String[] args) {\n        String os = System.getProperty(\"os.name\");\n        String version = System.getProperty(\"java.version\");\n        String usuario = System.getProperty(\"user.name\");\n\n        System.out.println(\"Sistema Operativo: \" + os);\n        System.out.println(\"Versión de Java: \" + version);\n        System.out.println(\"Usuario: \" + usuario);\n    }\n}",
+    "solutionExplanation": "System.getProperty() accede a propiedades del sistema. Almacenamos cada valor en una variable String y luego lo imprimimos concatenado con un texto descriptivo.",
+    "expectedOutput": "Sistema Operativo: Windows 11\nVersión de Java: 21.0.1\nUsuario: carlos"
+  }
+]

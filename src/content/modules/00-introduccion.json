@@ -1,0 +1,11 @@
+{
+  "id": "mod-00",
+  "slug": "00-introduccion",
+  "number": 0,
+  "title": "Introducción a Java",
+  "description": "Aprende qué es Java, cómo funciona el ecosistema JDK/JRE/JVM y escribe tu primer programa.",
+  "icon": "BookOpen",
+  "status": "disponible",
+  "lessonCount": 1,
+  "lessons": ["introduccion-java"]
+}

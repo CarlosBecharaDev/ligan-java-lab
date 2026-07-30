@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-setmap-facil",
+    "lessonSlug": "set-map-avanzados",
+    "title": "Eliminar duplicados con HashSet",
+    "difficulty": "facil",
+    "description": "Dado un arreglo de nombres con duplicados, usa un HashSet para eliminar los repetidos e imprime los nombres únicos.",
+    "template": "import java.util.*;\npublic class NombresUnicos {\n    public static void main(String[] args) {\n        String[] nombres = {\"Ana\", \"Carlos\", \"Ana\", \"Beatriz\", \"Carlos\", \"David\"};\n        // TODO: Usa HashSet para eliminar duplicados e imprime los únicos\n\n    }\n}",
+    "hints": [
+      "Crea un HashSet<String> y agrégale cada nombre",
+      "Usa add() para cada elemento del arreglo",
+      "Los duplicados se ignoran automáticamente"
+    ],
+    "solution": "import java.util.*;\npublic class NombresUnicos {\n    public static void main(String[] args) {\n        String[] nombres = {\"Ana\", \"Carlos\", \"Ana\", \"Beatriz\", \"Carlos\", \"David\"};\n        Set<String> unicos = new HashSet<>();\n        for (String nombre : nombres) {\n            unicos.add(nombre);\n        }\n        System.out.println(\"Nombres únicos: \" + unicos);\n    }\n}",
+    "solutionExplanation": "Creamos un HashSet y agregamos cada nombre. El Set ignora automáticamente los duplicados. Al final solo quedan los 4 nombres únicos.",
+    "expectedOutput": "Nombres únicos: [Ana, Carlos, Beatriz, David]"
+  },
+  {
+    "id": "ex-setmap-normal",
+    "lessonSlug": "set-map-avanzados",
+    "title": "Contador de palabras con LinkedHashMap",
+    "difficulty": "normal",
+    "description": "Dado un arreglo de palabras, cuenta cuántas veces aparece cada una usando un LinkedHashMap y preservando el orden de primera aparición.",
+    "template": "import java.util.*;\npublic class ContadorPalabras {\n    public static void main(String[] args) {\n        String[] palabras = {\"Java\", \"Python\", \"Java\", \"Kotlin\", \"Python\", \"Java\"};\n        // TODO: Usa LinkedHashMap para contar frecuencias\n        // e imprime cada palabra con su conteo\n\n    }\n}",
+    "hints": [
+      "LinkedHashMap<String, Integer> preserva orden de inserción",
+      "getOrDefault(palabra, 0) + 1 para contar",
+      "Itera con forEach o entrySet()"
+    ],
+    "solution": "import java.util.*;\npublic class ContadorPalabras {\n    public static void main(String[] args) {\n        String[] palabras = {\"Java\", \"Python\", \"Java\", \"Kotlin\", \"Python\", \"Java\"};\n        Map<String, Integer> conteo = new LinkedHashMap<>();\n        for (String p : palabras) {\n            conteo.put(p, conteo.getOrDefault(p, 0) + 1);\n        }\n        for (Map.Entry<String, Integer> e : conteo.entrySet()) {\n            System.out.println(e.getKey() + \": \" + e.getValue());\n        }\n    }\n}",
+    "solutionExplanation": "LinkedHashMap preserva el orden en que las palabras aparecen. getOrDefault() obtiene el conteo actual (0 si no existe) y suma 1. Al final iteramos sobre las entradas.",
+    "expectedOutput": "Java: 3\nPython: 2\nKotlin: 1"
+  },
+  {
+    "id": "ex-setmap-dificil",
+    "lessonSlug": "set-map-avanzados",
+    "title": "Agenda telefónica con TreeMap",
+    "difficulty": "dificil",
+    "description": "Crea una agenda telefónica usando TreeMap para que los contactos aparezcan siempre ordenados alfabéticamente. Agrega contactos, busca uno por nombre y muestra todos ordenados.",
+    "template": "import java.util.*;\npublic class AgendaTelefonica {\n    public static void main(String[] args) {\n        // TODO: Crea un TreeMap<String, String> para contactos\n        // Agrega: Ana->555-0101, Carlos->555-0202, Beatriz->555-0303\n        // Busca y muestra el teléfono de Carlos\n        // Muestra todos los contactos ordenados\n\n    }\n}",
+    "hints": [
+      "TreeMap<String, String> ordena automáticamente por clave",
+      "Usa put(clave, valor) para agregar",
+      "Usa get(clave) para buscar",
+      "Itera con forEach para mostrar todos"
+    ],
+    "solution": "import java.util.*;\npublic class AgendaTelefonica {\n    public static void main(String[] args) {\n        Map<String, String> agenda = new TreeMap<>();\n        agenda.put(\"Ana\", \"555-0101\");\n        agenda.put(\"Carlos\", \"555-0202\");\n        agenda.put(\"Beatriz\", \"555-0303\");\n\n        System.out.println(\"Teléfono de Carlos: \" + agenda.get(\"Carlos\"));\n        System.out.println(\"\\nTodos los contactos:\");\n        for (Map.Entry<String, String> e : agenda.entrySet()) {\n            System.out.println(e.getKey() + \" -> \" + e.getValue());\n        }\n    }\n}",
+    "solutionExplanation": "TreeMap ordena automáticamente las claves alfabéticamente (Ana, Beatriz, Carlos). get() busca un contacto por nombre. entrySet() itera en orden alfabético.",
+    "expectedOutput": "Teléfono de Carlos: 555-0202\n\nTodos los contactos:\nAna -> 555-0101\nBeatriz -> 555-0303\nCarlos -> 555-0202"
+  }
+]

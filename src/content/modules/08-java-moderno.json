@@ -6,6 +6,6 @@
   "description": "Las características modernas que hacen a Java elegante y expresivo (Java 8-21).",
   "icon": "Zap",
   "status": "disponible",
-  "lessonCount": 5,
-  "lessons": ["lambdas", "streams", "optional", "records", "pattern-matching"]
+  "lessonCount": 6,
+  "lessons": ["lambdas", "streams", "optional", "records", "pattern-matching", "genericos"]
 }

@@ -1,0 +1,306 @@
+---
+title: "Matrices (Arreglos Bidimensionales)"
+slug: "matrices"
+module: "03-metodos-y-arrays"
+level: "Intermedio"
+objectives:
+  - "Declarar e inicializar matrices de diferentes tipos en Java"
+  - "Recorrer una matriz con ciclos for anidados"
+  - "Diferenciar entre matriz.length y matriz[i].length"
+  - "Acceder y modificar elementos individuales de una matriz"
+  - "Identificar la diagonal principal de una matriz cuadrada"
+prerequisites:
+  - "arrays"
+  - "for"
+history:
+  introducedIn: "Java 1.0"
+  context: "Las matrices (arreglos bidimensionales) existen desde la primera versión de Java. Son simplemente 'arreglos de arreglos', lo que permite tener filas de diferentes longitudes (matrices irregulares). A diferencia de C, Java verifica automáticamente los límites de los índices."
+  evolution: "Java 5 introdujo Arrays.deepToString() para imprimir matrices fácilmente. Java 8 añadió streams que permiten procesar matrices con Arrays.stream(). En Java moderna se prefiere List<List<T>> para datos dinámicos, pero int[][] sigue siendo estándar para algoritmos y cálculos numéricos por su rendimiento."
+realWorldExamples:
+  - domain: "Educación — Calificaciones de estudiantes"
+    description: "Una matriz almacena las calificaciones de N estudiantes en M materias. Cada fila es un estudiante, cada columna una materia."
+    code: |
+      public class Calificaciones {
+          public static void main(String[] args) {
+              int[][] califs = {
+                  {85, 90, 78, 92},
+                  {70, 88, 95, 80},
+                  {91, 82, 87, 94}
+              };
+              for (int est = 0; est < califs.length; est++) {
+                  int suma = 0;
+                  for (int mat = 0; mat < califs[est].length; mat++) {
+                      suma += califs[est][mat];
+                  }
+                  double prom = (double) suma / califs[est].length;
+                  System.out.printf("Estudiante %d: %.1f%n", est + 1, prom);
+              }
+          }
+      }
+    result: |
+      Estudiante 1: 86.2
+      Estudiante 2: 83.2
+      Estudiante 3: 88.5
+  - domain: "Gaming — Tablero de juego"
+    description: "Un tablero de tres en raya (Tic-Tac-Toe) se modela con una matriz 3x3 de caracteres."
+    code: |
+      public class Tablero {
+          public static void main(String[] args) {
+              char[][] tablero = {
+                  {'X', 'O', 'X'},
+                  {'O', 'X', 'O'},
+                  {'O', 'X', 'X'}
+              };
+              for (int ren = 0; ren < tablero.length; ren++) {
+                  for (int col = 0; col < tablero[ren].length; col++) {
+                      System.out.print(tablero[ren][col] + " ");
+                  }
+                  System.out.println();
+              }
+              boolean ganoX = tablero[0][0] == 'X' && tablero[1][1] == 'X' && tablero[2][2] == 'X';
+              System.out.println("¿Ganó X en diagonal?: " + ganoX);
+          }
+      }
+    result: |
+      X O X
+      O X O
+      O X X
+      ¿Ganó X en diagonal?: true
+hasInteractive: false
+comparisons:
+  - title: "Arreglo 1D vs Matriz 2D"
+    items:
+      - name: "Arreglo 1D"
+        features:
+          dimensiones: "Una sola fila"
+          indices: "Un índice: arr[i]"
+          longitud: "arr.length"
+          representacion: "Lista lineal"
+          ejemplo: "int[] a = {1,2,3}"
+      - name: "Matriz 2D"
+        features:
+          dimensiones: "Filas y columnas"
+          indices: "Dos índices: mat[ren][col]"
+          longitud: "mat.length (filas), mat[i].length (cols)"
+          representacion: "Tabla / cuadrícula"
+          ejemplo: "int[][] m = {{1,2},{3,4}}"
+    recommendation: "Usa arreglos 1D para listas simples. Usa matrices 2D para datos tabulares, tableros o cualquier estructura que requiera dos coordenadas. Si necesitas más dimensiones, considera matrices 3D o clases personalizadas."
+videos:
+  - url: ""
+    title: "Matrices en Java - Curso desde cero"
+    channel: "Píldoras Informáticas"
+    summary: "Explicación de arreglos bidimensionales con ejemplos prácticos de recorrido y manipulación"
+faqs:
+  - question: "¿Cómo obtengo el número de columnas de una matriz?"
+    answer: "Usa matriz[0].length. Cada fila es un arreglo independiente, así que matriz.length da el número de filas y matriz[i].length da las columnas de la fila i."
+  - question: "¿En qué orden se recorren los elementos con ciclos anidados?"
+    answer: "El ciclo externo recorre las filas (renglones) y el interno recorre las columnas. El orden es: [0][0] → [0][1] → [0][2] → ... → [1][0] → [1][1] → ... hasta completar todas las filas."
+  - question: "¿Qué es una matriz irregular y cómo se maneja?"
+    answer: "En Java las filas pueden tener distinto número de columnas. Se declaran sin especificar la segunda dimensión: int[][] m = new int[3][]; luego se asigna cada fila individualmente. Al recorrer, usa m[i].length como límite del ciclo interno."
+  - question: "¿Cómo imprimo una matriz sin usar ciclos?"
+    answer: "Usa Arrays.deepToString(matriz) que devuelve una representación en cadena de la matriz. Necesitas importar java.util.Arrays."
+  - question: "¿Cuál es la diferencia entre matriz.length y matriz[i].length?"
+    answer: "matriz.length devuelve el número de filas (renglones). matriz[i].length devuelve el número de columnas de la fila i. En una matriz rectangular (todas las filas iguales), matriz[0].length es suficiente."
+sources:
+  - title: "Java Tutorials — Arrays (Oracle)"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    date: "2026-07-29"
+  - title: "Java 21 Language Specification — Array Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## ¿Qué es una matriz?
+
+Una **matriz** (arreglo bidimensional) es una estructura de datos que organiza elementos en filas y columnas. En Java, una matriz es simplemente un "arreglo de arreglos": cada elemento de la matriz es otro arreglo.
+
+Imagina una **hoja de cálculo de Excel**: necesitas una fila y una columna para acceder a una celda. En Java, eso se escribe `matriz[fila][columna]`.
+
+## Declaración e inicialización
+
+```java
+// Sintaxis completa: 3 filas, 4 columnas
+int[][] matriz = new int[3][4];
+
+// Sintaxis simplificada con valores
+int[][] tabla = {
+    {100, 200, 300},
+    {400, 500, 600}
+};
+
+// Matriz irregular (cada fila con distinto tamaño)
+int[][] irregular = new int[3][];
+irregular[0] = new int[2];
+irregular[1] = new int[4];
+irregular[2] = new int[3];
+```
+
+## longitudes: filas vs columnas
+
+```java
+int[][] m = {
+    {100, 200, 300},
+    {400, 500, 600}
+};
+
+System.out.println(m.length);      // 2 (filas)
+System.out.println(m[0].length);   // 3 (columnas de fila 0)
+System.out.println(m[1].length);   // 3 (columnas de fila 1)
+```
+
+## Recorrer una matriz con ciclos anidados
+
+<CodeBlock lang="java" title="Recorrer matriz con for anidados">
+{`public class RecorrerMatriz {
+    public static void main(String[] args) {
+        int[][] matriz = {
+            {100, 200, 300},
+            {400, 500, 600}
+        };
+
+        for (int ren = 0; ren < matriz.length; ren++) {
+            for (int col = 0; col < matriz[ren].length; col++) {
+                System.out.printf("[%d][%d] = %d%n", ren, col, matriz[ren][col]);
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+[0][0] = 100
+[0][1] = 200
+[0][2] = 300
+[1][0] = 400
+[1][1] = 500
+[1][2] = 600
+```
+
+### Orden de recorrido
+
+```
+Matriz 2x3: [0][0] → [0][1] → [0][2] → (ren pasa a 1) → [1][0] → [1][1] → [1][2] → fin
+```
+
+- **Ciclo externo** (`ren`): recorre las filas
+- **Ciclo interno** (`col`): recorre las columnas de la fila actual
+
+## Cómo vive en memoria
+
+```
+STACK                    HEAP (arreglo de arreglos)
+┌─────────────┐
+│ matriz ──────┼──► [ ref0 | ref1 ]
+└─────────────┘       │       │
+                       ▼       ▼
+                [100|200|300] [400|500|600]
+```
+
+La variable `matriz` en el Stack guarda una referencia a un arreglo que contiene dos referencias, cada una apuntando a un arreglo de enteros en el Heap.
+
+## Matriz cuadrada y diagonal principal
+
+Una **matriz cuadrada** tiene el mismo número de filas y columnas (`n x n`). La **diagonal principal** son las celdas donde el índice de fila es igual al índice de columna.
+
+```java
+int[][] m = {
+    {100, 200, 300},
+    {400, 500, 600},
+    {700, 800, 900}
+};
+// Diagonal: [0][0]=100, [1][1]=500, [2][2]=900
+```
+
+<CodeBlock lang="java" title="Suma de diagonal principal">
+{`public class SumaDiagonal {
+    public static void main(String[] args) {
+        int[][] m = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        int suma = 0;
+        for (int i = 0; i < m.length; i++) {
+            suma += m[i][i];
+        }
+        System.out.println("Suma diagonal: " + suma);
+    }
+}`}
+</CodeBlock>
+
+**Salida esperada:**
+```
+Suma diagonal: 15
+```
+
+## Errores frecuentes
+
+### Error 1: Invertir índices
+```java
+// ❌ Error: primer índice es fila, segundo es columna
+matriz[col][ren] = 10;
+
+// ✅ Correcto
+matriz[ren][col] = 10;
+```
+
+### Error 2: Usar matriz.length para columnas
+```java
+// ❌ Error: matriz.length da el número de filas
+for (int col = 0; col < matriz.length; col++)
+
+// ✅ Correcto: matriz[0].length da las columnas
+for (int col = 0; col < matriz[0].length; col++)
+```
+
+### Error 3: Imprimir la matriz directamente
+```java
+// ❌ Imprime dirección de memoria: [[I@1540e19d
+System.out.println(matriz);
+
+// ✅ Usa Arrays.deepToString()
+System.out.println(Arrays.deepToString(matriz));
+```
+
+## Buenas prácticas
+
+1. **Nombra con claridad** las variables que representan filas y columnas: `for (int fila = 0; fila < matriz.length; fila++)`
+2. **Usa `matriz[i].length`** en el ciclo interno, no un número fijo
+3. **`Arrays.deepToString(matriz)`** para depuración rápida
+4. **`List<List<T>>`** cuando el tamaño de la matriz pueda cambiar dinámicamente
+
+## Preguntas frecuentes
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Fuentes
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

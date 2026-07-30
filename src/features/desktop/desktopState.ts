@@ -8,6 +8,7 @@ export function estadoInicial(): DesktopState {
 }
 
 export const ICONOS_PRINCIPALES: DesktopIcon[] = [
+  { id: 'mod-00', label: '00_Introduccion', icon: 'BookOpen', route: '/tema/introduccion-java' },
   { id: 'mod-01', label: '01_Fundamentos', icon: 'Terminal', route: '/tema/variables-y-tipos' },
   { id: 'mod-02', label: '02_Control_de_flujo', icon: 'GitBranch', route: '/tema/if-else' },
   { id: 'mod-03', label: '03_Metodos_y_Arrays', icon: 'Layers', route: '/tema/metodos' },
