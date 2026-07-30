@@ -300,10 +300,20 @@
   }
 
   .lesson-nav {
-    flex-direction: column;
+    gap: var(--space-sm);
   }
 
   .lesson-nav__link {
-    max-width: 100%;
+    max-width: 50%;
+    min-width: 0;
+    padding: var(--space-sm) var(--space-md);
+  }
+
+  .lesson-nav__link--next {
+    margin-left: auto;
+  }
+
+  .lesson-nav > div:empty {
+    display: none;
   }
 }
