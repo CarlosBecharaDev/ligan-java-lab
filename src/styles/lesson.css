@@ -115,7 +115,10 @@
 .lesson-content code {
   background: rgba(0, 0, 0, 0.08);
   color: var(--win-text);
-  border-color: var(--win-border);
+  border: 1px solid var(--win-border);
+  border-radius: 2px;
+  padding: 0.1em 0.3em;
+  font-size: 0.9em;
 }
 
 .lesson-content pre {
@@ -123,13 +126,92 @@
   border: 2px solid var(--win-border-dark);
   color: #F0E8FF;
   box-shadow: var(--shadow-md);
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  overflow-x: auto;
 }
 
 .lesson-content pre code {
   background: none;
   color: #F0E8FF;
   border: none;
+  padding: 0;
+  font-size: inherit;
 }
+
+/* --- Tablas en contenido de lección --- */
+.lesson-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: var(--space-lg);
+  font-size: var(--text-sm);
+  overflow-x: auto;
+  display: block;
+}
+
+.lesson-content table th,
+.lesson-content table td {
+  padding: var(--space-sm) var(--space-md);
+  text-align: left;
+  border: 2px solid var(--win-border);
+  vertical-align: top;
+}
+
+.lesson-content table th {
+  background: rgba(0, 0, 0, 0.1);
+  color: var(--win-text);
+  font-weight: 600;
+  font-family: var(--font-pixel);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.lesson-content table td {
+  background: var(--win-bg);
+  color: var(--win-muted);
+}
+
+.lesson-content table tr:nth-child(even) td {
+  background: var(--win-bg-alt);
+}
+
+.lesson-content table code {
+  font-size: 0.85em;
+}
+
+/* --- Animaciones de entrada --- */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.lesson-content > * {
+  animation: fadeInUp 0.4s ease both;
+}
+
+.lesson-content > *:nth-child(1) { animation-delay: 0s; }
+.lesson-content > *:nth-child(2) { animation-delay: 0.04s; }
+.lesson-content > *:nth-child(3) { animation-delay: 0.08s; }
+.lesson-content > *:nth-child(4) { animation-delay: 0.12s; }
+.lesson-content > *:nth-child(5) { animation-delay: 0.16s; }
+.lesson-content > *:nth-child(6) { animation-delay: 0.2s; }
+.lesson-content > *:nth-child(7) { animation-delay: 0.24s; }
+.lesson-content > *:nth-child(8) { animation-delay: 0.28s; }
+.lesson-content > *:nth-child(9) { animation-delay: 0.32s; }
+.lesson-content > *:nth-child(10) { animation-delay: 0.36s; }
+.lesson-content > *:nth-child(11) { animation-delay: 0.4s; }
+.lesson-content > *:nth-child(12) { animation-delay: 0.44s; }
+.lesson-content > *:nth-child(13) { animation-delay: 0.48s; }
+.lesson-content > *:nth-child(14) { animation-delay: 0.52s; }
+.lesson-content > *:nth-child(15) { animation-delay: 0.56s; }
 
 /* --- Sección de historia --- */
 .lesson-history {

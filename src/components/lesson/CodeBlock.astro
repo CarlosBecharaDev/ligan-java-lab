@@ -1,12 +1,30 @@
 ---
+import { codeToHtml } from 'shiki';
+
 export interface Props {
-  code: string;
+  code?: string;
   lang?: string;
   title?: string;
 }
 
-const { code, lang = 'java', title } = Astro.props;
+const { code: propCode, lang = 'java', title } = Astro.props;
+
+let code = propCode ?? '';
+if (!code && Astro.slots.has('default')) {
+  code = (await Astro.slots.render('default')).trim();
+}
+
 const codeId = `code-${Math.random().toString(36).slice(2, 8)}`;
+
+let highlighted: string;
+try {
+  highlighted = await codeToHtml(code, {
+    lang,
+    theme: 'github-dark-default',
+  });
+} catch {
+  highlighted = `<pre class="shiki" style="background:#1A0D2E;color:#e0e0e0"><code>${code}</code></pre>`;
+}
 ---
 
 <div class="code-block" role="region" aria-label={title ?? 'Bloque de código'}>
@@ -23,45 +41,24 @@ const codeId = `code-${Math.random().toString(36).slice(2, 8)}`;
       </button>
     </div>
   </div>
-  <pre><code class={`language-${lang}`} data-code-source={codeId}>{code}</code></pre>
+  {highlighted}
+  <pre hidden aria-hidden="true" data-code-source={codeId}>{code}</pre>
 </div>
 
 <script>
-  // Funciones auxiliares para copiar y descargar (inline para evitar imports server-side)
-  async function copiarTexto(texto: string): Promise<boolean> {
-    try {
-      await navigator.clipboard.writeText(texto);
-      return true;
-    } catch {
-      return false;
-    }
-  }
-
-  function descargarJava(codigo: string, nombre: string) {
-    const blob = new Blob([codigo], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = nombre.endsWith('.java') ? nombre : `${nombre}.java`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
-  // Los scripts de Astro son module-scoped, se ejecutan por cada componente en la página.
-  // Usamos querySelectorAll para manejar múltiples instancias de CodeBlock.
   document.querySelectorAll('[data-copy]').forEach((btn) => {
     const blockId = btn.getAttribute('data-copy')!;
     const codeEl = document.querySelector(`[data-code-source="${blockId}"]`);
 
     btn.addEventListener('click', async () => {
       const codigo = codeEl?.textContent ?? '';
-      const exito = await copiarTexto(codigo);
-      if (exito) {
+      try {
+        await navigator.clipboard.writeText(codigo);
         const original = btn.innerHTML;
         btn.innerHTML = '✅ Copiado';
         setTimeout(() => { btn.innerHTML = original; }, 2000);
+      } catch {
+        // fallback silencioso
       }
     });
   });
@@ -72,7 +69,15 @@ const codeId = `code-${Math.random().toString(36).slice(2, 8)}`;
 
     btn.addEventListener('click', () => {
       const codigo = codeEl?.textContent ?? '';
-      descargarJava(codigo, 'Ejemplo.java');
+      const blob = new Blob([codigo], { type: 'text/plain;charset=utf-8' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'Ejemplo.java';
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     });
   });
 </script>

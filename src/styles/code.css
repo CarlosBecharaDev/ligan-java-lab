@@ -2,7 +2,6 @@
    Code CSS — Retro pixel-art style for code blocks, Code Lab and CodeMirror.
    ======================================================================== */
 
-/* --- Bloque de código --- */
 .code-block {
   position: relative;
   margin-bottom: var(--space-lg);
@@ -21,10 +20,9 @@
 }
 
 .code-block__lang {
-  font-size: var(--text-xs);
+  font-size: 0.55rem;
   color: var(--win-titlebar-text);
   font-family: var(--font-pixel);
-  font-size: 0.55rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
@@ -51,12 +49,42 @@
   color: #fff;
 }
 
-.code-block pre {
+.code-block .shiki {
   margin: 0;
   border-radius: 0;
   border: none;
-  background: #1A0D2E;
-  box-shadow: none;
+  background: #1A0D2E !important;
+  padding: var(--space-md);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+.code-block .shiki code {
+  background: none;
+  border: none;
+  color: inherit;
+}
+
+/* --- Código inline en contenido --- */
+.lesson-content code {
+  background: rgba(0, 0, 0, 0.08);
+  color: var(--win-text);
+  border: 1px solid var(--win-border);
+  font-size: 0.9em;
+}
+
+.lesson-content pre {
+  background: #2D2040;
+  border: 2px solid var(--win-border-dark);
+  color: #F0E8FF;
+  box-shadow: var(--shadow-md);
+}
+
+.lesson-content pre code {
+  background: none;
+  color: #F0E8FF;
+  border: none;
 }
 
 /* --- Code Lab --- */
@@ -198,5 +226,15 @@
   .codelab__toolbar {
     flex-wrap: wrap;
     gap: var(--space-sm);
+  }
+
+  .code-block__header {
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  .code-block .shiki {
+    font-size: var(--text-xs);
+    padding: var(--space-sm);
   }
 }
