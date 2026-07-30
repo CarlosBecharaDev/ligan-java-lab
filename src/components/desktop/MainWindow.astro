@@ -1,0 +1,483 @@
+---
+import LiganLogo from '@components/ui/LiganLogo.astro';
+---
+
+<div class="win" role="dialog" aria-label="JAVA_WORKSPACE" aria-modal="true">
+  <div class="win__titlebar">
+    <span class="win__title">JAVA_WORKSPACE</span>
+    <div class="win__controls">
+      <button class="win__btn" aria-label="Minimizar"></button>
+      <button class="win__btn" aria-label="Maximizar"></button>
+      <button class="win__btn win__btn--close" aria-label="Cerrar"></button>
+    </div>
+  </div>
+
+  <div class="win__body">
+
+    <nav class="sidebar">
+      <div class="sidebar__brand">
+        <LiganLogo />
+      </div>
+      <ul class="sidebar__menu">
+        <li><a href="/" class="sidebar__link sidebar__link--active">⌂ Inicio</a></li>
+        <li><a href="/ruta" class="sidebar__link">☰ Módulos</a></li>
+        <li><a href="/practica" class="sidebar__link">⚡ Code Lab</a></li>
+        <li><a href="/progreso" class="sidebar__link">📊 Progreso</a></li>
+        <li><a href="/recursos" class="sidebar__link">📖 Recursos</a></li>
+      </ul>
+    </nav>
+
+    <a href="/ruta" class="sidebar__mobile-btn">☰ MÓDULOS</a>
+
+    <main class="main">
+      <div class="main__top">
+        <span class="streak">RACHA · 🔥 3 días</span>
+      </div>
+
+      <div class="main__content">
+        <div class="main__welcome">
+          <p class="main__greeting">Bienvenido de nuevo,</p>
+          <h1 class="main__heading">Sigue aprendiendo.</h1>
+        </div>
+
+        <div class="lesson-card">
+          <span class="lesson-card__module">Módulo 02 · Fundamentos</span>
+          <h2 class="lesson-card__title">Variables y tipos</h2>
+          <p class="lesson-card__desc">Declaración, inicialización y tipos primitivos en Java.</p>
+          <div class="lesson-card__progress">
+            <div class="progress-bar">
+              <div class="progress-bar__fill"></div>
+            </div>
+            <span class="progress-bar__label">43% completado</span>
+          </div>
+          <a href="/tema/variables-y-tipos" class="cta-btn">CONTINUAR →</a>
+        </div>
+
+        <div class="challenge">
+          <span class="challenge__icon">✦</span>
+          <span class="challenge__text">Reto del día · Declara una variable · <strong>+50 XP</strong></span>
+          <a href="/tema/variables-y-tipos#ejercicios" class="challenge__link">Iniciar →</a>
+        </div>
+      </div>
+    </main>
+
+  </div>
+</div>
+
+<style>
+  /* ========================================================================
+     MainWindow — retro pixel-art ventana principal
+     ======================================================================== */
+
+  .win {
+    position: fixed;
+    display: flex;
+    flex-direction: column;
+    background: var(--win-bg);
+    border: 2px solid var(--win-border-dark);
+    border-top-color: #D0C0A0;
+    border-left-color: #D0C0A0;
+    box-shadow: var(--shadow-win);
+    overflow: hidden;
+    z-index: var(--z-window);
+    animation: winOpen 200ms ease both;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: min(90vw, 590px);
+    max-height: 85vh;
+  }
+
+  @keyframes winOpen {
+    from { opacity: 0; transform: translate(-50%, -50%) scale(0.95); }
+    to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  }
+
+  /* --- Titulo --- */
+  .win__titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 6px;
+    background: linear-gradient(90deg, var(--win-titlebar) 0%, #9898B0 50%, var(--win-titlebar) 100%);
+    user-select: none;
+    min-height: 28px;
+  }
+
+  .win__title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    font-family: var(--font-pixel);
+    font-size: 0.7rem;
+    font-weight: 400;
+    color: var(--win-titlebar-text);
+    text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.4);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .win__controls {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .win__btn {
+    width: 14px;
+    height: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    transition: opacity var(--transition);
+    padding: 0;
+  }
+
+  .win__btn:first-child { background: var(--win-minimize); }
+  .win__btn:nth-child(2) { background: var(--win-maximize); }
+  .win__btn--close { background: var(--win-close); }
+  .win__btn:hover { opacity: 0.8; }
+
+  /* --- Cuerpo: sidebar + main --- */
+  .win__body {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    background: var(--win-bg);
+    color: var(--win-text);
+    font-family: var(--font-ui);
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  /* --- Sidebar --- */
+  .sidebar {
+    width: 160px;
+    min-width: 160px;
+    display: flex;
+    flex-direction: column;
+    background: var(--win-bg-alt);
+    border-right: 2px solid var(--win-border);
+    padding: var(--space-md) var(--space-sm);
+    gap: var(--space-lg);
+  }
+
+  .sidebar__brand {
+    display: flex;
+    justify-content: center;
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--win-border);
+  }
+
+  .sidebar__brand .ligan-logo svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .sidebar__brand .logo-text strong {
+    font-size: 16px;
+  }
+
+  .sidebar__brand .logo-text small {
+    font-size: 7px;
+    letter-spacing: 2px;
+    margin-top: 4px;
+  }
+
+  .sidebar__menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .sidebar__link {
+    display: block;
+    padding: 6px 8px;
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    color: var(--win-muted);
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background var(--transition), color var(--transition);
+    border-radius: var(--radius-sm);
+  }
+
+  .sidebar__link:hover {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--win-text);
+    text-decoration: none;
+  }
+
+  .sidebar__link--active {
+    background: rgba(255, 215, 0, 0.12);
+    color: #A85499;
+    border-color: var(--win-border);
+    font-weight: 600;
+  }
+
+  .sidebar__mobile-btn {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: 8px;
+    margin: 0 var(--space-sm) var(--space-sm);
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    color: var(--win-text);
+    background: var(--win-bg-alt);
+    border: 1px solid var(--win-border);
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+  }
+
+  .sidebar__mobile-btn:hover {
+    background: rgba(255, 215, 0, 0.1);
+    text-decoration: none;
+  }
+
+  /* --- Main area --- */
+  .main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--space-lg);
+    overflow-y: auto;
+    gap: var(--space-md);
+  }
+
+  .main__top {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: var(--space-xs);
+  }
+
+  .streak {
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: var(--win-muted);
+    padding: 4px 8px;
+    border: 1px solid var(--win-border);
+    background: rgba(255, 215, 0, 0.05);
+  }
+
+  .main__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--space-lg);
+  }
+
+  .main__greeting {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--win-muted);
+    margin: 0;
+  }
+
+  .main__heading {
+    font-family: var(--font-pixel);
+    font-size: var(--text-xl);
+    color: var(--win-text);
+    margin: var(--space-xs) 0 0;
+    line-height: 1.2;
+  }
+
+  /* --- Lesson card --- */
+  .lesson-card {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    border: 2px solid var(--win-border);
+    background: var(--win-bg);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
+  }
+
+  .lesson-card__module {
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: #A85499;
+    letter-spacing: 0.05em;
+  }
+
+  .lesson-card__title {
+    font-family: var(--font-pixel);
+    font-size: var(--text-base);
+    color: var(--win-text);
+    margin: 0;
+    line-height: 1.3;
+  }
+
+  .lesson-card__desc {
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    color: var(--win-muted);
+    margin: 0;
+  }
+
+  .lesson-card__progress {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+
+  .progress-bar {
+    flex: 1;
+    height: 10px;
+    background: rgba(0, 0, 0, 0.08);
+    border: 1px solid var(--win-border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .progress-bar__fill {
+    height: 100%;
+    width: 43%;
+    background: #A85499;
+    animation: progressPulse 3s steps(10) infinite alternate;
+  }
+
+  @keyframes progressPulse {
+    0% { width: 43%; }
+    100% { width: 67%; }
+  }
+
+  .progress-bar__label {
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    color: var(--win-muted);
+    white-space: nowrap;
+  }
+
+  .cta-btn {
+    display: inline-block;
+    align-self: flex-start;
+    padding: 8px 20px;
+    margin-top: var(--space-xs);
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--win-bg);
+    background: #A85499;
+    border: 2px solid transparent;
+    border-top-color: #C874BB;
+    border-left-color: #C874BB;
+    border-bottom-color: #803878;
+    border-right-color: #803878;
+    text-decoration: none;
+    cursor: pointer;
+    animation: btnPulse 2s steps(4) infinite;
+    transition: filter var(--transition);
+  }
+
+  .cta-btn:hover {
+    filter: brightness(1.15);
+    text-decoration: none;
+  }
+
+  @keyframes btnPulse {
+    0%, 100% { box-shadow: 0 0 0 rgba(168, 84, 153, 0); }
+    50% { box-shadow: 0 0 6px rgba(168, 84, 153, 0.4); }
+  }
+
+  /* --- Challenge --- */
+  .challenge {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    padding: var(--space-sm) var(--space-md);
+    border-top: 1px solid var(--win-border);
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    color: var(--win-muted);
+  }
+
+  .challenge__icon {
+    color: #A85499;
+    font-size: var(--text-sm);
+  }
+
+  .challenge__text strong {
+    color: #A85499;
+    font-weight: 600;
+  }
+
+  .challenge__link {
+    margin-left: auto;
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: var(--win-link);
+    text-decoration: none;
+    white-space: nowrap;
+  }
+
+  .challenge__link:hover {
+    text-decoration: underline;
+  }
+
+  /* --- Reduced motion --- */
+  @media (prefers-reduced-motion: reduce) {
+    .win { animation: none; }
+    .progress-bar__fill { animation: none; width: 43%; }
+    .cta-btn { animation: none; }
+  }
+
+  /* --- Mobile --- */
+  @media (max-width: 767px) {
+    .win {
+      position: fixed;
+      inset: 0;
+      width: 100% !important;
+      height: 100% !important;
+      max-height: 100vh !important;
+      transform: none !important;
+      border-radius: 0;
+    }
+
+    .win__titlebar {
+      cursor: default;
+    }
+
+    .sidebar {
+      display: none;
+    }
+
+    .sidebar__mobile-btn {
+      display: flex;
+    }
+
+    .win__body {
+      flex-direction: column;
+    }
+
+    .main {
+      padding: var(--space-md);
+    }
+
+    .main__heading {
+      font-size: var(--text-lg);
+    }
+
+    .streak {
+      font-size: 0.45rem;
+    }
+
+    .challenge {
+      flex-wrap: wrap;
+      gap: var(--space-xs);
+    }
+
+    .challenge__link {
+      margin-left: 0;
+    }
+  }
+</style>
