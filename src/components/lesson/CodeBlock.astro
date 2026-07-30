@@ -65,9 +65,7 @@ try {
       </button>
     </div>
   </div>
-  <div class="code-block__body">
-    {highlighted}
-  </div>
+  <div class="code-block__body" set:html={highlighted} />
   <pre hidden aria-hidden="true" data-code-source={codeId}>{code}</pre>
 </div>
 
