@@ -22,8 +22,13 @@ try {
     lang,
     theme: 'github-dark-default',
   });
+  // Solo reemplazar el background del pre, mantener colores de tokens
+  highlighted = highlighted
+    .replace(/(<pre[^>]*style=")background-color:#[0-9a-fA-F]+/g, '$1background-color:#1A0D2E')
+    // Asegurar saltos de línea entre spans de línea
+    .replace(/<\/span> <span class="line">/g, '</span>\n<span class="line">');
 } catch {
-  highlighted = `<pre class="shiki" style="background:#1A0D2E;color:#e0e0e0"><code>${code}</code></pre>`;
+  highlighted = `<pre class="shiki" style="background-color:#1A0D2E;color:#e6edf3"><code>\n${code.split('\n').map(l => `<span class="line">${l}</span>`).join('\n')}\n</code></pre>`;
 }
 ---
 
