@@ -29,18 +29,23 @@ try {
   const result = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
   const lines = result.tokens;
 
-  const linesHtml = lines.map(function(lineTokens) {
+  var pad = String(lines.length).length;
+  const linesHtml = lines.map(function(lineTokens, i) {
+    var num = String(i + 1).padStart(pad, ' ');
     var inner = lineTokens.map(function(t) {
       var c = t.color || '#e6edf3';
       return '<span style="color:' + c + '">' + escHtml(t.content) + '</span>';
     }).join('');
-    return '<div class="l">' + inner + '</div>';
+    return '<div class="l"><span class="ln">' + num + '</span>' + inner + '</div>';
   }).join('');
 
   highlighted = '<div class="s">' + linesHtml + '</div>';
 } catch {
-  const fallbackLines = code.split('\n').map(function(l) {
-    return '<div class="l">' + escHtml(l) + '</div>';
+  var lines = code.split('\n');
+  var pad = String(lines.length).length;
+  const fallbackLines = lines.map(function(l, i) {
+    var num = String(i + 1).padStart(pad, ' ');
+    return '<div class="l"><span class="ln">' + num + '</span>' + escHtml(l) + '</div>';
   }).join('');
   highlighted = '<div class="s">' + fallbackLines + '</div>';
 }

@@ -68,6 +68,16 @@
   white-space: pre;
 }
 
+.code-block__body .ln {
+  display: inline-block;
+  width: 2.5em;
+  text-align: right;
+  margin-right: 1em;
+  color: #8B949E;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
 /* --- Código inline en contenido --- */
 .lesson-content code {
   background: rgba(0, 0, 0, 0.08);
