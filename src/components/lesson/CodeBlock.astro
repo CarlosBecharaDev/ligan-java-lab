@@ -14,6 +14,19 @@ if (!code && Astro.slots.has('default')) {
   code = (await Astro.slots.render('default')).trim();
 }
 
+// Astro's slot rendering HTML-escapes content (&quot; &#39; &lt; &gt; &amp;).
+// We must decode those entities so Shiki receives clean source code.
+function unescapeHtml(s: string): string {
+  return s
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&amp;/g, '&');
+}
+
+code = unescapeHtml(code);
+
 const codeId = `code-${Math.random().toString(36).slice(2, 8)}`;
 
 function escHtml(s: string): string {
