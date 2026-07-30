@@ -26,9 +26,10 @@ try {
     themes: ['github-dark-default'],
     langs: [lang],
   });
-  const tokens = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
+  const result = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
+  const lines = result.tokens;
 
-  const linesHtml = tokens.map(lineTokens => {
+  const linesHtml = lines.map(lineTokens => {
     const spans = lineTokens.map(t => {
       const color = t.color || '#e6edf3';
       return `<span style="color:${color}">${escHtml(t.content)}</span>`;
