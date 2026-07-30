@@ -1,5 +1,5 @@
 ---
-import { codeToHtml } from 'shiki';
+import { createHighlighter } from 'shiki';
 
 export interface Props {
   code?: string;
@@ -16,19 +16,29 @@ if (!code && Astro.slots.has('default')) {
 
 const codeId = `code-${Math.random().toString(36).slice(2, 8)}`;
 
+function escHtml(s: string): string {
+  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
 let highlighted: string;
 try {
-  highlighted = await codeToHtml(code, {
-    lang,
-    theme: 'github-dark-default',
+  const highlighter = await createHighlighter({
+    themes: ['github-dark-default'],
+    langs: [lang],
   });
-  // Solo reemplazar el background del pre, mantener colores de tokens
-  highlighted = highlighted
-    .replace(/(<pre[^>]*style=")background-color:#[0-9a-fA-F]+/g, '$1background-color:#1A0D2E')
-    // Asegurar saltos de línea entre spans de línea
-    .replace(/<\/span> <span class="line">/g, '</span>\n<span class="line">');
+  const tokens = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
+
+  const linesHtml = tokens.map(lineTokens => {
+    const spans = lineTokens.map(t => {
+      const color = t.color || '#e6edf3';
+      return `<span style="color:${color}">${escHtml(t.content)}</span>`;
+    }).join('');
+    return `<span class="line">${spans}</span>`;
+  }).join('\n');
+
+  highlighted = `<pre class="shiki github-dark-default" style="background-color:#1A0D2E;color:#e6edf3" tabindex="0"><code>\n${linesHtml}\n</code></pre>`;
 } catch {
-  highlighted = `<pre class="shiki" style="background-color:#1A0D2E;color:#e6edf3"><code>\n${code.split('\n').map(l => `<span class="line">${l}</span>`).join('\n')}\n</code></pre>`;
+  highlighted = `<pre class="shiki" style="background-color:#1A0D2E;color:#e6edf3" tabindex="0"><code>\n${code.split('\n').map(l => `<span class="line">${l}</span>`).join('\n')}\n</code></pre>`;
 }
 ---
 

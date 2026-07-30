@@ -72,7 +72,7 @@
 }
 
 .code-block .shiki .line {
-  display: block;
+  display: block !important;
   min-height: 1.2em;
 }
 
