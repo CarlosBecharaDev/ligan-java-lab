@@ -49,31 +49,23 @@
   color: #fff;
 }
 
-.code-block .shiki {
-  margin: 0;
-  border-radius: 0;
-  border: none;
+.code-block__body {
+  background: #1A0D2E;
+  overflow-x: auto;
   padding: var(--space-md);
   font-size: var(--text-sm);
   line-height: 1.6;
-  overflow-x: auto;
-  white-space: pre;
-  word-spacing: normal;
-  word-break: normal;
   tab-size: 2;
 }
 
-.code-block .shiki code {
-  background: none;
-  border: none;
-  color: inherit;
-  white-space: pre;
-  word-break: normal;
+.code-block__body .s {
+  font-family: var(--font-mono);
 }
 
-.code-block .shiki .line {
-  display: block !important;
+.code-block__body .l {
+  display: block;
   min-height: 1.2em;
+  white-space: pre;
 }
 
 /* --- Código inline en contenido --- */

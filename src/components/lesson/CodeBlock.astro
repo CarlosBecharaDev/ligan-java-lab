@@ -29,17 +29,20 @@ try {
   const result = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
   const lines = result.tokens;
 
-  const linesHtml = lines.map(lineTokens => {
-    const spans = lineTokens.map(t => {
-      const color = t.color || '#e6edf3';
-      return `<span style="color:${color}">${escHtml(t.content)}</span>`;
+  const linesHtml = lines.map(function(lineTokens) {
+    var inner = lineTokens.map(function(t) {
+      var c = t.color || '#e6edf3';
+      return '<span style="color:' + c + '">' + escHtml(t.content) + '</span>';
     }).join('');
-    return `<span class="line" style="display:block">${spans}</span>`;
-  }).join('\n');
+    return '<div class="l">' + inner + '</div>';
+  }).join('');
 
-  highlighted = `<pre class="shiki github-dark-default" style="background-color:#1A0D2E;color:#e6edf3;white-space:pre;overflow-x:auto;padding:1rem;font-size:1rem;line-height:1.6;margin:0;border:0;border-radius:0" tabindex="0"><code style="white-space:pre">\n${linesHtml}\n</code></pre>`;
+  highlighted = '<div class="s">' + linesHtml + '</div>';
 } catch {
-  highlighted = `<pre class="shiki" style="background-color:#1A0D2E;color:#e6edf3" tabindex="0"><code>\n${code.split('\n').map(l => `<span class="line">${l}</span>`).join('\n')}\n</code></pre>`;
+  const fallbackLines = code.split('\n').map(function(l) {
+    return '<div class="l">' + escHtml(l) + '</div>';
+  }).join('');
+  highlighted = '<div class="s">' + fallbackLines + '</div>';
 }
 ---
 
@@ -57,7 +60,9 @@ try {
       </button>
     </div>
   </div>
-  {highlighted}
+  <div class="code-block__body">
+    {highlighted}
+  </div>
   <pre hidden aria-hidden="true" data-code-source={codeId}>{code}</pre>
 </div>
 
