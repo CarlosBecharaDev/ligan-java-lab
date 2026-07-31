@@ -1,0 +1,161 @@
+---
+import { SPOTIFY_CLIENT_ID } from '@lib/spotify';
+---
+
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex" />
+    <title>Conectando Spotify…</title>
+    <style>
+      :root { color-scheme: dark; }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #0A0A0A;
+        color: #C0C0C0;
+        font-family: 'Press Start 2P', monospace;
+        padding: 24px;
+      }
+      .card {
+        text-align: center;
+        max-width: 420px;
+        border: 2px solid #FFD700;
+        background: #111;
+        padding: 32px;
+        box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+      }
+      .spinner {
+        width: 32px;
+        height: 32px;
+        border: 4px solid #333;
+        border-top-color: #1ED760;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        animation: spin 0.9s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+      h1 { font-size: 12px; color: #FFD700; margin-bottom: 16px; line-height: 1.6; }
+      p { font-size: 9px; line-height: 1.8; color: #C0C0C0; }
+      .error { color: #FF5F57; margin-top: 16px; font-size: 9px; line-height: 1.8; }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <div class="spinner"></div>
+      <h1>CONECTANDO SPOTIFY…</h1>
+      <p>Guardando tu sesión…</p>
+    </div>
+
+    <script is:inline set:html={`
+      (function () {
+        var CLIENT_ID = ${JSON.stringify(SPOTIFY_CLIENT_ID)};
+        var VERIFIER_KEY = 'spotify_pkce_verifier';
+        var STATE_KEY = 'spotify_pkce_state';
+        var TOKENS_KEY = 'spotify_tokens';
+
+        function redirectUri() {
+          var host = window.location.hostname;
+          if (host === 'localhost' || host === '127.0.0.1') {
+            return 'http://localhost:4321/spotify-callback';
+          }
+          return 'https://ligan-java-lab.vercel.app/spotify-callback';
+        }
+
+        function done() {
+          var target = sessionStorage.getItem('spotify_return') || '/';
+          sessionStorage.removeItem('spotify_return');
+          window.location.replace(target);
+        }
+
+        function clearAuth() {
+          localStorage.removeItem(TOKENS_KEY);
+          localStorage.removeItem(VERIFIER_KEY);
+          localStorage.removeItem(STATE_KEY);
+        }
+
+        function onError(msg) {
+          var card = document.querySelector('.card');
+          if (!card) return done();
+          card.innerHTML =
+            '<h1>ERROR DE CONEXI\u00D3N</h1>' +
+            '<p class="error">' + (msg || 'No se pudo conectar con Spotify.') + '</p>' +
+            '<button style="margin-top:20px;padding:10px 18px;border:2px solid #FFD700;background:#111;color:#FFD700;font-family:inherit;font-size:9px;cursor:pointer;box-shadow:2px 2px 0 #000;" onclick="window.location.href=\\'/\\'">VOLVER</button>';
+        }
+
+        (async function () {
+          try {
+            var params = new URLSearchParams(window.location.search);
+            var code = params.get('code');
+            var state = params.get('state');
+            var error = params.get('error');
+
+            if (error) {
+              clearAuth();
+              onError('Spotify rechaz\u00F3 la conexi\u00F3n (' + error + ').');
+              return;
+            }
+            if (!code) {
+              clearAuth();
+              onError('No se recibi\u00F3 el c\u00F3digo de autorizaci\u00F3n.');
+              return;
+            }
+
+            var expectedState = localStorage.getItem(STATE_KEY);
+            if (expectedState && state !== expectedState) {
+              clearAuth();
+              onError('La sesi\u00F3n no coincide. Intenta de nuevo.');
+              return;
+            }
+
+            var verifier = localStorage.getItem(VERIFIER_KEY);
+            if (!verifier) {
+              clearAuth();
+              onError('Sesi\u00F3n expirada. Vuelve a conectar desde la p\u00E1gina.');
+              return;
+            }
+
+            var body = new URLSearchParams({
+              grant_type: 'authorization_code',
+              code: code,
+              redirect_uri: redirectUri(),
+              client_id: CLIENT_ID,
+              code_verifier: verifier,
+            });
+
+            var res = await fetch('https://accounts.spotify.com/api/token', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+              body: body.toString(),
+            });
+
+            if (!res.ok) {
+              clearAuth();
+              onError('Spotify respondi\u00F3 con error (' + res.status + ').');
+              return;
+            }
+
+            var data = await res.json();
+            var tokens = {
+              access_token: data.access_token,
+              refresh_token: data.refresh_token,
+              expires_at: Date.now() + data.expires_in * 1000,
+            };
+            localStorage.setItem(TOKENS_KEY, JSON.stringify(tokens));
+            localStorage.removeItem(VERIFIER_KEY);
+            localStorage.removeItem(STATE_KEY);
+            done();
+          } catch (e) {
+            clearAuth();
+            onError(e && e.message ? e.message : String(e));
+          }
+        })();
+      })();
+    `} />
+  </body>
+</html>

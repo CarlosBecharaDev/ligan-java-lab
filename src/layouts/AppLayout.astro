@@ -4,6 +4,7 @@ import '@styles/animations.css';
 import '@styles/desktop.css';
 import Desktop from '../components/desktop/Desktop.astro';
 import Taskbar from '../components/desktop/Taskbar.astro';
+import RetroPlayer from '../components/desktop/RetroPlayer.astro';
 import RetroChars from '@components/desktop/RetroChars.astro';
 import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
 import { THEME_CLIENT_SCRIPT } from '@lib/theme';
@@ -42,6 +43,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
         <slot />
       </Desktop>
       <Taskbar />
+      <RetroPlayer />
     </div>
     <RetroChars />
     <script is:inline set:html={I18N_CLIENT_SCRIPT} />

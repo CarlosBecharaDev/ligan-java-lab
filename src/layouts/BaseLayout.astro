@@ -7,6 +7,7 @@ import '@styles/code.css';
 import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
 import { THEME_CLIENT_SCRIPT } from '@lib/theme';
 import Taskbar from '../components/desktop/Taskbar.astro';
+import RetroPlayer from '../components/desktop/RetroPlayer.astro';
 
 export interface Props {
   title: string;
@@ -43,6 +44,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
   <body>
     <slot />
     <Taskbar />
+    <RetroPlayer />
     <script is:inline set:html={I18N_CLIENT_SCRIPT} />
   </body>
   <style>

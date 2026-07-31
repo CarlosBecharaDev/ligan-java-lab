@@ -1,0 +1,644 @@
+---
+import { SPOTIFY_CLIENT_ID } from '@lib/spotify';
+---
+
+<div class="retro-player" data-retro-player data-connected="false" data-loading="false">
+  <div class="retro-player__led" aria-hidden="true"></div>
+
+  <!-- Estado: sin conectar -->
+  <div class="retro-player__idle" data-view="idle">
+    <div class="retro-player__speaker" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="34" height="34" fill="#1ED760" aria-hidden="true">
+        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9.5l7-4.5v9l-7-4.5z"/>
+      </svg>
+    </div>
+    <p class="retro-player__title">SPOTIFY<br>JUKBOX</p>
+    <button class="retro-player__connect" data-connect>CONECTAR SPOTIFY</button>
+    <p class="retro-player__hint">Muestra lo que escuchas y controla tu música desde aquí.</p>
+  </div>
+
+  <!-- Estado: conectando -->
+  <div class="retro-player__loading" data-view="loading" hidden>
+    <div class="retro-player__spinner" aria-hidden="true"></div>
+    <p class="retro-player__hint">Conectando con Spotify…</p>
+  </div>
+
+  <!-- Estado: conectado -->
+  <div class="retro-player__playing" data-view="playing" hidden>
+    <div class="retro-player__row">
+      <div class="retro-player__cover" data-cover aria-hidden="true">
+        <span class="retro-player__cover-fallback">♪</span>
+        <img data-cover-img alt="" />
+      </div>
+      <div class="retro-player__meta">
+        <div class="retro-player__track" data-track>—</div>
+        <div class="retro-player__artist" data-artist>—</div>
+        <div class="retro-player__device" data-device></div>
+      </div>
+    </div>
+
+    <div class="retro-player__progress">
+      <div class="retro-player__bar" data-bar>
+        <div class="retro-player__bar-fill" data-bar-fill></div>
+        <div class="retro-player__bar-knob" data-bar-knob></div>
+      </div>
+      <div class="retro-player__times">
+        <span data-time-cur>0:00</span>
+        <span data-time-total>0:00</span>
+      </div>
+    </div>
+
+    <div class="retro-player__controls">
+      <button class="retro-player__btn" data-prev aria-label="Anterior">⏮</button>
+      <button class="retro-player__btn retro-player__btn--main" data-toggle aria-label="Reproducir/Pausar">
+        <span data-toggle-icon>▶</span>
+      </button>
+      <button class="retro-player__btn" data-next aria-label="Siguiente">⏭</button>
+      <button class="retro-player__btn retro-player__btn--disconnect" data-disconnect aria-label="Desconectar Spotify">✕</button>
+    </div>
+    <p class="retro-player__premium-note" data-premium-note hidden>⚠ Control requiere cuenta Premium de Spotify.</p>
+  </div>
+</div>
+
+<style>
+  .retro-player {
+    position: fixed;
+    top: 12px;
+    right: 12px;
+    width: 260px;
+    z-index: calc(var(--z-window) + 1);
+    background: linear-gradient(160deg, #222 0%, #0a0a0a 100%);
+    border: 2px solid #333;
+    border-top-color: #555;
+    border-left-color: #444;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 0, 0, 0.5);
+    font-family: var(--font-pixel);
+    color: var(--taskbar-text);
+    overflow: hidden;
+  }
+
+  .retro-player__led {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #333;
+    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
+    transition: background 0.3s;
+  }
+
+  .retro-player[data-connected="true"] .retro-player__led {
+    background: #1ED760;
+    box-shadow: 0 0 6px #1ED760;
+  }
+
+  .retro-player[data-loading="true"] .retro-player__led {
+    background: #FFD700;
+    box-shadow: 0 0 6px #FFD700;
+    animation: ledBlink 1s steps(2) infinite;
+  }
+
+  @keyframes ledBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .retro-player__idle,
+  .retro-player__loading,
+  .retro-player__playing {
+    padding: 14px 14px 16px;
+  }
+
+  .retro-player__idle {
+    text-align: center;
+  }
+
+  .retro-player__speaker {
+    margin: 0 auto 10px;
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid #2a2a2a;
+    border-radius: 50%;
+    background: #111;
+    box-shadow: inset 0 0 0 3px #1a1a1a;
+  }
+
+  .retro-player__title {
+    font-size: 0.55rem;
+    line-height: 1.6;
+    color: var(--taskbar-text);
+    margin: 0 0 12px;
+    letter-spacing: 0.05em;
+  }
+
+  .retro-player__connect {
+    display: block;
+    width: 100%;
+    padding: 10px 8px;
+    font-family: var(--font-pixel);
+    font-size: 0.5rem;
+    color: #0a0a0a;
+    background: #1ED760;
+    border: 2px solid transparent;
+    border-top-color: #7BE8A7;
+    border-left-color: #7BE8A7;
+    border-bottom-color: #128A44;
+    border-right-color: #128A44;
+    cursor: pointer;
+    transition: filter var(--transition);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .retro-player__connect:hover {
+    filter: brightness(1.12);
+  }
+
+  .retro-player__hint {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--taskbar-text);
+    opacity: 0.75;
+    margin: 10px 0 0;
+    line-height: 1.4;
+  }
+
+  .retro-player__loading {
+    text-align: center;
+  }
+
+  .retro-player__spinner {
+    width: 28px;
+    height: 28px;
+    margin: 6px auto;
+    border: 3px solid #333;
+    border-top-color: #1ED760;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .retro-player__row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+
+  .retro-player__cover {
+    position: relative;
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    background: #111;
+    border: 2px solid #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .retro-player__cover-fallback {
+    font-size: 1.2rem;
+    color: #1ED760;
+  }
+
+  .retro-player__cover img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: none;
+  }
+
+  .retro-player__cover[data-has-img="true"] .retro-player__cover-fallback {
+    display: none;
+  }
+
+  .retro-player__cover[data-has-img="true"] img {
+    display: block;
+  }
+
+  .retro-player__meta {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .retro-player__track {
+    font-size: 0.5rem;
+    color: #fff;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+  }
+
+  .retro-player__artist {
+    font-family: var(--font-ui);
+    font-size: var(--text-sm);
+    color: var(--taskbar-text);
+    opacity: 0.8;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .retro-player__device {
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    color: #1ED760;
+    margin-top: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .retro-player__progress {
+    margin-bottom: 10px;
+  }
+
+  .retro-player__bar {
+    position: relative;
+    height: 10px;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    cursor: pointer;
+    overflow: hidden;
+  }
+
+  .retro-player__bar-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    background: repeating-linear-gradient(90deg, #1ED760 0 4px, #17B950 4px 8px);
+  }
+
+  .retro-player__bar-knob {
+    position: absolute;
+    top: -1px;
+    width: 4px;
+    height: 10px;
+    background: #fff;
+    border: 1px solid #0a0a0a;
+    transform: translateX(-2px);
+    display: none;
+  }
+
+  .retro-player__bar:hover .retro-player__bar-knob {
+    display: block;
+  }
+
+  .retro-player__times {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--taskbar-text);
+    opacity: 0.8;
+    margin-top: 4px;
+  }
+
+  .retro-player__controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+
+  .retro-player__btn {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-pixel);
+    font-size: 0.6rem;
+    color: var(--taskbar-text);
+    background: #1a1a1a;
+    border: 2px solid #333;
+    border-top-color: #444;
+    border-left-color: #444;
+    border-bottom-color: #222;
+    border-right-color: #222;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .retro-player__btn:hover {
+    background: #2a2a2a;
+    color: #1ED760;
+  }
+
+  .retro-player__btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  .retro-player__btn--main {
+    width: 40px;
+    height: 40px;
+    font-size: 0.75rem;
+    background: #1ED760;
+    color: #0a0a0a;
+    border-color: #7BE8A7 #128A44 #128A44 #7BE8A7;
+  }
+
+  .retro-player__btn--main:hover {
+    color: #0a0a0a;
+    background: #22E96B;
+  }
+
+  .retro-player__btn--disconnect {
+    margin-left: 4px;
+    font-size: 0.5rem;
+  }
+
+  .retro-player__premium-note {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: #FFBD2E;
+    margin: 8px 0 0;
+    text-align: center;
+    line-height: 1.4;
+  }
+
+  @media (max-width: 767px) {
+    .retro-player {
+      top: 8px;
+      right: 8px;
+      width: 200px;
+    }
+
+    .retro-player__idle,
+    .retro-player__loading,
+    .retro-player__playing {
+      padding: 10px 10px 12px;
+    }
+
+    .retro-player__speaker {
+      width: 48px;
+      height: 48px;
+    }
+
+    .retro-player__speaker svg {
+      width: 26px;
+      height: 26px;
+    }
+
+    .retro-player__title {
+      font-size: 0.45rem;
+    }
+
+    .retro-player__connect {
+      font-size: 0.42rem;
+      padding: 8px 6px;
+    }
+
+    .retro-player__cover {
+      width: 42px;
+      height: 42px;
+    }
+
+    .retro-player__track {
+      font-size: 0.42rem;
+    }
+
+    .retro-player__btn {
+      width: 28px;
+      height: 28px;
+    }
+
+    .retro-player__btn--main {
+      width: 34px;
+      height: 34px;
+    }
+  }
+</style>
+
+<script>
+  import {
+    startSpotifyAuth,
+    getPlayerState,
+    controlSpotify,
+    seekSpotify,
+    isSpotifyConnected,
+    clearSpotifyAuth,
+  } from '@lib/spotify';
+
+  const root = document.querySelector<HTMLElement>('[data-retro-player]');
+  if (root) {
+    const VIEWS = { idle: '[data-view="idle"]', loading: '[data-view="loading"]', playing: '[data-view="playing"]' } as const;
+
+    const connectBtn = root.querySelector<HTMLButtonElement>('[data-connect]');
+    const disconnectBtn = root.querySelector<HTMLButtonElement>('[data-disconnect]');
+    const toggleBtn = root.querySelector<HTMLButtonElement>('[data-toggle]');
+    const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]');
+    const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]');
+    const trackEl = root.querySelector<HTMLElement>('[data-track]');
+    const artistEl = root.querySelector<HTMLElement>('[data-artist]');
+    const deviceEl = root.querySelector<HTMLElement>('[data-device]');
+    const coverEl = root.querySelector<HTMLElement>('[data-cover]');
+    const coverImg = root.querySelector<HTMLImageElement>('[data-cover-img]');
+    const bar = root.querySelector<HTMLElement>('[data-bar]');
+    const barFill = root.querySelector<HTMLElement>('[data-bar-fill]');
+    const timeCur = root.querySelector<HTMLElement>('[data-time-cur]');
+    const timeTotal = root.querySelector<HTMLElement>('[data-time-total]');
+    const toggleIcon = root.querySelector<HTMLElement>('[data-toggle-icon]');
+    const premiumNote = root.querySelector<HTMLElement>('[data-premium-note]');
+    const buttons = root.querySelectorAll<HTMLButtonElement>('.retro-player__btn');
+
+    let pollTimer: number | undefined;
+
+    function showView(name: 'idle' | 'loading' | 'playing') {
+      (Object.keys(VIEWS) as (keyof typeof VIEWS)[]).forEach((key) => {
+        const el = root.querySelector<HTMLElement>(VIEWS[key]);
+        if (el) el.hidden = key !== name;
+      });
+    }
+
+    function setConnected(on: boolean) {
+      root.setAttribute('data-connected', on ? 'true' : 'false');
+      root.setAttribute('data-loading', 'false');
+    }
+
+    function fmt(ms: number): string {
+      if (!ms || isNaN(ms)) return '0:00';
+      const total = Math.round(ms / 1000);
+      const m = Math.floor(total / 60);
+      const s = total % 60;
+      return m + ':' + (s < 10 ? '0' : '') + s;
+    }
+
+    function coverUrl(track: { album?: { images?: { url: string }[] } } | null): string {
+      if (!track || !track.album || !track.album.images || track.album.images.length === 0) return '';
+      const imgs = track.album.images;
+      const pick = imgs.find((i) => i && i.url && i.url.includes('300')) || imgs[imgs.length - 1];
+      return pick ? pick.url : '';
+    }
+
+    async function refresh() {
+      try {
+        const state = await getPlayerState();
+        if (!state || !state.item) {
+          trackEl && (trackEl.textContent = 'Nada sonando');
+          artistEl && (artistEl.textContent = '—');
+          if (deviceEl) deviceEl.textContent = '';
+          toggleIcon && (toggleIcon.textContent = '▶');
+          barFill && (barFill.style.width = '0%');
+          timeCur && (timeCur.textContent = '0:00');
+          timeTotal && (timeTotal.textContent = '0:00');
+          if (premiumNote) premiumNote.hidden = true;
+          return;
+        }
+
+        trackEl && (trackEl.textContent = state.item.name || '—');
+        const artists = state.item.artists ? state.item.artists.map((a) => a.name).join(', ') : '—';
+        artistEl && (artistEl.textContent = artists);
+        if (deviceEl && state.device) deviceEl.textContent = '▸ ' + (state.device.name || state.device.type || '');
+
+        const url = coverUrl(state.item);
+        if (url && coverImg) {
+          coverImg.src = url;
+          coverEl && coverEl.setAttribute('data-has-img', 'true');
+        } else {
+          if (coverImg) coverImg.removeAttribute('src');
+          coverEl && coverEl.setAttribute('data-has-img', 'false');
+        }
+
+        const dur = state.item.duration_ms || 0;
+        const prog = state.progress_ms || 0;
+        timeCur && (timeCur.textContent = fmt(prog));
+        timeTotal && (timeTotal.textContent = fmt(dur));
+        barFill && (barFill.style.width = dur ? Math.min(100, (prog / dur) * 100) + '%' : '0%');
+        toggleIcon && (toggleIcon.textContent = state.is_playing ? '❚❚' : '▶');
+      } catch (e) {
+        const msg = e && (e as Error).message;
+        if (msg === 'Not connected') {
+          stopPolling();
+          showView('idle');
+          setConnected(false);
+          return;
+        }
+        if (msg && msg.indexOf('401') > -1) {
+          stopPolling();
+          showView('idle');
+          setConnected(false);
+          return;
+        }
+      }
+    }
+
+    function startPolling() {
+      stopPolling();
+      refresh();
+      pollTimer = window.setInterval(refresh, 4000);
+    }
+
+    function stopPolling() {
+      if (pollTimer !== undefined) {
+        window.clearInterval(pollTimer);
+        pollTimer = undefined;
+      }
+    }
+
+    function showNote(text: string) {
+      if (premiumNote) {
+        premiumNote.textContent = text;
+        premiumNote.hidden = false;
+      }
+    }
+
+    function hideNote() {
+      if (premiumNote) premiumNote.hidden = true;
+    }
+
+    /**
+     * Interpreta el código HTTP de Spotify para mostrar el mensaje correcto.
+     * 403 = realmente requiere Premium. 404/204 = no hay dispositivo activo
+     * (hay que reproducir algo en la app de Spotify). 401 = token inválido.
+     */
+    function handleControlError(status: number) {
+      if (status === 403) {
+        showNote('Esta cuenta no tiene Spotify Premium y el control remoto lo requiere.');
+        return;
+      }
+      if (status === 404 || status === 204) {
+        showNote('Reproduce algo en tu app de Spotify para controlar la música.');
+        return;
+      }
+      if (status === 401) {
+        stopPolling();
+        showView('idle');
+        setConnected(false);
+        return;
+      }
+      showNote('No se pudo controlar la reproducción. Inténtalo de nuevo.');
+    }
+
+    async function act(action: Parameters<typeof controlSpotify>[0]) {
+      const res = await controlSpotify(action);
+      if (res.ok) {
+        hideNote();
+        setTimeout(refresh, 500);
+      } else {
+        handleControlError(res.status);
+      }
+    }
+
+    connectBtn?.addEventListener('click', () => {
+      sessionStorage.setItem('spotify_return', window.location.pathname);
+      root.setAttribute('data-loading', 'true');
+      showView('loading');
+      startSpotifyAuth();
+    });
+
+    disconnectBtn?.addEventListener('click', () => {
+      clearSpotifyAuth();
+      stopPolling();
+      showView('idle');
+      setConnected(false);
+    });
+
+    toggleBtn?.addEventListener('click', async () => {
+      const state = await getPlayerState().catch(() => null);
+      if (!state) return;
+      await act(state.is_playing ? 'pause' : 'play');
+      setTimeout(refresh, 300);
+    });
+
+    prevBtn?.addEventListener('click', () => act('previous'));
+    nextBtn?.addEventListener('click', () => act('next'));
+
+    bar?.addEventListener('click', async (e) => {
+      const state = await getPlayerState().catch(() => null);
+      if (!state || !state.item) return;
+      const rect = bar.getBoundingClientRect();
+      const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
+      const target = Math.round(ratio * state.item.duration_ms);
+      timeCur && (timeCur.textContent = fmt(target));
+      barFill && (barFill.style.width = ratio * 100 + '%');
+      const res = await seekSpotify(target);
+      if (res.ok) hideNote();
+      else handleControlError(res.status);
+      setTimeout(refresh, 400);
+    });
+
+    // Estado inicial
+    if (isSpotifyConnected()) {
+      setConnected(true);
+      showView('playing');
+      startPolling();
+    } else {
+      setConnected(false);
+      showView('idle');
+    }
+  }
+</script>
