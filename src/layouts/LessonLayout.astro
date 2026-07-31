@@ -48,15 +48,7 @@ const sortedModules = modules
   .map((m) => m.data)
   .sort((a, b) => a.number - b.number);
 
-const currentModule = currentModuleSlug
-  ? sortedModules.find((m) => m.slug === currentModuleSlug)
-  : undefined;
-
-const visibleModules = currentModule
-  ? sortedModules.filter((m) => m.number >= currentModule.number)
-  : sortedModules;
-
-const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
+const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
   number: m.number,
   slug: m.slug,
   title: m.title,
