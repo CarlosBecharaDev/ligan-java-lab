@@ -134,7 +134,8 @@ const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
     display: flex;
     justify-content: center;
     padding: var(--space-xl);
-    min-height: 100vh;
+    height: calc(100vh - 48px);
+    min-height: 0;
   }
 
   /* Retro window wrapper for lesson content */
@@ -149,7 +150,8 @@ const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    height: fit-content;
+    height: 100%;
+    min-height: 0;
   }
 
   .lesson-layout__titlebar {
@@ -227,13 +229,16 @@ const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
   .lesson-layout__row {
     display: flex;
     align-items: stretch;
+    flex: 1;
     min-height: 0;
+    overflow: hidden;
     border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .lesson-layout__body {
     flex: 1;
     min-width: 0;
+    overflow-y: auto;
     padding: var(--space-2xl) var(--space-xl);
     background: var(--win-bg);
     color: var(--win-text);
@@ -265,10 +270,22 @@ const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
 
     .lesson-layout__main {
       padding: var(--space-md);
+      height: auto;
+      min-height: 100vh;
+    }
+
+    .lesson-layout__window {
+      height: auto;
+    }
+
+    .lesson-layout__row {
+      flex: none;
+      overflow: visible;
     }
 
     .lesson-layout__body {
       padding: var(--space-lg) var(--space-md);
+      overflow-y: visible;
     }
 
     .lesson-layout__title {
