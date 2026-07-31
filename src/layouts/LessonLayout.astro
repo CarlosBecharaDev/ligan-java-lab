@@ -1,6 +1,11 @@
 ---
+import { getCollection } from 'astro:content';
 import BaseLayout from './BaseLayout.astro';
 import LessonNav from '@components/lesson/LessonNav.astro';
+import LessonExplorer, {
+  type ExplorerModule,
+  type ExplorerLesson,
+} from '@components/lesson/LessonExplorer.astro';
 
 export interface Props {
   title: string;
@@ -10,21 +15,76 @@ export interface Props {
   nextSlug?: string;
   nextTitle?: string;
   description?: string;
+  currentModuleSlug?: string;
+  currentSlug?: string;
+  currentId?: string;
+  headings?: { depth: number; slug: string; text: string }[];
 }
 
-const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
+const {
+  title,
+  description,
+  prevSlug,
+  prevTitle,
+  nextSlug,
+  nextTitle,
+  currentModuleSlug,
+  currentSlug = '',
+  currentId = '',
+  headings = [],
+} = Astro.props;
+
+const modules = await getCollection('modules');
+const lessons = await getCollection('lessons');
+
+const idBySlug = new Map<string, string>();
+const titleById = new Map<string, string>();
+for (const l of lessons) {
+  idBySlug.set(l.data.slug, l.id);
+  titleById.set(l.id, l.data.title);
+}
+
+const sortedModules = modules
+  .map((m) => m.data)
+  .sort((a, b) => a.number - b.number);
+
+const currentModule = currentModuleSlug
+  ? sortedModules.find((m) => m.slug === currentModuleSlug)
+  : undefined;
+
+const visibleModules = currentModule
+  ? sortedModules.filter((m) => m.number >= currentModule.number)
+  : sortedModules;
+
+const explorerModules: ExplorerModule[] = visibleModules.map((m) => ({
+  number: m.number,
+  slug: m.slug,
+  title: m.title,
+  lessons: m.lessons
+    .map((slug) => {
+      const id = idBySlug.get(slug);
+      return id ? { slug, id, title: titleById.get(id) ?? slug } : null;
+    })
+    .filter((x): x is ExplorerLesson => x !== null),
+}));
 ---
 
 <BaseLayout title={title} description={description}>
   <div class="lesson-layout">
-    <aside class="lesson-layout__sidebar" id="lesson-sidebar">
-      <button class="lesson-layout__sidebar-close" id="sidebar-close" aria-label="Cerrar menú">✕</button>
-      <slot name="sidebar" />
-    </aside>
-    
     <div class="lesson-layout__main">
       <div class="lesson-layout__window">
         <div class="lesson-layout__titlebar">
+          <div class="lesson-layout__titlebar-left">
+            <button
+              class="lesson-layout__toggle"
+              id="explorer-toggle"
+              type="button"
+              aria-expanded="false"
+              aria-controls="lesson-explorer"
+              aria-label="Abrir contenido de la lección"
+              data-i18n-aria="explorer.open"
+            >☰ Contenido</button>
+          </div>
           <span class="lesson-layout__title">{title}</span>
           <div class="lesson-layout__controls">
             <span class="lesson-layout__ctrl lesson-layout__ctrl--min"></span>
@@ -32,19 +92,31 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
             <span class="lesson-layout__ctrl lesson-layout__ctrl--close"></span>
           </div>
         </div>
-        <div class="lesson-layout__body">
-          <article class="lesson-content">
-            <slot />
-          </article>
-          <LessonNav
-            prevSlug={prevSlug}
-            prevTitle={prevTitle}
-            nextSlug={nextSlug}
-            nextTitle={nextTitle}
+
+        <div class="lesson-layout__row">
+          <LessonExplorer
+            modules={explorerModules}
+            currentModuleSlug={currentModuleSlug ?? ''}
+            currentSlug={currentSlug}
+            currentId={currentId}
+            headings={headings}
           />
+          <div class="lesson-layout__body">
+            <article class="lesson-content">
+              <slot />
+            </article>
+            <LessonNav
+              prevSlug={prevSlug}
+              prevTitle={prevTitle}
+              nextSlug={nextSlug}
+              nextTitle={nextTitle}
+            />
+          </div>
         </div>
       </div>
     </div>
+
+    <div class="lesson-layout__backdrop" id="explorer-backdrop" hidden></div>
   </div>
 </BaseLayout>
 
@@ -55,25 +127,6 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
-  }
-
-  .lesson-layout__sidebar {
-    display: none;
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: var(--sidebar-width);
-    height: 100vh;
-    z-index: 200;
-    background: var(--surface-strong);
-    border-right: 2px solid var(--line);
-    padding: var(--space-xl);
-    overflow-y: auto;
-    backdrop-filter: blur(8px);
-  }
-
-  .lesson-layout__sidebar--open {
-    display: block;
   }
 
   .lesson-layout__main {
@@ -87,7 +140,7 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
   /* Retro window wrapper for lesson content */
   .lesson-layout__window {
     width: 100%;
-    max-width: var(--content-width-lg);
+    max-width: calc(var(--content-width-lg) + var(--explorer-width, 240px));
     background: var(--win-bg);
     border: 2px solid var(--win-border-dark);
     border-top-color: var(--win-bevel);
@@ -103,9 +156,36 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 8px;
     padding: 4px 8px;
     background: linear-gradient(90deg, var(--win-titlebar) 0%, var(--win-titlebar-mid) 50%, var(--win-titlebar) 100%);
     min-height: 28px;
+  }
+
+  .lesson-layout__titlebar-left {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .lesson-layout__toggle {
+    display: none;
+    align-items: center;
+    gap: 4px;
+    min-height: 22px;
+    padding: 2px 8px;
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    color: var(--win-titlebar-text);
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+
+  .lesson-layout__toggle:hover,
+  .lesson-layout__toggle[aria-expanded="true"] {
+    background: rgba(255, 255, 255, 0.22);
   }
 
   .lesson-layout__title {
@@ -116,6 +196,8 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    flex: 1;
+    text-align: left;
   }
 
   .lesson-layout__controls {
@@ -142,12 +224,19 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     background: var(--win-close);
   }
 
+  .lesson-layout__row {
+    display: flex;
+    align-items: stretch;
+    min-height: 0;
+    border-top: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
   .lesson-layout__body {
     flex: 1;
+    min-width: 0;
     padding: var(--space-2xl) var(--space-xl);
     background: var(--win-bg);
     color: var(--win-text);
-    border-top: 1px solid rgba(255, 255, 255, 0.3);
   }
 
   .lesson-layout__body h1,
@@ -164,32 +253,14 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     color: var(--win-link);
   }
 
-  .lesson-layout__sidebar-close {
+  /* Backdrop del drawer móvil */
+  .lesson-layout__backdrop {
     display: none;
-    position: absolute;
-    top: var(--space-md);
-    right: var(--space-md);
-    background: none;
-    border: none;
-    color: var(--accent);
-    font-size: 1.25rem;
-    cursor: pointer;
-    padding: var(--space-xs);
-    line-height: 1;
   }
 
-
   @media (max-width: 767px) {
-    .lesson-layout__sidebar {
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      padding: var(--space-xl);
-      backdrop-filter: blur(12px);
-    }
-
-    .lesson-layout__sidebar-close {
-      display: flex;
+    .lesson-layout__toggle {
+      display: inline-flex;
     }
 
     .lesson-layout__main {
@@ -203,15 +274,61 @@ const { title, description, prevSlug, prevTitle, nextSlug, nextTitle } = Astro.p
     .lesson-layout__title {
       font-size: 0.5rem;
     }
-  }
 
-  @media (min-width: 768px) and (max-width: 1023px) {
-    .lesson-layout__sidebar {
-      width: 200px;
-      padding: var(--space-lg);
+    .lesson-layout__backdrop--open {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 180;
     }
   }
 </style>
 
 <script>
+  (function() {
+    const toggle = document.getElementById('explorer-toggle');
+    const backdrop = document.getElementById('explorer-backdrop');
+    const drawer = document.getElementById('lesson-explorer');
+
+    function closeDrawer() {
+      document.body.classList.remove('explorer-drawer-open');
+      if (backdrop) {
+        backdrop.classList.remove('lesson-layout__backdrop--open');
+        backdrop.hidden = true;
+      }
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function openDrawer() {
+      document.body.classList.add('explorer-drawer-open');
+      if (backdrop) {
+        backdrop.hidden = false;
+        backdrop.classList.add('lesson-layout__backdrop--open');
+      }
+      if (toggle) toggle.setAttribute('aria-expanded', 'true');
+      const first = drawer?.querySelector('a, button');
+      if (first) (first as HTMLElement).focus();
+    }
+
+    toggle?.addEventListener('click', () => {
+      const open = document.body.classList.contains('explorer-drawer-open');
+      open ? closeDrawer() : openDrawer();
+    });
+
+    backdrop?.addEventListener('click', closeDrawer);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && document.body.classList.contains('explorer-drawer-open')) {
+        closeDrawer();
+        toggle?.focus();
+      }
+    });
+
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 767 && document.body.classList.contains('explorer-drawer-open')) {
+        closeDrawer();
+      }
+    });
+  })();
 </script>

@@ -4,6 +4,23 @@ Historial cronológico de cambios del proyecto.
 
 ---
 
+## [0.1.1] — 2026-07-30
+
+### Explorador de lecciones estilo VS Code
+
+- Nuevo componente `src/components/lesson/LessonExplorer.astro`: panel lateral de navegación tipo explorador de archivos dentro de la ventana de lección.
+- Muestra el módulo actual expandido (p. ej. `01_FUNDAMENTOS`) con todas sus lecciones y el siguiente módulo colapsado debajo (p. ej. `02_CONTROL_DE_FLUJO`).
+- Lección activa resaltada con sombreado sutil + borde izquierdo de acento y `aria-current="page"`.
+- Lecciones completadas muestran un `✓` verde (leído desde `localStorage` `ligan-java-lab-progress`) con texto accesible "Completado".
+- Módulos expandibles/colapsables con caret `▸`/`▾` y `aria-expanded`.
+- Subsecciones (`##`/`###`) de la lección activa enlazadas como anclas dentro del mismo tema.
+- Escritorio: panel fijo de 240px (200px en tablet) integrado en la ventana; ventana ampliada para conservar el ancho de lectura.
+- Móvil: panel oculto como drawer lateral, abierto con el botón "☰ Contenido" de la barra de título; cierra con backdrop, `Escape` o al redimensionar a escritorio.
+- `LessonLayout.astro` reconstruido: elimina el sidebar antiguo sin uso y prepara la fila ventana = explorador + contenido.
+- `tema/[slug].astro` ahora pasa `currentModuleSlug`, `currentSlug`, `currentId`, `headings` y despacha `progress-update` al marcar completada una lección.
+
+---
+
 ## [0.1.0] — 2026-07-26
 
 ### Fase 1: MVP Completo ✅

@@ -40,7 +40,7 @@ export async function getStaticPaths() {
 }
 
 const { entry, prevSlug, prevTitle, nextSlug, nextTitle, moduleTitle } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 const { title, slug } = entry.data;
 
 // Find related quizzes and exercises
@@ -63,6 +63,10 @@ const lessonExercises = exercisesColl
   prevTitle={prevTitle}
   nextSlug={nextSlug}
   nextTitle={nextTitle}
+  currentModuleSlug={entry.data.module}
+  currentSlug={slug}
+  currentId={entry.id}
+  headings={headings ?? []}
 >
   <Content />
 
@@ -149,6 +153,7 @@ const lessonExercises = exercisesColl
 
         saveProgress(data);
         updateUI(data);
+        document.dispatchEvent(new CustomEvent('progress-update'));
       }
     });
   })();
