@@ -49,7 +49,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
             <span class="lesson-explorer__caret" aria-hidden="true" data-caret>
               {expanded ? '▾' : '▸'}
             </span>
-            <span class="lesson-explorer__module-name">{mod.slug.replace(/-/g, '_').toUpperCase()}</span>
+            <span class="lesson-explorer__module-name" title={mod.slug.replace(/-/g, '_').toUpperCase()}>{mod.slug.replace(/-/g, '_').toUpperCase()}</span>
           </button>
 
           <ul id={listId} class="lesson-explorer__lessons" hidden={!expanded}>
@@ -64,7 +64,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
                     data-slug={lesson.slug}
                   >
                     <span class="lesson-explorer__file" aria-hidden="true"></span>
-                    <span class="lesson-explorer__label">{lesson.title}</span>
+                    <span class="lesson-explorer__label" title={lesson.title}>{lesson.title}</span>
                     <span class="lesson-explorer__check" aria-hidden="true" data-check></span>
                     <span class="sr-only" data-check-label></span>
                   </a>
@@ -73,9 +73,9 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
                     <ul class="lesson-explorer__subsections">
                       {visibleHeadings.map((h) => (
                         <li>
-                          <a class="lesson-explorer__subsection" href={`#${h.slug}`}>
+                          <a class="lesson-explorer__subsection" href={`#${h.slug}`} title={h.text}>
                             <span class="lesson-explorer__hash" aria-hidden="true">#</span>
-                            {h.text}
+                            <span class="lesson-explorer__subsection-text">{h.text}</span>
                           </a>
                         </li>
                       ))}
@@ -102,7 +102,9 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     background: var(--win-bg);
     border-right: 2px solid var(--win-border);
     color: var(--win-text);
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    scrollbar-gutter: stable;
   }
 
   .lesson-explorer__title {
@@ -128,7 +130,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
   .lesson-explorer__tree {
     padding: 4px 0;
-    min-width: max-content;
+    min-width: 0;
   }
 
   .lesson-explorer__toggle {
@@ -163,6 +165,10 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
   .lesson-explorer__module-name {
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    min-width: 0;
+    flex: 1;
   }
 
   .lesson-explorer__lessons {
@@ -213,9 +219,11 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
   }
 
   .lesson-explorer__label {
-    flex: 0 1 auto;
+    flex: 1;
     min-width: 0;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .lesson-explorer__check {
@@ -243,6 +251,14 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     color: var(--win-muted);
     text-decoration: none;
     white-space: nowrap;
+    min-width: 0;
+  }
+
+  .lesson-explorer__subsection-text {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .lesson-explorer__subsection:hover {
