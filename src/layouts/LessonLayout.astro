@@ -116,6 +116,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
   .lesson-layout {
     height: calc(100vh - 48px);
     min-height: 0;
+    overflow: hidden;
     background-image: url('/wallpaper.jpg');
     background-size: cover;
     background-position: center;
@@ -262,6 +263,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
     .lesson-layout {
       height: auto;
       min-height: 100vh;
+      overflow: visible;
     }
 
     .lesson-layout__toggle {
@@ -298,6 +300,17 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
       inset: 0;
       background: rgba(0, 0, 0, 0.5);
       z-index: 180;
+    }
+  }
+</style>
+
+<style is:global>
+  /* La página de lección es una "app" a pantalla completa:
+     el scroll vive solo dentro del explorador y del contenido. */
+  @media (min-width: 768px) {
+    html:has(.lesson-layout),
+    html:has(.lesson-layout) body {
+      overflow: hidden;
     }
   }
 </style>
