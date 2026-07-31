@@ -2,9 +2,15 @@
    Tokens CSS — Ligan Java Lab (Retro Pixel-Art Theme)
    Fuente única de verdad para colores, tipografía, spacing y efectos.
    Todos los componentes consumen estos tokens. No usar valores crudos.
+
+   Dos temas globales:
+   - "nebula"  (valor por defecto): desktop retro oscuro + ventanas crema.
+   - "terminal": Midnight Terminal, Linux/dark, seleccionado con
+     data-theme="terminal" en <html>.
    ======================================================================== */
 
-:root {
+:root,
+:root[data-theme="nebula"] {
   /* --- Paleta de colores: Desktop (dark context) --- */
   --bg: #1A0D2E;
   --bg-alt: #2D1B4E;
@@ -14,6 +20,11 @@
   --muted: #B0A0C0;
   --line: #4D3B6E;
   --line-subtle: #3D2B5A;
+  --surface-strong: rgba(26, 13, 46, 0.95);
+  --desktop-overlay: rgba(26, 13, 46, 0.15);
+  --desktop-overlay-hover: rgba(255, 255, 255, 0.08);
+  --desktop-label: #FFFFFF;
+  --desktop-label-shadow: rgba(0, 0, 0, 0.9);
 
   /* --- Paleta de colores: Acentos --- */
   --accent: #FFD700;
@@ -25,10 +36,21 @@
   --pink: #FF6EC7;
   --lavender: #B794F6;
 
+  /* --- Acento de marca (rosa-violeta retro) --- */
+  --brand-accent: #A85499;
+  --brand-accent-2: #BE6CB0;
+  --brand-accent-light: #C874BB;
+  --brand-accent-dark: #803878;
+  --brand-glow: rgba(168, 84, 153, 0.45);
+
+  /* --- XP / rachas / logros --- */
+  --xp: #A85499;
+
   /* --- Paleta de colores: Window (light context) --- */
   --win-bg: #F5E6C8;
   --win-bg-alt: #EDD9A3;
   --win-titlebar: #808098;
+  --win-titlebar-mid: #9898B0;
   --win-titlebar-text: #F0E8FF;
   --win-text: #1A1A1A;
   --win-muted: #5A5040;
@@ -36,6 +58,11 @@
   --win-border-dark: #706050;
   --win-link: #2B5BA8;
   --win-link-hover: #1A3D78;
+  --win-bevel: #D0C0A0;
+  --win-bevel-bright: #FFFFFF;
+  --win-bevel-dark: #5A5040;
+  --win-bevel-bg: #E8D5B5;
+  --win-bevel-bg-active: #D8C5A5;
 
   /* --- Window controls (macOS style) --- */
   --win-close: #FF5F57;
@@ -44,6 +71,8 @@
 
   /* --- Estado --- */
   --success: #28C840;
+  --success-border: #1A8030;
+  --success-border-light: #4DE860;
   --danger: #FF5F57;
   --warning: #FFBD2E;
 
@@ -53,6 +82,46 @@
   --taskbar-active: #FFD700;
   --taskbar-border: #333333;
   --taskbar-separator: #FFD700;
+
+  /* --- Botón primario (ejecutar/confirmar) --- */
+  --btn-primary-bg: #FFD700;
+  --btn-primary-hover: #FFC000;
+  --btn-primary-border: #B8860B;
+  --btn-primary-border-light: #FFE44D;
+  --btn-primary-text: #000000;
+
+  /* --- Código / editor --- */
+  --code-bg: #1A0D2E;
+  --code-bg-alt: #2D2040;
+  --code-text: #F0E8FF;
+  --code-gutter: #2D1B4E;
+  --code-gutter-border: #4D3B6E;
+  --code-gutter-text: #B0A0C0;
+  --code-line-number: #8B949E;
+  --code-active-gutter: #3D2B5A;
+  --code-active-line: rgba(200, 98, 168, 0.08);
+  --code-selection: rgba(255, 215, 0, 0.2);
+  --code-shiki-fg: #e6edf3;
+
+  /* --- Consola (CRT) --- */
+  --console-bg: #0A0A1A;
+  --console-text: #33FF33;
+  --console-error: #FF4444;
+  --console-glow: rgba(51, 255, 51, 0.3);
+
+  /* --- Progress --- */
+  --progress-track: #D4C4A8;
+
+  /* --- Carpeta pixel-art --- */
+  --folder-tab: #DAA520;
+  --folder-top: #FFD700;
+  --folder-bottom: #DAA520;
+  --folder-border: #B8860B;
+
+  /* --- Burbuja de diálogo (RetroChars) --- */
+  --bubble-bg: #FFF8E0;
+  --bubble-text: #1A1A2E;
+  --bubble-border: #2A1A3E;
 
   /* --- Tipografía --- */
   --font-ui: 'VT323', 'Courier New', monospace;
@@ -109,6 +178,117 @@
   --content-width: 760px;
   --content-width-lg: 820px;
   --sidebar-width: 280px;
+}
+
+/* ========================================================================
+   Tema "Midnight Terminal" — Linux terminal dark.
+   Sin blancos ni negros puros, sin blur ni neón excesivo.
+   ======================================================================== */
+:root[data-theme="terminal"] {
+  /* Desktop */
+  --bg: #120C1C;
+  --bg-alt: #1B1328;
+  --surface: #1B1328;
+  --surface-raised: #241A33;
+  --text: #F4EBD7;
+  --muted: #B8A9C0;
+  --line: #625274;
+  --line-subtle: #2A2140;
+  --surface-strong: rgba(9, 13, 9, 0.95);
+  --desktop-overlay: rgba(9, 13, 9, 0.35);
+  --desktop-overlay-hover: rgba(255, 255, 255, 0.07);
+  --desktop-label: #F4EBD7;
+  --desktop-label-shadow: rgba(9, 13, 9, 0.9);
+
+  /* Acentos */
+  --accent: #D66AAD;
+  --accent-hover: #E88FC6;
+  --sky: #57B8FF;
+  --sky-strong: #278CE8;
+  --cyan: #5FD4C7;
+  --magenta: #C862A8;
+  --pink: #FF6EC7;
+  --lavender: #B794F6;
+
+  /* Acento de marca (acción primaria) */
+  --brand-accent: #D66AAD;
+  --brand-accent-2: #E88FC6;
+  --brand-accent-light: #E88FC6;
+  --brand-accent-dark: #A84E86;
+  --brand-glow: rgba(214, 106, 173, 0.45);
+
+  /* XP / rachas / logros */
+  --xp: #F3CA4D;
+
+  /* Window */
+  --win-bg: #1B1328;
+  --win-bg-alt: #152017;
+  --win-titlebar: #352949;
+  --win-titlebar-mid: #4A3A5E;
+  --win-titlebar-text: #F4EBD7;
+  --win-text: #F4EBD7;
+  --win-muted: #B8A9C0;
+  --win-border: #625274;
+  --win-border-dark: #4A3A5E;
+  --win-link: #D66AAD;
+  --win-link-hover: #E88FC6;
+  --win-bevel: #4A3A5E;
+  --win-bevel-bright: #4A3A5E;
+  --win-bevel-dark: #0E0916;
+  --win-bevel-bg: #241A33;
+  --win-bevel-bg-active: #1B1328;
+
+  /* Estado */
+  --success: #8EDB75;
+  --success-border: #3A6B2F;
+  --success-border-light: #A8F08F;
+
+  /* Taskbar */
+  --taskbar-bg: #090D09;
+  --taskbar-text: #F4EBD7;
+  --taskbar-active: #F3CA4D;
+  --taskbar-border: #2A3320;
+  --taskbar-separator: #F3CA4D;
+
+  /* Botón primario (ejecutar/confirmar) */
+  --btn-primary-bg: #8EDB75;
+  --btn-primary-hover: #A8F08F;
+  --btn-primary-border: #5D8553;
+  --btn-primary-border-light: #A8F08F;
+  --btn-primary-text: #0B100D;
+
+  /* Código / editor */
+  --code-bg: #0B100D;
+  --code-bg-alt: #0B100D;
+  --code-text: #D6F6C7;
+  --code-gutter: #152017;
+  --code-gutter-border: #5D8553;
+  --code-gutter-text: #B8A9C0;
+  --code-line-number: #5D8553;
+  --code-active-gutter: #241A33;
+  --code-active-line: rgba(214, 106, 173, 0.08);
+  --code-selection: rgba(243, 202, 77, 0.25);
+  --code-shiki-fg: #D6F6C7;
+
+  /* Consola (CRT) */
+  --console-bg: #0B100D;
+  --console-text: #8EDB75;
+  --console-error: #FF5F57;
+  --console-glow: rgba(142, 219, 117, 0.3);
+
+  /* Progress */
+  --progress-track: #241A33;
+
+  /* Carpeta pixel-art */
+  --folder-tab: #5D8553;
+  --folder-top: #8EDB75;
+  --folder-bottom: #5D8553;
+  --folder-border: #2A3320;
+
+  /* Burbuja de diálogo (RetroChars) */
+  --bubble-bg: #241A33;
+  --bubble-text: #F4EBD7;
+  --bubble-border: #4A3A5E;
 }
 
 /* --- Responsive: ajustes para móvil --- */

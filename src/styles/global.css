@@ -21,6 +21,16 @@ html {
   color-scheme: dark;
 }
 
+html[data-theme="nebula"] {
+  color-scheme: dark light;
+}
+
+/* Midnight Terminal: sin blur ni efectos de vidrio. */
+:root[data-theme="terminal"] * {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
 body {
   font-family: var(--font-ui);
   font-size: var(--text-base);

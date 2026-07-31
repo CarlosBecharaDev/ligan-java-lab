@@ -36,19 +36,19 @@ const barId = `progress-${Math.random().toString(36).slice(2, 6)}`;
   .progress-bar__track {
     flex: 1;
     height: 16px;
-    background: #D4C4A8;
+    background: var(--progress-track);
     border: 2px solid;
-    border-top-color: var(--win-muted);
-    border-left-color: var(--win-muted);
-    border-bottom-color: #FFF;
-    border-right-color: #FFF;
+    border-top-color: var(--win-bevel-dark);
+    border-left-color: var(--win-bevel-dark);
+    border-bottom-color: var(--win-bevel-bright);
+    border-right-color: var(--win-bevel-bright);
     overflow: hidden;
   }
 
   .progress-bar__fill {
     height: 100%;
-    background: var(--accent);
-    border-right: 2px solid #B8860B;
+    background: var(--xp);
+    border-right: 2px solid var(--btn-primary-border);
     transition: width var(--transition-slow);
   }
 

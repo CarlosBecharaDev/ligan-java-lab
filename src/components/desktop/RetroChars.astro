@@ -48,17 +48,17 @@
     bottom: 90px;
     left: 50%;
     transform: translateX(-50%);
-    background: #FFF8E0;
-    color: #1A1A2E;
+    background: var(--bubble-bg);
+    color: var(--bubble-text);
     padding: 8px 16px;
     border-radius: 16px;
     font-family: var(--font-ui);
     font-size: 0.9rem;
     white-space: nowrap;
     box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
-    border: 2px solid #2A1A3E;
-    border-top-color: #D0C0A0;
-    border-left-color: #D0C0A0;
+    border: 2px solid var(--bubble-border);
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
     opacity: 0;
     transition: opacity 0.4s;
     pointer-events: none;
@@ -80,8 +80,8 @@
     height: 0;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
-    border-top: 10px solid #FFF8E0;
-    filter: drop-shadow(0 3px 0 #2A1A3E);
+    border-top: 10px solid var(--bubble-bg);
+    filter: drop-shadow(0 3px 0 var(--bubble-border));
   }
 
   .rc-bubble--visible { opacity: 1; }

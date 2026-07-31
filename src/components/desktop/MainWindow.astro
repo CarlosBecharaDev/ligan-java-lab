@@ -88,8 +88,8 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     flex-direction: column;
     background: var(--win-bg);
     border: 2px solid var(--win-border-dark);
-    border-top-color: #D0C0A0;
-    border-left-color: #D0C0A0;
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
     box-shadow: var(--shadow-win);
     overflow: hidden;
     z-index: var(--z-window);
@@ -112,7 +112,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     align-items: center;
     justify-content: space-between;
     padding: 4px 6px;
-    background: linear-gradient(90deg, var(--win-titlebar) 0%, #9898B0 50%, var(--win-titlebar) 100%);
+    background: linear-gradient(90deg, var(--win-titlebar) 0%, var(--win-titlebar-mid) 50%, var(--win-titlebar) 100%);
     user-select: none;
     min-height: 28px;
   }
@@ -213,7 +213,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   }
 
   .mobile-brand .logo-text small {
-    color: #A85499;
+    color: var(--brand-accent);
   }
 
   .bottom-nav {
@@ -249,7 +249,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
 
   .sidebar__link--active {
     background: rgba(255, 215, 0, 0.12);
-    color: #A85499;
+    color: var(--brand-accent);
     border-color: var(--win-border);
     font-weight: 600;
   }
@@ -266,8 +266,8 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     color: var(--win-text);
     background: var(--win-bg-alt);
     border: 1px solid var(--win-border);
-    border-top-color: #D0C0A0;
-    border-left-color: #D0C0A0;
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
     cursor: pointer;
     text-decoration: none;
     text-align: center;
@@ -299,7 +299,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   .streak {
     font-family: var(--font-pixel);
     font-size: 0.5rem;
-    color: var(--win-muted);
+    color: var(--xp);
     padding: 4px 8px;
     border: 1px solid var(--win-border);
     background: rgba(255, 215, 0, 0.05);
@@ -335,7 +335,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   .lesson-card__module {
     font-family: var(--font-pixel);
     font-size: 0.5rem;
-    color: #A85499;
+    color: var(--brand-accent);
     letter-spacing: 0.05em;
   }
 
@@ -375,8 +375,8 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     width: 43%;
     background: repeating-linear-gradient(
       135deg,
-      #A85499 0 6px,
-      #BE6CB0 6px 12px
+      var(--brand-accent) 0 6px,
+      var(--brand-accent-2) 6px 12px
     );
     animation: progressFill 7s steps(14) infinite alternate;
   }
@@ -420,12 +420,12 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     font-family: var(--font-pixel);
     font-size: 0.6rem;
     color: var(--win-bg);
-    background: #A85499;
+    background: var(--brand-accent);
     border: 2px solid transparent;
-    border-top-color: #C874BB;
-    border-left-color: #C874BB;
-    border-bottom-color: #803878;
-    border-right-color: #803878;
+    border-top-color: var(--brand-accent-light);
+    border-left-color: var(--brand-accent-light);
+    border-bottom-color: var(--brand-accent-dark);
+    border-right-color: var(--brand-accent-dark);
     text-decoration: none;
     cursor: pointer;
     animation: btnPulse 2.4s steps(4) infinite;
@@ -438,8 +438,8 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   }
 
   @keyframes btnPulse {
-    0%, 100% { box-shadow: 0 0 0 rgba(168, 84, 153, 0); }
-    50% { box-shadow: 0 0 6px rgba(168, 84, 153, 0.45); }
+    0%, 100% { box-shadow: 0 0 0 var(--brand-glow); }
+    50% { box-shadow: 0 0 6px var(--brand-glow); }
   }
 
   /* --- Challenge --- */
@@ -455,12 +455,12 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   }
 
   .challenge__icon {
-    color: #A85499;
+    color: var(--brand-accent);
     font-size: var(--text-sm);
   }
 
   .challenge__text strong {
-    color: #A85499;
+    color: var(--xp);
     font-weight: 600;
   }
 

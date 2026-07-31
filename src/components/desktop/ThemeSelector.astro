@@ -1,0 +1,253 @@
+---
+import { THEMES } from '@lib/theme';
+---
+
+<div class="theme-selector" data-theme-selector>
+  <button
+    class="theme-btn"
+    type="button"
+    data-theme-toggle
+    aria-haspopup="menu"
+    aria-expanded="false"
+    aria-label="Temas"
+    data-i18n-aria="nav.themes"
+  >
+    <span class="theme-btn__icon" aria-hidden="true">◐</span>
+    <span class="theme-btn__label" data-i18n="theme.button">THEME</span>
+    <span class="theme-btn__caret" aria-hidden="true">▾</span>
+  </button>
+
+  <div class="theme-menu" role="menu" data-theme-menu hidden>
+    {THEMES.map((t) => (
+      <button class="theme-menu__item" role="menuitemradio" aria-checked="false" data-theme-option={t}>
+        <span class="theme-menu__dot" aria-hidden="true">○</span>
+        {t === 'nebula' ? (
+          <span class="theme-menu__label" data-i18n="theme.nebula">☀ Nebula Desktop</span>
+        ) : (
+          <span class="theme-menu__label" data-i18n="theme.terminal">● Midnight Terminal</span>
+        )}
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .theme-selector {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .theme-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 38px;
+    padding: 6px 10px;
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    color: var(--taskbar-text);
+    background: none;
+    border: 1px solid var(--taskbar-border);
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition), border-color var(--transition);
+    white-space: nowrap;
+  }
+
+  .theme-btn__icon {
+    color: var(--taskbar-active);
+    font-size: 0.7rem;
+    line-height: 1;
+  }
+
+  .theme-btn__label {
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .theme-btn__caret {
+    font-size: 0.5rem;
+    color: var(--taskbar-text);
+    transition: transform var(--transition);
+  }
+
+  .theme-btn:hover,
+  .theme-btn[aria-expanded="true"] {
+    background: rgba(255, 215, 0, 0.1);
+    color: var(--taskbar-active);
+    border-color: var(--taskbar-separator);
+  }
+
+  .theme-btn[aria-expanded="true"] .theme-btn__caret {
+    transform: rotate(180deg);
+  }
+
+  .theme-menu {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 0;
+    min-width: 200px;
+    background: var(--taskbar-bg);
+    border: 2px solid var(--taskbar-border);
+    border-bottom-color: var(--taskbar-separator);
+    box-shadow: 0 -3px 0 rgba(255, 215, 0, 0.15), 3px 3px 0 rgba(0, 0, 0, 0.5);
+    z-index: calc(var(--z-taskbar) + 1);
+    padding: 4px;
+  }
+
+  .theme-menu[hidden] {
+    display: none;
+  }
+
+  .theme-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 44px;
+    padding: 8px 12px;
+    font-family: var(--font-pixel);
+    font-size: 0.55rem;
+    line-height: 1.4;
+    color: var(--taskbar-text);
+    background: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: background var(--transition), color var(--transition);
+  }
+
+  .theme-menu__item:hover {
+    background: rgba(255, 215, 0, 0.12);
+    color: var(--taskbar-active);
+    border-color: var(--taskbar-separator);
+  }
+
+  .theme-menu__dot {
+    font-size: 0.6rem;
+    line-height: 1;
+    color: var(--taskbar-active);
+    width: 12px;
+    text-align: center;
+    flex-shrink: 0;
+  }
+
+  .theme-menu__item[aria-checked="true"] {
+    color: var(--taskbar-active);
+  }
+
+  .theme-menu__item[aria-checked="false"] .theme-menu__dot {
+    color: var(--taskbar-text);
+    opacity: 0.55;
+  }
+
+  @media (max-width: 767px) {
+    .theme-btn {
+      min-height: 44px;
+      padding: 6px 8px;
+      font-size: 0.45rem;
+    }
+
+    .theme-btn__label {
+      text-transform: none;
+    }
+
+    .theme-btn__caret {
+      display: none;
+    }
+
+    .theme-menu {
+      min-width: 180px;
+    }
+
+    .theme-menu__item {
+      min-height: 48px;
+      font-size: 0.5rem;
+    }
+  }
+</style>
+
+<script>
+  (function() {
+    const root = document.documentElement;
+    const selector = document.querySelector('[data-theme-selector]') as HTMLElement | null;
+    if (!selector) return;
+    const toggle = selector.querySelector('[data-theme-toggle]') as HTMLButtonElement | null;
+    const menu = selector.querySelector('[data-theme-menu]') as HTMLElement | null;
+    const options = Array.from(selector.querySelectorAll('[data-theme-option]')) as HTMLButtonElement[];
+    const themeApi = (window as any).__liganTheme as { get: () => string; set: (t: string) => void } | undefined;
+
+    function currentTheme(): string {
+      return (themeApi && themeApi.get()) || 'nebula';
+    }
+
+    function sync() {
+      const active = currentTheme();
+      options.forEach((opt) => {
+        const on = opt.getAttribute('data-theme-option') === active;
+        opt.setAttribute('aria-checked', on ? 'true' : 'false');
+        const dot = opt.querySelector('.theme-menu__dot');
+        if (dot) dot.textContent = on ? '●' : '○';
+      });
+    }
+
+    function openMenu() {
+      if (!menu) return;
+      menu.hidden = false;
+      if (toggle) toggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeMenu() {
+      if (!menu) return;
+      menu.hidden = true;
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }
+
+    function setTheme(next: string) {
+      root.classList.add('theme-switching');
+      if (themeApi && themeApi.set) {
+        themeApi.set(next);
+      } else {
+        root.setAttribute('data-theme', next);
+      }
+      sync();
+      closeMenu();
+      window.setTimeout(() => root.classList.remove('theme-switching'), 200);
+    }
+
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (menu && menu.hidden) {
+        openMenu();
+      } else {
+        closeMenu();
+      }
+    });
+
+    options.forEach((opt) => {
+      opt.addEventListener('click', () => {
+        const value = opt.getAttribute('data-theme-option');
+        if (value) setTheme(value);
+      });
+    });
+
+    document.addEventListener('click', (e) => {
+      if (!selector.contains(e.target as Node)) closeMenu();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeMenu();
+        toggle?.focus();
+      }
+    });
+
+    document.addEventListener('theme-change', sync);
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', sync);
+    } else {
+      sync();
+    }
+  })();
+</script>

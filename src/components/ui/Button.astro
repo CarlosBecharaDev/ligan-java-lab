@@ -55,12 +55,12 @@ const classes = `btn btn--${variant} btn--${size}`;
   }
 
   .btn--primary {
-    background: var(--accent);
-    color: var(--win-text);
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
   }
 
   .btn--primary:hover {
-    background: #e6c200;
+    background: var(--btn-primary-hover);
   }
 
   .btn--secondary {
@@ -70,7 +70,7 @@ const classes = `btn btn--${variant} btn--${size}`;
   }
 
   .btn--secondary:hover {
-    background: #e5d6b8;
+    background: var(--win-bevel-bg);
   }
 
   .btn--ghost {
@@ -91,7 +91,7 @@ const classes = `btn btn--${variant} btn--${size}`;
 
   .btn--danger {
     background: var(--win-close);
-    color: #fff;
+    color: var(--win-titlebar-text);
   }
 
   .btn--danger:hover {

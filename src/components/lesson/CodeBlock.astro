@@ -46,7 +46,7 @@ try {
   const linesHtml = lines.map(function(lineTokens, i) {
     var num = String(i + 1).padStart(pad, ' ');
     var inner = lineTokens.map(function(t) {
-      var c = t.color || '#e6edf3';
+      var c = t.color || 'var(--code-shiki-fg)';
       return '<span style="color:' + c + '">' + escHtml(t.content) + '</span>';
     }).join('');
     return '<div class="l"><span class="ln">' + num + '</span>' + inner + '</div>';

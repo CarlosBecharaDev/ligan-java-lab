@@ -205,12 +205,12 @@ const terms = [
     justify-content: center;
     width: 36px;
     height: 36px;
-    background: #E8D5B5;
+    background: var(--win-bevel-bg);
     border: 2px solid var(--win-border);
-    border-top-color: #FFFFFF;
-    border-left-color: #FFFFFF;
-    border-right-color: #5A5040;
-    border-bottom-color: #5A5040;
+    border-top-color: var(--win-bevel-bright);
+    border-left-color: var(--win-bevel-bright);
+    border-right-color: var(--win-bevel-dark);
+    border-bottom-color: var(--win-bevel-dark);
     text-decoration: none;
     font-weight: 700;
     color: var(--win-text);
@@ -219,11 +219,11 @@ const terms = [
     box-shadow: 1px 1px 0 rgba(0,0,0,0.2);
   }
   .retro-btn:active {
-    border-top-color: #5A5040;
-    border-left-color: #5A5040;
-    border-right-color: #FFFFFF;
-    border-bottom-color: #FFFFFF;
-    background: #D8C5A5;
+    border-top-color: var(--win-bevel-dark);
+    border-left-color: var(--win-bevel-dark);
+    border-right-color: var(--win-bevel-bright);
+    border-bottom-color: var(--win-bevel-bright);
+    background: var(--win-bevel-bg-active);
   }
   .retro-card {
     background-color: var(--win-bg) !important;

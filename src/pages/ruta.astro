@@ -116,7 +116,7 @@ modules.sort((a, b) => a.data.number - b.data.number);
     justify-content: center;
     width: 64px;
     height: 64px;
-    background: #E8D8B0;
+    background: var(--win-bevel-bg);
     border: 2px solid var(--win-border);
     flex-shrink: 0;
     color: var(--win-text);
@@ -157,24 +157,24 @@ modules.sort((a, b) => a.data.number - b.data.number);
   .ruta__badge {
     font-size: 10px;
     padding: 4px 6px;
-    border: 1px solid black;
+    border: 1px solid var(--win-border-dark);
     box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
     font-family: var(--font-pixel);
   }
 
   .ruta__badge--available {
-    background: #28C840;
-    color: black;
+    background: var(--success);
+    color: var(--btn-primary-text);
   }
 
   .ruta__badge--progress {
     background: var(--taskbar-active);
-    color: black;
+    color: var(--btn-primary-text);
   }
 
   .ruta__badge--soon {
-    background: #A09070;
-    color: white;
+    background: var(--win-border);
+    color: var(--text);
   }
 
   .ruta__progress-wrap {
@@ -182,8 +182,8 @@ modules.sort((a, b) => a.data.number - b.data.number);
   }
 
   .ruta__progress-bar {
-    border: 2px solid black;
-    background: white;
+    border: 2px solid var(--win-border-dark);
+    background: var(--progress-track);
     height: 16px;
     width: 100%;
     position: relative;
@@ -194,7 +194,7 @@ modules.sort((a, b) => a.data.number - b.data.number);
     height: 100%;
     width: 0%;
     background: var(--win-link);
-    border-right: 2px solid black;
+    border-right: 2px solid var(--win-border-dark);
   }
 
   /* General progress section */
@@ -221,8 +221,8 @@ modules.sort((a, b) => a.data.number - b.data.number);
   }
 
   .ruta__general-bar {
-    border: 2px solid black;
-    background: white;
+    border: 2px solid var(--win-border-dark);
+    background: var(--progress-track);
     height: 24px;
     width: 100%;
     position: relative;
@@ -233,7 +233,7 @@ modules.sort((a, b) => a.data.number - b.data.number);
     height: 100%;
     width: 5%;
     background: var(--win-link);
-    border-right: 2px solid black;
+    border-right: 2px solid var(--win-border-dark);
   }
 
   .ruta__general-label {
@@ -244,7 +244,7 @@ modules.sort((a, b) => a.data.number - b.data.number);
     font-family: var(--font-pixel);
     font-size: 10px;
     line-height: 24px;
-    color: black;
+    color: var(--btn-primary-text);
     white-space: nowrap;
   }
 

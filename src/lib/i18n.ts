@@ -38,6 +38,11 @@ export const translations: Record<Lang, Record<string, string>> = {
     'nav.themes': 'Temas',
     'nav.apps': 'Apps',
 
+    // --- Temas ---
+    'theme.button': 'Tema',
+    'theme.nebula': '☀ Nebula Desktop',
+    'theme.terminal': '● Midnight Terminal',
+
     // --- Controles de ventana ---
     'win.minimize': 'Minimizar',
     'win.maximize': 'Maximizar',
@@ -267,6 +272,11 @@ export const translations: Record<Lang, Record<string, string>> = {
     'nav.glossary': 'Glossary',
     'nav.themes': 'Themes',
     'nav.apps': 'Apps',
+
+    // --- Themes ---
+    'theme.button': 'Theme',
+    'theme.nebula': '☀ Nebula Desktop',
+    'theme.terminal': '● Midnight Terminal',
 
     // --- Window Controls ---
     'win.minimize': 'Minimize',

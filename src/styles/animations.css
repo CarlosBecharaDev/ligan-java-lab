@@ -82,6 +82,15 @@
   animation: blink 1s step-end infinite;
 }
 
+/* --- Transición de tema (≤180ms, sin parpadeo) --- */
+/* Se activa solo durante el cambio de tema (clase añadida por el selector). */
+html.theme-switching *,
+html.theme-switching *::before,
+html.theme-switching *::after {
+  transition: background-color 180ms ease, color 180ms ease,
+    border-color 180ms ease, fill 180ms ease, box-shadow 180ms ease !important;
+}
+
 /* --- Respetar prefers-reduced-motion --- */
 @media (prefers-reduced-motion: reduce) {
   *,

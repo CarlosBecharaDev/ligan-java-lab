@@ -8,12 +8,12 @@ import BaseLayout from '@layouts/BaseLayout.astro';
     <div style="background:var(--win-bg);border:2px solid var(--win-border);box-shadow:4px 4px 0 rgba(0,0,0,0.5);width:100%;max-width:600px;text-align:left;display:flex;flex-direction:column">
       
       <!-- Title bar -->
-      <div style="background:#808098;color:white;padding:6px 8px;font-family:var(--font-pixel);font-size:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--win-border)">
+      <div style="background:var(--win-titlebar);color:var(--win-titlebar-text);padding:6px 8px;font-family:var(--font-pixel);font-size:12px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--win-border)">
         <span data-i18n="404.title">Error_404.exe</span>
         <div style="display:flex;gap:6px">
-          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-close);border:1px solid #333"></div>
-          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-minimize);border:1px solid #333"></div>
-          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-maximize);border:1px solid #333"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-close);border:1px solid var(--win-border-dark)"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-minimize);border:1px solid var(--win-border-dark)"></div>
+          <div style="width:12px;height:12px;border-radius:50%;background:var(--win-maximize);border:1px solid var(--win-border-dark)"></div>
         </div>
       </div>
       
@@ -32,7 +32,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
           Java lanza una excepción cuando algo no se encuentra. Aquí pasa igual.
         </p>
 
-        <div style="background:#0A0A0A;color:#C0C0C0;border:2px solid #555;padding:var(--space-md);margin-bottom:var(--space-xl);font-family:var(--font-mono);font-size:var(--text-sm);text-align:left;width:100%;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.8)">
+        <div style="background:var(--taskbar-bg);color:var(--taskbar-text);border:2px solid var(--taskbar-border);padding:var(--space-md);margin-bottom:var(--space-xl);font-family:var(--font-mono);font-size:var(--text-sm);text-align:left;width:100%;box-shadow:inset 2px 2px 0 rgba(0,0,0,0.8)">
           <div style="color:var(--danger)">C:\> java Ruta.java</div>
           <div style="color:var(--danger)">Exception in thread "main" java.lang.ClassNotFoundException: Ruta.noEncontrada</div>
           <div style="color:var(--warning)">  at java.base/jdk.internal.loader.BuiltinClassLoader.loadClass(BuiltinClassLoader.java:641)</div>
@@ -41,7 +41,7 @@ import BaseLayout from '@layouts/BaseLayout.astro';
           <div data-i18n="404.suggestion" style="color:var(--success);margin-top:8px">> Sugerencia: verifica la URL o vuelve al escritorio</div>
         </div>
 
-        <a href="/" style="display:inline-flex;align-items:center;gap:var(--space-sm);padding:8px 16px;background:#C0C0C0;color:black;border:2px solid;border-color:white #555 #555 white;font-family:var(--font-pixel);font-size:12px;text-decoration:none;cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,0.3)">
+        <a href="/" style="display:inline-flex;align-items:center;gap:var(--space-sm);padding:8px 16px;background:var(--taskbar-text);color:var(--btn-primary-text);border:2px solid;border-color:var(--win-bevel-bright) var(--win-bevel-dark) var(--win-bevel-dark) var(--win-bevel-bright);font-family:var(--font-pixel);font-size:12px;text-decoration:none;cursor:pointer;box-shadow:2px 2px 0 rgba(0,0,0,0.3)">
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" /><polyline points="9 22 9 12 15 12 15 22" /></svg>
           <span data-i18n="404.back">Volver al escritorio</span>
         </a>

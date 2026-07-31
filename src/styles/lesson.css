@@ -122,9 +122,9 @@
 }
 
 .lesson-content pre {
-  background: #2D2040;
+  background: var(--code-bg-alt);
   border: 2px solid var(--win-border-dark);
-  color: #F0E8FF;
+  color: var(--code-text);
   box-shadow: var(--shadow-md);
   padding: var(--space-md);
   font-size: var(--text-sm);
@@ -134,7 +134,7 @@
 
 .lesson-content pre code {
   background: none;
-  color: #F0E8FF;
+  color: var(--code-text);
   border: none;
   padding: 0;
   font-size: inherit;
@@ -259,14 +259,14 @@
 }
 
 .real-world-example__result {
-  background: #2D2040;
+  background: var(--code-bg-alt);
   border: 2px solid var(--win-border-dark);
   border-radius: var(--radius-sm);
   padding: var(--space-md);
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   margin-top: var(--space-md);
-  color: #F0E8FF;
+  color: var(--code-text);
   box-shadow: var(--shadow-sm);
 }
 

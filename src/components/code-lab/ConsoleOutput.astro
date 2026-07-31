@@ -24,7 +24,7 @@ const consoleId = `console-${Math.random().toString(36).slice(2, 6)}`;
 
 <style>
   .console-output {
-    background: var(--bg);
+    background: var(--console-bg);
     padding: var(--space-md);
     font-family: var(--font-mono);
     font-size: var(--text-sm);
@@ -32,6 +32,8 @@ const consoleId = `console-${Math.random().toString(36).slice(2, 6)}`;
     min-height: 150px;
     max-height: 250px;
     overflow-y: auto;
+    color: var(--console-text);
+    text-shadow: 0 0 4px var(--console-glow);
   }
 
   .console-output__warning {

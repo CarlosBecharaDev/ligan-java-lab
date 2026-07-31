@@ -6,6 +6,7 @@ import Desktop from '../components/desktop/Desktop.astro';
 import Taskbar from '../components/desktop/Taskbar.astro';
 import RetroChars from '@components/desktop/RetroChars.astro';
 import { I18N_CLIENT_SCRIPT } from '@lib/i18n';
+import { THEME_CLIENT_SCRIPT } from '@lib/theme';
 
 export interface Props {
   title: string;
@@ -24,6 +25,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
     <meta name="description" content={description ?? 'Aprende Java 21 LTS desde cero — en español latino.'} />
     <meta name="author" content="Carlos Bechara" />
     <meta name="theme-color" content="#1A0D2E" />
+    <script is:inline set:html={THEME_CLIENT_SCRIPT} />
     <meta property="og:title" content={siteTitle} />
     <meta property="og:description" content={description ?? 'Plataforma educativa interactiva para aprender Java.'} />
     <meta property="og:type" content="website" />

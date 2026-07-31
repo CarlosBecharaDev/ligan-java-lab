@@ -1,10 +1,12 @@
 ---
 import LiganLogo from '@components/ui/LiganLogo.astro';
+import ThemeSelector from './ThemeSelector.astro';
 ---
 
 <footer class="taskbar" role="toolbar" aria-label="Barra de tareas" data-i18n-aria="taskbar.aria">
   <div class="taskbar__left">
     <LiganLogo compact={false} />
+    <ThemeSelector />
   </div>
   
   <div class="taskbar__right">
