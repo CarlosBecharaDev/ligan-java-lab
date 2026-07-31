@@ -5,6 +5,13 @@ import ContentLayout from '@layouts/ContentLayout.astro';
 const lessons = await getCollection('lessons');
 const modules = await getCollection('modules');
 modules.sort((a, b) => a.data.number - b.data.number);
+
+const idBySlug = new Map<string, string>();
+const titleById = new Map<string, string>();
+for (const l of lessons) {
+  idBySlug.set(l.data.slug, l.id);
+  titleById.set(l.id, l.data.title);
+}
 ---
 
 <ContentLayout title="Ruta de aprendizaje" description="Mapa de módulos con progreso">
@@ -37,6 +44,35 @@ modules.sort((a, b) => a.data.number - b.data.number);
                 {mod.data.status === 'proximamente' && <span class="ruta__badge ruta__badge--soon" data-i18n="path.coming-soon">Próximamente</span>}
               </div>
               <p class="ruta__desc">{mod.data.description}</p>
+              <div class="ruta__content">
+                <button
+                  type="button"
+                  class="ruta__content-toggle"
+                  data-content-toggle
+                  aria-expanded="false"
+                  aria-controls={`ruta-content-${mod.data.slug}`}
+                >
+                  <span class="ruta__content-caret" data-caret aria-hidden="true">▸</span>
+                  <span data-i18n="path.view-content">Ver contenido</span>
+                </button>
+                <ul id={`ruta-content-${mod.data.slug}`} class="ruta__content-list" hidden>
+                  {mod.data.lessons.map((slug) => {
+                    const id = idBySlug.get(slug);
+                    return id ? (
+                      <li class="ruta__content-item">
+                        <a
+                          class="ruta__content-link"
+                          href={`/tema/${id}`}
+                          onclick="event.stopPropagation()"
+                        >
+                          <span class="ruta__content-file" aria-hidden="true"></span>
+                          <span class="ruta__content-label">{titleById.get(id)}</span>
+                        </a>
+                      </li>
+                    ) : null;
+                  })}
+                </ul>
+              </div>
             </div>
             {mod.data.status !== 'proximamente' && (
               <div class="ruta__progress-wrap">
@@ -60,6 +96,22 @@ modules.sort((a, b) => a.data.number - b.data.number);
     </div>
   </div>
 </ContentLayout>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-content-toggle]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const list = document.getElementById(btn.getAttribute('aria-controls') || '');
+        const caret = btn.querySelector('[data-caret]');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        if (caret) caret.textContent = expanded ? '▸' : '▾';
+        if (list) list.hidden = expanded;
+      });
+    });
+  })();
+</script>
 
 <style>
   .ruta {
@@ -152,6 +204,93 @@ modules.sort((a, b) => a.data.number - b.data.number);
     margin: 8px 0 0;
     font-size: 1rem;
     line-height: 1.5;
+  }
+
+  .ruta__content {
+    margin-top: var(--space-md);
+  }
+
+  .ruta__content-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--win-text);
+    background: var(--win-bevel-bg);
+    border: 2px solid var(--win-border-dark);
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+
+  .ruta__content-toggle:hover,
+  .ruta__content-toggle:focus-visible {
+    color: var(--win-link);
+  }
+
+  .ruta__content-toggle[aria-expanded="true"] {
+    background: var(--win-bg-alt);
+  }
+
+  .ruta__content-caret {
+    font-size: 0.6rem;
+    color: var(--win-muted);
+    line-height: 1;
+  }
+
+  .ruta__content-list {
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 6px 0;
+    background: var(--win-bg-alt);
+    border: 2px solid var(--win-border);
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .ruta__content-list[hidden] {
+    display: none;
+  }
+
+  .ruta__content-item {
+    margin: 0;
+  }
+
+  .ruta__content-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    color: var(--win-muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+
+  .ruta__content-link:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--win-link);
+    text-decoration: none;
+    border-left-color: var(--accent);
+  }
+
+  .ruta__content-file {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    background: var(--win-link);
+    outline: 1px solid var(--win-border);
+  }
+
+  .ruta__content-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .ruta__badge {
