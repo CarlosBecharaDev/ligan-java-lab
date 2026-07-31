@@ -114,7 +114,8 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
 
 <style>
   .lesson-layout {
-    min-height: 100vh;
+    height: calc(100vh - 48px);
+    min-height: 0;
     background-image: url('/wallpaper.jpg');
     background-size: cover;
     background-position: center;
@@ -126,7 +127,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
     display: flex;
     justify-content: center;
     padding: var(--space-xl);
-    height: calc(100vh - 48px);
+    height: 100%;
     min-height: 0;
   }
 
@@ -256,6 +257,11 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
   }
 
   @media (max-width: 767px) {
+    .lesson-layout {
+      height: auto;
+      min-height: 100vh;
+    }
+
     .lesson-layout__toggle {
       display: inline-flex;
     }
