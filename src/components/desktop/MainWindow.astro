@@ -555,9 +555,9 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       bottom: 0;
       height: 52px;
       display: flex;
-      background: var(--win-bg-alt);
-      border-top: 2px solid var(--win-border);
-      box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.1);
+      background: var(--taskbar-bg);
+      border-top: 2px solid var(--taskbar-separator);
+      box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.5);
       z-index: var(--z-taskbar);
     }
 
@@ -570,9 +570,9 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       gap: 2px;
       font-family: var(--font-pixel);
       font-size: 0.4rem;
-      color: var(--win-muted);
+      color: var(--taskbar-text);
       text-decoration: none;
-      border-right: 1px solid var(--win-border);
+      border-right: 1px solid var(--taskbar-border);
       transition: background var(--transition), color var(--transition);
     }
 
@@ -586,12 +586,14 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
 
     .bottom-nav__link:hover {
       background: rgba(255, 215, 0, 0.1);
+      color: var(--taskbar-active);
       text-decoration: none;
     }
 
     .bottom-nav__link--active {
-      background: rgba(168, 84, 153, 0.12);
-      color: #A85499;
+      background: rgba(255, 215, 0, 0.15);
+      color: var(--taskbar-active);
+      border-color: var(--taskbar-separator);
     }
   }
 </style>
