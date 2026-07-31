@@ -1,5 +1,6 @@
 ---
 import LiganLogo from '@components/ui/LiganLogo.astro';
+import ThemeSelector from './ThemeSelector.astro';
 ---
 
 <div class="win" role="dialog" aria-label="JAVA_WORKSPACE" aria-modal="true">
@@ -19,11 +20,11 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
         <LiganLogo />
       </div>
       <ul class="sidebar__menu">
-        <li><a href="/" class="sidebar__link sidebar__link--active">⌂ Inicio</a></li>
-        <li><a href="/ruta" class="sidebar__link">☰ Módulos</a></li>
-        <li><a href="/practica" class="sidebar__link">⚡ Code Lab</a></li>
-        <li><a href="/progreso" class="sidebar__link">📊 Progreso</a></li>
-        <li><a href="/recursos" class="sidebar__link">📖 Recursos</a></li>
+        <li><a href="/" class="sidebar__link sidebar__link--active"><span class="sidebar__icon" aria-hidden="true">⌂</span>Inicio</a></li>
+        <li><a href="/ruta" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">☰</span>Módulos</a></li>
+        <li><a href="/practica" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">⚡</span>Code Lab</a></li>
+        <li><a href="/progreso" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📊</span>Progreso</a></li>
+        <li><a href="/recursos" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📖</span>Recursos</a></li>
       </ul>
     </nav>
 
@@ -70,10 +71,22 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   </div>
 
   <nav class="bottom-nav" aria-label="Navegación móvil">
-    <a href="/" class="bottom-nav__link bottom-nav__link--active">⌂<span>Inicio</span></a>
-    <a href="/ruta" class="bottom-nav__link">☰<span>Módulos</span></a>
-    <a href="/practica" class="bottom-nav__link">⚡<span>Lab</span></a>
-    <a href="/progreso" class="bottom-nav__link">📊<span>Progreso</span></a>
+    <div class="bottom-nav__links">
+      <a href="/" class="bottom-nav__link bottom-nav__link--active">⌂<span>Inicio</span></a>
+      <a href="/ruta" class="bottom-nav__link">☰<span>Módulos</span></a>
+      <a href="/practica" class="bottom-nav__link">⚡<span>Lab</span></a>
+      <a href="/progreso" class="bottom-nav__link">📊<span>Progreso</span></a>
+    </div>
+    <div class="bottom-nav__tools">
+      <div class="bottom-nav__theme"><ThemeSelector /></div>
+      <div class="bottom-nav__lang">
+        <button class="bottom-nav__lang-btn" data-lang-btn="en" onclick="window.__i18n && window.__i18n.setLang('en')">EN</button>
+        <button class="bottom-nav__lang-btn" data-lang-btn="es" onclick="window.__i18n && window.__i18n.setLang('es')">ES</button>
+      </div>
+      <span class="bottom-nav__clock" id="bottom-nav-clock" aria-label="Reloj" data-i18n-aria="taskbar.clock-aria">
+        {new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+      </span>
+    </div>
   </nav>
 </div>
 
@@ -171,7 +184,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     min-width: 160px;
     display: flex;
     flex-direction: column;
-    background: var(--win-bg-alt);
+    background: rgba(0, 0, 0, 0.35);
     border-right: 2px solid var(--win-border);
     padding: var(--space-md) var(--space-sm);
     gap: var(--space-lg);
@@ -220,6 +233,10 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     display: none;
   }
 
+  .bottom-nav__tools {
+    display: none;
+  }
+
   .sidebar__menu {
     list-style: none;
     padding: 0;
@@ -230,7 +247,9 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   }
 
   .sidebar__link {
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 8px;
     padding: 6px 8px;
     font-family: var(--font-pixel);
     font-size: 0.55rem;
@@ -239,6 +258,19 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     border: 1px solid transparent;
     transition: background var(--transition), color var(--transition);
     border-radius: var(--radius-sm);
+  }
+
+  .sidebar__icon {
+    flex-shrink: 0;
+    width: 1.4em;
+    text-align: center;
+    filter: grayscale(1) brightness(1.5);
+    font-style: normal;
+  }
+
+  .sidebar__link:hover .sidebar__icon,
+  .sidebar__link--active .sidebar__icon {
+    filter: grayscale(1) brightness(2);
   }
 
   .sidebar__link:hover {
@@ -555,10 +587,21 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       bottom: 0;
       height: 52px;
       display: flex;
+      align-items: center;
+      gap: 4px;
+      padding: 0 6px;
       background: var(--taskbar-bg);
       border-top: 2px solid var(--taskbar-separator);
       box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.5);
       z-index: var(--z-taskbar);
+    }
+
+    .bottom-nav__links {
+      display: flex;
+      align-items: center;
+      gap: 2px;
+      min-width: 0;
+      flex: 1;
     }
 
     .bottom-nav__link {
@@ -567,26 +610,28 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 2px;
+      gap: 1px;
+      padding: 3px 2px;
       font-family: var(--font-pixel);
-      font-size: 0.4rem;
+      font-size: 0.34rem;
       color: var(--taskbar-text);
       text-decoration: none;
-      border-right: 1px solid var(--taskbar-border);
+      border: 1px solid transparent;
       transition: background var(--transition), color var(--transition);
-    }
-
-    .bottom-nav__link:last-child {
-      border-right: none;
+      white-space: nowrap;
     }
 
     .bottom-nav__link span {
-      font-size: 0.4rem;
+      font-size: 0.34rem;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .bottom-nav__link:hover {
       background: rgba(255, 215, 0, 0.1);
       color: var(--taskbar-active);
+      border-color: var(--taskbar-separator);
       text-decoration: none;
     }
 
@@ -595,5 +640,73 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       color: var(--taskbar-active);
       border-color: var(--taskbar-separator);
     }
+
+    .bottom-nav__tools {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .bottom-nav__theme .theme-btn {
+      min-height: 32px;
+      padding: 4px 6px;
+      font-size: 0.4rem;
+      gap: 4px;
+    }
+
+    .bottom-nav__theme .theme-btn__label,
+    .bottom-nav__theme .theme-btn__caret {
+      display: none;
+    }
+
+    .bottom-nav__theme .theme-btn__icon {
+      font-size: 0.6rem;
+    }
+
+    .bottom-nav__lang {
+      display: flex;
+      gap: 2px;
+    }
+
+    .bottom-nav__lang-btn {
+      padding: 3px 5px;
+      font-family: var(--font-pixel);
+      font-size: 0.4rem;
+      color: var(--taskbar-text);
+      border: 1px solid var(--taskbar-border);
+      background: none;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .bottom-nav__lang-btn:hover,
+    .bottom-nav__lang-btn.active {
+      background: var(--taskbar-active);
+      color: var(--btn-primary-text);
+      border-color: var(--taskbar-active);
+    }
+
+    .bottom-nav__clock {
+      font-family: var(--font-ui);
+      font-size: 0.5rem;
+      color: var(--taskbar-text);
+      padding: 3px 4px;
+      border-left: 1px solid var(--taskbar-border);
+    }
   }
 </style>
+
+<script>
+  function actualizarRelojNav() {
+    const reloj = document.getElementById('bottom-nav-clock');
+    if (reloj) {
+      reloj.textContent = new Date().toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit',
+      });
+    }
+  }
+  setInterval(actualizarRelojNav, 60000);
+  actualizarRelojNav();
+</script>

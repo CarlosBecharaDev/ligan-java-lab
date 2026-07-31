@@ -39,6 +39,8 @@ for (const l of lessons) {
             <div class="ruta__info">
               <div class="ruta__title-row">
                 <h2 class="ruta__heading">{mod.data.title}</h2>
+              </div>
+              <div class="ruta__badge-row">
                 {mod.data.status === 'disponible' && <span class="ruta__badge ruta__badge--available" data-i18n="path.available">Disponible</span>}
                 {mod.data.status === 'en-progreso' && <span class="ruta__badge ruta__badge--progress" data-i18n="path.in-progress">En progreso</span>}
                 {mod.data.status === 'proximamente' && <span class="ruta__badge ruta__badge--soon" data-i18n="path.coming-soon">Próximamente</span>}
@@ -153,7 +155,7 @@ for (const l of lessons) {
     border: 2px solid var(--win-border);
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
     cursor: pointer;
-    align-items: center;
+    align-items: flex-start;
     transition: transform 0.12s, box-shadow 0.12s;
   }
 
@@ -190,6 +192,13 @@ for (const l of lessons) {
     align-items: center;
     gap: var(--space-sm);
     flex-wrap: wrap;
+  }
+
+  .ruta__badge-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
   }
 
   .ruta__heading {
@@ -401,6 +410,7 @@ for (const l of lessons) {
       gap: var(--space-md);
       padding: var(--space-md);
       text-align: center;
+      align-items: center;
     }
 
     .ruta__num-box {
@@ -421,6 +431,10 @@ for (const l of lessons) {
       flex-direction: column;
       align-items: center;
       gap: var(--space-xs);
+    }
+
+    .ruta__badge-row {
+      justify-content: center;
     }
 
     .ruta__heading {

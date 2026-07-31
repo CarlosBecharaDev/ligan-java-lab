@@ -360,5 +360,24 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
         closeDrawer();
       }
     });
+
+    if (drawer) {
+      let touchStartX = 0;
+      let touchStartY = 0;
+
+      drawer.addEventListener('touchstart', (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      }, { passive: true });
+
+      drawer.addEventListener('touchend', (e) => {
+        if (!document.body.classList.contains('explorer-drawer-open')) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        if (dx < -50 && Math.abs(dx) > Math.abs(dy)) {
+          closeDrawer();
+        }
+      }, { passive: true });
+    }
   })();
 </script>

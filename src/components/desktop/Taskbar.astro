@@ -22,6 +22,32 @@ import ThemeSelector from './ThemeSelector.astro';
 </footer>
 
 <style>
+  @media (min-width: 768px) {
+    .taskbar .ligan-logo svg {
+      width: 20px;
+      height: 20px;
+    }
+    .taskbar .ligan-logo {
+      gap: 6px;
+      align-items: center;
+    }
+    .taskbar .logo-text strong,
+    .taskbar .logo-text small {
+      text-align: center;
+    }
+    .taskbar .logo-text strong {
+      font-size: 11px;
+      line-height: 1;
+      letter-spacing: 0.5px;
+    }
+    .taskbar .logo-text small {
+      font-size: 6px;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+      line-height: 1;
+    }
+  }
+
   @media (max-width: 767px) {
     .taskbar {
       transition: transform 0.3s ease;
@@ -31,19 +57,27 @@ import ThemeSelector from './ThemeSelector.astro';
       transform: translateY(100%);
     }
     .taskbar .ligan-logo svg {
-      width: 32px;
-      height: 32px;
+      width: 17px;
+      height: 17px;
     }
     .taskbar .ligan-logo {
-      gap: 6px;
+      gap: 5px;
+      align-items: center;
+    }
+    .taskbar .logo-text strong,
+    .taskbar .logo-text small {
+      text-align: center;
     }
     .taskbar .logo-text strong {
-      font-size: 13px;
+      font-size: 10px;
+      line-height: 1;
+      letter-spacing: 0.5px;
     }
     .taskbar .logo-text small {
-      font-size: 7px;
-      letter-spacing: 2px;
-      margin-top: 3px;
+      font-size: 5px;
+      letter-spacing: 1.5px;
+      margin-top: 2px;
+      line-height: 1;
     }
     .taskbar__right {
       font-size: 0.5rem !important;

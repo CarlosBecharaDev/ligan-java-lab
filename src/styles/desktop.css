@@ -167,7 +167,8 @@
   text-align: center;
   line-height: 1.1;
   max-width: 90px;
-  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: normal;
   text-shadow: 1px 1px 0 var(--desktop-label-shadow), 2px 2px 0 rgba(0, 0, 0, 0.5);
   letter-spacing: 0.02em;
 }
