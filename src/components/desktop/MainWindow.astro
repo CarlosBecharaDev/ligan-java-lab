@@ -27,16 +27,19 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       </ul>
     </nav>
 
+    <div class="mobile-brand">
+      <LiganLogo />
+    </div>
+
     <a href="/ruta" class="sidebar__mobile-btn">☰ MÓDULOS</a>
 
     <main class="main">
       <div class="main__top">
-        <span class="streak">RACHA · 🔥 3 días</span>
+        <span class="streak">🔥 3 DÍAS</span>
       </div>
 
       <div class="main__content">
         <div class="main__welcome">
-          <p class="main__greeting">Bienvenido de nuevo,</p>
           <h1 class="main__heading">Sigue aprendiendo.</h1>
         </div>
 
@@ -50,7 +53,10 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
             </div>
             <span class="progress-bar__label">43% completado</span>
           </div>
-          <a href="/tema/variables-y-tipos" class="cta-btn">CONTINUAR →</a>
+          <div class="lesson-card__meta">
+            <span class="lesson-card__duration">⏱ 15 min</span>
+            <a href="/tema/variables-y-tipos" class="cta-btn">CONTINUAR →</a>
+          </div>
         </div>
 
         <div class="challenge">
@@ -62,6 +68,13 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     </main>
 
   </div>
+
+  <nav class="bottom-nav" aria-label="Navegación móvil">
+    <a href="/" class="bottom-nav__link bottom-nav__link--active">⌂<span>Inicio</span></a>
+    <a href="/ruta" class="bottom-nav__link">☰<span>Módulos</span></a>
+    <a href="/practica" class="bottom-nav__link">⚡<span>Lab</span></a>
+    <a href="/progreso" class="bottom-nav__link">📊<span>Progreso</span></a>
+  </nav>
 </div>
 
 <style>
@@ -186,6 +199,27 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     margin-top: 4px;
   }
 
+  .mobile-brand {
+    display: none;
+  }
+
+  .mobile-brand .ligan-logo {
+    color: var(--win-text);
+  }
+
+  .mobile-brand .logo-text strong {
+    color: var(--win-text);
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.12);
+  }
+
+  .mobile-brand .logo-text small {
+    color: #A85499;
+  }
+
+  .bottom-nav {
+    display: none;
+  }
+
   .sidebar__menu {
     list-style: none;
     padding: 0;
@@ -232,9 +266,12 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     color: var(--win-text);
     background: var(--win-bg-alt);
     border: 1px solid var(--win-border);
+    border-top-color: #D0C0A0;
+    border-left-color: #D0C0A0;
     cursor: pointer;
     text-decoration: none;
     text-align: center;
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
   }
 
   .sidebar__mobile-btn:hover {
@@ -274,13 +311,6 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     flex-direction: column;
     justify-content: center;
     gap: var(--space-lg);
-  }
-
-  .main__greeting {
-    font-family: var(--font-ui);
-    font-size: var(--text-sm);
-    color: var(--win-muted);
-    margin: 0;
   }
 
   .main__heading {
@@ -343,13 +373,17 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
   .progress-bar__fill {
     height: 100%;
     width: 43%;
-    background: #A85499;
-    animation: progressPulse 3s steps(10) infinite alternate;
+    background: repeating-linear-gradient(
+      135deg,
+      #A85499 0 6px,
+      #BE6CB0 6px 12px
+    );
+    animation: progressFill 7s steps(14) infinite alternate;
   }
 
-  @keyframes progressPulse {
-    0% { width: 43%; }
-    100% { width: 67%; }
+  @keyframes progressFill {
+    from { width: 43%; }
+    to { width: 67%; }
   }
 
   .progress-bar__label {
@@ -359,11 +393,30 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     white-space: nowrap;
   }
 
+  .lesson-card__meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-sm);
+    margin-top: var(--space-xs);
+  }
+
+  .lesson-card__duration {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 8px;
+    font-family: var(--font-pixel);
+    font-size: 0.45rem;
+    color: var(--win-muted);
+    border: 1px solid var(--win-border);
+    background: var(--win-bg-alt);
+    white-space: nowrap;
+  }
+
   .cta-btn {
     display: inline-block;
-    align-self: flex-start;
     padding: 8px 20px;
-    margin-top: var(--space-xs);
     font-family: var(--font-pixel);
     font-size: 0.6rem;
     color: var(--win-bg);
@@ -375,7 +428,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
     border-right-color: #803878;
     text-decoration: none;
     cursor: pointer;
-    animation: btnPulse 2s steps(4) infinite;
+    animation: btnPulse 2.4s steps(4) infinite;
     transition: filter var(--transition);
   }
 
@@ -386,7 +439,7 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
 
   @keyframes btnPulse {
     0%, 100% { box-shadow: 0 0 0 rgba(168, 84, 153, 0); }
-    50% { box-shadow: 0 0 6px rgba(168, 84, 153, 0.4); }
+    50% { box-shadow: 0 0 6px rgba(168, 84, 153, 0.45); }
   }
 
   /* --- Challenge --- */
@@ -441,6 +494,8 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       max-height: 100vh !important;
       transform: none !important;
       border-radius: 0;
+      padding-bottom: 52px;
+      z-index: calc(var(--z-taskbar) + 1);
     }
 
     .win__titlebar {
@@ -451,12 +506,21 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       display: none;
     }
 
+    .mobile-brand {
+      display: flex;
+      justify-content: center;
+      padding: var(--space-sm) var(--space-sm) var(--space-xs);
+      border-bottom: 1px solid var(--win-border);
+    }
+
     .sidebar__mobile-btn {
       display: flex;
+      margin-top: var(--space-sm);
     }
 
     .win__body {
       flex-direction: column;
+      overflow-y: auto;
     }
 
     .main {
@@ -471,6 +535,10 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
       font-size: 0.45rem;
     }
 
+    .lesson-card__meta {
+      flex-wrap: wrap;
+    }
+
     .challenge {
       flex-wrap: wrap;
       gap: var(--space-xs);
@@ -478,6 +546,52 @@ import LiganLogo from '@components/ui/LiganLogo.astro';
 
     .challenge__link {
       margin-left: 0;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 52px;
+      display: flex;
+      background: var(--win-bg-alt);
+      border-top: 2px solid var(--win-border);
+      box-shadow: 0 -2px 0 rgba(0, 0, 0, 0.1);
+      z-index: var(--z-taskbar);
+    }
+
+    .bottom-nav__link {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      font-family: var(--font-pixel);
+      font-size: 0.4rem;
+      color: var(--win-muted);
+      text-decoration: none;
+      border-right: 1px solid var(--win-border);
+      transition: background var(--transition), color var(--transition);
+    }
+
+    .bottom-nav__link:last-child {
+      border-right: none;
+    }
+
+    .bottom-nav__link span {
+      font-size: 0.4rem;
+    }
+
+    .bottom-nav__link:hover {
+      background: rgba(255, 215, 0, 0.1);
+      text-decoration: none;
+    }
+
+    .bottom-nav__link--active {
+      background: rgba(168, 84, 153, 0.12);
+      color: #A85499;
     }
   }
 </style>
