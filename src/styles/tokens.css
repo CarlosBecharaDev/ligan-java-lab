@@ -292,8 +292,10 @@
 }
 
 /* --- Responsive: ajustes para móvil --- */
+/* Usa :root:root (misma especificidad que :root[data-theme="nebula"]) para que
+   los tamaños móviles se apliquen en ambos temas y no queden los de escritorio. */
 @media (max-width: 767px) {
-  :root {
+  :root:root {
     --text-xs: 0.75rem;
     --text-sm: 0.875rem;
     --text-base: 1rem;

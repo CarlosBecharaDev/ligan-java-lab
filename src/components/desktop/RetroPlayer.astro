@@ -1,13 +1,16 @@
 ---
 // src/components/desktop/RetroPlayer.astro
 // Reproductor de Spotify con skin inspirado en Windows Media Player clásico.
-import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'lucide-astro';
+import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lucide-astro';
 ---
 <div id="retro-player" class="wmp-player" aria-label="Reproductor de Spotify">
   <!-- Barra de título estilo WMP (arrástrala para mover el reproductor) -->
   <div class="wmp-titlebar" data-wmp-drag>
     <span class="wmp-title">Reproductor de Spotify</span>
     <div class="wmp-title-actions">
+      <button id="wmp-lyrics-btn" type="button" aria-label="Mostrar letra" aria-pressed="false" title="Letra">
+        <FileText size={14} />
+      </button>
       <button id="wmp-collapse" type="button" aria-label="Minimizar reproductor"><Minus size={14} /></button>
     </div>
   </div>
@@ -43,6 +46,12 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
         </div>
       </div>
 
+      <!-- Panel de letras sincronizadas -->
+      <div id="wmp-lyrics-panel" class="wmp-lyrics hidden" aria-live="off">
+        <p id="wmp-lyrics-status" class="wmp-lyrics-status">Cargando letra...</p>
+        <ol id="wmp-lyrics-body" class="wmp-lyrics-body"></ol>
+      </div>
+
       <!-- Barra de progreso -->
       <div class="wmp-progress-row">
         <span id="wmp-time-current" class="wmp-time">0:00</span>
@@ -59,12 +68,15 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
 
       <!-- Controles de transporte -->
       <div class="wmp-controls">
-        <button id="wmp-prev" type="button" aria-label="Canción anterior">⏮</button>
-        <button id="wmp-playpause" type="button" aria-label="Reproducir">▶</button>
-        <button id="wmp-next" type="button" aria-label="Siguiente canción">⏭</button>
+        <button id="wmp-prev" type="button" aria-label="Canción anterior"><SkipBack size={16} /></button>
+        <button id="wmp-playpause" type="button" aria-label="Reproducir">
+          <span id="wmp-icon-play"><Play size={18} /></span>
+          <span id="wmp-icon-pause" class="hidden"><Pause size={18} /></span>
+        </button>
+        <button id="wmp-next" type="button" aria-label="Siguiente canción"><SkipForward size={16} /></button>
         <div class="wmp-volume">
           <label for="wmp-volume-slider" class="visually-hidden">Volumen</label>
-          <span aria-hidden="true">🔊</span>
+          <span aria-hidden="true" class="wmp-volume-icon"><Volume2 size={14} /></span>
           <input id="wmp-volume-slider" type="range" min="0" max="100" value="70" aria-label="Volumen" />
         </div>
       </div>
@@ -292,6 +304,41 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
     color: #888;
   }
 
+  .wmp-lyrics {
+    border: 1px solid #333;
+    background: #050505;
+    max-height: 132px;
+    overflow-y: auto;
+    padding: 4px 6px;
+  }
+  .wmp-lyrics-status {
+    margin: 0;
+    font-size: 9px;
+    color: #888;
+    white-space: pre-wrap;
+  }
+  .wmp-lyrics-body {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .wmp-lyric-line {
+    padding: 3px 2px;
+    font-size: 10px;
+    line-height: 1.35;
+    color: #9b9b9b;
+    transition: color 0.15s ease, background 0.15s ease;
+  }
+  .wmp-lyric-line.active {
+    color: var(--wmp-green);
+    font-weight: bold;
+    background: rgba(30, 215, 96, 0.08);
+  }
+  #wmp-lyrics-btn[aria-pressed="true"] {
+    background: var(--wmp-green);
+    color: #000;
+  }
+
   .wmp-progress-row {
     display: flex;
     align-items: center;
@@ -323,16 +370,43 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
     height: 24px;
     cursor: pointer;
     font-size: 11px;
+    display: grid;
+    place-items: center;
+    transition:
+      transform 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease,
+      background 0.15s ease;
+  }
+  .wmp-controls button:hover {
+    border-color: #888;
+    transform: translateY(-1px);
+  }
+  .wmp-controls button:active {
+    transform: translateY(1px);
+    box-shadow: none;
   }
   #wmp-playpause {
     border-color: var(--wmp-green);
     color: var(--wmp-green);
+    background: #0d1f14;
+  }
+  #wmp-playpause:hover {
+    border-color: var(--wmp-green);
+    color: #2af57e;
+    background: #12331f;
+    box-shadow: 0 0 8px rgba(30, 215, 96, 0.35);
   }
   .wmp-volume {
     display: flex;
     align-items: center;
     gap: 4px;
     margin-left: auto;
+  }
+  .wmp-volume-icon {
+    display: grid;
+    place-items: center;
+    color: #aaa;
   }
   .wmp-volume input {
     width: 60px;
@@ -394,8 +468,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
   /* --- Botón flotante de música (mostrar/ocultar en móvil) --- */
   .wmp-fab {
     position: fixed;
+    top: 12px;
     right: 12px;
-    bottom: 16px;
     z-index: 510;
     width: 44px;
     height: 44px;
@@ -453,6 +527,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
       max-height: calc(100dvh - 120px);
     }
     .wmp-fab {
+      top: auto;
       right: 10px;
       bottom: calc(58px + env(safe-area-inset-bottom, 0px));
     }
@@ -476,6 +551,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
     SpotifyAppError,
   } from "@lib/spotify";
   import type { PlaybackState } from "@lib/spotify";
+  import { getSyncedLyrics } from "@lib/lyrics";
+  import type { LyricLine } from "@lib/lyrics";
 
   const $ = <T extends Element = HTMLElement>(sel: string) =>
     document.querySelector<T>(sel)!;
@@ -502,6 +579,10 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
   const searchInput = $<HTMLInputElement>("#wmp-search-input");
   const resultsList = $("#wmp-search-results");
   const collapseBtn = $("#wmp-collapse");
+  const lyricsBtn = $("#wmp-lyrics-btn");
+  const lyricsPanel = $("#wmp-lyrics-panel");
+  const lyricsStatus = $("#wmp-lyrics-status");
+  const lyricsBody = $("#wmp-lyrics-body");
   const titlebar = $(".wmp-titlebar");
   const player = $("#retro-player");
   const fab = $("#wmp-fab");
@@ -510,9 +591,52 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
   let userIsDraggingProgress = false;
   let currentDurationMs = 0;
 
+  // --- Estado de las letras sincronizadas ---
+  let lyricsLines: LyricLine[] = [];
+  let lyricsKey = "";
+  let lyricsActiveIndex = -1;
+  // Últimos datos de reproducción conocidos, para estimar el progreso entre polls
+  let lastProgressMs = 0;
+  let lastPollAt = 0;
+  let lastPlaying = false;
+
   // --- Mostrar / ocultar reproductor con el botón flotante ---
-  // El reproductor se abre centrado sobre el FAB (justo donde se pulsó) y
-  // se mantiene siempre dentro del viewport con un margen de seguridad.
+  // En móvil se abre centrado sobre el FAB (donde se pulsó), dentro del
+  // viewport. En escritorio vuelve al CSS: arriba a la derecha.
+  const PLAYER_POS_KEY = "wmp-player-pos";
+
+  function savePlayerPos() {
+    const left = /^(\d+)px$/.exec(player.style.left || "");
+    const top = /^(\d+)px$/.exec(player.style.top || "");
+    if (!left || !top) return;
+    try {
+      localStorage.setItem(
+        PLAYER_POS_KEY,
+        JSON.stringify({ left: Number(left[1]), top: Number(top[1]) })
+      );
+    } catch {
+      // almacenamiento no disponible: ignorar
+    }
+  }
+
+  function loadPlayerPos(): { left: number; top: number } | null {
+    try {
+      const raw = localStorage.getItem(PLAYER_POS_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (
+        parsed &&
+        typeof parsed.left === "number" &&
+        typeof parsed.top === "number"
+      ) {
+        return { left: parsed.left, top: parsed.top };
+      }
+    } catch {
+      // almacenamiento corrupto o no disponible
+    }
+    return null;
+  }
+
   function setPlayerVisible(visible: boolean) {
     if (visible) {
       const edge = 8;
@@ -520,16 +644,37 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
       const playerHeight = player.offsetHeight;
       const maxX = window.innerWidth - playerWidth - edge;
       const maxY = window.innerHeight - playerHeight - edge;
-      const fabRect = fab.getBoundingClientRect();
-      // Centra el reproductor sobre el FAB y lo mantiene dentro del viewport
-      let left = fabRect.left + fabRect.width / 2 - playerWidth / 2;
-      let top = fabRect.top + fabRect.height / 2 - playerHeight / 2;
-      left = Math.max(edge, Math.min(maxX, left));
-      top = Math.max(edge, Math.min(maxY, top));
-      player.style.left = `${left}px`;
-      player.style.top = `${top}px`;
-      player.style.right = "auto";
-      player.style.bottom = "auto";
+      const saved = loadPlayerPos();
+      const isMobile = window.matchMedia("(max-width: 640px)").matches;
+
+      if (saved) {
+        // El usuario ya movió el reproductor: restaurar su última posición
+        player.style.left = `${Math.max(edge, Math.min(maxX, saved.left))}px`;
+        player.style.top = `${Math.max(edge, Math.min(maxY, saved.top))}px`;
+        player.style.right = "auto";
+        player.style.bottom = "auto";
+      } else if (isMobile) {
+        // Centra el reproductor sobre el FAB y lo mantiene dentro del viewport
+        const fabRect = fab.getBoundingClientRect();
+        const left = Math.max(
+          edge,
+          Math.min(maxX, fabRect.left + fabRect.width / 2 - playerWidth / 2)
+        );
+        const top = Math.max(
+          edge,
+          Math.min(maxY, fabRect.top + fabRect.height / 2 - playerHeight / 2)
+        );
+        player.style.left = `${left}px`;
+        player.style.top = `${top}px`;
+        player.style.right = "auto";
+        player.style.bottom = "auto";
+      } else {
+        // Por defecto en escritorio: arriba a la derecha (CSS)
+        player.style.removeProperty("left");
+        player.style.removeProperty("top");
+        player.style.removeProperty("right");
+        player.style.removeProperty("bottom");
+      }
       player.classList.remove("wmp-player--hide");
     } else {
       player.classList.add("wmp-player--hide");
@@ -575,10 +720,11 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
       const dx = e.clientX - dragState.startX;
       const dy = e.clientY - dragState.startY;
       if (Math.abs(dx) + Math.abs(dy) > 4) dragState.moved = true;
-      const maxX = Math.max(0, window.innerWidth - target.offsetWidth);
-      const maxY = Math.max(0, window.innerHeight - target.offsetHeight);
-      const nextLeft = Math.max(0, Math.min(maxX, dragState.originX + dx));
-      const nextTop = Math.max(0, Math.min(maxY, dragState.originY + dy));
+      const edge = target === player ? 8 : 0;
+      const maxX = Math.max(0, window.innerWidth - target.offsetWidth - edge);
+      const maxY = Math.max(0, window.innerHeight - target.offsetHeight - edge);
+      const nextLeft = Math.max(edge, Math.min(maxX, dragState.originX + dx));
+      const nextTop = Math.max(edge, Math.min(maxY, dragState.originY + dy));
       target.style.left = `${nextLeft}px`;
       target.style.top = `${nextTop}px`;
       target.style.right = "auto";
@@ -598,14 +744,18 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
       if (wasDrag && handle === target) {
         suppressFabClick = true;
       }
+      // Recordar dónde dejó el reproductor el usuario
+      if (wasDrag && target === player) {
+        savePlayerPos();
+      }
     };
     handle.addEventListener("pointerup", endDrag);
     handle.addEventListener("pointercancel", endDrag);
   }
 
-  // Arrastrar el reproductor por su barra de título
+  // El reproductor arranca arriba a la derecha (CSS) pero se puede arrastrar
+  // por toda la página tanto en escritorio como en móvil.
   enableDrag(titlebar, player);
-  // Arrastrar el botón flotante de música
   enableDrag(fab, fab);
 
   function formatTime(ms: number): string {
@@ -623,6 +773,70 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
   function clearStatus() {
     statusEl.classList.add("hidden");
     statusEl.textContent = "";
+  }
+
+  // --- Letras sincronizadas (LRCLIB) ---
+  function setLyricsStatus(message: string) {
+    lyricsLines = [];
+    lyricsActiveIndex = -1;
+    lyricsBody.innerHTML = "";
+    lyricsStatus.textContent = message;
+    lyricsStatus.classList.remove("hidden");
+  }
+
+  async function loadLyrics(track: string, artist: string, durationMs: number) {
+    const data = await getSyncedLyrics(track, artist, durationMs);
+    if (`${track}\u0000${artist}` !== lyricsKey) return;
+    if (!data || (!data.plainText && data.lines.length === 0)) {
+      setLyricsStatus("No se encontró letra para esta canción.");
+      return;
+    }
+    if (data.lines.length > 0) {
+      lyricsLines = data.lines;
+      lyricsStatus.classList.add("hidden");
+      lyricsBody.innerHTML = "";
+      data.lines.forEach((line, i) => {
+        const li = document.createElement("li");
+        li.className = "wmp-lyric-line";
+        li.textContent = line.text || "…";
+        li.dataset.index = String(i);
+        lyricsBody.appendChild(li);
+      });
+      updateLyricHighlight();
+    } else if (data.plainText) {
+      setLyricsStatus(data.plainText);
+    }
+  }
+
+  function updateLyricHighlight() {
+    if (lyricsLines.length === 0) return;
+    const elapsed = lastPlaying ? performance.now() - lastPollAt : 0;
+    const progress = lastProgressMs + elapsed;
+
+    let index = 0;
+    while (
+      index < lyricsLines.length - 1 &&
+      lyricsLines[index + 1].timeMs <= progress
+    ) {
+      index++;
+    }
+    if (index === lyricsActiveIndex) return;
+    lyricsActiveIndex = index;
+
+    const items = lyricsBody.children;
+    for (let i = 0; i < items.length; i++) {
+      items[i].classList.toggle("active", i === index);
+    }
+    const active = items[index] as HTMLElement | undefined;
+    if (active) active.scrollIntoView({ block: "nearest" });
+  }
+
+  function toggleLyrics() {
+    const isOpen = !lyricsPanel.classList.contains("hidden");
+    lyricsPanel.classList.toggle("hidden", isOpen);
+    lyricsBtn.setAttribute("aria-pressed", String(!isOpen));
+    lyricsBtn.setAttribute("aria-label", isOpen ? "Mostrar letra" : "Ocultar letra");
+    if (!isOpen) updateLyricHighlight();
   }
 
   function messageForError(err: unknown): string {
@@ -647,6 +861,14 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
     return "Ocurrió un error inesperado.";
   }
 
+  function setPlayingIcon(playing: boolean) {
+    const playIcon = document.getElementById("wmp-icon-play");
+    const pauseIcon = document.getElementById("wmp-icon-pause");
+    if (playIcon) playIcon.classList.toggle("hidden", playing);
+    if (pauseIcon) pauseIcon.classList.toggle("hidden", !playing);
+    playPauseBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+  }
+
   async function refreshNowPlaying() {
     try {
       const state: PlaybackState | null = await getPlaybackState();
@@ -657,8 +879,9 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
         deviceNameEl.textContent = "";
         artImg.classList.add("hidden");
         artPlaceholder.classList.remove("hidden");
-        playPauseBtn.textContent = "▶";
-        playPauseBtn.setAttribute("aria-label", "Reproducir");
+        setPlayingIcon(false);
+        lastPlaying = false;
+        setLyricsStatus("Sin reproducción activa.");
         showStatus("No hay ninguna reproducción en curso.");
         return;
       }
@@ -690,11 +913,22 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
       timeCurrentEl.textContent = formatTime(state.progressMs);
       timeTotalEl.textContent = formatTime(state.durationMs);
 
-      playPauseBtn.textContent = state.isPlaying ? "⏸" : "▶";
-      playPauseBtn.setAttribute(
-        "aria-label",
-        state.isPlaying ? "Pausar" : "Reproducir"
-      );
+      setPlayingIcon(state.isPlaying);
+
+      lastProgressMs = state.progressMs;
+      lastPollAt = performance.now();
+      lastPlaying = state.isPlaying;
+
+      const key = `${state.trackName}\u0000${state.artistNames}`;
+      if (key !== lyricsKey) {
+        lyricsKey = key;
+        if (state.trackName && state.artistNames) {
+          setLyricsStatus("Cargando letra...");
+          void loadLyrics(state.trackName, state.artistNames, state.durationMs);
+        } else {
+          setLyricsStatus("Sin letra disponible.");
+        }
+      }
 
       if (state.volumePercent !== null && !document.activeElement?.isSameNode(volumeSlider)) {
         volumeSlider.value = String(state.volumePercent);
@@ -864,10 +1098,17 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'luci
   });
 
   collapseBtn.addEventListener("click", () => setPlayerVisible(false));
+  lyricsBtn.addEventListener("click", toggleLyrics);
 
-  // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB)
+  // Resalta la línea de letra activa según el progreso estimado
+  window.setInterval(updateLyricHighlight, 500);
+
+  // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB).
+  // En escritorio se muestra y, si el usuario ya lo movió, restaura su posición.
   if (window.matchMedia("(max-width: 640px)").matches) {
     setPlayerVisible(false);
+  } else {
+    setPlayerVisible(true);
   }
 
   if (isConnected()) {

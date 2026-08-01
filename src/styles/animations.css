@@ -82,13 +82,17 @@
   animation: blink 1s step-end infinite;
 }
 
-/* --- Transición de tema (≤180ms, sin parpadeo) --- */
-/* Se activa solo durante el cambio de tema (clase añadida por el selector). */
-html.theme-switching *,
-html.theme-switching *::before,
-html.theme-switching *::after {
-  transition: background-color 180ms ease, color 180ms ease,
-    border-color 180ms ease, fill 180ms ease, box-shadow 180ms ease !important;
+/* --- Transición de tema (fade suave del contenido) --- */
+/* Al cambiar de tema el <body> se desvanece brevemente, el fondo (<html>)
+   muestra el color del nuevo tema y el contenido reaparece fundido.
+   Evita el flash de layout (vista de escritorio) en móvil sin cortina sólida. */
+html {
+  background-color: var(--bg);
+}
+
+html.theme-fading body {
+  opacity: 0;
+  transition: opacity 140ms ease;
 }
 
 /* --- Respetar prefers-reduced-motion --- */

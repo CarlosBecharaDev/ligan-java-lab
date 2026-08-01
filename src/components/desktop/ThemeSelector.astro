@@ -203,15 +203,22 @@ import { THEMES } from '@lib/theme';
       }
 
       function setTheme(next: string) {
-        root.classList.add('theme-switching');
-        if (themeApi && themeApi.set) {
-          themeApi.set(next);
-        } else {
-          root.setAttribute('data-theme', next);
-        }
+        const root = document.documentElement;
+        // Fade suave: desvanece el contenido, cambia el tema y reaparece.
+        // Enmascara el re-render (flash de escritorio en móvil) sin cortina sólida.
+        root.classList.add('theme-fading');
+        window.setTimeout(() => {
+          if (themeApi && themeApi.set) {
+            themeApi.set(next);
+          } else {
+            root.setAttribute('data-theme', next);
+          }
+          // Fuerza el repintado del nuevo tema antes de reaparecer.
+          void root.offsetHeight;
+          root.classList.remove('theme-fading');
+        }, 160);
         sync();
         closeMenu();
-        window.setTimeout(() => root.classList.remove('theme-switching'), 200);
       }
 
       toggle?.addEventListener('click', (e) => {

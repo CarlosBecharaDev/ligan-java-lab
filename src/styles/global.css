@@ -17,12 +17,9 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   scroll-behavior: smooth;
   color-scheme: dark;
-}
-
-html[data-theme="nebula"] {
-  color-scheme: dark light;
 }
 
 /* Midnight Terminal: sin blur ni efectos de vidrio. */
