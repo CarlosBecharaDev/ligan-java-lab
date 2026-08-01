@@ -110,6 +110,10 @@ npm run preview       # Previsualizar build local
 npm run astro check   # Verificar tipos
 ```
 
+## 🎵 Spotify
+
+El reproductor integrado usa PKCE y no requiere exponer un secreto. Consulta la guía de configuración y las URI de redirección en [docs/SPOTIFY.md](docs/SPOTIFY.md).
+
 ---
 
 ## 🌍 Despliegue en Vercel

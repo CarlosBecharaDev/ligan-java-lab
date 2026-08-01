@@ -1,644 +1,878 @@
 ---
-import { SPOTIFY_CLIENT_ID } from '@lib/spotify';
+// src/components/desktop/RetroPlayer.astro
+// Reproductor de Spotify con skin inspirado en Windows Media Player clásico.
+import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, Music2 } from 'lucide-astro';
 ---
-
-<div class="retro-player" data-retro-player data-connected="false" data-loading="false">
-  <div class="retro-player__led" aria-hidden="true"></div>
-
-  <!-- Estado: sin conectar -->
-  <div class="retro-player__idle" data-view="idle">
-    <div class="retro-player__speaker" aria-hidden="true">
-      <svg viewBox="0 0 24 24" width="34" height="34" fill="#1ED760" aria-hidden="true">
-        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-3.5-9.5l7-4.5v9l-7-4.5z"/>
-      </svg>
+<div id="retro-player" class="wmp-player" aria-label="Reproductor de Spotify">
+  <!-- Barra de título estilo WMP (arrástrala para mover el reproductor) -->
+  <div class="wmp-titlebar" data-wmp-drag>
+    <span class="wmp-title">Reproductor de Spotify</span>
+    <div class="wmp-title-actions">
+      <button id="wmp-collapse" type="button" aria-label="Minimizar reproductor"><Minus size={14} /></button>
     </div>
-    <p class="retro-player__title">SPOTIFY<br>JUKBOX</p>
-    <button class="retro-player__connect" data-connect>CONECTAR SPOTIFY</button>
-    <p class="retro-player__hint">Muestra lo que escuchas y controla tu música desde aquí.</p>
   </div>
 
-  <!-- Estado: conectando -->
-  <div class="retro-player__loading" data-view="loading" hidden>
-    <div class="retro-player__spinner" aria-hidden="true"></div>
-    <p class="retro-player__hint">Conectando con Spotify…</p>
-  </div>
-
-  <!-- Estado: conectado -->
-  <div class="retro-player__playing" data-view="playing" hidden>
-    <div class="retro-player__row">
-      <div class="retro-player__cover" data-cover aria-hidden="true">
-        <span class="retro-player__cover-fallback">♪</span>
-        <img data-cover-img alt="" />
-      </div>
-      <div class="retro-player__meta">
-        <div class="retro-player__track" data-track>—</div>
-        <div class="retro-player__artist" data-artist>—</div>
-        <div class="retro-player__device" data-device></div>
-      </div>
-    </div>
-
-    <div class="retro-player__progress">
-      <div class="retro-player__bar" data-bar>
-        <div class="retro-player__bar-fill" data-bar-fill></div>
-        <div class="retro-player__bar-knob" data-bar-knob></div>
-      </div>
-      <div class="retro-player__times">
-        <span data-time-cur>0:00</span>
-        <span data-time-total>0:00</span>
-      </div>
-    </div>
-
-    <div class="retro-player__controls">
-      <button class="retro-player__btn" data-prev aria-label="Anterior">⏮</button>
-      <button class="retro-player__btn retro-player__btn--main" data-toggle aria-label="Reproducir/Pausar">
-        <span data-toggle-icon>▶</span>
+  <div id="wmp-body" class="wmp-body">
+    <!-- Estado de conexión -->
+    <div id="wmp-connect-panel" class="wmp-panel">
+      <p class="wmp-msg">Conecta tu cuenta de Spotify para reproducir música.</p>
+      <button id="wmp-connect-btn" type="button" class="wmp-btn-primary">
+        Conectar con Spotify
       </button>
-      <button class="retro-player__btn" data-next aria-label="Siguiente">⏭</button>
-      <button class="retro-player__btn retro-player__btn--disconnect" data-disconnect aria-label="Desconectar Spotify">✕</button>
     </div>
-    <p class="retro-player__premium-note" data-premium-note hidden>⚠ Control requiere cuenta Premium de Spotify.</p>
+
+    <!-- Panel principal (oculto hasta conectar) -->
+    <div id="wmp-main-panel" class="wmp-panel hidden">
+      <div class="wmp-user-row">
+        <span id="wmp-username">—</span>
+        <span id="wmp-plan" class="wmp-plan-badge">—</span>
+        <button id="wmp-disconnect-btn" type="button" aria-label="Desconectar cuenta de Spotify">
+          Desconectar
+        </button>
+      </div>
+
+      <div class="wmp-nowplaying">
+        <div class="wmp-art-frame">
+          <img id="wmp-art" alt="" src="" class="hidden" />
+          <div id="wmp-art-placeholder" class="wmp-art-placeholder" aria-hidden="true"></div>
+        </div>
+        <div class="wmp-track-info">
+          <p id="wmp-track-name" class="wmp-track-name">Sin reproducción</p>
+          <p id="wmp-artist-name" class="wmp-artist-name"></p>
+          <p id="wmp-device-name" class="wmp-device-name"></p>
+        </div>
+      </div>
+
+      <!-- Barra de progreso -->
+      <div class="wmp-progress-row">
+        <span id="wmp-time-current" class="wmp-time">0:00</span>
+        <input
+          id="wmp-progress"
+          type="range"
+          min="0"
+          max="1000"
+          value="0"
+          aria-label="Progreso de la canción"
+        />
+        <span id="wmp-time-total" class="wmp-time">0:00</span>
+      </div>
+
+      <!-- Controles de transporte -->
+      <div class="wmp-controls">
+        <button id="wmp-prev" type="button" aria-label="Canción anterior">⏮</button>
+        <button id="wmp-playpause" type="button" aria-label="Reproducir">▶</button>
+        <button id="wmp-next" type="button" aria-label="Siguiente canción">⏭</button>
+        <div class="wmp-volume">
+          <label for="wmp-volume-slider" class="visually-hidden">Volumen</label>
+          <span aria-hidden="true">🔊</span>
+          <input id="wmp-volume-slider" type="range" min="0" max="100" value="70" aria-label="Volumen" />
+        </div>
+      </div>
+
+      <!-- Mensaje de estado (errores / avisos) -->
+      <p id="wmp-status" class="wmp-status hidden" role="status"></p>
+
+      <!-- Búsqueda -->
+      <div class="wmp-search">
+        <label for="wmp-search-input" class="visually-hidden">Buscar canciones</label>
+        <input
+          id="wmp-search-input"
+          type="text"
+          placeholder="Buscar canción o artista..."
+          aria-label="Buscar canciones por artista o título"
+        />
+        <ul id="wmp-search-results" class="wmp-search-results" aria-label="Resultados de búsqueda"></ul>
+      </div>
+    </div>
   </div>
 </div>
 
+<!-- Botón flotante de música: muestra/oculta el reproductor (móvil) -->
+<button id="wmp-fab" type="button" class="wmp-fab hidden" aria-label="Mostrar reproductor de Spotify">
+  <svg viewBox="0 0 16 16" width="22" height="22" fill="none" shape-rendering="crispEdges" aria-hidden="true">
+    <rect x="10" y="1" width="2" height="11" fill="#fff"/>
+    <rect x="11" y="1" width="3" height="2" fill="#fff"/>
+    <rect x="4" y="9" width="4" height="4" fill="#1ed760"/>
+    <rect x="3" y="10" width="4" height="2" fill="#1ed760"/>
+    <rect x="4" y="13" width="3" height="1" fill="#1ed760"/>
+    <rect x="3" y="9" width="1" height="1" fill="#2a2a2a"/>
+  </svg>
+</button>
+
 <style>
-  .retro-player {
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+  .hidden {
+    display: none !important;
+  }
+
+  .wmp-player {
+    --wmp-green: #1ed760;
+    --wmp-warn: #ffd700;
+    --wmp-bg: #0a0a0a;
+    --wmp-error: #ff5f57;
+
     position: fixed;
     top: 12px;
     right: 12px;
-    width: 260px;
-    z-index: calc(var(--z-window) + 1);
-    background: linear-gradient(160deg, #222 0%, #0a0a0a 100%);
-    border: 2px solid #333;
-    border-top-color: #555;
-    border-left-color: #444;
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6), 0 0 18px rgba(0, 0, 0, 0.5);
-    font-family: var(--font-pixel);
-    color: var(--taskbar-text);
-    overflow: hidden;
+    width: 270px;
+    max-width: 280px;
+    z-index: 500;
+    font-family: "Perfect DOS VGA 437", "MS Sans Serif", monospace;
+    border: 2px solid #000;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+    background: var(--wmp-bg);
+    color: #e6e6e6;
+    image-rendering: pixelated;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      visibility 0.2s;
+    transform-origin: center;
   }
 
-  .retro-player__led {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #333;
-    box-shadow: inset 0 0 2px rgba(0, 0, 0, 0.8);
-    transition: background 0.3s;
+  /* Estado oculto: usa visibility (mantiene las dimensiones medibles) y
+     anima la aparición/desaparición en vez de cortarse bruscamente. */
+  .wmp-player--hide {
+    opacity: 0;
+    transform: scale(0.92) translateY(6px);
+    visibility: hidden;
+    pointer-events: none;
   }
 
-  .retro-player[data-connected="true"] .retro-player__led {
-    background: #1ED760;
-    box-shadow: 0 0 6px #1ED760;
-  }
-
-  .retro-player[data-loading="true"] .retro-player__led {
-    background: #FFD700;
-    box-shadow: 0 0 6px #FFD700;
-    animation: ledBlink 1s steps(2) infinite;
-  }
-
-  @keyframes ledBlink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-
-  .retro-player__idle,
-  .retro-player__loading,
-  .retro-player__playing {
-    padding: 14px 14px 16px;
-  }
-
-  .retro-player__idle {
-    text-align: center;
-  }
-
-  .retro-player__speaker {
-    margin: 0 auto 10px;
-    width: 64px;
-    height: 64px;
+  /* Barra de título tipo WMP (chrome azul con bisel) */
+  .wmp-titlebar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    border: 2px solid #2a2a2a;
-    border-radius: 50%;
-    background: #111;
-    box-shadow: inset 0 0 0 3px #1a1a1a;
-  }
-
-  .retro-player__title {
-    font-size: 0.55rem;
-    line-height: 1.6;
-    color: var(--taskbar-text);
-    margin: 0 0 12px;
-    letter-spacing: 0.05em;
-  }
-
-  .retro-player__connect {
-    display: block;
-    width: 100%;
-    padding: 10px 8px;
-    font-family: var(--font-pixel);
-    font-size: 0.5rem;
-    color: #0a0a0a;
-    background: #1ED760;
-    border: 2px solid transparent;
-    border-top-color: #7BE8A7;
-    border-left-color: #7BE8A7;
-    border-bottom-color: #128A44;
-    border-right-color: #128A44;
-    cursor: pointer;
-    transition: filter var(--transition);
-    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
-  }
-
-  .retro-player__connect:hover {
-    filter: brightness(1.12);
-  }
-
-  .retro-player__hint {
-    font-family: var(--font-ui);
-    font-size: var(--text-sm);
-    color: var(--taskbar-text);
-    opacity: 0.75;
-    margin: 10px 0 0;
-    line-height: 1.4;
-  }
-
-  .retro-player__loading {
-    text-align: center;
-  }
-
-  .retro-player__spinner {
-    width: 28px;
-    height: 28px;
-    margin: 6px auto;
-    border: 3px solid #333;
-    border-top-color: #1ED760;
-    border-radius: 50%;
-    animation: spin 0.8s linear infinite;
-  }
-
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .retro-player__row {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-    margin-bottom: 10px;
-  }
-
-  .retro-player__cover {
-    position: relative;
-    width: 52px;
-    height: 52px;
-    flex-shrink: 0;
-    background: #111;
-    border: 2px solid #2a2a2a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-  }
-
-  .retro-player__cover-fallback {
-    font-size: 1.2rem;
-    color: #1ED760;
-  }
-
-  .retro-player__cover img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: none;
-  }
-
-  .retro-player__cover[data-has-img="true"] .retro-player__cover-fallback {
-    display: none;
-  }
-
-  .retro-player__cover[data-has-img="true"] img {
-    display: block;
-  }
-
-  .retro-player__meta {
-    min-width: 0;
-    flex: 1;
-  }
-
-  .retro-player__track {
-    font-size: 0.5rem;
-    color: #fff;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin-bottom: 4px;
-  }
-
-  .retro-player__artist {
-    font-family: var(--font-ui);
-    font-size: var(--text-sm);
-    color: var(--taskbar-text);
-    opacity: 0.8;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .retro-player__device {
-    font-family: var(--font-ui);
-    font-size: 0.75rem;
-    color: #1ED760;
-    margin-top: 2px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-
-  .retro-player__progress {
-    margin-bottom: 10px;
-  }
-
-  .retro-player__bar {
-    position: relative;
-    height: 10px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    cursor: pointer;
-    overflow: hidden;
-  }
-
-  .retro-player__bar-fill {
-    position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    width: 0;
-    background: repeating-linear-gradient(90deg, #1ED760 0 4px, #17B950 4px 8px);
-  }
-
-  .retro-player__bar-knob {
-    position: absolute;
-    top: -1px;
-    width: 4px;
-    height: 10px;
-    background: #fff;
-    border: 1px solid #0a0a0a;
-    transform: translateX(-2px);
-    display: none;
-  }
-
-  .retro-player__bar:hover .retro-player__bar-knob {
-    display: block;
-  }
-
-  .retro-player__times {
-    display: flex;
     justify-content: space-between;
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    color: var(--taskbar-text);
-    opacity: 0.8;
-    margin-top: 4px;
+    padding: 3px 6px;
+    background: linear-gradient(180deg, #be6cb0 0%, #a85499 50%, #803878 100%);
+    border-bottom: 2px solid #000;
+    cursor: move;
+    touch-action: none;
+    user-select: none;
+  }
+  .wmp-title {
+    font-size: 11px;
+    color: #fff;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wmp-title-actions button {
+    background: #c0c0c0;
+    border: 1px solid #000;
+    color: #000;
+    font-size: 10px;
+    width: 16px;
+    height: 16px;
+    line-height: 1;
+    cursor: pointer;
   }
 
-  .retro-player__controls {
+  .wmp-body {
+    padding: 8px;
+    max-height: calc(100vh - 90px);
+    overflow-y: auto;
+  }
+
+  .wmp-panel {
     display: flex;
-    align-items: center;
-    justify-content: center;
+    flex-direction: column;
     gap: 8px;
   }
 
-  .retro-player__btn {
-    width: 32px;
-    height: 32px;
+  .wmp-msg {
+    font-size: 11px;
+    color: var(--wmp-warn);
+    margin: 0;
+  }
+
+  .wmp-btn-primary {
+    background: var(--wmp-green);
+    color: #000;
+    border: 2px solid #000;
+    box-shadow: 2px 2px 0 #000;
+    padding: 6px 8px;
+    font-family: inherit;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .wmp-btn-primary:focus-visible,
+  button:focus-visible,
+  input:focus-visible {
+    outline: 2px solid var(--wmp-warn);
+    outline-offset: 2px;
+  }
+
+  .wmp-user-row {
     display: flex;
     align-items: center;
-    justify-content: center;
-    font-family: var(--font-pixel);
-    font-size: 0.6rem;
-    color: var(--taskbar-text);
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 10px;
+  }
+  #wmp-username {
+    font-weight: bold;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100px;
+  }
+  .wmp-plan-badge {
+    background: var(--wmp-green);
+    color: #000;
+    padding: 1px 4px;
+    font-size: 9px;
+    text-transform: uppercase;
+  }
+  #wmp-disconnect-btn {
+    margin-left: auto;
     background: #1a1a1a;
-    border: 2px solid #333;
+    color: var(--wmp-error);
+    border: 1px solid var(--wmp-error);
+    font-size: 9px;
+    cursor: pointer;
+    padding: 2px 5px;
+  }
+
+  .wmp-nowplaying {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+  }
+  .wmp-art-frame {
+    width: 56px;
+    height: 56px;
+    flex-shrink: 0;
+    background: radial-gradient(circle at 30% 30%, #3a1f5c, #0a0a0a 70%);
+    border: 2px solid #000;
+    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+  }
+  .wmp-art-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .wmp-art-placeholder {
+    width: 100%;
+    height: 100%;
+  }
+
+  .wmp-track-info {
+    min-width: 0;
+    flex: 1;
+  }
+  .wmp-track-name,
+  .wmp-artist-name,
+  .wmp-device-name {
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .wmp-track-name {
+    font-size: 11px;
+    color: var(--wmp-green);
+    font-weight: bold;
+  }
+  .wmp-artist-name {
+    font-size: 10px;
+    color: #ccc;
+  }
+  .wmp-device-name {
+    font-size: 9px;
+    color: #888;
+  }
+
+  .wmp-progress-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  .wmp-time {
+    font-size: 9px;
+    color: #aaa;
+    width: 28px;
+  }
+  #wmp-progress {
+    flex: 1;
+    min-width: 0;
+    accent-color: var(--wmp-green);
+  }
+
+  .wmp-controls {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .wmp-controls button {
+    background: #1a1a1a;
+    color: #fff;
+    border: 2px solid #444;
+    box-shadow: 1px 1px 0 #000;
+    width: 28px;
+    height: 24px;
+    cursor: pointer;
+    font-size: 11px;
+  }
+  #wmp-playpause {
+    border-color: var(--wmp-green);
+    color: var(--wmp-green);
+  }
+  .wmp-volume {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+  .wmp-volume input {
+    width: 60px;
+    accent-color: var(--wmp-green);
+  }
+
+  .wmp-status {
+    font-size: 10px;
+    color: var(--wmp-warn);
+    background: #1a1a1a;
+    border: 1px solid var(--wmp-warn);
+    padding: 4px 6px;
+    margin: 0;
+  }
+  .wmp-status[data-kind="error"] {
+    color: var(--wmp-error);
+    border-color: var(--wmp-error);
+  }
+
+  .wmp-search input {
+    width: 100%;
+    box-sizing: border-box;
+    background: #000;
+    color: #fff;
+    border: 1px solid #444;
+    font-family: inherit;
+    font-size: 10px;
+    padding: 4px;
+  }
+  .wmp-search-results {
+    list-style: none;
+    margin: 4px 0 0;
+    padding: 0;
+    max-height: 130px;
+    overflow-y: auto;
+    border: 1px solid #333;
+  }
+  .wmp-search-results li {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 3px 4px;
+    font-size: 9px;
+    border-bottom: 1px solid #222;
+    cursor: pointer;
+  }
+  .wmp-search-results li:hover,
+  .wmp-search-results li:focus-visible {
+    background: #1a2f1e;
+  }
+  .wmp-search-results .wmp-result-title {
+    flex: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* --- Botón flotante de música (mostrar/ocultar en móvil) --- */
+  .wmp-fab {
+    position: fixed;
+    right: 12px;
+    bottom: 16px;
+    z-index: 510;
+    width: 44px;
+    height: 44px;
+    border-radius: 0;
+    border: 2px solid #000;
+    border-top-color: #c0c0c0;
+    border-left-color: #c0c0c0;
+    border-bottom-color: #444;
+    border-right-color: #444;
+    background: linear-gradient(180deg, #be6cb0 0%, #a85499 50%, #803878 100%);
+    color: #fff;
+    font-family: "Perfect DOS VGA 437", "MS Sans Serif", monospace;
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+    display: grid;
+    place-items: center;
+    image-rendering: pixelated;
+    touch-action: none;
+  }
+  .wmp-fab:active {
     border-top-color: #444;
     border-left-color: #444;
-    border-bottom-color: #222;
-    border-right-color: #222;
-    cursor: pointer;
-    transition: background var(--transition), color var(--transition);
+    border-bottom-color: #c0c0c0;
+    border-right-color: #c0c0c0;
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
+    transform: translate(1px, 1px);
+  }
+  .wmp-fab:focus-visible {
+    outline: 2px solid var(--wmp-warn);
+    outline-offset: 2px;
+  }
+  .wmp-fab.pulse {
+    animation: wmp-fab-pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes wmp-fab-pulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(30, 215, 96, 0.5); }
+    50% { box-shadow: 0 0 0 8px rgba(30, 215, 96, 0); }
   }
 
-  .retro-player__btn:hover {
-    background: #2a2a2a;
-    color: #1ED760;
-  }
-
-  .retro-player__btn:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-
-  .retro-player__btn--main {
-    width: 40px;
-    height: 40px;
-    font-size: 0.75rem;
-    background: #1ED760;
-    color: #0a0a0a;
-    border-color: #7BE8A7 #128A44 #128A44 #7BE8A7;
-  }
-
-  .retro-player__btn--main:hover {
-    color: #0a0a0a;
-    background: #22E96B;
-  }
-
-  .retro-player__btn--disconnect {
-    margin-left: 4px;
-    font-size: 0.5rem;
-  }
-
-  .retro-player__premium-note {
-    font-family: var(--font-ui);
-    font-size: 0.8rem;
-    color: #FFBD2E;
-    margin: 8px 0 0;
-    text-align: center;
-    line-height: 1.4;
-  }
-
-  @media (max-width: 767px) {
-    .retro-player {
-      top: 8px;
-      right: 8px;
-      width: 200px;
+  /* --- Responsive móvil --- */
+  @media (max-width: 640px) {
+    .wmp-player {
+      top: auto;
+      bottom: calc(48px + env(safe-area-inset-bottom, 0px));
+      right: 6px;
+      left: 6px;
+      width: auto;
+      max-width: 200px;
+      margin-left: auto;
+      max-height: calc(100dvh - 72px);
     }
-
-    .retro-player__idle,
-    .retro-player__loading,
-    .retro-player__playing {
-      padding: 10px 10px 12px;
+    .wmp-body {
+      max-height: calc(100dvh - 120px);
     }
-
-    .retro-player__speaker {
-      width: 48px;
-      height: 48px;
-    }
-
-    .retro-player__speaker svg {
-      width: 26px;
-      height: 26px;
-    }
-
-    .retro-player__title {
-      font-size: 0.45rem;
-    }
-
-    .retro-player__connect {
-      font-size: 0.42rem;
-      padding: 8px 6px;
-    }
-
-    .retro-player__cover {
-      width: 42px;
-      height: 42px;
-    }
-
-    .retro-player__track {
-      font-size: 0.42rem;
-    }
-
-    .retro-player__btn {
-      width: 28px;
-      height: 28px;
-    }
-
-    .retro-player__btn--main {
-      width: 34px;
-      height: 34px;
+    .wmp-fab {
+      right: 10px;
+      bottom: calc(58px + env(safe-area-inset-bottom, 0px));
     }
   }
 </style>
 
 <script>
   import {
-    startSpotifyAuth,
-    getPlayerState,
-    controlSpotify,
-    seekSpotify,
-    isSpotifyConnected,
-    clearSpotifyAuth,
-  } from '@lib/spotify';
+    isConnected,
+    startLogin,
+    logout,
+    getMe,
+    getPlaybackState,
+    play,
+    pause,
+    nextTrack,
+    previousTrack,
+    seek,
+    setVolume,
+    searchTracks,
+    SpotifyAppError,
+  } from "@lib/spotify";
+  import type { PlaybackState } from "@lib/spotify";
 
-  const root = document.querySelector<HTMLElement>('[data-retro-player]');
-  if (root) {
-    const VIEWS = { idle: '[data-view="idle"]', loading: '[data-view="loading"]', playing: '[data-view="playing"]' } as const;
+  const $ = <T extends Element = HTMLElement>(sel: string) =>
+    document.querySelector<T>(sel)!;
 
-    const connectBtn = root.querySelector<HTMLButtonElement>('[data-connect]');
-    const disconnectBtn = root.querySelector<HTMLButtonElement>('[data-disconnect]');
-    const toggleBtn = root.querySelector<HTMLButtonElement>('[data-toggle]');
-    const prevBtn = root.querySelector<HTMLButtonElement>('[data-prev]');
-    const nextBtn = root.querySelector<HTMLButtonElement>('[data-next]');
-    const trackEl = root.querySelector<HTMLElement>('[data-track]');
-    const artistEl = root.querySelector<HTMLElement>('[data-artist]');
-    const deviceEl = root.querySelector<HTMLElement>('[data-device]');
-    const coverEl = root.querySelector<HTMLElement>('[data-cover]');
-    const coverImg = root.querySelector<HTMLImageElement>('[data-cover-img]');
-    const bar = root.querySelector<HTMLElement>('[data-bar]');
-    const barFill = root.querySelector<HTMLElement>('[data-bar-fill]');
-    const timeCur = root.querySelector<HTMLElement>('[data-time-cur]');
-    const timeTotal = root.querySelector<HTMLElement>('[data-time-total]');
-    const toggleIcon = root.querySelector<HTMLElement>('[data-toggle-icon]');
-    const premiumNote = root.querySelector<HTMLElement>('[data-premium-note]');
-    const buttons = root.querySelectorAll<HTMLButtonElement>('.retro-player__btn');
+  const connectPanel = $("#wmp-connect-panel");
+  const mainPanel = $("#wmp-main-panel");
+  const connectBtn = $("#wmp-connect-btn");
+  const disconnectBtn = $("#wmp-disconnect-btn");
+  const usernameEl = $("#wmp-username");
+  const planEl = $("#wmp-plan");
+  const artImg = $<HTMLImageElement>("#wmp-art");
+  const artPlaceholder = $("#wmp-art-placeholder");
+  const trackNameEl = $("#wmp-track-name");
+  const artistNameEl = $("#wmp-artist-name");
+  const deviceNameEl = $("#wmp-device-name");
+  const progressInput = $<HTMLInputElement>("#wmp-progress");
+  const timeCurrentEl = $("#wmp-time-current");
+  const timeTotalEl = $("#wmp-time-total");
+  const playPauseBtn = $("#wmp-playpause");
+  const prevBtn = $("#wmp-prev");
+  const nextBtn = $("#wmp-next");
+  const volumeSlider = $<HTMLInputElement>("#wmp-volume-slider");
+  const statusEl = $("#wmp-status");
+  const searchInput = $<HTMLInputElement>("#wmp-search-input");
+  const resultsList = $("#wmp-search-results");
+  const collapseBtn = $("#wmp-collapse");
+  const titlebar = $(".wmp-titlebar");
+  const player = $("#retro-player");
+  const fab = $("#wmp-fab");
 
-    let pollTimer: number | undefined;
+  let pollHandle: number | null = null;
+  let userIsDraggingProgress = false;
+  let currentDurationMs = 0;
 
-    function showView(name: 'idle' | 'loading' | 'playing') {
-      (Object.keys(VIEWS) as (keyof typeof VIEWS)[]).forEach((key) => {
-        const el = root.querySelector<HTMLElement>(VIEWS[key]);
-        if (el) el.hidden = key !== name;
-      });
-    }
-
-    function setConnected(on: boolean) {
-      root.setAttribute('data-connected', on ? 'true' : 'false');
-      root.setAttribute('data-loading', 'false');
-    }
-
-    function fmt(ms: number): string {
-      if (!ms || isNaN(ms)) return '0:00';
-      const total = Math.round(ms / 1000);
-      const m = Math.floor(total / 60);
-      const s = total % 60;
-      return m + ':' + (s < 10 ? '0' : '') + s;
-    }
-
-    function coverUrl(track: { album?: { images?: { url: string }[] } } | null): string {
-      if (!track || !track.album || !track.album.images || track.album.images.length === 0) return '';
-      const imgs = track.album.images;
-      const pick = imgs.find((i) => i && i.url && i.url.includes('300')) || imgs[imgs.length - 1];
-      return pick ? pick.url : '';
-    }
-
-    async function refresh() {
-      try {
-        const state = await getPlayerState();
-        if (!state || !state.item) {
-          trackEl && (trackEl.textContent = 'Nada sonando');
-          artistEl && (artistEl.textContent = '—');
-          if (deviceEl) deviceEl.textContent = '';
-          toggleIcon && (toggleIcon.textContent = '▶');
-          barFill && (barFill.style.width = '0%');
-          timeCur && (timeCur.textContent = '0:00');
-          timeTotal && (timeTotal.textContent = '0:00');
-          if (premiumNote) premiumNote.hidden = true;
-          return;
-        }
-
-        trackEl && (trackEl.textContent = state.item.name || '—');
-        const artists = state.item.artists ? state.item.artists.map((a) => a.name).join(', ') : '—';
-        artistEl && (artistEl.textContent = artists);
-        if (deviceEl && state.device) deviceEl.textContent = '▸ ' + (state.device.name || state.device.type || '');
-
-        const url = coverUrl(state.item);
-        if (url && coverImg) {
-          coverImg.src = url;
-          coverEl && coverEl.setAttribute('data-has-img', 'true');
-        } else {
-          if (coverImg) coverImg.removeAttribute('src');
-          coverEl && coverEl.setAttribute('data-has-img', 'false');
-        }
-
-        const dur = state.item.duration_ms || 0;
-        const prog = state.progress_ms || 0;
-        timeCur && (timeCur.textContent = fmt(prog));
-        timeTotal && (timeTotal.textContent = fmt(dur));
-        barFill && (barFill.style.width = dur ? Math.min(100, (prog / dur) * 100) + '%' : '0%');
-        toggleIcon && (toggleIcon.textContent = state.is_playing ? '❚❚' : '▶');
-      } catch (e) {
-        const msg = e && (e as Error).message;
-        if (msg === 'Not connected') {
-          stopPolling();
-          showView('idle');
-          setConnected(false);
-          return;
-        }
-        if (msg && msg.indexOf('401') > -1) {
-          stopPolling();
-          showView('idle');
-          setConnected(false);
-          return;
-        }
-      }
-    }
-
-    function startPolling() {
-      stopPolling();
-      refresh();
-      pollTimer = window.setInterval(refresh, 4000);
-    }
-
-    function stopPolling() {
-      if (pollTimer !== undefined) {
-        window.clearInterval(pollTimer);
-        pollTimer = undefined;
-      }
-    }
-
-    function showNote(text: string) {
-      if (premiumNote) {
-        premiumNote.textContent = text;
-        premiumNote.hidden = false;
-      }
-    }
-
-    function hideNote() {
-      if (premiumNote) premiumNote.hidden = true;
-    }
-
-    /**
-     * Interpreta el código HTTP de Spotify para mostrar el mensaje correcto.
-     * 403 = realmente requiere Premium. 404/204 = no hay dispositivo activo
-     * (hay que reproducir algo en la app de Spotify). 401 = token inválido.
-     */
-    function handleControlError(status: number) {
-      if (status === 403) {
-        showNote('Esta cuenta no tiene Spotify Premium y el control remoto lo requiere.');
-        return;
-      }
-      if (status === 404 || status === 204) {
-        showNote('Reproduce algo en tu app de Spotify para controlar la música.');
-        return;
-      }
-      if (status === 401) {
-        stopPolling();
-        showView('idle');
-        setConnected(false);
-        return;
-      }
-      showNote('No se pudo controlar la reproducción. Inténtalo de nuevo.');
-    }
-
-    async function act(action: Parameters<typeof controlSpotify>[0]) {
-      const res = await controlSpotify(action);
-      if (res.ok) {
-        hideNote();
-        setTimeout(refresh, 500);
-      } else {
-        handleControlError(res.status);
-      }
-    }
-
-    connectBtn?.addEventListener('click', () => {
-      sessionStorage.setItem('spotify_return', window.location.pathname);
-      root.setAttribute('data-loading', 'true');
-      showView('loading');
-      startSpotifyAuth();
-    });
-
-    disconnectBtn?.addEventListener('click', () => {
-      clearSpotifyAuth();
-      stopPolling();
-      showView('idle');
-      setConnected(false);
-    });
-
-    toggleBtn?.addEventListener('click', async () => {
-      const state = await getPlayerState().catch(() => null);
-      if (!state) return;
-      await act(state.is_playing ? 'pause' : 'play');
-      setTimeout(refresh, 300);
-    });
-
-    prevBtn?.addEventListener('click', () => act('previous'));
-    nextBtn?.addEventListener('click', () => act('next'));
-
-    bar?.addEventListener('click', async (e) => {
-      const state = await getPlayerState().catch(() => null);
-      if (!state || !state.item) return;
-      const rect = bar.getBoundingClientRect();
-      const ratio = Math.min(1, Math.max(0, (e.clientX - rect.left) / rect.width));
-      const target = Math.round(ratio * state.item.duration_ms);
-      timeCur && (timeCur.textContent = fmt(target));
-      barFill && (barFill.style.width = ratio * 100 + '%');
-      const res = await seekSpotify(target);
-      if (res.ok) hideNote();
-      else handleControlError(res.status);
-      setTimeout(refresh, 400);
-    });
-
-    // Estado inicial
-    if (isSpotifyConnected()) {
-      setConnected(true);
-      showView('playing');
-      startPolling();
+  // --- Mostrar / ocultar reproductor con el botón flotante ---
+  // El reproductor se abre centrado sobre el FAB (justo donde se pulsó) y
+  // se mantiene siempre dentro del viewport con un margen de seguridad.
+  function setPlayerVisible(visible: boolean) {
+    if (visible) {
+      const edge = 8;
+      const playerWidth = player.offsetWidth;
+      const playerHeight = player.offsetHeight;
+      const maxX = window.innerWidth - playerWidth - edge;
+      const maxY = window.innerHeight - playerHeight - edge;
+      const fabRect = fab.getBoundingClientRect();
+      // Centra el reproductor sobre el FAB y lo mantiene dentro del viewport
+      let left = fabRect.left + fabRect.width / 2 - playerWidth / 2;
+      let top = fabRect.top + fabRect.height / 2 - playerHeight / 2;
+      left = Math.max(edge, Math.min(maxX, left));
+      top = Math.max(edge, Math.min(maxY, top));
+      player.style.left = `${left}px`;
+      player.style.top = `${top}px`;
+      player.style.right = "auto";
+      player.style.bottom = "auto";
+      player.classList.remove("wmp-player--hide");
     } else {
-      setConnected(false);
-      showView('idle');
+      player.classList.add("wmp-player--hide");
     }
+    fab.classList.toggle("hidden", visible);
+    collapseBtn.setAttribute(
+      "aria-label",
+      visible ? "Minimizar reproductor" : "Mostrar reproductor"
+    );
+  }
+
+  let suppressFabClick = false;
+  fab.addEventListener("click", () => {
+    if (suppressFabClick) {
+      suppressFabClick = false;
+      return;
+    }
+    setPlayerVisible(true);
+  });
+
+  // --- Arrastrar un elemento por la pantalla (reutilizable) ---
+  function enableDrag(handle: HTMLElement, target: HTMLElement) {
+    let dragState:
+      | { pointerId: number; startX: number; startY: number; originX: number; originY: number; moved: boolean }
+      | null = null;
+
+    handle.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 && e.pointerType === "mouse") return;
+      if (handle !== target && (e.target as HTMLElement).closest("button")) return;
+      dragState = {
+        pointerId: e.pointerId,
+        startX: e.clientX,
+        startY: e.clientY,
+        originX: target.offsetLeft,
+        originY: target.offsetTop,
+        moved: false,
+      };
+      handle.setPointerCapture(e.pointerId);
+    });
+
+    handle.addEventListener("pointermove", (e) => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      const dx = e.clientX - dragState.startX;
+      const dy = e.clientY - dragState.startY;
+      if (Math.abs(dx) + Math.abs(dy) > 4) dragState.moved = true;
+      const maxX = Math.max(0, window.innerWidth - target.offsetWidth);
+      const maxY = Math.max(0, window.innerHeight - target.offsetHeight);
+      const nextLeft = Math.max(0, Math.min(maxX, dragState.originX + dx));
+      const nextTop = Math.max(0, Math.min(maxY, dragState.originY + dy));
+      target.style.left = `${nextLeft}px`;
+      target.style.top = `${nextTop}px`;
+      target.style.right = "auto";
+      target.style.bottom = "auto";
+    });
+
+    const endDrag = (e: PointerEvent) => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+      const wasDrag = dragState.moved;
+      dragState = null;
+      try {
+        handle.releasePointerCapture(e.pointerId);
+      } catch {
+        // sin captura activa, ignorar
+      }
+      // Si el usuario arrastró (en vez de pulsar), ignorar el clic siguiente
+      if (wasDrag && handle === target) {
+        suppressFabClick = true;
+      }
+    };
+    handle.addEventListener("pointerup", endDrag);
+    handle.addEventListener("pointercancel", endDrag);
+  }
+
+  // Arrastrar el reproductor por su barra de título
+  enableDrag(titlebar, player);
+  // Arrastrar el botón flotante de música
+  enableDrag(fab, fab);
+
+  function formatTime(ms: number): string {
+    const totalSec = Math.floor(ms / 1000);
+    const m = Math.floor(totalSec / 60);
+    const s = totalSec % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  }
+
+  function showStatus(message: string, kind: "info" | "error" = "info") {
+    statusEl.textContent = message;
+    statusEl.dataset.kind = kind;
+    statusEl.classList.remove("hidden");
+  }
+  function clearStatus() {
+    statusEl.classList.add("hidden");
+    statusEl.textContent = "";
+  }
+
+  function messageForError(err: unknown): string {
+    if (err instanceof SpotifyAppError) {
+      switch (err.kind) {
+        case "no_device":
+          return "No hay ningún dispositivo activo. Abre Spotify en un dispositivo.";
+        case "no_playback":
+          return "No hay ninguna reproducción en curso.";
+        case "premium_required":
+          return "Esta función requiere una cuenta Spotify Premium.";
+        case "missing_scope":
+          return "Faltan permisos autorizados para esta acción.";
+        case "token_expired":
+          return "Tu sesión expiró. Conéctate de nuevo.";
+        case "network_error":
+          return "Problema de red al hablar con Spotify.";
+        default:
+          return "Spotify respondió con un error.";
+      }
+    }
+    return "Ocurrió un error inesperado.";
+  }
+
+  async function refreshNowPlaying() {
+    try {
+      const state: PlaybackState | null = await getPlaybackState();
+      clearStatus();
+      if (!state) {
+        trackNameEl.textContent = "Sin reproducción";
+        artistNameEl.textContent = "";
+        deviceNameEl.textContent = "";
+        artImg.classList.add("hidden");
+        artPlaceholder.classList.remove("hidden");
+        playPauseBtn.textContent = "▶";
+        playPauseBtn.setAttribute("aria-label", "Reproducir");
+        showStatus("No hay ninguna reproducción en curso.");
+        return;
+      }
+      trackNameEl.textContent = state.trackName || "—";
+      artistNameEl.textContent = state.artistNames || "";
+      deviceNameEl.textContent = state.deviceName
+        ? `Dispositivo: ${state.deviceName}`
+        : "Sin dispositivo activo";
+      if (!state.deviceName) showStatus("No hay ningún dispositivo activo.");
+
+      if (state.albumImageUrl) {
+        artImg.src = state.albumImageUrl;
+        artImg.alt = `Portada de ${state.trackName}`;
+        artImg.classList.remove("hidden");
+        artPlaceholder.classList.add("hidden");
+      } else {
+        artImg.classList.add("hidden");
+        artPlaceholder.classList.remove("hidden");
+      }
+
+      currentDurationMs = state.durationMs;
+      if (!userIsDraggingProgress) {
+        progressInput.value = String(
+          state.durationMs > 0
+            ? Math.round((state.progressMs / state.durationMs) * 1000)
+            : 0
+        );
+      }
+      timeCurrentEl.textContent = formatTime(state.progressMs);
+      timeTotalEl.textContent = formatTime(state.durationMs);
+
+      playPauseBtn.textContent = state.isPlaying ? "⏸" : "▶";
+      playPauseBtn.setAttribute(
+        "aria-label",
+        state.isPlaying ? "Pausar" : "Reproducir"
+      );
+
+      if (state.volumePercent !== null && !document.activeElement?.isSameNode(volumeSlider)) {
+        volumeSlider.value = String(state.volumePercent);
+      }
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+  }
+
+  function startPolling() {
+    stopPolling();
+    refreshNowPlaying();
+    pollHandle = window.setInterval(refreshNowPlaying, 5000);
+  }
+  function stopPolling() {
+    if (pollHandle !== null) {
+      clearInterval(pollHandle);
+      pollHandle = null;
+    }
+  }
+
+  async function showConnectedUI() {
+    connectPanel.classList.add("hidden");
+    mainPanel.classList.remove("hidden");
+    try {
+      const me = await getMe();
+      usernameEl.textContent = me.display_name || "Usuario";
+      planEl.textContent = me.product === "premium" ? "Premium" : "Free";
+      if (me.product !== "premium") {
+        showStatus(
+          "Con cuenta Free solo puedes ver lo que suenas, no controlar la reproducción."
+        );
+      }
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+    startPolling();
+  }
+
+  function showDisconnectedUI() {
+    mainPanel.classList.add("hidden");
+    connectPanel.classList.remove("hidden");
+    stopPolling();
+  }
+
+  connectBtn.addEventListener("click", async () => {
+    try {
+      await startLogin();
+    } catch {
+      showStatus("No se pudo iniciar la conexión con Spotify.", "error");
+    }
+  });
+
+  disconnectBtn.addEventListener("click", () => {
+    logout();
+    showDisconnectedUI();
+  });
+
+  playPauseBtn.addEventListener("click", async () => {
+    try {
+      const state = await getPlaybackState();
+      if (state?.isPlaying) {
+        await pause();
+      } else {
+        await play();
+      }
+      await refreshNowPlaying();
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+  });
+
+  prevBtn.addEventListener("click", async () => {
+    try {
+      await previousTrack();
+      setTimeout(refreshNowPlaying, 400);
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+  });
+
+  nextBtn.addEventListener("click", async () => {
+    try {
+      await nextTrack();
+      setTimeout(refreshNowPlaying, 400);
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+  });
+
+  progressInput.addEventListener("pointerdown", () => {
+    userIsDraggingProgress = true;
+  });
+  progressInput.addEventListener("change", async () => {
+    userIsDraggingProgress = false;
+    try {
+      const ratio = Number(progressInput.value) / 1000;
+      await seek(ratio * currentDurationMs);
+      setTimeout(refreshNowPlaying, 300);
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
+  });
+
+  let volumeDebounce: number | null = null;
+  volumeSlider.addEventListener("input", () => {
+    if (volumeDebounce) clearTimeout(volumeDebounce);
+    volumeDebounce = window.setTimeout(async () => {
+      try {
+        await setVolume(Number(volumeSlider.value));
+      } catch (err) {
+        showStatus(messageForError(err), "error");
+      }
+    }, 250);
+  });
+
+  let searchDebounce: number | null = null;
+  searchInput.addEventListener("input", () => {
+    if (searchDebounce) clearTimeout(searchDebounce);
+    const query = searchInput.value;
+    searchDebounce = window.setTimeout(async () => {
+      resultsList.innerHTML = "";
+      if (!query.trim()) return;
+      try {
+        const results = await searchTracks(query);
+        for (const track of results) {
+          const li = document.createElement("li");
+          li.setAttribute("role", "button");
+          li.tabIndex = 0;
+
+          if (track.albumImageUrl) {
+            const img = document.createElement("img");
+            img.src = track.albumImageUrl;
+            img.alt = "";
+            img.width = 20;
+            img.height = 20;
+            li.appendChild(img);
+          }
+
+          const titleSpan = document.createElement("span");
+          titleSpan.className = "wmp-result-title";
+          titleSpan.textContent = `${track.name} — ${track.artistNames}`;
+          li.appendChild(titleSpan);
+
+          const activate = async () => {
+            try {
+              await play(track.uri);
+              setTimeout(refreshNowPlaying, 400);
+            } catch (err) {
+              showStatus(messageForError(err), "error");
+            }
+          };
+          li.addEventListener("click", activate);
+          li.addEventListener("keydown", (e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              activate();
+            }
+          });
+
+          resultsList.appendChild(li);
+        }
+      } catch (err) {
+        showStatus(messageForError(err), "error");
+      }
+    }, 400);
+  });
+
+  collapseBtn.addEventListener("click", () => setPlayerVisible(false));
+
+  // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB)
+  if (window.matchMedia("(max-width: 640px)").matches) {
+    setPlayerVisible(false);
+  }
+
+  if (isConnected()) {
+    showConnectedUI();
+  } else {
+    showDisconnectedUI();
   }
 </script>
