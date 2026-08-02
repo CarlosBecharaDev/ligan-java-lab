@@ -1,0 +1,92 @@
+{
+  "id": "quiz-24-arraylist-avanzado",
+  "lessonSlug": "arraylist",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What are the differences between ArrayList vs Array?",
+      "options": [
+        "ArrayList is dynamic, Array has a fixed size",
+        "Array is faster than ArrayList in every case",
+        "ArrayList only stores Strings",
+        "There are no differences between them"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. ArrayList grows automatically while the Array has a fixed size defined at creation time.",
+        "No. Although Array can be faster for index access, ArrayList has advantages in insertion and removal operations.",
+        "No. ArrayList can store any type of object using generics.",
+        "No. There are important differences between ArrayList and Array."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What type of data does ArrayList store?",
+      "options": [
+        "Only objects (autoboxing for primitives)",
+        "Only primitive types",
+        "Any type without restrictions",
+        "Only Strings and numbers"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. ArrayList only stores objects. For primitive types, autoboxing converts them to their wrapper (Integer, Double, etc.).",
+        "No. ArrayList cannot store primitive types directly.",
+        "No. ArrayList has the restriction of objects only.",
+        "No. ArrayList can store any type of object, not only Strings and numbers."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you convert an ArrayList to an Array?",
+      "options": [
+        "toArray() or .stream().toArray()",
+        "toArray() only",
+        "toarray() with lowercase",
+        "It cannot be converted"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. You can use toArray(), which returns an Object array, or .stream().toArray() to convert to an Array with a specific type.",
+        "No. Although toArray() works, .stream().toArray() can also be used and is a modern alternative.",
+        "No. The method is called toArray() with a capital T.",
+        "No. ArrayList can be converted to an Array with these methods."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What happens with remove() if the index does not exist?",
+      "options": [
+        "IndexOutOfBoundsException",
+        "NullPointerException",
+        "Returns null",
+        "Does nothing"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. If the index is outside the valid range, IndexOutOfBoundsException is thrown.",
+        "No. IndexOutOfBoundsException is thrown, not NullPointerException.",
+        "No. It does not return null; it throws an exception.",
+        "No. It does throw an exception, it does not simply ignore the operation."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you sort an ArrayList?",
+      "options": [
+        "Collections.sort() or sort() with a Comparator",
+        "ordenar()",
+        "sortList()",
+        "It cannot be sorted"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. You can use Collections.sort() for natural order or sort() with a Comparator for custom order.",
+        "No. There is no ordenar() method in Java.",
+        "No. There is no sortList() method in Java.",
+        "No. It can be sorted using Collections.sort() or the list's sort() method."
+      ]
+    }
+  ]
+}

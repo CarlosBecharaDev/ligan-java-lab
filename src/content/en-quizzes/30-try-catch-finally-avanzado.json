@@ -1,0 +1,92 @@
+{
+  "id": "quiz-30-try-catch-finally-avanzado",
+  "lessonSlug": "try-catch-finally",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "When does finally run in relation to a return statement inside try?",
+      "options": [
+        "Finally does not run if there is a return inside try",
+        "Finally runs before the return of the try block",
+        "Finally runs after try evaluates the return value, but before the method actually returns the result",
+        "Finally only runs when the method has no return"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Finally always runs, even if there is a return in try.",
+        "Correct. When try has a return statement, finally still executes after the return value is evaluated but before the method actually returns to the caller.",
+        "Finally runs after the value to be returned is computed, not before.",
+        "Finally always runs; it does not depend on whether there is a return."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What happens if the finally block contains a return statement?",
+      "options": [
+        "The return in finally is ignored and the return in try is used",
+        "A compilation error occurs because returns are not allowed in finally",
+        "The return in finally overrides the return in try, and the method returns finally's value",
+        "Both the try return and the finally return are executed"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "The return in finally is not ignored; it takes priority over the one in try.",
+        "It is legal to use return in finally, but it is a bad practice because it can mask errors.",
+        "Correct. If finally has a return, it overrides the value try was going to return. This is dangerous because it can mask exceptions.",
+        "Only one return can be executed; finally overrides the one in try."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Can try-catch blocks be nested in Java?",
+      "options": [
+        "No, Java does not allow nesting try-catch",
+        "Yes, but excessive nesting is discouraged for readability",
+        "Only if a single exception type is used at each level",
+        "Only in methods that declare throws"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java does allow nesting try-catch; it is a valid feature.",
+        "Correct. You can nest try-catch, but excessive nesting makes the code harder to read and maintain.",
+        "Nesting has no restrictions on the exception types at each level.",
+        "Using throws has nothing to do with the ability to nest try-catch."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "If a method declares `catch(Exception e)`, which exceptions are NOT caught?",
+      "options": [
+        "RuntimeException and all its subclasses",
+        "Only the Error and Throwable classes",
+        "All checked exceptions",
+        "None, Exception catches everything"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "RuntimeException is caught by catch(Exception e) because RuntimeException is a child of Exception.",
+        "Correct. Exception is the parent of all exceptions except Error and Throwable. To catch Error you need catch(Error e) or catch(Throwable e).",
+        "Exception does catch checked exceptions because they inherit from Exception.",
+        "Exception does not catch Error or Throwable directly."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How does AutoCloseable work in try-with-resources?",
+      "options": [
+        "close() is called manually at the end of the try block",
+        "Java invokes close() automatically when leaving the try-with-resources block, whether normally or due to an exception",
+        "AutoCloseable only works with streams, not with database connections",
+        "You need to use finally after try-with-resources to close the resource"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "With try-with-resources there is no need to call close() manually; Java does it automatically.",
+        "Correct. When a resource is declared in try-with-resources, Java invokes close() automatically when leaving the block, regardless of whether it left normally or due to an exception.",
+        "AutoCloseable works with any resource that implements the interface, not just streams.",
+        "try-with-resources already handles closing; no additional finally is needed for that."
+      ]
+    }
+  ]
+}

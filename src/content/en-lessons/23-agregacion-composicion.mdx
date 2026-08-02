@@ -1,0 +1,671 @@
+---
+title: "Aggregation and Composition"
+slug: "agregacion-composicion"
+description: "Learn to model relationships between objects in Java. Distinguish between aggregation (weak reference) and composition (strong ownership)."
+module: "04-poo"
+level: "Advanced"
+order: 23
+estimatedMinutes: 35
+objectives:
+  - "Understand the \"has-a\" relationship between objects"
+  - "Distinguish between aggregation and composition"
+  - "Build complex objects from parts"
+  - "Pass objects as method parameters"
+  - "Model real-world systems with relationships between objects"
+prerequisites:
+  - "clases-objetos"
+  - "clases-abstractas-interfaces"
+realWorldExamples:
+  - domain: "Healthcare"
+    description: "Practical healthcare example"
+    code: "public class Medicamento {\n    String nombre;\n    double dosis;\n\n    Medicamento(String nombre, double dosis) {\n        this.nombre = nombre;\n        this.dosis = dosis;\n    }\n\n    void mostrar() {\n        System.out.println(\"  Medicamento: \" + nombre + \" \" + dosis + \"mg\");\n    }\n}\n\n// Composición: una Receta CREA sus medicamentos\npublic class Receta {\n    Medico medico;  // Agregación: referencia débil\n    ArrayList<Medicamento> medicamentos;\n    String fecha;\n\n    Receta(Medico medico, String ..."
+    result: "Composition: a Prescription CREATES its medications"
+  - domain: "E-commerce"
+    description: "Practical e-commerce example"
+    code: "public class Producto {\n    String nombre;\n    double precio;\n\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n}\n\npublic class ItemPedido {\n    Producto producto;  // Agregación: referencia al producto\n    int cantidad;\n\n    ItemPedido(Producto producto, int cantidad) {\n        this.producto = producto;\n        this.cantidad = cantidad;\n    }\n\n    double calcularSubtotal() {\n        return producto.precio * cantidad;\n    }\n\n    void ..."
+    result: "Aggregation: reference to the product"
+hasInteractive: false
+comparisons:
+  - title: "Aggregation vs Composition"
+    items:
+      - name: "Aggregation (has-a)"
+        features:
+          strength: "Main strength of the approach"
+          weakness: "Limitation to consider"
+          best_for: "Ideal use case on the left"
+      - name: "Composition (is-composed-of)"
+        features:
+          strength: "Main strength of the approach"
+          weakness: "Limitation to consider"
+          best_for: "Ideal use case on the right"
+    recommendation: "Use the option that best fits your specific case"
+videos: []
+faqs:
+  - question: "How do I know if it is aggregation or composition?"
+    answer: "Ask yourself: if I remove the container, does the content still make sense? If yes, it is aggregation. If not, it is composition. A Hospital without Patients is still a Hospital (aggregation). An Order without Items does not exist (composition)."
+  - question: "Can I mix both in the same class?"
+    answer: "Yes. A class can have aggregation and composition attributes at the same time. For example, a Hospital aggregates Patients (aggregation) but is composed of Consultations (composition)."
+  - question: "How do I pass an object as a parameter?"
+    answer: "Simply use the object's type as the parameter type: `void atender(Paciente p)`. Java passes a reference to the object, not a copy."
+  - question: "What happens with memory in composition?"
+    answer: "When the container is deleted (or there are no more references), Java's garbage collector also removes the parts, since nobody else references them."
+sources:
+  - title: "Oracle - Passing Information to a Method"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Composition vs Aggregation"
+    url: "https://www.baeldung.com/java-composition-aggregation"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Association Composition and Aggregation in Java"
+    url: "https://www.geeksforgeeks.org/association-composition-aggregation-java/"
+    date: "2025-07-27"
+  - title: "Oracle - Controlling Access to Members of a Class"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+- Understand the "has-a" relationship between objects
+- Distinguish between aggregation and composition
+- Build complex objects from parts
+- Pass objects as method parameters
+- Model real-world systems with relationships between objects
+
+---
+
+## What Is the Has-A Relationship?
+
+In OOP, when a class **contains** a reference to another class, we say it has a **has-a** relationship. This is different from inheritance (is-a):
+
+```java
+// Has-a relationship: A Hospital HAS Patients
+public class Hospital {
+    String nombre;
+    Paciente[] pacientes;  // The hospital "has" patients
+}
+
+// Is-a relationship: A Doctor IS a Person
+public class Doctor extends Persona {
+    String especialidad;
+}
+```
+
+<CodeBlock
+  title="Basic has-a relationship"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    int edad;
+
+    Paciente(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " (" + edad + " years old)");
+    }
+}
+
+// An Appointment HAS ONE Patient (has-a)
+public class Consulta {
+    Paciente paciente;  // Reference to another object
+    String motivo;
+    String fecha;
+
+    Consulta(Paciente paciente, String motivo, String fecha) {
+        this.paciente = paciente;
+        this.mostrar = motivo;
+        this.fecha = fecha;
+    }
+
+    void mostrarDetalle() {
+        System.out.println("Appointment on " + fecha);
+        System.out.println("Patient: " + paciente.nombre);
+        System.out.println("Reason: " + motivo);
+    }
+
+    public static void main(String[] args) {
+        Paciente p = new Paciente("María", 35);
+        Consulta c = new Consulta(p, "Headache", "2025-01-15");
+        c.mostrarDetalle();
+    }
+}`}
+/>
+
+**When to use has-a?**
+- When a class **needs** another one to work
+- When an object **contains** or **uses** other objects
+- When you model real-world things (a car has an engine, a hospital has patients)
+
+---
+
+## Aggregation (Weak Reference)
+
+In **aggregation**, an object holds a reference to another, but both **can exist independently**. It is a more flexible relationship:
+
+```java
+// A Patient can exist without a Hospital
+// A Hospital can exist without that specific Patient
+public class Hospital {
+    String nombre;
+    ArrayList<Paciente> pacientes;  // Weak reference
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.pacientes = new ArrayList<>();
+    }
+
+    void agregarPaciente(Paciente p) {
+        pacientes.add(p);
+    }
+
+    void mostrarPacientes() {
+        System.out.println("Hospital " + nombre + ":");
+        for (Paciente p : pacientes) {
+            System.out.println("  - " + p.nombre);
+        }
+    }
+}
+
+public class Paciente {
+    String nombre;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+    }
+}
+
+// Example: the patient survives if they "leave" the hospital
+Paciente p = new Paciente("Carlos");
+Hospital h1 = new Hospital("Hospital Central");
+h1.agregarPaciente(p);
+
+// Carlos keeps existing even if removed from the hospital
+```
+
+**Characteristics of aggregation:**
+- Objects are created separately
+- They are passed by reference (not copied)
+- If the container is deleted, the content **keeps existing**
+- Voluntary relationship: the content can belong to several containers
+
+<CodeBlock
+  title="Aggregation: Hospital with Patients"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    String cedula;
+
+    Paciente(String nombre, String cedula) {
+        this.nombre = nombre;
+        this.cedula = cedula;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " | ID: " + cedula);
+    }
+}
+
+public class Consulta {
+    Paciente paciente;  // Aggregation: weak reference
+    String fecha;
+    String diagnostico;
+
+    Consulta(Paciente paciente, String fecha, String diagnostico) {
+        this.paciente = paciente;
+        this.fecha = fecha;
+        this.diagnostico = diagnostico;
+    }
+
+    void mostrarConsulta() {
+        System.out.println("Date: " + fecha);
+        System.out.println("Patient: " + paciente.nombre);
+        System.out.println("Diagnosis: " + diagnostico);
+    }
+}
+
+public class Hospital {
+    String nombre;
+    ArrayList<Consulta> consultas;
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.consultas = new ArrayList<>();
+    }
+
+    void agendarConsulta(Consulta c) {
+        consultas.add(c);
+    }
+
+    void mostrarConsultas() {
+        System.out.println("Appointments of " + nombre + ":");
+        for (Consulta c : consultas) {
+            System.out.println("  - " + c.paciente.nombre + ": " + c.diagnostico);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create patients first (independent)
+        Paciente p1 = new Paciente("Ana García", "12345678");
+        Paciente p2 = new Paciente("Luis Pérez", "87654321");
+
+        // Create appointments (they aggregate references to patients)
+        Consulta c1 = new Consulta(p1, "2025-01-10", "Common cold");
+        Consulta c2 = new Consulta(p2, "2025-01-12", "General check-up");
+        Consulta c3 = new Consulta(p1, "2025-01-20", "Follow-up");
+
+        // Hospital aggregates the appointments
+        Hospital h = new Hospital("Hospital Central");
+        h.agendarConsulta(c1);
+        h.agendarConsulta(c2);
+        h.agendarConsulta(c3);
+
+        h.mostrarConsultas();
+
+        // p1 still exists outside the hospital
+        System.out.println("\nPatient outside: " + p1.nombre);
+    }
+}`}
+/>
+
+---
+
+## Composition (Strong Ownership)
+
+In **composition**, an object **creates and controls** its parts. When the container dies, the parts die too. It is a relationship of total dependency:
+
+**Characteristics of composition:**
+- The container **creates** the parts (with `new` inside the method)
+- The parts **do not exist outside** the container
+- If the container is destroyed, the parts are destroyed
+- The container has **total control** over the parts
+
+<CodeBlock
+  title="Composition: Order with Items"
+  lang="java"
+  code={`public class ItemPedido {
+    String producto;
+    int cantidad;
+    double precioUnitario;
+
+    ItemPedido(String producto, int cantidad, double precioUnitario) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+        this.precioUnitario = precioUnitario;
+    }
+
+    double calcularSubtotal() {
+        return cantidad * precioUnitario;
+    }
+}
+
+public class Pedido {
+    String cliente;
+    String fecha;
+    ArrayList<ItemPedido> items;  // Composition: creates its items
+
+    Pedido(String cliente, String fecha) {
+        this.cliente = cliente;
+        this.fecha = fecha;
+        this.items = new ArrayList<>();
+    }
+
+    // The order CREATES the item (it does not receive an external one)
+    void agregarProducto(String nombre, int cantidad, double precio) {
+        ItemPedido item = new ItemPedido(nombre, cantidad, precio);
+        items.add(item);
+    }
+
+    double calcularTotal() {
+        double total = 0;
+        for (ItemPedido item : items) {
+            total += item.calcularSubtotal();
+        }
+        return total;
+    }
+
+    void mostrarResumen() {
+        System.out.println("=== Order of " + cliente + " (" + fecha + ") ===");
+        for (ItemPedido item : items) {
+            System.out.printf("  %-20s x%d  $%.2f%n",
+                item.producto, item.cantidad, item.calcularSubtotal());
+        }
+        System.out.printf("  TOTAL: $%.2f%n", calcularTotal());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Pedido pedido = new Pedido("María López", "2025-01-15");
+
+        // The order creates its items internally
+        pedido.agregarProducto("Laptop HP", 1, 1500.00);
+        pedido.agregarProducto("Mouse Logitech", 2, 45.99);
+        pedido.agregarProducto("Cable HDMI", 3, 12.50);
+
+        pedido.mostrarResumen();
+        // === Order of María López (2025-01-15) ===
+        //   Laptop HP            x1  $1500.00
+        //   Mouse Logitech       x2  $91.98
+        //   Cable HDMI           x3  $37.50
+        //   TOTAL: $1629.48
+    }
+}`}
+/>
+
+---
+
+## Passing Objects as Parameters
+
+A key concept is passing objects as arguments to methods. This allows objects to interact with each other:
+
+```java
+public class Doctor {
+    String nombre;
+    String especialidad;
+
+    Doctor(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+
+    // Receives a Patient object as a parameter
+    void atender(Paciente p) {
+        System.out.println("Dr. " + nombre + " treats " + p.nombre);
+    }
+}
+```
+
+<CodeBlock
+  title="Passing objects as parameters"
+  lang="java"
+  code={`public class Paciente {
+    String nombre;
+    boolean enTratamiento;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+        this.enTratamiento = false;
+    }
+}
+
+public class Medico {
+    String nombre;
+    String especialidad;
+
+    Medico(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+
+    // Receives a Patient as a parameter
+    void diagnosticar(Paciente p) {
+        p.enTratamiento = true;
+        System.out.println("Dr. " + nombre + " diagnoses " + p.nombre);
+    }
+
+    // Receives two objects
+    void transferir(Paciente p, Medico otroMedico) {
+        System.out.println(nombre + " transfers " + p.nombre + " to Dr. " + otroMedico.nombre);
+        otroMedico.diagnosticar(p);
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Paciente p1 = new Paciente("Carlos");
+        Medico m1 = new Medico("García", "Cardiology");
+        Medico m2 = new Medico("Rodríguez", "Neurology");
+
+        m1.diagnosticar(p1);
+        System.out.println(p1.enTratamiento);  // true
+
+        m1.transferir(p1, m2);
+        // Dr. García transfers Carlos to Dr. Rodríguez
+        // Dr. Rodríguez diagnoses Carlos
+    }
+}`}
+/>
+
+---
+
+## Real-World Example: Healthcare
+
+<CodeBlock
+  title="Hospital with composition and aggregation"
+  lang="java"
+  code={`public class Medicamento {
+    String nombre;
+    double dosis;
+
+    Medicamento(String nombre, double dosis) {
+        this.nombre = nombre;
+        this.dosis = dosis;
+    }
+
+    void mostrar() {
+        System.out.println("  Medication: " + nombre + " " + dosis + "mg");
+    }
+}
+
+// Composition: a Prescription CREATES its medications
+public class Receta {
+    Medico medico;  // Aggregation: weak reference
+    ArrayList<Medicamento> medicamentos;
+    String fecha;
+
+    Receta(Medico medico, String fecha) {
+        this.medico = medico;
+        this.fecha = fecha;
+        this.medicamentos = new ArrayList<>();
+    }
+
+    // Composition: the prescription creates its medications
+    void agregarMedicamento(String nombre, double dosis) {
+        Medicamento m = new Medicamento(nombre, dosis);
+        medicamentos.add(m);
+    }
+
+    void mostrarReceta() {
+        System.out.println("Prescription of " + fecha + " - Dr. " + medico.nombre);
+        for (Medicamento m : medicamentos) {
+            m.mostrar();
+        }
+    }
+}
+
+public class Medico {
+    String nombre;
+    String especialidad;
+
+    Medico(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+}
+
+public class Hospital {
+    String nombre;
+    ArrayList<Medico> medicos;  // Aggregation: independent doctors
+
+    Hospital(String nombre) {
+        this.nombre = nombre;
+        this.medicos = new ArrayList<>();
+    }
+
+    void contratarMedico(Medico m) {
+        medicos.add(m);
+    }
+
+    void mostrarEquipo() {
+        System.out.println("Team of " + nombre + ":");
+        for (Medico m : medicos) {
+            System.out.println("  Dr. " + m.nombre + " - " + m.especialidad);
+        }
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create doctors (aggregation: they exist independently)
+        Medico m1 = new Medico("García", "Cardiology");
+        Medico m2 = new Medico("Rodríguez", "Pediatrics");
+
+        // Hospital aggregates doctors
+        Hospital h = new Hospital("Hospital Central");
+        h.contratarMedico(m1);
+        h.contratarMedico(m2);
+        h.mostrarEquipo();
+
+        // Create prescription (composition: creates medications)
+        Receta receta = new Receta(m1, "2025-01-15");
+        receta.agregarMedicamento("Aspirin", 500);
+        receta.agregarMedicamento("Ibuprofen", 400);
+        receta.mostrarReceta();
+    }
+}`}
+/>
+
+---
+
+## Real-World Example: E-commerce
+
+<CodeBlock
+  title="Order with composition and aggregation"
+  lang="java"
+  code={`public class Producto {
+    String nombre;
+    double precio;
+
+    Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+}
+
+public class ItemPedido {
+    Producto producto;  // Aggregation: reference to the product
+    int cantidad;
+
+    ItemPedido(Producto producto, int cantidad) {
+        this.producto = producto;
+        this.cantidad = cantidad;
+    }
+
+    double calcularSubtotal() {
+        return producto.precio * cantidad;
+    }
+
+    void mostrar() {
+        System.out.println("  " + producto.nombre + " x" + cantidad + " = $" + calcularSubtotal());
+    }
+}
+
+// Composition: the Order CREATES its items internally
+public class Pedido {
+    String cliente;
+    ArrayList<ItemPedido> items;
+
+    Pedido(String cliente) {
+        this.cliente = cliente;
+        this.items = new ArrayList<>();
+    }
+
+    // Receives existing products (aggregation) and creates items (composition)
+    void agregarProducto(Producto producto, int cantidad) {
+        ItemPedido item = new ItemPedido(producto, cantidad);
+        items.add(item);
+    }
+
+    double calcularTotal() {
+        double total = 0;
+        for (ItemPedido item : items) {
+            total += item.calcularSubtotal();
+        }
+        return total;
+    }
+
+    void mostrarResumen() {
+        System.out.println("Order of " + cliente + ":");
+        for (ItemPedido item : items) {
+            item.mostrar();
+        }
+        System.out.printf("Total: $%.2f%n", calcularTotal());
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Products exist independently (aggregation)
+        Producto laptop = new Producto("Laptop", 1500.00);
+        Producto mouse = new Producto("Mouse", 25.99);
+        Producto teclado = new Producto("Keyboard", 45.50);
+
+        // Order creates its items (composition)
+        Pedido pedido = new Pedido("Ana García");
+        pedido.agregarProducto(laptop, 1);
+        pedido.agregarProducto(mouse, 2);
+        pedido.agregarProducto(teclado, 1);
+
+        pedido.mostrarResumen();
+        // Order of Ana García:
+        //   Laptop x1 = $1500.00
+        //   Mouse x2 = $51.98
+        //   Keyboard x1 = $45.50
+        // Total: $1597.48
+    }
+}`}
+/>
+
+---
+
+## Summary
+
+| Concept | Description |
+|----------|-------------|
+| **Has-A** | Relationship where one object contains another |
+| **Aggregation** | Weak reference: the content can exist on its own |
+| **Composition** | Strong ownership: the content dies with the container |
+| **Parameters** | Passing objects as arguments to methods |
+
+---
+
+## Frequently Asked Questions
+
+<details>
+<summary>How do I know if it is aggregation or composition?</summary>
+Ask yourself: if I remove the container, does the content still make sense? If yes, it is aggregation. If not, it is composition. A Hospital without Patients is still a Hospital (aggregation). An Order without Items does not exist (composition).
+</details>
+
+<details>
+<summary>Can I mix both in the same class?</summary>
+Yes. A class can have aggregation and composition attributes at the same time. For example, a Hospital aggregates Patients (aggregation) but is composed of Consultations (composition).
+</details>
+
+<details>
+<summary>How do I pass an object as a parameter?</summary>
+Simply use the object's type as the parameter type: `void atender(Paciente p)`. Java passes a reference to the object, not a copy.
+</details>
+
+<details>
+<summary>What happens with memory in composition?</summary>
+When the container is deleted (or there are no more references), Java's garbage collector also removes the parts, since nobody else references them.
+</details>
+
+---
+
+## Sources and References
+
+- [Oracle - Passing Information to a Method](https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html)
+- [Baeldung - Composition vs Aggregation](https://www.baeldung.com/java-composition-aggregation)
+- [GeeksforGeeks - Association Composition and Aggregation in Java](https://www.geeksforgeeks.org/association-composition-aggregation-java/)
+- [Oracle - Controlling Access to Members of a Class](https://docs.oracle.com/javase/tutorial/java/javaOO/accesscontrol.html)

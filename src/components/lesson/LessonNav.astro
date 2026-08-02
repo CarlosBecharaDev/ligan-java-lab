@@ -1,24 +1,28 @@
 ---
+import { localePrefix } from '@lib/course';
+
 export interface Props {
   prevSlug?: string;
   prevTitle?: string;
   nextSlug?: string;
   nextTitle?: string;
+  locale?: 'es' | 'en';
 }
 
-const { prevSlug, prevTitle, nextSlug, nextTitle } = Astro.props;
+const { prevSlug, prevTitle, nextSlug, nextTitle, locale = 'es' } = Astro.props;
+const P = localePrefix(locale);
 ---
 
-<nav class="lesson-nav" aria-label="Navegación entre lecciones">
+<nav class="lesson-nav" aria-label="Navegación entre lecciones" data-i18n-aria="lesson.nav-aria">
   {prevSlug ? (
-    <a href={`/tema/${prevSlug}`} class="lesson-nav__link lesson-nav__link--prev">
-      <span class="lesson-nav__label">Anterior</span>
+    <a href={`${P}/tema/${prevSlug}`} class="lesson-nav__link lesson-nav__link--prev">
+      <span class="lesson-nav__label" data-i18n="lesson.prev">Anterior</span>
       <span class="lesson-nav__title">{prevTitle}</span>
     </a>
   ) : <div />}
   {nextSlug ? (
-    <a href={`/tema/${nextSlug}`} class="lesson-nav__link lesson-nav__link--next">
-      <span class="lesson-nav__label">Siguiente</span>
+    <a href={`${P}/tema/${nextSlug}`} class="lesson-nav__link lesson-nav__link--next">
+      <span class="lesson-nav__label" data-i18n="lesson.next">Siguiente</span>
       <span class="lesson-nav__title">{nextTitle}</span>
     </a>
   ) : <div />}

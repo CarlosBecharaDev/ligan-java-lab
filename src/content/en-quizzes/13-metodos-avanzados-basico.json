@@ -1,0 +1,58 @@
+{
+  "id": "quiz-13-metodos-avanzados-basico",
+  "lessonSlug": "metodos-avanzados",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What do you need in every recursive method to avoid an infinite loop?",
+      "options": [
+        "A while loop as a fallback",
+        "A base case (stopping condition)",
+        "A static variable",
+        "A try-catch"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Recursion does not use while loops.",
+        "Correct. The base case is the condition that stops the recursion. Without it, the method calls itself indefinitely.",
+        "Static variables have nothing to do with stopping recursion.",
+        "try-catch handles exceptions; it does not control recursion."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What are varargs (double... nums)?",
+      "options": [
+        "A variable of type double",
+        "A fixed number of 2 arguments",
+        "An array that receives 0 or more arguments of the same type",
+        "A syntax error"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "It is not a simple variable.",
+        "It has no fixed limit.",
+        "Correct. double... nums is treated internally as a double[] containing all the arguments.",
+        "It is valid syntax since Java 5."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the problem with the simple Fibonacci recursion?",
+      "options": [
+        "It does not compute the numbers correctly",
+        "It recalculates the same values many times",
+        "It does not work in Java",
+        "It only works with negative numbers"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Recursive Fibonacci computes correctly.",
+        "Correct. fibonacci(5) calls fibonacci(4) and fibonacci(3), which in turn call others, recalculating the same values multiple times.",
+        "It works perfectly in Java.",
+        "Negative numbers are handled by the base case."
+      ]
+    }
+  ]
+}

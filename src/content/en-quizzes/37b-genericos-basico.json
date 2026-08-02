@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-genericos",
+  "lessonSlug": "genericos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What main advantage do generics provide in Java?",
+      "options": ["Better performance", "Type safety at compile time", "Always shorter code", "Database access"],
+      "correctIndex": 1,
+      "explanations": [
+        "Generics do not significantly improve performance.",
+        "Correct. Generics allow detecting type errors at compile time, eliminating ClassCastException at runtime.",
+        "Not necessarily; sometimes they make the code more verbose but safer.",
+        "Generics are not directly related to databases."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which syntax is correct for declaring a generic List of Strings?",
+      "options": ["List<String> list = new List<String>()", "List<String> list = new ArrayList<>()", "List<String> list = new ArrayList<String>()", "B and C are correct"],
+      "correctIndex": 3,
+      "explanations": [
+        "List is an interface, it cannot be instantiated directly.",
+        "Correct, but the diamond operator is optional.",
+        "Also correct, but more verbose.",
+        "Correct. Both are valid. The diamond operator <> (Java 7+) is the modern way."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is type erasure?",
+      "options": ["The deletion of .class files", "The removal of generic types at compile time", "The memory cleanup by the garbage collector", "The removal of dead code"],
+      "correctIndex": 1,
+      "explanations": [
+        "Type erasure does not delete files.",
+        "Correct. The compiler erases generic type information in the bytecode for backward compatibility.",
+        "It is not related to the garbage collector.",
+        "It does not remove code, only type information."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which operator has allowed type inference since Java 7?",
+      "options": ["var", "<>", "auto", "infer"],
+      "correctIndex": 1,
+      "explanations": [
+        "var is from Java 10 for local variables.",
+        "Correct. The diamond operator <> allows the compiler to infer the generic type in the constructor.",
+        "auto does not exist in Java.",
+        "infer does not exist in Java."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Which of the following is NOT a conventional name for type parameters?",
+      "options": ["T", "E", "X", "K"],
+      "correctIndex": 2,
+      "explanations": [
+        "T (Type) is the most common conventional name.",
+        "E (Element) is used for collections such as List<E>.",
+        "Correct. X is not a conventional name. The conventions are T, E, K, V, N.",
+        "K (Key) is used in maps such as Map<K,V>."
+      ]
+    }
+  ]
+}

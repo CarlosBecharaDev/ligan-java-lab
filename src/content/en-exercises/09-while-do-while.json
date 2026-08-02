@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-while-facil",
+    "lessonSlug": "while-do-while",
+    "title": "Multiplication table with while",
+    "difficulty": "facil",
+    "description": "Display the 7 times table using a while loop, from 1 to 10.",
+    "template": "public class Tabla7 {\n    public static void main(String[] args) {\n        int i = 1;\n\n        // TODO: Use while to print:\n        // 7 x 1 = 7\n        // 7 x 2 = 14\n        // ... up to 7 x 10 = 70\n        // Remember to increment i inside the loop\n\n    }\n}",
+    "hints": [
+      "Initialize i = 1 and the condition is i <= 10",
+      "Do not forget i++ at the end of the body to avoid an infinite loop"
+    ],
+    "solution": "public class Tabla7 {\n    public static void main(String[] args) {\n        int i = 1;\n\n        while (i <= 10) {\n            System.out.println(\"7 x \" + i + \" = \" + (7 * i));\n            i++;\n        }\n    }\n}",
+    "solutionExplanation": "The counter i starts at 1 and is incremented in each iteration. The condition i <= 10 guarantees exactly 10 iterations. Without the i++ the loop would be infinite.",
+    "expectedOutput": "7 x 1 = 7\n7 x 2 = 14\n7 x 3 = 21\n7 x 4 = 28\n7 x 5 = 35\n7 x 6 = 42\n7 x 7 = 49\n7 x 8 = 56\n7 x 9 = 63\n7 x 10 = 70"
+  },
+  {
+    "id": "ex-while-normal",
+    "lessonSlug": "while-do-while",
+    "title": "Guess the number with limited attempts",
+    "difficulty": "normal",
+    "description": "Simulate a game where the user tries to guess a secret number between 1 and 100. Use do-while to allow up to 5 attempts, showing 'higher' or 'lower' clues.",
+    "template": "public class AdivinaNumero {\n    public static void main(String[] args) {\n        int secreto = 73;\n        int[] intentos = {50, 80, 70, 75, 73};  // simulated inputs\n        int idx = 0;\n        int intento;\n        boolean acierto = false;\n\n        // TODO: Use do-while to iterate through the attempts\n        // Display: \"Attempt N: X - the secret is higher/lower\"\n        // If it matches, print \"Correct!\" and stop\n        // Limit to 5 attempts at most\n\n    }\n}",
+    "hints": [
+      "Keep an attempt counter (starts at 0)",
+      "The do-while condition: !acierto && realizados < 5",
+      "Compare the attempt with the secret to give the clue"
+    ],
+    "solution": "public class AdivinaNumero {\n    public static void main(String[] args) {\n        int secreto = 73;\n        int[] intentos = {50, 80, 70, 75, 73};\n        int idx = 0;\n        int intento;\n        boolean acierto = false;\n        int realizados = 0;\n\n        do {\n            intento = intentos[idx++];\n            realizados++;\n            System.out.print(\"Attempt \" + realizados + \": \" + intento);\n            if (intento == secreto) {\n                acierto = true;\n                System.out.println(\" - Correct! 🎉\");\n            } else if (intento < secreto) {\n                System.out.println(\" - the secret is higher\");\n            } else {\n                System.out.println(\" - the secret is lower\");\n            }\n        } while (!acierto && realizados < 5);\n\n        if (!acierto) {\n            System.out.println(\"No matches. The number was \" + secreto);\n        }\n    }\n}",
+    "solutionExplanation": "do-while guarantees at least one attempt. We keep an attempt counter and a match boolean. The compound condition allows exiting when matching or when the 5 attempts are used up. The higher/lower clues guide the user.",
+    "expectedOutput": "Attempt 1: 50 - the secret is higher\nAttempt 2: 80 - the secret is lower\nAttempt 3: 70 - the secret is higher\nAttempt 4: 75 - the secret is lower\nAttempt 5: 73 - Correct! 🎉"
+  },
+  {
+    "id": "ex-while-dificil",
+    "lessonSlug": "while-do-while",
+    "title": "Square root calculation with the Babylonian method",
+    "difficulty": "dificil",
+    "description": "Calculate the square root of a number using the Babylonian method (Newton): iterate improving an estimate until the difference between iterations is less than 0.0001. The number of iterations is unknown.",
+    "template": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;  // exact root = 12\n        double estimacion = numero / 2.0;  // initial estimate\n        double epsilon = 0.0001;\n\n        // TODO: Babylonian method: while the difference is >= epsilon\n        // newEstimate = (estimacion + numero / estimacion) / 2\n        // Update estimacion with the new value\n        // Count the iterations\n        // Prints: \"Square root of 144 = 12.0000 (in N iterations)\"\n\n    }\n}",
+    "hints": [
+      "Use Math.abs(nueva - estimacion) to measure the change between iterations",
+      "The while condition: the difference >= epsilon",
+      "Remember to update estimacion = nueva at the end of each iteration"
+    ],
+    "solution": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;\n        double estimacion = numero / 2.0;\n        double epsilon = 0.0001;\n        int iteraciones = 0;\n\n        while (true) {\n            double nueva = (estimacion + numero / estimacion) / 2.0;\n            iteraciones++;\n            if (Math.abs(nueva - estimacion) < epsilon) {\n                estimacion = nueva;\n                break;\n            }\n            estimacion = nueva;\n        }\n\n        System.out.printf(\"Square root of %.1f = %.4f (in %d iterations)%n\",\n                numero, estimacion, iteraciones);\n    }\n}",
+    "solutionExplanation": "The Babylonian method refines the estimate in each iteration with the formula (e + n/e)/2. We use while(true) with an exit condition based on convergence (change < epsilon), a classic case of an indeterminate loop where the number of iterations is not known in advance.",
+    "expectedOutput": "Square root of 144.0 = 12.0000 (in 9 iterations)"
+  }
+]

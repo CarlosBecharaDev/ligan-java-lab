@@ -1,0 +1,109 @@
+{
+  "id": "quiz-23-agregacion-composicion-basico",
+  "lessonSlug": "agregacion-composicion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is aggregation in OOP?",
+      "options": [
+        "An object contains another and both can exist independently",
+        "An object destroys the other",
+        "A class inherits from another",
+        "A method returns an object"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Aggregation = weak relationship, independent objects.",
+        "They do not destroy anything.",
+        "It is not inheritance.",
+        "It is not about returning."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is composition?",
+      "options": [
+        "Independent objects that are related",
+        "An object contains another and the child cannot exist without the parent",
+        "Multiple constructors",
+        "Static methods"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "That is aggregation.",
+        "Correct. Composition = strong relationship, dependent lifecycle.",
+        "It is not about constructors.",
+        "It is not about static."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "If an Order has Products, what kind of relationship is it?",
+      "options": [
+        "Inheritance",
+        "Aggregation",
+        "Composition",
+        "Dependency"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not inheritance.",
+        "Correct. The Order has Products, but the products exist without the order.",
+        "It is not composition because the product can exist on its own.",
+        "Dependency is temporary usage."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "If a Car has an Engine, what relationship is it?",
+      "options": [
+        "Aggregation",
+        "Composition",
+        "Inheritance",
+        "Polymorphism"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Aggregation is a weak relationship.",
+        "Correct. The Engine cannot exist without the Car (composition).",
+        "It is not inheritance.",
+        "It is not polymorphism."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How is an object passed as a parameter to a method?",
+      "options": [
+        "By value (full copy)",
+        "By reference (the object's address)",
+        "By name",
+        "By default"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It does not copy the whole object.",
+        "Correct. Java passes the reference of the object, not a copy.",
+        "It is not by name.",
+        "It is not by default."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "What is it called when a car is destroyed and its engine is destroyed too?",
+      "options": [
+        "Aggregation",
+        "Composition",
+        "Inheritance",
+        "Polymorphism"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Aggregation: independent objects.",
+        "Correct. Composition: dependent lifecycle.",
+        "It is not inheritance.",
+        "It is not polymorphism."
+      ]
+    }
+  ]
+}

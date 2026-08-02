@@ -1,0 +1,567 @@
+---
+title: "Inheritance"
+slug: "herencia"
+description: "Reuse code with inheritance, extends, super, and the 'is-a' relationship."
+module: "04-poo"
+level: "Intermediate"
+order: 20
+estimatedMinutes: 35
+objectives:
+  - "Create class hierarchies with extends"
+  - "Use super to access parent attributes and constructors"
+  - "Apply @Override to customize inherited methods"
+  - "Understand the \"is-a\" relationship and when to use inheritance"
+prerequisites:
+  - "clases-objetos"
+  - "encapsulacion"
+realWorldExamples:
+  - domain: "Health - Doctor extends Persona"
+    description: "Practical example of Health - Doctor extends Persona"
+    code: "public class Persona {\n    protected String nombre;\n    protected int edad;\n    protected String telefono;\n\n    Persona(String nombre, int edad, String telefono) {\n        this.nombre = nombre;\n        this.edad = edad;\n        this.telefono = telefono;\n    }\n\n    void mostrarInfo() {\n        System.out.println(nombre + \" | \" + edad + \" años | Tel: \" + telefono);\n    }\n\n    String getRol() {\n        return \"Persona\";\n    }\n}\n\npublic class Doctor extends Persona {\n    private String especialidad;..."
+    result: "Ana López | 35 years old | Tel: 555-0101"
+  - domain: "E-commerce - DigitalProduct extends Product"
+    description: "Practical example of E-commerce - DigitalProduct extends Product"
+    code: "public class Producto {\n    protected String nombre;\n    protected double precio;\n    protected int stock;\n\n    Producto(String nombre, double precio, int stock) {\n        this.nombre = nombre;\n        this.precio = precio;\n        this.stock = stock;\n    }\n\n    boolean hayStock() {\n        return stock > 0;\n    }\n\n    void vender(int cantidad) {\n        if (cantidad <= stock) {\n            stock -= cantidad;\n            System.out.println(\"Venta: \" + cantidad + \" x \" + nombre);\n        } else {..."
+    result: "Stock always 1 (digital infinity)"
+hasInteractive: false
+comparisons:
+  - title: "Inheritance vs Composition"
+    items:
+      - name: "Inheritance (extends)"
+        features:
+          relationship: "Is-a (is-a)"
+          coupling: "High (tightly coupled)"
+          reuse: "Both allow code reuse"
+      - name: "Composition (has-a)"
+        features:
+          strength: "Main strength of the approach"
+          weakness: "Limitation to consider"
+          best_for: "Ideal use case - right"
+    recommendation: "Use the option that best fits your specific case"
+videos: []
+faqs:
+  - question: "Can a class inherit from multiple classes?"
+    answer: "No. Java does not allow multiple class inheritance. A class can only extend one superclass. For multiple functionality, interfaces are used."
+  - question: "When do I use inheritance vs composition?"
+    answer: "Use inheritance when there is a natural \"is-a\" relationship (Doctor is a Person). Use composition when the relationship is \"has-a\" (Car has an Engine). Composition is more flexible."
+  - question: "What happens if I don't put super() in the constructor?"
+    answer: "Java inserts `super()` automatically (the parent's empty constructor). If the parent has no parameterless constructor, it gives a compilation error."
+  - question: "Is using @Override mandatory?"
+    answer: "It is not mandatory, but it is highly recommended. Without it, if you change the method signature and it does not match the parent's, Java will treat it as a new method instead of an override."
+sources:
+  - title: "Oracle - Subclasses and Superclasses"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/subclasses.html"
+    date: "2025-07-27"
+  - title: "Oracle - Overriding and Hiding Methods"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/IandI/override.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Java Inheritance"
+    url: "https://www.baeldung.com/java-inheritance"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Inheritance in Java"
+    url: "https://www.geeksforgeeks.org/inheritance-in-java/"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+- Create class hierarchies with `extends`
+- Use `super` to access parent attributes and constructors
+- Apply `@Override` to customize inherited methods
+- Understand the "is-a" relationship and when to use inheritance
+
+---
+
+## What is Inheritance?
+
+**Inheritance** allows creating a new class based on an existing one. The child class inherits attributes and methods from the parent class, and can add or modify behavior.
+
+```java
+// Parent class (superclass)
+public class Persona {
+    String nombre;
+    int edad;
+
+    Persona(String nombre, int edad) {
+        this.nombre = nombre;
+        this.edad = edad;
+    }
+
+    void saludar() {
+        System.out.println("Hola, soy " + nombre);
+    }
+}
+
+// Child class (subclass) that INHERITS from Persona
+public class Doctor extends Persona {
+    String especialidad;
+
+    Doctor(String nombre, int edad, String especialidad) {
+        super(nombre, edad);  // Calls the Persona constructor
+        this.especialidad = especialidad;
+    }
+
+    void diagnosticar() {
+        System.out.println(nombre + " diagnostica en " + especialidad);
+    }
+}
+
+// Doctor has: nombre, edad (inherited) + especialidad (its own)
+Doctor d = new Doctor("Ana", 35, "Cardiología");
+d.saludar();       // Hola, soy Ana (inherited method)
+d.diagnosticar();  // Ana diagnostica en Cardiología (its own)
+```
+
+---
+
+## The `extends` Keyword
+
+`extends` declares that a class inherits from another:
+
+```java
+public class Animal {
+    String nombre;
+    int patas;
+
+    Animal(String nombre, int patas) {
+        this.nombre = nombre;
+        this.patas = patas;
+    }
+
+    void comer() {
+        System.out.println(nombre + " está comiendo");
+    }
+}
+
+// Perro INHERITS everything from Animal
+public class Perro extends Animal {
+    String raza;
+
+    Perro(String nombre, String raza) {
+        super(nombre, 4);  // Perro always has 4 legs
+        this.raza = raza;
+    }
+
+    void ladrar() {
+        System.out.println(nombre + " dice: Guau!");
+    }
+}
+```
+
+**What Perro inherits from Animal:**
+- Attribute `nombre` (inherited)
+- Attribute `patas` (inherited)
+- Method `comer()` (inherited)
+- Attribute `raza` (its own)
+- Method `ladrar()` (its own)
+
+---
+
+## The `super` Keyword
+
+`super` is used to access members of the parent class:
+
+<CodeBlock
+  title="Using super for constructors and methods"
+  lang="java"
+  code={`public class Vehiculo {
+    String marca;
+    double velocidadMax;
+
+    Vehiculo(String marca, double velocidadMax) {
+        this.marca = marca;
+        this.velocidadMax = velocidadMax;
+    }
+
+    void mostrarInfo() {
+        System.out.println("Marca: " + marca + " | Vel. máx: " + velocidadMax + " km/h");
+    }
+}
+
+public class Auto extends Vehiculo {
+    int puertas;
+    boolean tieneAire;
+
+    Auto(String marca, double velocidadMax, int puertas, boolean tieneAire) {
+        super(marca, velocidadMax);  // Calls the Vehiculo constructor
+        this.puertas = puertas;
+        this.tieneAire = tieneAire;
+    }
+
+    @Override
+    void mostrarInfo() {
+        super.mostrarInfo();  // Calls the parent's method
+        System.out.println("Puertas: " + puertas + " | Aire: " + tieneAire);
+    }
+
+    public static void main(String[] args) {
+        Auto auto = new Auto("Toyota", 200, 4, true);
+        auto.mostrarInfo();
+        // Marca: Toyota | Vel. máx: 200.0 km/h
+        // Puertas: 4 | Aire: true
+    }
+}`}
+/>
+
+**Uses of `super`:**
+- `super(attributes)` -- Calls the parent class constructor
+- `super.metodo()` -- Calls a method of the parent class
+- `super.atributo` -- Accesses an attribute of the parent (if it is `protected`)
+
+---
+
+## @Override: Customizing Inherited Methods
+
+When a child class wants to change the behavior of an inherited method, it uses `@Override`:
+
+<CodeBlock
+  title="Overriding methods"
+  lang="java"
+  code={`public class Animal {
+    String nombre;
+
+    Animal(String nombre) {
+        this.nombre = nombre;
+    }
+
+    String hacerSonido() {
+        return "...";
+    }
+
+    String describir() {
+        return nombre + " hace " + hacerSonido();
+    }
+}
+
+public class Gato extends Animal {
+    Gato(String nombre) {
+        super(nombre);
+    }
+
+    @Override
+    String hacerSonido() {
+        return "Miau!";
+    }
+}
+
+public class Perro extends Animal {
+    Perro(String nombre) {
+        super(nombre);
+    }
+
+    @Override
+    String hacerSonido() {
+        return "Guau!";
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Animal a1 = new Gato("Michi");
+        Animal a2 = new Perro("Rex");
+
+        System.out.println(a1.describir());  // Michi hace Miau!
+        System.out.println(a2.describir());  // Rex hace Guau!
+    }
+}`}
+/>
+
+**`@Override` is an annotation that:**
+- Indicates that a parent's method is being overridden
+- Java verifies that the method actually exists in the parent
+- If there is a signature error, the compiler detects it
+
+---
+
+## Constructor Chain with `super()`
+
+When you create a child object, Java runs the parent's constructor first:
+
+```java
+public class Persona {
+    Persona(String nombre) {
+        System.out.println("1. Constructor de Persona: " + nombre);
+    }
+}
+
+public class Doctor extends Persona {
+    Doctor(String nombre, String especialidad) {
+        super(nombre);  // Persona runs first
+        System.out.println("2. Constructor de Doctor: " + especialidad);
+    }
+}
+
+// When creating a Doctor:
+Doctor d = new Doctor("Ana", "Cardiología");
+// Output:
+// 1. Constructor de Persona: Ana
+// 2. Constructor de Doctor: Cardiología
+```
+
+<CodeBlock
+  title="Full hierarchy: Persona -> Doctor -> Cirujano"
+  lang="java"
+  code={`public class Persona {
+    String nombre;
+
+    Persona(String nombre) {
+        this.nombre = nombre;
+        System.out.println("Persona creada: " + nombre);
+    }
+}
+
+public class Doctor extends Persona {
+    String especialidad;
+
+    Doctor(String nombre, String especialidad) {
+        super(nombre);  // Persona first
+        this.especialidad = especialidad;
+        System.out.println("Doctor creado: " + especialidad);
+    }
+}
+
+public class Cirujano extends Doctor {
+    int cirugiasRealizadas;
+
+    Cirujano(String nombre, String especialidad) {
+        super(nombre, especialidad);  // Doctor first (which in turn calls Persona)
+        this.cirugiasRealizadas = 0;
+        System.out.println("Cirujano registrado");
+    }
+
+    void realizarCirugia() {
+        cirugiasRealizadas++;
+        System.out.println(nombre + " realiza cirugia #" + cirugiasRealizadas);
+    }
+
+    public static void main(String[] args) {
+        Cirujano c = new Cirujano("Dr. García", "Cardiología");
+        // Persona creada: Dr. García
+        // Doctor creado: Cardiología
+        // Cirujano registrado
+
+        c.realizarCirugia();  // Dr. García realiza cirugia #1
+    }
+}`}
+/>
+
+---
+
+## Real Example: Health - Doctor extends Persona
+
+<CodeBlock
+  title="Health professionals system"
+  lang="java"
+  code={`public class Persona {
+    protected String nombre;
+    protected int edad;
+    protected String telefono;
+
+    Persona(String nombre, int edad, String telefono) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.telefono = telefono;
+    }
+
+    void mostrarInfo() {
+        System.out.println(nombre + " | " + edad + " años | Tel: " + telefono);
+    }
+
+    String getRol() {
+        return "Persona";
+    }
+}
+
+public class Doctor extends Persona {
+    private String especialidad;
+    private int consultasHoy;
+
+    Doctor(String nombre, int edad, String telefono, String especialidad) {
+        super(nombre, edad, telefono);
+        this.especialidad = especialidad;
+        this.consultasHoy = 0;
+    }
+
+    void atenderPaciente(String paciente) {
+        consultasHoy++;
+        System.out.println("Dr. " + nombre + " atiende a " + paciente +
+                           " (Consulta #" + consultasHoy + ")");
+    }
+
+    @Override
+    void mostrarInfo() {
+        super.mostrarInfo();
+        System.out.println("Especialidad: " + especialidad + " | Consultas hoy: " + consultasHoy);
+    }
+
+    @Override
+    String getRol() {
+        return "Doctor de " + especialidad;
+    }
+
+    public static void main(String[] args) {
+        Doctor dr = new Doctor("Ana López", 35, "555-0101", "Cardiología");
+        dr.mostrarInfo();
+        // Ana López | 35 años | Tel: 555-0101
+        // Especialidad: Cardiología | Consultas hoy: 0
+
+        dr.atenderPaciente("Carlos Ruiz");
+        dr.atenderPaciente("María García");
+
+        System.out.println("Rol: " + dr.getRol());
+        // Rol: Doctor de Cardiología
+    }
+}`}
+/>
+
+---
+
+## Real Example: E-commerce - DigitalProduct extends Product
+
+<CodeBlock
+  title="Physical and digital products"
+  lang="java"
+  code={`public class Producto {
+    protected String nombre;
+    protected double precio;
+    protected int stock;
+
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = precio;
+        this.stock = stock;
+    }
+
+    boolean hayStock() {
+        return stock > 0;
+    }
+
+    void vender(int cantidad) {
+        if (cantidad <= stock) {
+            stock -= cantidad;
+            System.out.println("Venta: " + cantidad + " x " + nombre);
+        } else {
+            System.out.println("Stock insuficiente para " + nombre);
+        }
+    }
+
+    void mostrar() {
+        String estado = hayStock() ? "Disponible" : "Agotado";
+        System.out.println(nombre + " - $" + precio + " | " + estado + " (" + stock + ")");
+    }
+
+    String getTipo() {
+        return "Producto físico";
+    }
+}
+
+public class ProductoDigital extends Producto {
+    private double tamanoMB;
+    private int descargasPermitidas;
+    private int descargasRealizadas;
+
+    ProductoDigital(String nombre, double precio, double tamanoMB, int descargasMax) {
+        super(nombre, precio, 1);  // Stock always 1 (digital infinity)
+        this.tamanoMB = tamanoMB;
+        this.descargasPermitidas = descargasMax;
+        this.descargasRealizadas = 0;
+    }
+
+    @Override
+    void vender(int cantidad) {
+        // Digital products never run out of stock
+        System.out.println("Descarga permitida: " + nombre);
+    }
+
+    void descargar() {
+        if (descargasRealizadas < descargasPermitidas) {
+            descargasRealizadas++;
+            System.out.println("Descargando " + nombre + " (" + tamanoMB + " MB)..."
+                               + " [" + descargasRealizadas + "/" + descargasPermitidas + "]");
+        } else {
+            System.out.println("Límite de descargas alcanzado para " + nombre);
+        }
+    }
+
+    @Override
+    void mostrar() {
+        System.out.println(nombre + " - $" + precio + " | " + tamanoMB + " MB"
+                           + " | Descargas: " + descargasRealizadas + "/" + descargasPermitidas);
+    }
+
+    @Override
+    String getTipo() {
+        return "Producto digital";
+    }
+
+    public static void main(String[] args) {
+        Producto laptop = new Producto("Laptop HP", 1200.00, 5);
+        ProductoDigital ebook = new ProductoDigital("Java Guía", 29.99, 5.2, 3);
+
+        laptop.mostrar();
+        ebook.mostrar();
+
+        laptop.vender(2);   // Venta: 2 x Laptop HP
+        ebook.descargar();  // Descargando Java Guía (5.2 MB)... [1/3]
+        ebook.descargar();  // Descargando Java Guía (5.2 MB)... [2/3]
+        ebook.descargar();  // Descargando Java Guía (5.2 MB)... [3/3]
+        ebook.descargar();  // Límite de descargas alcanzado
+
+        System.out.println("Tipo laptop: " + laptop.getTipo());    // Producto físico
+        System.out.println("Tipo ebook: " + ebook.getTipo());      // Producto digital
+    }
+}`}
+/>
+
+---
+
+## Summary
+
+| Concept | Description |
+|----------|-------------|
+| **extends** | Declares that a class inherits from another |
+| **super** | Accesses the parent's attributes/methods |
+| **super()** | Calls the parent's constructor |
+| **@Override** | Indicates that an inherited method is overridden |
+| **Inheritance** | "is-a" relationship (Doctor is a Person) |
+| **Subclass** | The class that inherits (child) |
+| **Superclass** | The class from which inheritance occurs (parent) |
+| **Multiple inheritance** | Not allowed in Java (only one superclass) |
+
+---
+
+## Frequently Asked Questions
+
+<details>
+<summary>Can a class inherit from multiple classes?</summary>
+No. Java does not allow multiple class inheritance. A class can only extend one superclass. For multiple functionality, interfaces are used.
+</details>
+
+<details>
+<summary>When do I use inheritance vs composition?</summary>
+Use inheritance when there is a natural "is-a" relationship (Doctor is a Person). Use composition when the relationship is "has-a" (Car has an Engine). Composition is more flexible.
+</details>
+
+<details>
+<summary>What happens if I don't put super() in the constructor?</summary>
+Java inserts `super()` automatically (the parent's empty constructor). If the parent has no parameterless constructor, it gives a compilation error.
+</details>
+
+<details>
+<summary>Is using @Override mandatory?</summary>
+It is not mandatory, but it is highly recommended. Without it, if you change the method signature and it does not match the parent's, Java will treat it as a new method instead of an override.
+</details>
+
+---
+
+## Sources and References
+
+- [Oracle - Subclasses and Superclasses](https://docs.oracle.com/javase/tutorial/java/javaOO/subclasses.html)
+- [Oracle - Overriding and Hiding Methods](https://docs.oracle.com/javase/tutorial/java/javaOO/IandI/override.html)
+- [Baeldung - Java Inheritance](https://www.baeldung.com/java-inheritance)
+- [GeeksforGeeks - Inheritance in Java](https://www.geeksforgeeks.org/inheritance-in-java/)

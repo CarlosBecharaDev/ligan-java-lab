@@ -1,0 +1,338 @@
+---
+title: "Defining and Calling Methods"
+slug: "metodos"
+module: "03-metodos-y-arrays"
+level: "Beginner"
+objectives:
+  - "Define methods with parameters and arguments"
+  - "Understand the difference between parameters and arguments"
+  - "Call static methods from main and from other methods"
+  - "Use methods to break problems down into smaller parts"
+  - "Apply the DRY (Don't Repeat Yourself) principle with methods"
+prerequisites:
+  - "Have completed Module 02: Control Flow"
+  - "Understand basic data types (int, double, String, boolean)"
+  - "Know the basic structure of a class with main"
+history:
+  introducedIn: "Methods since Java 1.0"
+  context: "Methods (functions) have existed since the earliest programming languages. In Java, all code lives inside methods — even main is a method. The central idea is to write once and use many times: define a block of code with a name, and run it as many times as needed passing different data."
+  evolution: "Java 1.0 introduced static and instance methods. Java 8 added default methods in interfaces. Methods are the fundamental unit of organization in Java; all code must live inside a method."
+realWorldExamples:
+  - domain: "Healthcare — medication dosage calculation"
+    description: "A hospital system calculates a medication dose based on the patient's weight. A method encapsulates the calculation logic so it can be reused with different patients."
+    code: |
+      public class DosisMedicamento {
+          static double calcularDosis(double pesoKg, double dosisPorKg) {
+              return pesoKg * dosisPorKg;
+          }
+
+          public static void main(String[] args) {
+              double dosisAna = calcularDosis(65.0, 10.0);
+              double dosisLuis = calcularDosis(82.5, 10.0);
+              double dosisNina = calcularDosis(25.0, 15.0);
+
+              System.out.printf("Ana: %.1f mg%n", dosisAna);
+              System.out.printf("Luis: %.1f mg%n", dosisLuis);
+              System.out.printf("Niña: %.1f mg%n", dosisNina);
+          }
+      }
+    result: |
+      Ana: 650.0 mg
+      Luis: 825.0 mg
+      Niña: 375.0 mg
+
+  - domain: "E-commerce — discount calculation"
+    description: "An online store applies discounts based on customer tier (basic, premium, VIP). One method determines the discount percentage and another calculates the final price."
+    code: |
+      public class DescuentoTienda {
+          static double obtenerDescuento(String nivel) {
+              switch (nivel.toLowerCase()) {
+                  case "vip":     return 20.0;
+                  case "premium": return 10.0;
+                  case "basico":  return 5.0;
+                  default:        return 0.0;
+              }
+          }
+
+          static double precioFinal(double precio, String nivel) {
+              double descuento = obtenerDescuento(nivel);
+              return precio - (precio * descuento / 100);
+          }
+
+          public static void main(String[] args) {
+              double precio = 500.0;
+              String[] clientes = {"basico", "premium", "vip"};
+
+              for (String cliente : clientes) {
+                  double final_ = precioFinal(precio, cliente);
+                  System.out.printf("%s: $%.0f → $%.0f (-%.0f%%)%n",
+                      cliente, precio, final_,
+                      obtenerDescuento(cliente));
+              }
+          }
+      }
+    result: |
+      basic: $500 → $475 (-5%)
+      premium: $500 → $450 (-10%)
+      vip: $500 → $400 (-20%)
+hasInteractive: false
+comparisons:
+  - title: "Code with methods vs without methods"
+    items:
+      - name: "Without methods (everything in main)"
+        features:
+          reuse: "Copy and paste the same code"
+          readability: "One long method that is hard to read"
+          maintenance: "If the logic changes, you must change it in every place"
+          errors: "More prone to errors when copying code"
+      - name: "With methods"
+        features:
+          reuse: "Call the same method with different data"
+          readability: "Each method does one specific, clear thing"
+          maintenance: "Change it once and it affects every call"
+          errors: "Less prone to errors because the logic lives in one place"
+    recommendation: "Always use methods to extract blocks of code that repeat or do something specific. A method should not be more than 20-30 lines. If it is longer, split it into smaller methods."
+videos:
+  - url: ""
+    title: "Java Methods for Beginners"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What is the difference between parameters and arguments?"
+    answer: "Parameters are the variables defined in the method signature (e.g. double peso). Arguments are the actual values passed when calling the method (e.g. 65.0). Think of parameters as a blank form and arguments as the data you fill in."
+  - question: "Why is static used in the example methods?"
+    answer: "In Java, to call a method from main (which is static), the method must also be static. Instance methods (without static) require creating an object first. We'll learn the full difference in the OOP module."
+  - question: "What happens if I don't put a return in a method that returns a value?"
+    answer: "The compiler throws an error: 'missing return statement'. Every method with a return type other than void must have at least one return with a value. void methods can finish without a return, or use return without a value to exit early."
+sources:
+  - title: "Java 21 Language Specification — Method Declaration"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Defining Methods"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/methods.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a method?
+
+A method is a **named block of code** that performs a specific task. Instead of writing all your code in `main`, you split it into methods that do concrete things and can be reused as many times as you need.
+
+```
+// Basic syntax
+modifier returnType methodName(parameters) {
+    // body
+    return value; // if returnType is not void
+}
+```
+
+## Your first method
+
+Let's look at a simple method that greets a person:
+
+<CodeBlock lang="java" title="Basic method — greeting">
+{`public class Saludar {
+    // Method definition
+    static void saludar(String nombre) {
+        System.out.println("Hello, " + nombre + "!");
+    }
+
+    public static void main(String[] args) {
+        // Method call
+        saludar("Ana");
+        saludar("Luis");
+        saludar("María");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Hello, Ana!
+Hello, Luis!
+Hello, María!
+```
+
+The `saludar` method is defined once and called three times with different arguments. Without methods, you'd have to write `System.out.println("Hello, " + nombre + "!");` three times.
+
+## Parameters vs arguments
+
+These terms are frequently confused:
+
+- **Parameter**: the variable in the method definition (`String nombre`)
+- **Argument**: the actual value you pass when calling (`"Ana"`)
+
+```java
+//            parameters
+static int sumar(int a, int b) {
+    return a + b;
+}
+
+//         arguments
+int resultado = sumar(5, 3);  // a=5, b=3 → returns 8
+```
+
+## Methods with return values
+
+A method can **return a value** using `return`. The return type indicates what type of data it returns:
+
+<CodeBlock lang="java" title="Method with return — calculate circle area">
+{`public class AreaCirculo {
+    static double calcularArea(double radio) {
+        return Math.PI * radio * radio;
+    }
+
+    static String clasificar(double area) {
+        if (area < 10)  return "Small";
+        if (area < 50)  return "Medium";
+        return "Large";
+    }
+
+    public static void main(String[] args) {
+        double[] radios = {2.0, 4.0, 7.0};
+
+        for (double r : radios) {
+            double area = calcularArea(r);
+            String tipo = clasificar(area);
+            System.out.printf("Radius %.1f → Area: %.2f (%s)%n",
+                r, area, tipo);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Radius 2.0 → Area: 12.57 (Medium)
+Radius 4.0 → Area: 50.27 (Large)
+Radius 7.0 → Area: 153.94 (Large)
+```
+
+## void methods — no return value
+
+A `void` method performs an action but **returns nothing**. It doesn't need `return`, or it can use `return;` without a value to exit early:
+
+<CodeBlock lang="java" title="void method — print report">
+{`public class Reporte {
+    static void imprimirLinea(char caracter, int veces) {
+        for (int i = 0; i < veces; i++) {
+            System.out.print(caracter);
+        }
+        System.out.println();
+    }
+
+    static void imprimirTitulo(String titulo) {
+        imprimirLinea('=', 40);
+        System.out.println("  " + titulo);
+        imprimirLinea('=', 40);
+    }
+
+    public static void main(String[] args) {
+        imprimirTitulo("SALES REPORT");
+        System.out.println("January:   $12,500");
+        System.out.println("February: $15,200");
+        System.out.println("March:     $18,900");
+        imprimirLinea('-', 40);
+        System.out.println("Total:     $46,600");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+========================================
+  SALES REPORT
+========================================
+January:   $12,500
+February: $15,200
+March:     $18,900
+----------------------------------------
+Total:     $46,600
+```
+
+## Multiple parameters
+
+A method can receive several parameters of different types:
+
+<CodeBlock lang="java" title="Multiple parameters — tax calculator">
+{`public class Impuestos {
+    static double calcularImpuesto(
+            double monto, double tasaPorcentaje, double descuento) {
+        double base = monto - descuento;
+        if (base < 0) base = 0;
+        return base * tasaPorcentaje / 100;
+    }
+
+    public static void main(String[] args) {
+        double imp1 = calcularImpuesto(100000, 19, 0);
+        double imp2 = calcularImpuesto(100000, 19, 20000);
+        double imp3 = calcularImpuesto(50000, 16, 5000);
+
+        System.out.printf("No discount: $%.2f%n", imp1);
+        System.out.printf("With $20k discount: $%.2f%n", imp2);
+        System.out.printf("Rate 16%%: $%.2f%n", imp3);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+No discount: $19000.00
+With $20k discount: $15200.00
+Rate 16%: $7200.00
+```
+
+## Order matters
+
+In Java, a method must be **defined before** it is used (within the same class). Best practice is to put helper methods before `main`, or in a separate class.
+
+```
+// ✅ Correct: method defined before it is used
+static void saludar(String nombre) { ... }
+
+public static void main(String[] args) {
+    saludar("Ana"); // works
+}
+```
+
+## Pass by value
+
+In Java, primitive types are passed **by value**: the method receives a copy, not the original variable. Modifying the parameter inside the method does NOT change the original variable:
+
+<CodeBlock lang="java" title="Pass by value — the original does not change">
+{`public class PasoPorValor {
+    static void duplicar(int numero) {
+        numero = numero * 2; // modifies the copy
+        System.out.println("Inside the method: " + numero);
+    }
+
+    public static void main(String[] args) {
+        int edad = 25;
+        System.out.println("Before: " + edad);
+        duplicar(edad);
+        System.out.println("After: " + edad);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Before: 25
+Inside the method: 50
+After: 25
+```
+
+The `edad` variable is still 25 because `duplicar` received a copy, not the original reference.

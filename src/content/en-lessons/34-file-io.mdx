@@ -1,0 +1,276 @@
+---
+title: "File Reading — FileReader and BufferedReader"
+slug: "file-io"
+module: "07-archivos"
+level: "Intermediate"
+objectives:
+  - "Read text files with FileReader and BufferedReader"
+  - "Understand the difference between read(), readLine() and newlines"
+  - "Use try-with-resources to close files automatically"
+  - "Create paths and files with File and Path"
+  - "Detect and handle FileNotFoundException and IOException"
+prerequisites:
+  - "Haber completado Lección 30: try-catch-finally y try-with-resources"
+  - "Entender excepciones checked (IOException)"
+history:
+  introducedIn: "java.io since Java 1.0, java.nio since Java 1.7"
+  context: "The java.io package has existed since Java 1.0 and provides classes for basic input/output. java.nio.file (NIO.2) was added in Java 1.7 with Path, Files, and FileSystem that simplify file operations."
+  evolution: "Java 1.0: File, FileInputStream, FileReader. Java 1.1: BufferedReader, InputStreamReader. Java 1.4: NIO (New I/O). Java 7: NIO.2 with Path, Files, and Files.walk(). Java 8+ improves large-file performance with Streams."
+realWorldExamples:
+  - domain: "E-commerce — reading a product catalog"
+    description: "A system reads a CSV file with catalog products. Each line is a product with name, price, and category."
+    code: |
+      import java.io.*;
+      import java.util.ArrayList;
+
+      public class LeerCatalogo {
+          static void leerProductos(String ruta) {
+              ArrayList<String[]> productos = new ArrayList<>();
+
+              try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+                  String linea;
+                  br.readLine(); // saltar encabezado
+                  while ((linea = br.readLine()) != null) {
+                      String[] partes = linea.split(",");
+                      productos.add(partes);
+                      System.out.printf("%s | $%s | %s%n",
+                          partes[0], partes[1], partes[2]);
+                  }
+              } catch (FileNotFoundException e) {
+                  System.out.println("No se encontró el catálogo: " + ruta);
+              } catch (IOException e) {
+                  System.out.println("Error leyendo catálogo: " + e.getMessage());
+              }
+          }
+
+          public static void main(String[] args) {
+              leerProductos("productos.csv");
+          }
+      }
+    result: |
+      Catalog not found: productos.csv
+
+  - domain: "Health — reading medical records"
+    description: "A hospital reads text files with patient medical records, processes each line, and counts keyword mentions."
+    code: |
+      import java.io.*;
+
+      public class LeerHistorias {
+          static void analizar(String ruta, String[] sintomas) {
+              try (BufferedReader br = new BufferedReader(new FileReader(ruta))) {
+                  String linea;
+                  int totalLineas = 0;
+                  int[] conteos = new int[sintomas.length];
+
+                  while ((linea = br.readLine()) != null) {
+                      totalLineas++;
+                      for (int i = 0; i < sintomas.length; i++) {
+                          if (linea.toLowerCase().contains(sintomas[i])) {
+                              conteos[i]++;
+                          }
+                      }
+                  }
+
+                  System.out.println("Líneas: " + totalLineas);
+                  for (int i = 0; i < sintomas.length; i++) {
+                      System.out.printf("%s: %d%n", sintomas[i], conteos[i]);
+                  }
+              } catch (IOException e) {
+                  System.out.println("Error: " + e.getMessage());
+              }
+          }
+
+          public static void main(String[] args) {
+              analizar("historias.txt",
+                  new String[]{"fiebre", "dolor", "náuseas"});
+          }
+      }
+    result: |
+      Error: historias.txt (The system cannot find the file specified)
+
+hasInteractive: false
+comparisons:
+  - title: "FileReader vs Files.newBufferedReader"
+    items:
+      - name: "FileReader + BufferedReader"
+        features:
+          api: "Classic (java.io since 1.0)"
+          charset: "Uses the system default charset"
+          lines: "readLine() returns null at the end of the file"
+          usage: "Simple reading of local text files"
+      - name: "Files.newBufferedReader (NIO.2)"
+        features:
+          api: "Modern (java.nio.file since 1.7)"
+          charset: "You can specify the charset explicitly"
+          lines: "Files.lines() returns a Stream<String>"
+          usage: "Modern operations, large files with streams"
+    recommendation: "Use FileReader+BufferedReader for simple, traditional code. Use Files.newBufferedReader when you want explicit charset control or want to process the file with streams. NIO.2 is preferable for new code."
+videos:
+  - url: ""
+    title: "Reading files in Java"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and good practices"
+faqs:
+  - question: "What is the difference between read() and readLine()?"
+    answer: "read() reads one character and returns its int value (-1 at end of file). readLine() reads a whole line and returns a String (null at end of file). readLine() is more common and more efficient for text."
+  - question: "Can I read PDFs or Excel files with these classes?"
+    answer: "No. FileReader/BufferedReader are for plain text files. PDFs, Excel, and Word require specific libraries such as Apache POI or iText. For images and binary files use FileInputStream."
+  - question: "What happens if the file has a different encoding?"
+    answer: "FileReader uses the operating system charset. To specify the encoding, use new InputStreamReader(new FileInputStream(ruta), StandardCharsets.UTF_8) instead of FileReader."
+sources:
+  - title: "Java 21 API — java.io"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/package-summary.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — I/O Streams"
+    url: "https://docs.oracle.com/javase/tutorial/essential/io/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Reading a text file
+
+The most common way to read text files in Java:
+
+<CodeBlock lang="java" title="Read a file with BufferedReader">
+{`import java.io.*;
+
+public class LeerArchivo {
+    public static void main(String[] args) {
+        // try-with-resources closes the file automatically
+        try (BufferedReader br = new BufferedReader(new FileReader("datos.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+**What does each part do?**
+- `FileReader(ruta)`: opens the file for reading
+- `BufferedReader(br)`: wraps the FileReader to read line by line
+- `readLine()`: reads a complete line, returns `null` at the end
+- `try-with-resources`: closes the file automatically
+
+## Exception handling
+
+File operations throw **checked exceptions** that you must handle:
+
+| Exception | When it occurs |
+|-----------|---------------|
+| `FileNotFoundException` | The file does not exist at the specified path |
+| `IOException` | General I/O error (disk, permissions, etc.) |
+| `SecurityException` (unchecked) | No read permissions |
+
+## Read the whole file at once
+
+<CodeBlock lang="java" title="Read the whole file as a String (Java 11+)">
+{`import java.nio.file.*;
+
+public class LeerTodo {
+    public static void main(String[] args) {
+        try {
+            String contenido = Files.readString(Path.of("datos.txt"));
+            System.out.println(contenido);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Read line by line with NIO.2
+
+<CodeBlock lang="java" title="Read with Files.lines() (Java 8+)">
+{`import java.nio.file.*;
+import java.util.stream.Stream;
+
+public class LeerConStream {
+    public static void main(String[] args) {
+        try (Stream<String> lineas = Files.lines(Path.of("datos.txt"))) {
+            lineas.forEach(System.out::println);
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Creating and verifying paths
+
+<CodeBlock lang="java" title="Path operations">
+{`import java.nio.file.*;
+import java.io.File;
+
+public class OperacionesPath {
+    public static void main(String[] args) {
+        Path ruta = Path.of("datos/config.properties");
+
+        // Information
+        System.out.println("Exists: " + Files.exists(ruta));
+        System.out.println("File: " + Files.isRegularFile(ruta));
+        System.out.println("Directory: " + Files.isDirectory(ruta));
+        System.out.println("Size: " + (Files.exists(ruta) ? Files.size(ruta) : 0));
+        System.out.println("Parent: " + ruta.getParent());
+        System.out.println("Name: " + ruta.getFileName());
+
+        // File (old API)
+        File archivo = ruta.toFile();
+        System.out.println("Absolute path: " + archivo.getAbsolutePath());
+    }
+}`}
+</CodeBlock>
+
+Note: use `\\` to write a backslash in Java: `"C:\\\\Datos\\\\archivo.txt"` or better yet, use `Path.of()` with forward slashes.
+
+## Reading binary files
+
+<CodeBlock lang="java" title="Read bytes from a file">
+{`import java.nio.file.*;
+
+public class LeerBinario {
+    public static void main(String[] args) {
+        try {
+            byte[] datos = Files.readAllBytes(Path.of("imagen.jpg"));
+            System.out.println("Size: " + datos.length + " bytes");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

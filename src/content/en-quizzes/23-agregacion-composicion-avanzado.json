@@ -1,0 +1,109 @@
+{
+  "id": "quiz-23-agregacion-composicion-avanzado",
+  "lessonSlug": "agregacion-composicion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How is aggregation implemented?",
+      "options": [
+        "The object is created in the container's constructor",
+        "The object is passed as a parameter (a reference is received)",
+        "The object is created inside the method",
+        "The object is static"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "That would be composition.",
+        "Correct. Aggregation = received reference, not created internally.",
+        "It is not created inside the method.",
+        "It is not static."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How is composition implemented?",
+      "options": [
+        "It is received as a parameter",
+        "The object is created inside the container (new in constructor or attribute)",
+        "It is inherited",
+        "A singleton is used"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Receiving it as a parameter is aggregation.",
+        "Correct. The container creates and owns the object.",
+        "It is not inheritance.",
+        "It is not a singleton."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What problem does composition solve over inheritance?",
+      "options": [
+        "It is faster",
+        "It avoids strong coupling and allows greater flexibility",
+        "It allows multiple constructors",
+        "It does not require interfaces"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not about speed.",
+        "Correct. Composition > Inheritance: more flexible and less coupled.",
+        "It is unrelated to constructors.",
+        "It can use interfaces just the same."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is a Value Object?",
+      "options": [
+        "An object that changes constantly",
+        "An immutable object that represents a value (like Money or Date)",
+        "An object with many attributes",
+        "A static object"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Value Objects are immutable.",
+        "Correct. They represent values like $10.50, not entities with identity.",
+        "It is not about the number of attributes.",
+        "It is not about static."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the design pattern \"Composition over Inheritance\"?",
+      "options": [
+        "Always use inheritance",
+        "Prefer composition for code reuse instead of inheritance",
+        "Never use inheritance",
+        "Use only interfaces"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Not always inheritance.",
+        "Correct. Prefer composition when possible.",
+        "Inheritance is still valid.",
+        "It is not only about interfaces."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "What would happen if you destroy an Order but its Products no longer exist?",
+      "options": [
+        "It is composition (the Order \"owns\" the Products)",
+        "It is aggregation (the Products exist independently)",
+        "It is inheritance",
+        "There is no relationship"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. If the Products die with the Order, it is composition.",
+        "If they survive, it is aggregation.",
+        "It is not inheritance.",
+        "There is a relationship."
+      ]
+    }
+  ]
+}

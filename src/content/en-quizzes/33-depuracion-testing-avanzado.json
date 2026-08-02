@@ -1,0 +1,92 @@
+{
+  "id": "quiz-33-depuracion-testing-avanzado",
+  "lessonSlug": "depuracion-testing",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is TDD (Test-Driven Development)?",
+      "options": [
+        "A methodology where the code is written first and the tests afterwards",
+        "A methodology where the test is written before the code, made to fail, and then implemented",
+        "A way of debugging code by writing tests during debugging",
+        "A framework for running tests automatically in production"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "TDD reverses the order: the test is written first, not afterwards.",
+        "Correct. TDD (Test-Driven Development) is a cycle where you first write a test that fails, then write the minimal code to make it pass, and finally refactor. The cycle is: Red -> Green -> Refactor.",
+        "TDD is not a debugging technique; it is a development methodology.",
+        "TDD does not run tests in production; it is used during development."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which assertions does JUnit 5 offer for verifying results?",
+      "options": [
+        "Only assertEquals and assertNotEquals",
+        "assertEquals, assertTrue, assertFalse, assertThrows, assertAll among others",
+        "Only assertTrue and assertFalse",
+        "A single assert() function that verifies everything"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "JUnit 5 offers many more assertions than just assertEquals and assertNotEquals.",
+        "Correct. JUnit 5 offers a rich set of assertions: assertEquals, assertTrue, assertFalse, assertThrows (for exceptions), assertAll (for grouping assertions), assertNotNull, among others.",
+        "JUnit 5 has more assertions than just assertTrue and assertFalse.",
+        "There is no single assert() function that verifies everything in JUnit."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is an integration test?",
+      "options": [
+        "A test that verifies a single isolated function of the code",
+        "A test that verifies that multiple components or modules work correctly together",
+        "A test that automatically integrates with the version control system",
+        "A test that only runs in the production environment"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "A test that verifies an isolated function is a unit test, not an integration test.",
+        "Correct. An integration test verifies that multiple components, modules, or services work correctly when they interact with each other, such as a database connection or communication between services.",
+        "Integration tests have no specific relationship with version control systems.",
+        "Integration tests run in development and CI environments, not only in production."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you debug a NullPointerException in Java?",
+      "options": [
+        "Adding more prints in the code without using the debugger",
+        "Examining the stack trace to identify the exact line, and inspecting the variables on that line",
+        "Adding a try-catch that prints the error message",
+        "Removing the null reference without investigating the cause"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Adding prints is useful but it is not the most efficient way to debug.",
+        "Correct. The stack trace of the NullPointerException indicates the exact line where it occurred. You should inspect that line and the variables involved to determine which one is null and why it was not initialized.",
+        "A try-catch does not solve the cause of the NullPointerException; it only catches it.",
+        "Removing the reference without investigating does not solve the underlying problem."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is an assertion message in JUnit?",
+      "options": [
+        "The message that is printed when the test passes successfully",
+        "The optional first parameter that describes the expected error if the assertion fails",
+        "A message that is emailed to the team when a test fails",
+        "The documentation of the method being tested"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The assertion message is not printed when the test passes; it is shown when it fails.",
+        "Correct. The assertion message is the optional first parameter in an assertion (e.g. assertEquals(\"message\", expected, actual)) that is shown as a description of the error if the assertion fails, making it easier to identify the problem.",
+        "Assertion messages are not sent by email.",
+        "Assertion messages are not documentation; they are error messages for failed tests."
+      ]
+    }
+  ]
+}

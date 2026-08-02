@@ -1,0 +1,75 @@
+{
+  "id": "quiz-32-excepciones-personalizadas-basico",
+  "lessonSlug": "excepciones-personalizadas",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How do you create a custom exception in Java?",
+      "options": [
+        "Using the `new Exception` keyword directly in the code",
+        "By extending the Exception or RuntimeException class",
+        "By implementing the Exception interface",
+        "By declaring it as a static final constant"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "new Exception only creates an instance, it does not define a new type.",
+        "Correct. To create a custom exception you define a class that inherits from Exception (checked) or RuntimeException (unchecked).",
+        "Exception is a class, not an interface; it cannot be implemented.",
+        "Constants do not define new exception types."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Why is it useful to create custom exceptions?",
+      "options": [
+        "To make the code faster at runtime",
+        "To represent errors specific to the application's domain",
+        "To avoid using try-catch in the code",
+        "To replace Java's standard exceptions"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Custom exceptions do not improve code performance.",
+        "Correct. Custom exceptions allow you to represent errors that are specific to the application's context (e.g. InsufficientBalanceException, UserNotFoundException), making the code more expressive and maintainable.",
+        "Custom exceptions still require try-catch.",
+        "They do not replace standard exceptions; they complement them."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which constructors should a custom exception typically have?",
+      "options": [
+        "Only an empty constructor without parameters",
+        "A constructor with an error message and optionally a cause",
+        "A constructor with 10 mandatory parameters",
+        "A constructor that receives an Error object"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "An empty constructor is useful, but not enough for a complete custom exception.",
+        "Correct. The typical approach is to have a constructor that accepts an error message (String message) and optionally a cause (Throwable cause) for exception chaining.",
+        "It is not necessary to have 10 parameters; the common constructors are message and cause.",
+        "The constructor does not receive an Error object; it inherits from Exception."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "When is it better to create a checked exception vs a custom unchecked exception?",
+      "options": [
+        "Always use checked exceptions for every kind of error",
+        "Checked if the caller can recover from the error; unchecked if it is a programming error",
+        "Always use unchecked exceptions because they are easier to use",
+        "It depends on the size of the file where the exception is defined"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Not every kind of error should be checked; it depends on the context.",
+        "Correct. A checked exception is used when the error is recoverable and the caller must handle it (e.g. file not found). An unchecked exception is used when it is a programming error that should be fixed (e.g. null argument).",
+        "Unchecked is not always the best option; the context must be evaluated.",
+        "The size of the file does not determine the type of exception."
+      ]
+    }
+  ]
+}

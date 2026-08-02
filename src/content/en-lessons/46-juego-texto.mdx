@@ -1,0 +1,293 @@
+---
+title: "Project: Text Adventure Game"
+slug: "juego-texto"
+module: "09-proyectos"
+level: "Advanced"
+objectives:
+  - "Design a game architecture with Room, Player, and Object classes"
+  - "Implement navigation between connected rooms"
+  - "Use HashMap to model inventory and connections"
+  - "Apply inheritance for objects and actions"
+  - "Validate movements and actions with game rules"
+prerequisites:
+  - "Have completed all previous modules"
+  - "Know HashMap, inheritance, interfaces, and exception handling"
+history:
+  introducedIn: "Final project: text adventure game"
+  context: "A text adventure game (also known as an adventure game or Zork-like) is a classic project for integrating all programming concepts. The player explores rooms, collects objects, and solves puzzles using text commands."
+  evolution: "The base version has 4 interconnected rooms. The commands are: go, look, take, use, inventory. You can extend it with more rooms, puzzles, NPCs, and a combat system."
+realWorldExamples: []
+hasInteractive: false
+comparisons: []
+videos:
+  - url: ""
+    title: "Project: Text Adventure Game in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "How are the connections between rooms modeled?"
+    answer: "Each Room has a HashMap<String, Room> called exits. The keys are directions (north, south, east, west) and the values are the connected rooms. If there is no exit in a direction, the map contains null."
+  - question: "How does the command parser work?"
+    answer: "The parser splits the user's command into two parts: verb (action) and object (what receives the action). For example, 'take key' splits into verb='take' and object='key'. A switch routes each verb to its corresponding method."
+  - question: "How do I add goals or missions to the game?"
+    answer: "Add a list of goals (objects the player must have) and check when entering certain rooms whether they are met. Each room can have a different description depending on the game state (objects taken, actions performed)."
+sources:
+  - title: "Java Tutorials — Inheritance"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Project Description
+
+You will create a **text adventure game** where the player explores rooms, collects objects, and solves puzzles using simple text commands like `go north`, `take key`, `look`.
+
+## Step 1: Room Class
+
+<CodeBlock lang="java" title="Room model with exits and objects">
+{`import java.util.HashMap;
+
+public class Espacio {
+    private String nombre;
+    private String descripcion;
+    private HashMap<String, Espacio> salidas;
+    private HashMap<String, Objeto> objetos;
+
+    public Espacio(String nombre, String descripcion) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.salidas = new HashMap<>();
+        this.objetos = new HashMap<>();
+    }
+
+    public void agregarSalida(String direccion, Espacio destino) {
+        salidas.put(direccion, destino);
+    }
+
+    public Espacio getSalida(String direccion) {
+        return salidas.get(direccion);
+    }
+
+    public void agregarObjeto(Objeto obj) {
+        objetos.put(obj.getNombre(), obj);
+    }
+
+    public Objeto tomarObjeto(String nombre) {
+        return objetos.remove(nombre);
+    }
+
+    public boolean tieneObjeto(String nombre) {
+        return objetos.containsKey(nombre);
+    }
+
+    public String getNombre() { return nombre; }
+
+    public String getDescripcionCompleta() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("\\n=== ").append(nombre).append(" ===\\n");
+        sb.append(descripcion).append("\\n\\n");
+
+        if (!objetos.isEmpty()) {
+            sb.append("You see: ");
+            objetos.keySet().forEach(o -> sb.append(o).append(", "));
+            sb.setLength(sb.length() - 2);
+            sb.append("\\n");
+        }
+
+        sb.append("Exits: ");
+        salidas.keySet().forEach(s -> sb.append(s).append(" "));
+        return sb.toString();
+    }
+}`}
+</CodeBlock>
+
+## Step 2: Object Class
+
+<CodeBlock lang="java" title="Object model">
+{`public class Objeto {
+    private String nombre;
+    private String descripcion;
+    private boolean portable;
+
+    public Objeto(String nombre, String descripcion, boolean portable) {
+        this.nombre = nombre;
+        this.descripcion = descripcion;
+        this.portable = portable;
+    }
+
+    public String getNombre() { return nombre; }
+    public String getDescripcion() { return descripcion; }
+    public boolean esPortable() { return portable; }
+
+    @Override
+    public String toString() {
+        return nombre + ": " + descripcion;
+    }
+}`}
+</CodeBlock>
+
+## Step 3: Player Class
+
+<CodeBlock lang="java" title="Player with inventory">
+{`import java.util.HashMap;
+
+public class Jugador {
+    private Espacio ubicacion;
+    private HashMap<String, Objeto> inventario;
+
+    public Jugador(Espacio inicio) {
+        this.ubicacion = inicio;
+        this.inventario = new HashMap<>();
+    }
+
+    public String irA(String direccion) {
+        Espacio destino = ubicacion.getSalida(direccion);
+        if (destino == null) {
+            return "You can't go that way.";
+        }
+        ubicacion = destino;
+        return ubicacion.getDescripcionCompleta();
+    }
+
+    public String tomar(String nombreObjeto) {
+        if (!ubicacion.tieneObjeto(nombreObjeto)) {
+            return "There is no '" + nombreObjeto + "' here.";
+        }
+        Objeto obj = ubicacion.tomarObjeto(nombreObjeto);
+        if (!obj.esPortable()) {
+            ubicacion.agregarObjeto(obj); // put it back
+            return "You can't take " + obj.getNombre() + ".";
+        }
+        inventario.put(obj.getNombre(), obj);
+        return "You took " + obj.getNombre() + ".";
+    }
+
+    public String mirar() {
+        return ubicacion.getDescripcionCompleta();
+    }
+
+    public String inventario() {
+        if (inventario.isEmpty()) {
+            return "You are not carrying anything.";
+        }
+        StringBuilder sb = new StringBuilder("Inventory:\\n");
+        inventario.values().forEach(o ->
+            sb.append("  - ").append(o).append("\\n"));
+        return sb.toString();
+    }
+
+    public boolean tieneObjeto(String nombre) {
+        return inventario.containsKey(nombre);
+    }
+}`}
+</CodeBlock>
+
+## Step 4: World Builder
+
+<CodeBlock lang="java" title="Create the game rooms and objects">
+{`public class Mundo {
+    private Jugador jugador;
+
+    public Mundo() {
+        // Create rooms
+        Espacio entrada = new Espacio("Entrance",
+            "You are at the entrance of an old mansion. ");
+        Espacio salon = new Espacio("Living Room",
+            "A large hall with antique furniture. ");
+        Espacio cocina = new Espacio("Kitchen",
+            "A cold kitchen that smells musty.");
+        Espacio jardin = new Espacio("Garden",
+            "An overgrown garden with a dry fountain.");
+
+        // Connect rooms
+        entrada.agregarSalida("norte", salon);
+        salon.agregarSalida("sur", entrada);
+        salon.agregarSalida("este", cocina);
+        salon.agregarSalida("oeste", jardin);
+        cocina.agregarSalida("oeste", salon);
+        jardin.agregarSalida("este", salon);
+
+        // Place objects
+        salon.agregarObjeto(new Objeto("key", "A rusty key", true));
+        cocina.agregarObjeto(new Objeto("candle", "An unused candle", true));
+        jardin.agregarObjeto(new Objeto("chest",
+            "A locked chest with a padlock", false));
+
+        jugador = new Jugador(entrada);
+    }
+
+    public Jugador getJugador() { return jugador; }
+}`}
+</CodeBlock>
+
+## Step 5: Command Parser
+
+<CodeBlock lang="java" title="Game parser and main menu">
+{`import java.util.Scanner;
+
+public class JuegoAventura {
+    public static void main(String[] args) {
+        Mundo mundo = new Mundo();
+        Jugador jugador = mundo.getJugador();
+        Scanner sc = new Scanner(System.in);
+
+        System.out.println("\\n🏰 MANSION ADVENTURE 🏰");
+        System.out.println("Commands: ir [dir], tomar [obj], mirar, inventario, salir");
+        System.out.println(jugador.mirar());
+
+        while (true) {
+            System.out.print("\\n> ");
+            String entrada = sc.nextLine().trim().toLowerCase();
+            String[] partes = entrada.split(" ", 2);
+            String verbo = partes[0];
+            String objeto = partes.length > 1 ? partes[1] : "";
+
+            if (verbo.equals("salir") || verbo.equals("exit")) {
+                System.out.println("Thanks for playing!");
+                break;
+            }
+
+            String resultado = switch (verbo) {
+                case "ir", "mover" -> jugador.irA(objeto);
+                case "tomar", "agarrar" -> jugador.tomar(objeto);
+                case "mirar", "ver" -> jugador.mirar();
+                case "inventario", "i" -> jugador.inventario();
+                default -> "I don't understand '" + verbo + "'.";
+            };
+            System.out.println(resultado);
+        }
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+## Extension Exercises
+
+1. **More rooms**: add 4+ new rooms with complex connections
+2. **Puzzles**: an object is obtained only if the player answers correctly
+3. **NPCs**: non-player characters that give hints
+4. **Victory**: winning condition (collect certain objects or reach a place)
+5. **Save/load**: serialize the game state with ObjectOutputStream
+6. **Points**: add scoring for objects found and actions performed
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

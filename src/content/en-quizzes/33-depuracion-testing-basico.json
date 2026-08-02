@@ -1,0 +1,92 @@
+{
+  "id": "quiz-33-depuracion-testing-basico",
+  "lessonSlug": "depuracion-testing",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is debugging in programming?",
+      "options": [
+        "A method to optimize code speed",
+        "Finding and fixing errors (bugs) in the program's code",
+        "A technique for writing code faster",
+        "A process for creating program documentation"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Debugging does not optimize speed; it finds errors.",
+        "Correct. Debugging is the process of finding and fixing errors (bugs) in the program's code by analyzing its behavior step by step.",
+        "Debugging is not a productivity technique for writing code.",
+        "Documentation is a separate process from debugging."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a breakpoint in a debugger?",
+      "options": [
+        "A point where the program restarts automatically",
+        "A point where program execution pauses to inspect the state",
+        "An error that stops program compilation",
+        "A line of code that is removed during debugging"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "A breakpoint does not restart the program; it pauses it.",
+        "Correct. A breakpoint is a marked point in the code where execution stops, allowing you to inspect variables, the stack trace, and the program's state at that moment.",
+        "Breakpoints are not errors; they are debugger tools.",
+        "Breakpoints do not remove code; they only pause execution."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is JUnit in Java?",
+      "options": [
+        "An alternative compiler for Java",
+        "A framework for writing and running automated tests",
+        "A library for creating graphical user interfaces",
+        "A tool for deploying applications"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "JUnit is not a compiler; it is used alongside Java's standard compiler.",
+        "Correct. JUnit is the most widely used testing framework in Java for writing and running automated unit tests that verify the code works correctly.",
+        "JUnit does not create graphical interfaces; it is for testing.",
+        "JUnit does not handle deployments; it is for testing code."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does the @Test annotation do in JUnit?",
+      "options": [
+        "Marks a class as a test class",
+        "Marks an individual method as a test method that will be executed",
+        "Indicates that the method is a constructor of the class",
+        "Declares a variable as a test value"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The @Test annotation is placed on methods, not classes.",
+        "Correct. The @Test annotation marks a method as a test that will be executed by the JUnit framework to verify the expected behavior of the code.",
+        "@Test does not declare constructors; it marks test methods.",
+        "@Test does not declare variables; it marks methods."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What does the assertEquals method do in JUnit?",
+      "options": [
+        "Compares whether two objects are at the same memory address",
+        "Verifies that two values are equal; if they are not, the test fails",
+        "Assigns an equal value to two different variables",
+        "Counts the number of successful assertions in a test"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "assertEquals does not compare memory addresses; it compares values.",
+        "Correct. assertEquals(expected, actual) verifies that the expected value is equal to the actual value. If they are different, the test fails and shows an error message indicating the difference.",
+        "assertEquals does not assign values; it compares them.",
+        "assertEquals does not count assertions; it is a single assertion."
+      ]
+    }
+  ]
+}

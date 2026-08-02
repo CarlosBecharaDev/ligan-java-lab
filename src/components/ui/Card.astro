@@ -1,12 +1,13 @@
 ---
 export interface Props {
   padding?: 'sm' | 'md' | 'lg';
+  class?: string;
 }
 
-const { padding = 'md' } = Astro.props;
+const { padding = 'md', class: className = '' } = Astro.props;
 ---
 
-<div class="card card--{padding}"><slot /></div>
+<div class:list={['card', `card--${padding}`, className]}><slot /></div>
 
 <style>
   .card {

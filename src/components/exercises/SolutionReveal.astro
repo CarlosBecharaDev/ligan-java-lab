@@ -13,17 +13,17 @@ const srId = `sr-${Math.random().toString(36).slice(2, 8)}`;
 <div class="solution-reveal" data-sr-id={srId}>
   <button class="solution-reveal__toggle" aria-expanded="false" aria-controls={srId}>
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" /><circle cx="12" cy="12" r="3" /></svg>
-    Mostrar solución
+    <span class="solution-reveal__label" data-i18n="exercise.show-solution">Mostrar solución</span>
   </button>
 
   <div id={srId} class="solution-reveal__content" hidden>
-    <h4>Código de solución</h4>
+    <h4 data-i18n="exercise.solution-code">Código de solución</h4>
     <pre class="solution-reveal__code"><code>{solution}</code></pre>
 
-    <h4>Explicación</h4>
+    <h4 data-i18n="exercise.explanation">Explicación</h4>
     <p class="solution-reveal__explanation">{explanation}</p>
 
-    <h4>Salida esperada</h4>
+    <h4 data-i18n="exercise.expected-output">Salida esperada</h4>
     <pre class="solution-reveal__output"><code>{expectedOutput}</code></pre>
   </div>
 </div>
@@ -98,15 +98,18 @@ const srId = `sr-${Math.random().toString(36).slice(2, 8)}`;
   document.querySelectorAll('.solution-reveal').forEach((container) => {
     const toggleBtn = container.querySelector('.solution-reveal__toggle');
     const content = container.querySelector('.solution-reveal__content');
+    const label = container.querySelector('.solution-reveal__label');
+    const T = (key: string): string =>
+      ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
 
     toggleBtn?.addEventListener('click', () => {
       const hidden = content?.hasAttribute('hidden');
       if (content) {
         content.toggleAttribute('hidden');
         toggleBtn.setAttribute('aria-expanded', String(!hidden));
-        toggleBtn.innerHTML = hidden
-          ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg> Ocultar solución'
-          : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> Mostrar solución';
+        if (label) {
+          label.textContent = hidden ? T('exercise.hide-solution') : T('exercise.show-solution');
+        }
       }
     });
   });

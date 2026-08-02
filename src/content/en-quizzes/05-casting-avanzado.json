@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-casting",
+  "lessonSlug": "casting",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\n```java\nbyte b = 100;\nbyte c = 50;\nint r = b + c;\nSystem.out.println(r);\n```",
+      "options": ["150", "Error", "100", "-106"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. b and c are promoted to int before adding, the result is 150.",
+        "The code compiles correctly.",
+        "The sum of 100+50 is 150.",
+        "There is no overflow in this case."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What happens when you do `(byte) 128`?",
+      "options": [
+        "128",
+        "0",
+        "-128",
+        "It throws an exception"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "128 exceeds the byte range (-128 to 127).",
+        "128 in signed 8 bits does not give 0.",
+        "Correct. byte has a range of -128 to 127. 128 exceeds it and overflows to -128.",
+        "Java does not throw an exception for overflow in casting."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the difference between `Integer.parseInt()` and `Integer.valueOf()`?",
+      "options": [
+        "They are exactly the same",
+        "parseInt returns int, valueOf returns Integer",
+        "parseInt returns Integer, valueOf returns int",
+        "valueOf throws an exception on failure, parseInt does not"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They have different return types.",
+        "Correct. parseInt() returns int (primitive). valueOf() returns Integer (wrapper). valueOf() can also cache common values (-128 to 127).",
+        "It is the other way around.",
+        "Both throw NumberFormatException on failure."
+      ]
+    }
+  ]
+}

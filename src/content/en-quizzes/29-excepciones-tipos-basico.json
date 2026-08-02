@@ -1,0 +1,92 @@
+{
+  "id": "quiz-29-excepciones-tipos-basico",
+  "lessonSlug": "excepciones-tipos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is an exception in Java?",
+      "options": [
+        "A compilation error that prevents generating the bytecode",
+        "A runtime error that interrupts the normal flow of the program",
+        "A warning the compiler shows when it finds suspicious code",
+        "A special type of variable for handling errors"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Compilation errors are not exceptions; they are detected before running the program.",
+        "Correct. An exception is an event that occurs at runtime and alters the normal flow of the program.",
+        "Compiler warnings are not exceptions; they are just notifications.",
+        "Exceptions are not variables; they are objects that represent errors."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a checked exception?",
+      "options": [
+        "An exception that is verified automatically at runtime",
+        "An exception verified by the compiler that must be handled or declared",
+        "An exception that only occurs with primitive data types",
+        "An exception thrown when a null value is checked"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Checked exceptions are verified at compile time, not at runtime.",
+        "Correct. A checked exception is verified by the compiler, and the code must use try-catch or declare it with throws.",
+        "Checked exceptions have no relation to primitive types.",
+        "Checking null values does not define checked exceptions."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is an unchecked exception?",
+      "options": [
+        "An exception the compiler does not force you to handle; it inherits from RuntimeException",
+        "An exception that must always be caught with try-catch",
+        "An exception that only occurs during compilation",
+        "An exception that requires using the throws keyword in every function"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Unchecked exceptions (like NullPointerException) inherit from RuntimeException and do not require an explicit try-catch.",
+        "Unchecked exceptions do not force the use of try-catch; it is optional.",
+        "Exceptions occur at runtime, not during compilation.",
+        "Unchecked exceptions do not require the throws keyword in the method signature."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does the Error class represent in Java?",
+      "options": [
+        "A minor error that can be ignored in the code",
+        "A serious system error that generally should not be attempted to be caught",
+        "An alternative way of writing checked exceptions",
+        "A type of custom exception created by the developer"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Errors are not minor errors; they represent serious system failures.",
+        "Correct. Error represents serious JVM system problems like OutOfMemoryError or StackOverflowError, which normally should not be attempted to be handled.",
+        "Error is not an alternative to checked exceptions; it is a different category.",
+        "Error is a class from the Java API, not a custom exception."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the main hierarchy of error handling in Java?",
+      "options": [
+        "Error → Exception → RuntimeException",
+        "Exception → Error → Throwable",
+        "Throwable → Exception / Error",
+        "RuntimeException → Exception → Throwable"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "The order is inverted. Throwable is the parent class.",
+        "Exception is not a parent of Error. Both are children of Throwable.",
+        "Correct. Throwable is the root class and has two main children: Exception (exceptions) and Error (system errors).",
+        "RuntimeException is a child of Exception, not the other way around."
+      ]
+    }
+  ]
+}

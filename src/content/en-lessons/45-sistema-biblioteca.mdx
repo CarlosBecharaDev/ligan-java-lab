@@ -1,0 +1,309 @@
+---
+title: "Project: Library System"
+slug: "sistema-biblioteca"
+module: "09-proyectos"
+level: "Advanced"
+objectives:
+  - "Model a system with multiple related classes (Book, User, Loan)"
+  - "Implement aggregation and composition relationships"
+  - "Use HashMap to look up books by ISBN quickly"
+  - "Implement loans with dates using java.time"
+  - "Calculate fines for late returns"
+prerequisites:
+  - "Have completed Module 04: OOP"
+  - "Know HashMap, LocalDate, and inheritance"
+history:
+  introducedIn: "Guided library system project"
+  context: "This project integrates advanced OOP: inheritance, interfaces, composition, and date handling. It models books, users, loans, and fines simulating a real library system."
+  evolution: "The base version uses in-memory collections. You can extend it with file persistence, multi-criteria search, and a graphical interface."
+realWorldExamples: []
+hasInteractive: false
+comparisons: []
+videos:
+  - url: ""
+    title: "Project: Library System in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Why use HashMap instead of ArrayList for the books?"
+    answer: "HashMap lets you look up books by ISBN in O(1). With ArrayList you would have to iterate through the whole list to find the ISBN. Fast key-based access is ideal for catalogs."
+  - question: "How do I calculate the days of delay?"
+    answer: "Use Period.between(dueDate, currentDate).getDays(). If currentDate is after dueDate, there is a delay. Multiply the days by the daily fine to calculate the total fine."
+  - question: "Can I add inheritance for user types?"
+    answer: "Yes. Create an abstract User class with subclasses: Student, Teacher, External. Each one can have different loan limits and fines. Use polymorphism to process loans for any type of user."
+sources:
+  - title: "Java Tutorials — HashMap"
+    url: "https://docs.oracle.com/javase/tutorial/collections/interfaces/map.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Project Description
+
+You will build a **library management system** that allows you to:
+
+- Add and search books by ISBN, title, or author
+- Register users (students, teachers)
+- Lend books to users with a return date
+- Return books and calculate late fines
+- List available and on-loan books
+
+## Step 1: Book Class
+
+<CodeBlock lang="java" title="Book model">
+{`public class Libro {
+    private String isbn;
+    private String titulo;
+    private String autor;
+    private int anio;
+    private boolean disponible;
+
+    public Libro(String isbn, String titulo, String autor, int anio) {
+        this.isbn = isbn;
+        this.titulo = titulo;
+        this.autor = autor;
+        this.anio = anio;
+        this.disponible = true;
+    }
+
+    public String getIsbn() { return isbn; }
+    public String getTitulo() { return titulo; }
+    public String getAutor() { return autor; }
+    public boolean isDisponible() { return disponible; }
+    public void setDisponible(boolean d) { this.disponible = d; }
+
+    @Override
+    public String toString() {
+        String estado = disponible ? "✓ Available" : "✗ On loan";
+        return String.format("%s — %s (%d) | %s",
+            titulo, autor, anio, estado);
+    }
+}`}
+</CodeBlock>
+
+## Step 2: Loan Class
+
+<CodeBlock lang="java" title="Loan model with dates">
+{`import java.time.LocalDate;
+import java.time.Period;
+
+public class Prestamo {
+    private Libro libro;
+    private String usuarioId;
+    private LocalDate fechaPrestamo;
+    private LocalDate fechaDevolucion;
+    private static final double MULTA_DIARIA = 0.50;
+
+    public Libro getLibro() { return libro; }
+
+    public Prestamo(Libro libro, String usuarioId, int diasPrestamo) {
+        this.libro = libro;
+        this.usuarioId = usuarioId;
+        this.fechaPrestamo = LocalDate.now();
+        this.fechaDevolucion = fechaPrestamo.plusDays(diasPrestamo);
+        libro.setDisponible(false);
+    }
+
+    public double devolver() {
+        libro.setDisponible(true);
+        LocalDate hoy = LocalDate.now();
+
+        if (hoy.isAfter(fechaDevolucion)) {
+            int diasRetraso = Period.between(fechaDevolucion, hoy).getDays();
+            double multa = diasRetraso * MULTA_DIARIA;
+            System.out.printf("⚠ Late return: %d days, fine: $%.2f%n",
+                diasRetraso, multa);
+            return multa;
+        }
+        System.out.println("✓ Returned on time");
+        return 0;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%s → %s (due: %s)",
+            libro.getTitulo(), usuarioId, fechaDevolucion);
+    }
+}`}
+</CodeBlock>
+
+## Step 3: Catalog (Library)
+
+<CodeBlock lang="java" title="Catalog management with HashMap">
+{`import java.util.*;
+
+public class Biblioteca {
+    private HashMap<String, Libro> catalogo;
+    private ArrayList<Prestamo> prestamosActivos;
+
+    public Biblioteca() {
+        catalogo = new HashMap<>();
+        prestamosActivos = new ArrayList<>();
+    }
+
+    public void agregarLibro(Libro libro) {
+        if (catalogo.containsKey(libro.getIsbn())) {
+            System.out.println("⚠ ISBN already exists: " + libro.getIsbn());
+            return;
+        }
+        catalogo.put(libro.getIsbn(), libro);
+        System.out.println("✓ Book added: " + libro.getTitulo());
+    }
+
+    public Libro buscarPorIsbn(String isbn) {
+        return catalogo.get(isbn);
+    }
+
+    public ArrayList<Libro> buscarPorTitulo(String titulo) {
+        ArrayList<Libro> resultado = new ArrayList<>();
+        for (Libro l : catalogo.values()) {
+            if (l.getTitulo().toLowerCase().contains(titulo.toLowerCase())) {
+                resultado.add(l);
+            }
+        }
+        return resultado;
+    }
+
+    public void prestar(String isbn, String usuarioId, int dias) {
+        Libro libro = catalogo.get(isbn);
+        if (libro == null) {
+            System.out.println("⚠ Book not found: " + isbn);
+            return;
+        }
+        if (!libro.isDisponible()) {
+            System.out.println("⚠ Book already on loan: " + libro.getTitulo());
+            return;
+        }
+        Prestamo p = new Prestamo(libro, usuarioId, dias);
+        prestamosActivos.add(p);
+        System.out.println("✓ Loan registered: " + p);
+    }
+
+    public void devolver(String isbn) {
+        Prestamo prestamo = null;
+        for (Prestamo p : prestamosActivos) {
+            if (p.getLibro().getIsbn().equals(isbn)) {
+                prestamo = p;
+                break;
+            }
+        }
+        if (prestamo == null) {
+            System.out.println("⚠ No active loan for: " + isbn);
+            return;
+        }
+        double multa = prestamo.devolver();
+        prestamosActivos.remove(prestamo);
+        System.out.printf("Total fine: $%.2f%n", multa);
+    }
+
+    public void listarDisponibles() {
+        System.out.println("\\n📚 Available books:");
+        catalogo.values().stream()
+            .filter(Libro::isDisponible)
+            .forEach(l -> System.out.println("  " + l));
+    }
+
+    public void listarPrestados() {
+        System.out.println("\\n📖 Books on loan:");
+        for (Prestamo p : prestamosActivos) {
+            System.out.println("  " + p);
+        }
+    }
+}`}
+</CodeBlock>
+
+## Step 4: Main Menu
+
+<CodeBlock lang="java" title="User interface">
+{`import java.util.Scanner;
+
+public class MenuBiblioteca {
+    public static void main(String[] args) {
+        Biblioteca biblio = new Biblioteca();
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        // Example data
+        biblio.agregarLibro(new Libro("978-1", "Java para todos", "Ana García", 2023));
+        biblio.agregarLibro(new Libro("978-2", "POO en Java", "Luis Pérez", 2024));
+        biblio.agregarLibro(new Libro("978-3", "Estructuras de Datos", "María López", 2023));
+
+        do {
+            System.out.println("\\n=== LIBRARY SYSTEM ===");
+            System.out.println("1. View available");
+            System.out.println("2. View on loan");
+            System.out.println("3. Search book");
+            System.out.println("4. Lend book");
+            System.out.println("5. Return book");
+            System.out.println("6. Add book");
+            System.out.println("7. Exit");
+            System.out.print("Option: ");
+            opcion = sc.nextInt();
+            sc.nextLine();
+
+            switch (opcion) {
+                case 1 -> biblio.listarDisponibles();
+                case 2 -> biblio.listarPrestados();
+                case 3 -> {
+                    System.out.print("Title to search: ");
+                    var encontrados = biblio.buscarPorTitulo(sc.nextLine());
+                    encontrados.forEach(l -> System.out.println("  " + l));
+                }
+                case 4 -> {
+                    System.out.print("ISBN: ");
+                    String isbn = sc.nextLine();
+                    System.out.print("User ID: ");
+                    String uid = sc.nextLine();
+                    System.out.print("Loan days: ");
+                    int dias = sc.nextInt();
+                    biblio.prestar(isbn, uid, dias);
+                }
+                case 5 -> {
+                    System.out.print("ISBN to return: ");
+                    biblio.devolver(sc.nextLine());
+                }
+                case 6 -> {
+                    System.out.print("ISBN: "); String i = sc.nextLine();
+                    System.out.print("Title: "); String t = sc.nextLine();
+                    System.out.print("Author: "); String a = sc.nextLine();
+                    System.out.print("Year: "); int an = sc.nextInt();
+                    biblio.agregarLibro(new Libro(i, t, a, an));
+                }
+                case 7 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid option");
+            }
+        } while (opcion != 7);
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+## Extension Exercises
+
+1. **User inheritance**: Student (7 days), Teacher (14 days), External (3 days)
+2. **Differentiated fines**: each user type with a different daily fine
+3. **Persistence**: save the catalog and loans to files
+4. **History**: record a loan history per book and user
+5. **Advanced search**: search by author, year, or range of years
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

@@ -1,0 +1,11 @@
+{
+  "id": "mod-04",
+  "slug": "04-poo",
+  "number": 4,
+  "title": "Object-Oriented Programming",
+  "description": "The heart of Java. Learn to model the real world with classes and objects.",
+  "icon": "Box",
+  "status": "disponible",
+  "lessonCount": 7,
+  "lessons": ["clases-objetos", "constructores", "encapsulacion", "herencia", "polimorfismo", "clases-abstractas-interfaces", "agregacion-composicion"]
+}

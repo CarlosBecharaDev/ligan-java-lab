@@ -1,0 +1,352 @@
+---
+title: "Generics in Java"
+slug: "genericos"
+module: "08-java-moderno"
+level: "Intermediate"
+objectives:
+  - "Understand what generics are and why they exist in Java"
+  - "Create generic classes and methods with type parameters"
+  - "Use bounded type parameters to restrict types"
+  - "Distinguish between ? extends T and ? super T (wildcards)"
+  - "Apply generics in collections safely"
+prerequisites:
+  - "clases-objetos"
+  - "herencia"
+  - "arraylist"
+history:
+  introducedIn: "Java 5 (JDK 1.5, 2004)"
+  context: "Before Java 5, collections stored Object and required explicit casting when retrieving elements. There was no compile-time type checking, which caused ClassCastException at runtime. Generics were one of the most significant additions of Java 5, along with autoboxing and enums."
+  evolution: "Java 5: Generics with type erasure (generic types are erased at runtime for backward compatibility). Java 7: Diamond operator <> for inference. Java 10: var with generic types. Java 14: Records with generic support. Type erasure was a controversial decision that allows Java 5+ code to be compatible with pre-Java 5 libraries."
+realWorldExamples:
+  - domain: "E-commerce — generic repository"
+    description: "A generic repository allows CRUD operations for any type of entity without duplicating code."
+    code: |
+      import java.util.*;
+      public class Repositorio<T> {
+          private Map<String, T> almacen = new HashMap<>();
+
+          public void guardar(String id, T elemento) {
+              almacen.put(id, elemento);
+          }
+          public T obtener(String id) {
+              return almacen.get(id);
+          }
+          public List<T> listarTodos() {
+              return new ArrayList<>(almacen.values());
+          }
+          public static void main(String[] args) {
+              Repositorio<String> mensajes = new Repositorio<>();
+              mensajes.guardar("1", "Hola");
+              mensajes.guardar("2", "Mundo");
+              System.out.println(mensajes.listarTodos());
+          }
+      }
+    result: |
+      [Hola, Mundo]
+  - domain: "Math — generic ordered pair"
+    description: "A Pair<T,U> class models a pair of values of possibly different types."
+    code: |
+      public class Pair<T, U> {
+          private T first;
+          private U second;
+          public Pair(T first, U second) {
+              this.first = first;
+              this.second = second;
+          }
+          public T getFirst() { return first; }
+          public U getSecond() { return second; }
+
+          public static void main(String[] args) {
+              Pair<String, Integer> p = new Pair<>("Edad", 25);
+              System.out.println(p.getFirst() + ": " + p.getSecond());
+          }
+      }
+    result: |
+      Age: 25
+hasInteractive: false
+comparisons:
+  - title: "Collections without generics vs with generics"
+    items:
+      - name: "Without generics (Java < 5)"
+        features:
+          declaration: "List lista = new ArrayList()"
+          insertion: "lista.add(\"texto\") — accepts any Object"
+          extraction: "String s = (String) lista.get(0) — manual casting"
+          safety: "ClassCastException at runtime if the type does not match"
+          readability: "You do not know what the list contains without inspecting it"
+      - name: "With generics (Java 5+)"
+        features:
+          declaration: "List<String> lista = new ArrayList<>()"
+          insertion: "lista.add(\"texto\") — only accepts String"
+          extraction: "String s = lista.get(0) — no casting"
+          safety: "Compilation error if the type does not match"
+          readability: "List<String> clearly indicates the content"
+    recommendation: "Always use generics in collections. The compiler protects you from type errors at compile time, eliminating ClassCastException at runtime."
+videos:
+  - url: ""
+    title: "Generics in Java - Full course"
+    channel: "MoureDev"
+    summary: "Detailed explanation of generics: classes, methods, and wildcards with practical examples"
+faqs:
+  - question: "What is type erasure and why does it exist?"
+    answer: "Type erasure means that generic type parameters are removed during compilation. List<String> and List<Integer> become List (raw type) in bytecode. This exists to maintain backward compatibility with pre-Java 5 code."
+  - question: "What is the difference between ? extends T and ? super T?"
+    answer: "? extends T (covariance) lets you read elements of type T or subtypes, but not insert. ? super T (contravariance) lets you insert elements of type T or subtypes, but when reading you only get Object. It is the PECS principle (Producer Extends, Consumer Super)."
+  - question: "Can I use generics with primitive types?"
+    answer: "Not directly. List<int> does not compile. You must use wrapper classes: List<Integer>. Java 5 introduced autoboxing/unboxing so the conversion is automatic. Project Valhalla (future) might add support for primitives in generics."
+  - question: "What does the diamond operator <> mean?"
+    answer: "The <> operator (Java 7+) lets the compiler infer the generic type on the right-hand side: List<String> lista = new ArrayList<>();. Without it, you had to repeat the type: new ArrayList<String>();."
+  - question: "Can I create a generic array like new T[]?"
+    answer: "No. Java does not allow creating generic-type arrays because arrays have reified types (they know their type at runtime) and generics use type erasure. The solution is to use new Object[] with casting or use ArrayList<T>."
+sources:
+  - title: "Java 21 Language Specification — Generics"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html#jls-4.5"
+    date: "2026-07-29"
+  - title: "Oracle Tutorial — Generics"
+    url: "https://docs.oracle.com/javase/tutorial/java/generics/"
+    date: "2026-07-29"
+  - title: "JEP 286 — Local-Variable Type Inference (var)"
+    url: "https://openjdk.org/jeps/286"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What are generics?
+
+**Generics** let you define classes, interfaces, and methods with a **type parameter** that is specified when you use them. The compiler uses that type to verify that the values are correct, eliminating the need for manual casting and preventing `ClassCastException` at runtime.
+
+Before Java 5, collections worked with `Object`:
+
+```java
+// ❌ Pre-Java 5 — no type safety
+List lista = new ArrayList();
+lista.add("Hola");
+lista.add(123);           // This compiles but it's suspicious!
+String s = (String) lista.get(1); // ClassCastException at runtime
+```
+
+With generics, the compiler detects the error:
+
+```java
+// ✅ Java 5+ — safe at compile time
+List<String> lista = new ArrayList<>();
+lista.add("Hola");
+lista.add(123);  // Compilation error: int is not String
+String s = lista.get(0); // No casting needed
+```
+
+## Generic classes
+
+A generic class is defined with one or more type parameters between `<>`:
+
+```java
+public class Caja<T> {
+    private T contenido;
+
+    public void guardar(T valor) {
+        this.contenido = valor;
+    }
+
+    public T obtener() {
+        return contenido;
+    }
+}
+
+// Usage:
+Caja<String> caja = new Caja<>();
+caja.guardar("Libro");
+String item = caja.obtener(); // no casting
+```
+
+Multiple type parameters:
+
+```java
+public class Par<K, V> {
+    private K clave;
+    private V valor;
+
+    public Par(K clave, V valor) {
+        this.clave = clave;
+        this.valor = valor;
+    }
+
+    public K getClave() { return clave; }
+    public V getValor() { return valor; }
+}
+
+Par<Integer, String> p = new Par<>(1, "Uno");
+```
+
+## Generic methods
+
+Methods can be generic even if the class is not:
+
+```java
+public class Util {
+    public static <T> T obtenerUltimo(List<T> lista) {
+        return lista.get(lista.size() - 1);
+    }
+
+    public static <T> void intercambiar(T[] arr, int i, int j) {
+        T temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+
+// The compiler infers the type:
+String ultimo = Util.obtenerUltimo(List.of("A", "B", "C"));
+```
+
+## Bounded Type Parameters
+
+Restricts the allowed types to those that extend a class or implement an interface:
+
+```java
+// Only accepts types that implement Comparable
+public static <T extends Comparable<T>> T maximo(T a, T b) {
+    return a.compareTo(b) > 0 ? a : b;
+}
+
+// Usage:
+System.out.println(maximo(10, 20));    // 20 (Integer implements Comparable)
+System.out.println(maximo("Ana", "Carlos")); // Carlos (String implements Comparable)
+```
+
+## Wildcards (?), ? extends and ? super
+
+### ? (unbounded wildcard)
+
+Accepts any type:
+
+```java
+public static void imprimirLista(List<?> lista) {
+    for (Object obj : lista) {
+        System.out.println(obj);
+    }
+}
+```
+
+### ? extends T (covariance — Producer Extends)
+
+You can **read** elements as type `T`, but you cannot **insert**:
+
+```java
+// Accepts List<Integer>, List<Double>, etc.
+public static double sumar(List<? extends Number> numeros) {
+    double total = 0;
+    for (Number n : numeros) {
+        total += n.doubleValue();
+    }
+    return total;
+}
+
+// ✅ You can read as Number
+// ❌ numeros.add(10) — does not compile
+```
+
+### ? super T (contravariance — Consumer Super)
+
+You can **insert** elements of type `T`, but when reading you get `Object`:
+
+```java
+// You can add Integer or any subtype
+public static void llenar(List<? super Integer> lista) {
+    lista.add(10);
+    lista.add(20);
+    // Integer i = lista.get(0); // ❌ Does not compile
+    Object obj = lista.get(0);    // ✅ Only Object
+}
+```
+
+### PECS principle
+
+**P**roducer **E**xtends, **C**onsumer **S**uper:
+
+- If a parameter **produces** values (you read them), use `? extends T`
+- If a parameter **consumes** values (you write to it), use `? super T`
+
+```java
+// Real example: Collections.copy()
+public static <T> void copy(
+    List<? super T> dest,   // consumer: writes here
+    List<? extends T> src   // producer: reads from here
+) { ... }
+```
+
+## Type Erasure
+
+Java implements generics through **type erasure**: the compiler removes the generic type information in the bytecode.
+
+```java
+// In source code:
+List<String> lista = new ArrayList<>();
+
+// After type erasure (in bytecode):
+List lista = new ArrayList();
+```
+
+This means that at runtime you **cannot** know whether a list is `List<String>` or `List<Integer>`.
+
+## Best practices
+
+1. **Always use generics** in collections — never raw types like `List` without a parameter
+2. **Name type parameters** with uppercase letters: `T` (type), `E` (element), `K`/`V` (key/value), `N` (number)
+3. **Prefer `? extends T`** for read-only parameters
+4. **Use the diamond operator `<>`** since Java 7+
+5. **Avoid casting** with generics — if you need casting, something is badly designed
+
+## Common errors
+
+### Error 1: Raw types
+```java
+// ❌ Raw type — no type safety
+List lista = new ArrayList();
+
+// ✅ Generic
+List<String> lista = new ArrayList<>();
+```
+
+### Error 2: Believing that `List<Integer>` is a subclass of `List<Number>`
+```java
+// ❌ Does not compile — generics are invariant
+List<Integer> enteros = new ArrayList<>();
+List<Number> numeros = enteros; // Error
+
+// ✅ Use a wildcard if you need flexibility
+List<? extends Number> numeros = enteros;
+```
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

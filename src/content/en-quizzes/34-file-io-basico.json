@@ -1,0 +1,82 @@
+{
+  "id": "quiz-34-file-io-basico",
+  "lessonSlug": "file-io",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which class does Java use to represent files in the file system?",
+      "options": ["java.io.Path", "java.io.File", "java.io.FileHandle", "java.io.DiskFile"],
+      "correctIndex": 1,
+      "explanations": [
+        "Path belongs to java.nio.file and is a path, not the main file class.",
+        "Correct. java.io.File is the traditional class for representing files and directories.",
+        "FileHandle does not exist in the standard Java API.",
+        "DiskFile does not exist in the standard Java API."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How do you read a file using BufferedReader?",
+      "options": [
+        "new BufferedReader(file)",
+        "new BufferedReader(new FileReader(file))",
+        "BufferedReader.read(file)",
+        "new BufferedReader(new FileInputStream(file))"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "BufferedReader requires a Reader as a parameter, not a file directly.",
+        "Correct. You wrap a FileReader inside a BufferedReader to read text efficiently.",
+        "BufferedReader does not have a static read() method that takes a file.",
+        "FileInputStream reads bytes, not characters; you need FileReader for text."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you read a file line by line with BufferedReader?",
+      "options": [
+        "br.readNext() in a while",
+        "br.nextLine() in a while",
+        "br.readLine() in a while",
+        "br.readLines() until it is null"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "readNext() does not exist in BufferedReader.",
+        "nextLine() is a Scanner method, not a BufferedReader method.",
+        "Correct. readLine() returns a line or null when there is no more data, ideal for a while loop.",
+        "readLines() does not exist as a standard BufferedReader method."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which exception can FileReader throw if the file does not exist?",
+      "options": ["IOException", "FileNotFoundException", "FileNotExistsException", "NoSuchFileException"],
+      "correctIndex": 1,
+      "explanations": [
+        "IOException is a general exception, but it is not the one FileReader specifically throws.",
+        "Correct. FileNotFoundException is a checked exception indicating that the specified file was not found.",
+        "FileNotExistsException does not exist in the standard Java API.",
+        "NoSuchFileException belongs to java.nio.file, not java.io."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you check whether a file exists on disk?",
+      "options": [
+        "file.verify()",
+        "file.exists()",
+        "file.check()",
+        "Files.isFile(file)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "verify() is not a method of the File class.",
+        "Correct. file.exists() returns true if the file or directory exists in the file system.",
+        "check() is not a method of the File class.",
+        "Files.isFile() checks whether it is a file, not whether it exists; it also requires a Path."
+      ]
+    }
+  ]
+}

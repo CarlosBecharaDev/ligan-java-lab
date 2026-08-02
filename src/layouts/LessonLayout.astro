@@ -6,6 +6,7 @@ import LessonExplorer, {
   type ExplorerModule,
   type ExplorerLesson,
 } from '@components/lesson/LessonExplorer.astro';
+import { lessonCollection, moduleCollection } from '@lib/course';
 
 export interface Props {
   title: string;
@@ -19,6 +20,7 @@ export interface Props {
   currentSlug?: string;
   currentId?: string;
   headings?: { depth: number; slug: string; text: string }[];
+  locale?: 'es' | 'en';
 }
 
 const {
@@ -32,10 +34,11 @@ const {
   currentSlug = '',
   currentId = '',
   headings = [],
+  locale = 'es',
 } = Astro.props;
 
-const modules = await getCollection('modules');
-const lessons = await getCollection('lessons');
+const modules = await getCollection(moduleCollection(locale));
+const lessons = await getCollection(lessonCollection(locale));
 
 const idBySlug = new Map<string, string>();
 const titleById = new Map<string, string>();
@@ -61,7 +64,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
 }));
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} lang={locale}>
   <div class="lesson-layout">
     <div class="lesson-layout__main">
       <div class="lesson-layout__window">
@@ -75,7 +78,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
               aria-controls="lesson-explorer"
               aria-label="Abrir contenido de la lección"
               data-i18n-aria="explorer.open"
-            >☰ Contenido</button>
+            >☰ <span data-i18n="explorer.content">Contenido</span></button>
           </div>
           <span class="lesson-layout__title">{title}</span>
           <div class="lesson-layout__controls">
@@ -92,6 +95,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
             currentSlug={currentSlug}
             currentId={currentId}
             headings={headings}
+            locale={locale}
           />
           <div class="lesson-layout__body">
             <article class="lesson-content">
@@ -102,6 +106,7 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
               prevTitle={prevTitle}
               nextSlug={nextSlug}
               nextTitle={nextTitle}
+              locale={locale}
             />
           </div>
         </div>
@@ -376,6 +381,33 @@ const explorerModules: ExplorerModule[] = sortedModules.map((m) => ({
         const dy = e.changedTouches[0].clientY - touchStartY;
         if (dx < -50 && Math.abs(dx) > Math.abs(dy)) {
           closeDrawer();
+        }
+      }, { passive: true });
+    }
+
+    // Gesto móvil: deslizar desde la mitad de la pantalla hacia la derecha abre el explorador
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      let swipeStartX = 0;
+      let swipeStartY = 0;
+      let swipeStartTime = 0;
+      document.addEventListener('touchstart', (e) => {
+        if (document.body.classList.contains('explorer-drawer-open')) return;
+        if (drawer && drawer.contains(e.target as Node)) return;
+        swipeStartX = e.touches[0].clientX;
+        swipeStartY = e.touches[0].clientY;
+        swipeStartTime = Date.now();
+      }, { passive: true });
+
+      document.addEventListener('touchend', (e) => {
+        if (document.body.classList.contains('explorer-drawer-open')) return;
+        const dx = e.changedTouches[0].clientX - swipeStartX;
+        const dy = e.changedTouches[0].clientY - swipeStartY;
+        // Exige una pulsación mantenida (~150ms) para evitar gestos accidentales
+        const held = Date.now() - swipeStartTime >= 150;
+        // El gesto parte del centro (izquierda de la mitad) y se desliza a la derecha
+        const fromMiddle = swipeStartX <= window.innerWidth * 0.6;
+        if (held && dx > 60 && Math.abs(dx) > Math.abs(dy) && fromMiddle) {
+          openDrawer();
         }
       }, { passive: true });
     }

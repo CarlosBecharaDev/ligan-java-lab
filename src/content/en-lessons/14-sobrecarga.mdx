@@ -1,0 +1,321 @@
+---
+title: "Method Overloading"
+slug: "sobrecarga"
+module: "03-metodos-y-arrays"
+level: "Intermediate"
+objectives:
+  - "Understand what method overloading is"
+  - "Create multiple versions of the same method with different parameters"
+  - "Distinguish overloading from overriding"
+  - "Understand the resolution rules for overloaded methods"
+  - "Use overloading to create more flexible interfaces"
+prerequisites:
+  - "Have completed Lesson 12: Defining and Calling Methods"
+  - "Know primitive data types and their conversions"
+history:
+  introducedIn: "Overloading since Java 1.0"
+  context: "Method overloading has existed since Java 1.0 and is a form of compile-time polymorphism. It lets you define multiple methods with the same name but different parameters. The compiler chooses which one to run based on the types and number of arguments in the call. This is different from overriding, which is run-time polymorphism with inheritance."
+  evolution: "Java has always allowed overloading. Java 5 introduced generics, which interact with overloading. The Java compiler performs overload resolution as part of compilation, choosing the most specific method. Overloading with varargs adds complexity because the compiler must disambiguate between methods with fixed and variable parameters."
+realWorldExamples:
+  - domain: "E-commerce — multiple price versions"
+    description: "An online store has overloaded methods called precioFinal: one takes amount and discount, another takes amount, discount and tax, and another takes a coupon code that is resolved internally."
+    code: |
+      public class PrecioFinal {
+          static double precioFinal(double monto, double descuento) {
+              return monto - (monto * descuento / 100);
+          }
+
+          static double precioFinal(
+                  double monto, double descuento, double impuesto) {
+              double base = monto - (monto * descuento / 100);
+              return base + (base * impuesto / 100);
+          }
+
+          static double precioFinal(
+                  double monto, String codigoCupon) {
+              double desc = switch (codigoCupon.toUpperCase()) {
+                  case "BLACK" -> 25.0;
+                  case "VIERNES" -> 15.0;
+                  default -> 0.0;
+              };
+              return precioFinal(monto, desc);
+          }
+
+          public static void main(String[] args) {
+              System.out.printf("Sin impuesto: $%.2f%n",
+                  precioFinal(1000, 10));
+              System.out.printf("Con impuesto: $%.2f%n",
+                  precioFinal(1000, 10, 16));
+              System.out.printf("Cupón BLACK: $%.2f%n",
+                  precioFinal(1000, "BLACK"));
+          }
+      }
+    result: |
+      No tax: $900.00
+      With tax: $1044.00
+      Coupon BLACK: $750.00
+
+  - domain: "Healthcare — overloaded BMI calculation"
+    description: "A healthcare system calculates BMI (body mass index) with different levels of precision: one takes weight and height, another adds age, another takes the data in pounds and inches."
+    code: |
+      public class BMI {
+          static String calcular(double pesoKg, double alturaM) {
+              double bmi = pesoKg / (alturaM * alturaM);
+              return String.format("BMI: %.1f", bmi);
+          }
+
+          static String calcular(
+                  double pesoKg, double alturaM, int edad) {
+              double bmi = pesoKg / (alturaM * alturaM);
+              String rango = bmi < 25 ? "Normal" : "Sobrepeso";
+              return String.format("BMI: %.1f (%s, %d años)",
+                  bmi, rango, edad);
+          }
+
+          static String calcularLibrasPulgadas(
+                  double libras, double pulgadas) {
+              double kg = libras * 0.453592;
+              double m = pulgadas * 0.0254;
+              double bmi = kg / (m * m);
+              return String.format("BMI: %.1f", bmi);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(calcular(70, 1.75));
+              System.out.println(calcular(70, 1.75, 30));
+              System.out.println(calcularLibrasPulgadas(154, 69));
+          }
+      }
+    result: |
+      BMI: 22.9
+      BMI: 22.9 (Normal, 30 years)
+      BMI: 22.7
+hasInteractive: false
+comparisons:
+  - title: "Overloading vs Overriding"
+    items:
+      - name: "Overloading"
+        features:
+          relationship: "Same class (or parent class)"
+          name: "Same method name"
+          parameters: "Different parameter types or counts"
+          polyType: "Compile-time (static)"
+      - name: "Overriding"
+        features:
+          relationship: "Child class redefines parent method"
+          name: "Same name and same parameters"
+          parameters: "Same types and parameter count"
+          polyType: "Run-time (dynamic)"
+    recommendation: "Overloading creates variations of the same method for different input types (useful now). Overriding lets a child class change the behavior of a parent method (we'll see this in OOP)."
+videos:
+  - url: ""
+    title: "Method overloading in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What are the rules for overloading a method?"
+    answer: "The parameters must be different: a different count, different types, or both. You cannot overload by changing only the return type or only the modifiers (static, etc.). The compiler chooses the method whose parameters best match the arguments."
+  - question: "Why is overloading called compile-time polymorphism?"
+    answer: "Because the compiler determines at compile time which version of the method to run, based on the types of the arguments. This is different from run-time polymorphism (overriding), where the JVM decides at run time based on the actual type of the object."
+  - question: "What happens if there is ambiguity between two overloaded methods?"
+    answer: "The compiler throws an error 'reference to X is ambiguous'. For example, if you have sumar(int, double) and sumar(double, int), and you call sumar(5, 5), the compiler doesn't know which to choose because both require a conversion. Solution: make the types more explicit."
+sources:
+  - title: "Java 21 Language Specification — Overloading"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4.9"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Summary of Parameters"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/arguments.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is overloading?
+
+Overloading lets you have **several methods with the same name** but different parameters. The compiler picks which one to run based on the arguments you pass.
+
+<CodeBlock lang="java" title="Overloaded methods — sum different types">
+{`public class SumaSobrecargada {
+    static int sumar(int a, int b) {
+        return a + b;
+    }
+
+    static double sumar(double a, double b) {
+        return a + b;
+    }
+
+    static int sumar(int a, int b, int c) {
+        return a + b + c;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("integers: " + sumar(3, 5));
+        System.out.println("decimals: " + sumar(2.5, 3.7));
+        System.out.println("three: " + sumar(1, 2, 3));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+integers: 8
+decimals: 6.2
+three: 6
+```
+
+All the methods are called `sumar`, but the compiler chooses the right one based on the types and number of arguments.
+
+## Overloading rules
+
+For two methods to be overloaded, they **must differ in their parameters**:
+
+```
+✅ Different number of parameters:
+   sumar(int, int) vs sumar(int, int, int)
+
+✅ Different parameter types:
+   sumar(int, int) vs sumar(double, double)
+
+✅ Both:
+   sumar(int) vs sumar(int, double)
+
+❌ NOT overloading — same name and same parameters:
+   int sumar(int a, int b)
+   double sumar(int a, int b)  // ERROR: only the return type changes
+```
+
+The key: **the return type does NOT count** for overloading. Two methods with the same name, same parameters and different return types produce a compilation error.
+
+## The compiler resolves the ambiguity
+
+When you call an overloaded method, the compiler looks for the version whose parameters match best:
+
+<CodeBlock lang="java" title="Overload resolution">
+{`public class Resolucion {
+    static void mostrar(String texto) {
+        System.out.println("String: " + texto);
+    }
+
+    static void mostrar(int numero) {
+        System.out.println("int: " + numero);
+    }
+
+    static void mostrar(double valor) {
+        System.out.println("double: " + valor);
+    }
+
+    public static void main(String[] args) {
+        mostrar("Hello");     // calls mostrar(String)
+        mostrar(42);          // calls mostrar(int)
+        mostrar(3.14);        // calls mostrar(double)
+        mostrar('A');         // calls mostrar(int) — char is promoted to int
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+String: Hello
+int: 42
+double: 3.14
+int: 65
+```
+
+**Note:** `char` is implicitly converted to `int` (promotion), so `mostrar('A')` calls `mostrar(int)`, not `mostrar(String)`.
+
+## Overloading with compatible types
+
+The type conversion hierarchy affects which version is chosen:
+
+```
+byte → short → int → long → float → double
+         char ↗
+```
+
+The compiler chooses the **smallest** possible conversion:
+
+<CodeBlock lang="java" title="Type promotion in overloading">
+{`public class Promocion {
+    static void procesar(int n) {
+        System.out.println("int: " + n);
+    }
+
+    static void procesar(double d) {
+        System.out.println("double: " + d);
+    }
+
+    public static void main(String[] args) {
+        byte b = 10;
+        procesar(b);    // int — byte is promoted to int
+
+        float f = 5.5f;
+        procesar(f);    // double — float is promoted to double
+
+        short s = 20;
+        procesar(s);    // int — short is promoted to int
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+int: 10
+double: 5.5
+int: 20
+```
+
+## Useful overloading in practice
+
+A common pattern is to offer a simple version and a complete one:
+
+<CodeBlock lang="java" title="Practical overloading — formatting text">
+{`public class Formatear {
+    static String formatear(String texto) {
+        return texto.trim().toUpperCase();
+    }
+
+    static String formatear(String texto, int longitud) {
+        String resultado = texto.trim().toUpperCase();
+        if (resultado.length() > longitud) {
+            return resultado.substring(0, longitud) + "...";
+        }
+        return resultado;
+    }
+
+    static String formatear(String texto, int longitud,
+            char relleno) {
+        String resultado = texto.trim().toUpperCase();
+        while (resultado.length() < longitud) {
+            resultado = relleno + resultado + relleno;
+        }
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(formatear("  hello world  "));
+        System.out.println(formatear("  hello world  ", 8));
+        System.out.println(formatear("  hi  ", 12, '*'));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+HELLO WORLD
+HELLO WO...
+***HI*****
+```
+
+The three versions of `formatear` do similar things but with different levels of customization.

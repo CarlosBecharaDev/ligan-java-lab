@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-introduccion-facil",
+    "lessonSlug": "introduccion-java",
+    "title": "Your First Hello World",
+    "difficulty": "facil",
+    "description": "Write a program that prints 'Hello World from Java!' to the console. Make sure the class is named exactly 'HolaMundo'.",
+    "template": "public class HolaMundo {\n    public static void main(String[] args) {\n        // TODO: Print a message to the console\n\n    }\n}",
+    "hints": [
+      "Use System.out.println() to print text",
+      "The text must go inside double quotes",
+      "Don't forget the semicolon at the end of each statement"
+    ],
+    "solution": "public class HolaMundo {\n    public static void main(String[] args) {\n        System.out.println(\"Hello World from Java!\");\n    }\n}",
+    "solutionExplanation": "We declare the HolaMundo class with the main method (entry point). We use System.out.println() to print the message to the console. Every statement ends with a semicolon.",
+    "expectedOutput": "Hello World from Java!"
+  },
+  {
+    "id": "ex-introduccion-normal",
+    "lessonSlug": "introduccion-java",
+    "title": "Personal Introduction with Java",
+    "difficulty": "normal",
+    "description": "Create a program that prints your name, the subject you study, and why you like programming, using three separate lines.",
+    "template": "public class Presentacion {\n    public static void main(String[] args) {\n        // TODO: Print three lines with your introduction\n\n    }\n}",
+    "hints": [
+      "Use System.out.println() for each line",
+      "Each println() call automatically adds a line break"
+    ],
+    "solution": "public class Presentacion {\n    public static void main(String[] args) {\n        System.out.println(\"My name is Carlos\");\n        System.out.println(\"I study Systems Engineering\");\n        System.out.println(\"I like programming because I can create solutions\");\n    }\n}",
+    "solutionExplanation": "Each System.out.println() prints a different line. The println method automatically adds a line break at the end, so each message appears on its own line.",
+    "expectedOutput": "My name is Carlos\nI study Systems Engineering\nI like programming because I can create solutions"
+  },
+  {
+    "id": "ex-introduccion-dificil",
+    "lessonSlug": "introduccion-java",
+    "title": "System Information with Java Properties",
+    "difficulty": "dificil",
+    "description": "Create a program that uses System.getProperty() to get and display: the operating system name, the Java version, and the current user.",
+    "template": "public class InfoSistema {\n    public static void main(String[] args) {\n        // TODO: Use System.getProperty() to get:\n        // os.name, java.version, user.name\n        // Print each value with a descriptive label\n\n    }\n}",
+    "hints": [
+      "System.getProperty(\"os.name\") returns the OS name",
+      "System.getProperty(\"java.version\") returns the Java version",
+      "System.getProperty(\"user.name\") returns the user name",
+      "Concatenate with + to create descriptive messages"
+    ],
+    "solution": "public class InfoSistema {\n    public static void main(String[] args) {\n        String os = System.getProperty(\"os.name\");\n        String version = System.getProperty(\"java.version\");\n        String usuario = System.getProperty(\"user.name\");\n\n        System.out.println(\"Operating System: \" + os);\n        System.out.println(\"Java Version: \" + version);\n        System.out.println(\"User: \" + usuario);\n    }\n}",
+    "solutionExplanation": "System.getProperty() accesses system properties. We store each value in a String variable and then print it concatenated with a descriptive label.",
+    "expectedOutput": "Operating System: Windows 11\nJava Version: 21.0.1\nUser: carlos"
+  }
+]

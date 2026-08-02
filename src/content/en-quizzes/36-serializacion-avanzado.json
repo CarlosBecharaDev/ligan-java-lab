@@ -1,0 +1,87 @@
+{
+  "id": "quiz-36-serializacion-avanzado",
+  "lessonSlug": "serializacion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which keyword is used to exclude a field from serialization?",
+      "options": ["exclude", "transient", "volatile", "static"],
+      "correctIndex": 1,
+      "explanations": [
+        "exclude is not a Java keyword.",
+        "Correct. transient indicates that the field MUST NOT be serialized and will keep its default value when deserialized.",
+        "volatile ensures visibility between threads, it does not affect serialization.",
+        "static belongs to the class, not to the instance, and it is not serialized anyway."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How does serialization work with inheritance?",
+      "options": [
+        "Only the child class is serialized",
+        "The entire class hierarchy is serialized if all classes implement Serializable",
+        "You must implement writeObject() in each parent class",
+        "Java does not allow serializing classes that inherit from others"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Not only the child class is serialized; it includes the fields of the parent classes.",
+        "Correct. Serialization includes all fields of the entire class hierarchy, as long as every class in the chain implements Serializable.",
+        "writeObject() is optional and not required in every parent class.",
+        "Java does allow serializing classes that inherit from others."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is custom serialization?",
+      "options": [
+        "Serializing only the static fields",
+        "Implementing writeObject() and readObject() to control what is saved and how",
+        "Using an external library to serialize",
+        "Serializing only the first half of the object"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Static fields are not serialized anyway.",
+        "Correct. By implementing writeObject() and readObject() in the class, you can control exactly which fields are saved and how they are transformed.",
+        "Custom serialization does not require external libraries.",
+        "It has nothing to do with splitting the object into parts."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is the main advantage of using JSON over Java's native serialization?",
+      "options": [
+        "JSON is faster than Serializable",
+        "JSON is portable across languages, Serializable only works in Java",
+        "JSON can serialize objects without implementing an interface",
+        "JSON does not require external libraries"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Speed is not necessarily the main advantage.",
+        "Correct. JSON is a readable, portable text format that can be read from any programming language, while Java's native serialization can only be deserialized in Java.",
+        "JSON also requires configuration or an interface in many cases.",
+        "JSON does require libraries such as Gson, Jackson, or similar."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you deserialize an object in Java?",
+      "options": [
+        "ObjectOutputStream.readObject()",
+        "ObjectInputStream.readObject()",
+        "ObjectDeserializer.deserialize()",
+        "File.readObject()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "ObjectOutputStream writes objects, it does not read them.",
+        "Correct. ObjectInputStream reads bytes from a stream and converts them back into objects using readObject().",
+        "ObjectDeserializer does not exist in the standard Java API.",
+        "File does not have a readObject() method."
+      ]
+    }
+  ]
+}

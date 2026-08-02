@@ -1,0 +1,294 @@
+---
+title: "Advanced Set and Map (HashSet, TreeSet, LinkedHashMap, TreeMap)"
+slug: "set-map-avanzados"
+module: "05-colecciones"
+level: "Intermediate"
+objectives:
+  - "Understand the Set hierarchy and its main implementations"
+  - "Use HashSet for collections without duplicates or order"
+  - "Use TreeSet for ordered collections without duplicates"
+  - "Differentiate HashMap, LinkedHashMap and TreeMap by order and performance"
+  - "Choose the correct implementation for each use case"
+prerequisites:
+  - "arraylist"
+  - "hashmap"
+history:
+  introducedIn: "HashSet and TreeSet since Java 1.2, LinkedHashMap since Java 1.4"
+  context: "Java 1.2 (1998) introduced the Collections Framework with Set and Map. HashSet uses a hash table to offer O(1) for basic operations. TreeSet implements a red-black tree to keep elements ordered. LinkedHashMap (Java 1.4) added insertion order to HashMap."
+  evolution: "Java 6 added NavigableSet and NavigableMap. Java 8 improved the implementations with balanced trees for hash collisions. Java 21 keeps evolving collections with SequencedCollection, SequencedSet and SequencedMap (JEP 431), which add methods to operate at both ends."
+realWorldExamples:
+  - domain: "E-commerce — Unique product filter"
+    description: "A catalog needs to show all available categories without repeating them. HashSet guarantees uniqueness regardless of order."
+    code: |
+      import java.util.*;
+      public class CategoriasUnicas {
+          public static void main(String[] args) {
+              Set<String> categorias = new HashSet<>();
+              categorias.add("Electrónica");
+              categorias.add("Ropa");
+              categorias.add("Hogar");
+              categorias.add("Electrónica"); // duplicado ignorado
+              System.out.println("Categorías: " + categorias);
+              System.out.println("Total: " + categorias.size());
+          }
+      }
+    result: |
+      Categories: [Electrónica, Ropa, Hogar]
+      Total: 3
+  - domain: "Banking — Customer rankings by balance"
+    description: "A bank needs to keep customers ordered by balance for promotions. TreeSet keeps them sorted automatically."
+    code: |
+      import java.util.*;
+      public class RankingClientes {
+          public static void main(String[] args) {
+              TreeSet<Integer> saldos = new TreeSet<>();
+              saldos.add(1500);
+              saldos.add(50000);
+              saldos.add(25000);
+              saldos.add(1500); // duplicado ignorado
+              System.out.println("Saldos ordenados: " + saldos);
+              System.out.println("Menor saldo: " + saldos.first());
+              System.out.println("Mayor saldo: " + saldos.last());
+          }
+      }
+    result: |
+      Sorted balances: [1500, 25000, 50000]
+      Lowest balance: 1500
+      Highest balance: 50000
+hasInteractive: false
+comparisons:
+  - title: "HashMap vs LinkedHashMap vs TreeMap"
+    items:
+      - name: "HashMap"
+        features:
+          order: "No guaranteed order"
+          performance: "O(1) average"
+          allows_null: "Null key and value"
+          use_cases: "Fast lookups, caches"
+      - name: "LinkedHashMap"
+        features:
+          order: "Insertion order"
+          performance: "O(1) average"
+          allows_null: "Null key and value"
+          use_cases: "LRU cache, order of arrival"
+      - name: "TreeMap"
+        features:
+          order: "Natural order or Comparator"
+          performance: "O(log n)"
+          allows_null: "Only null value (not key)"
+          use_cases: "Ranges, floor/ceiling, sorted"
+    recommendation: "Use HashMap for maximum speed without order. Use LinkedHashMap when you need to preserve insertion order. Use TreeMap when you need sorted keys or range queries."
+videos:
+  - url: ""
+    title: "Set and Map in Java — HashSet, TreeSet, LinkedHashMap"
+    channel: "Código Facilito"
+    summary: "Explanation of the Set and Map implementations with practical examples"
+faqs:
+  - question: "What is the difference between HashSet and TreeSet?"
+    answer: "HashSet uses a hash table: O(1) insertions but no guaranteed order. TreeSet uses a red-black tree: O(log n) operations but elements are always kept sorted. TreeSet requires elements to implement Comparable or a Comparator to be passed."
+  - question: "Can LinkedHashMap have access order instead of insertion order?"
+    answer: "Yes. The LinkedHashMap(initialCapacity, loadFactor, accessOrder) constructor with accessOrder=true keeps access order (useful for an LRU cache). The removeEldestEntry() method allows automatically evicting the oldest entry."
+  - question: "Which Map implementation should I use for a simple cache?"
+    answer: "LinkedHashMap with accessOrder=true and removeEldestEntry() for an LRU cache. For a concurrent cache, use ConcurrentHashMap. For an expiring cache, consider external libraries such as Caffeine."
+  - question: "Do TreeSet and TreeMap allow null elements?"
+    answer: "TreeSet does not allow null elements because it needs to compare them to sort them. TreeMap does not allow null keys for the same reason, but it does allow null values. HashMap and HashSet do allow null."
+  - question: "What is a NavigableSet and what methods does it add?"
+    answer: "NavigableSet (Java 6) extends SortedSet with methods such as lower(), floor(), ceiling(), higher(), pollFirst(), pollLast(), descendingSet() and subSet() with inclusion/exclusion of bounds."
+sources:
+  - title: "Java 21 API — Set Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html"
+    date: "2026-07-29"
+  - title: "Java 21 API — Map Interface"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html"
+    date: "2026-07-29"
+  - title: "Oracle — The Collections Framework Overview"
+    url: "https://docs.oracle.com/javase/8/docs/technotes/guides/collections/overview.html"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Set: collections without duplicates
+
+The `Set` interface represents a collection that **does not allow duplicate elements**. There is no guaranteed order unless you use a specific implementation. It belongs to the Collection framework and is ideal for modeling mathematical sets.
+
+### HashSet
+
+`HashSet<E>` is the most widely used implementation of `Set`. Internally it uses a hash table to offer **O(1)** performance for basic operations (`add`, `remove`, `contains`). It does not guarantee the order of elements.
+
+```java
+Set<String> nombres = new HashSet<>();
+nombres.add("Ana");
+nombres.add("Carlos");
+nombres.add("Ana");        // silently ignored
+nombres.add("Beatriz");
+
+System.out.println(nombres);          // [Ana, Carlos, Beatriz] (variable order)
+System.out.println(nombres.size());   // 3
+System.out.println(nombres.contains("Carlos")); // true
+```
+
+### TreeSet
+
+`TreeSet<E>` implements `NavigableSet` and keeps the elements **sorted** according to their natural order (`Comparable`) or an external `Comparator`. Operations in **O(log n)**.
+
+```java
+TreeSet<Integer> numeros = new TreeSet<>();
+numeros.add(30);
+numeros.add(10);
+numeros.add(50);
+numeros.add(20);
+numeros.add(30);           // ignored
+
+System.out.println(numeros);         // [10, 20, 30, 50] (sorted)
+System.out.println(numeros.first()); // 10
+System.out.println(numeros.last());  // 50
+System.out.println(numeros.ceiling(25)); // 30 (greater or equal)
+System.out.println(numeros.floor(25));   // 20 (less or equal)
+```
+
+## Advanced Map: beyond HashMap
+
+You already know `HashMap`. Now let's see its variants with order.
+
+### LinkedHashMap: insertion order
+
+`LinkedHashMap<K,V>` maintains a doubly linked list of the entries, preserving the **insertion order**. It offers similar performance to HashMap (O(1)).
+
+```java
+Map<String, Integer> edades = new LinkedHashMap<>();
+edades.put("Ana", 25);
+edades.put("Carlos", 30);
+edades.put("Beatriz", 22);
+
+System.out.println(edades);
+// {Ana=25, Carlos=30, Beatriz=22} (insertion order)
+```
+
+**LRU Cache with LinkedHashMap:**
+
+```java
+class LRUCache<K,V> extends LinkedHashMap<K,V> {
+    private final int maxSize;
+
+    public LRUCache(int maxSize) {
+        super(16, 0.75f, true); // accessOrder = true
+        this.maxSize = maxSize;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<K,V> eldest) {
+        return size() > maxSize;
+    }
+}
+```
+
+### TreeMap: sorted keys
+
+`TreeMap<K,V>` implements `NavigableMap` and keeps the keys **sorted**. Operations in **O(log n)**.
+
+```java
+TreeMap<String, Double> productos = new TreeMap<>();
+productos.put("Laptop", 1200.00);
+productos.put("Mouse", 25.50);
+productos.put("Keyboard", 89.99);
+
+System.out.println(productos);
+// {Laptop=1200.0, Mouse=25.5, Keyboard=89.99} (alphabetical order)
+
+System.out.println(productos.firstKey());      // Laptop
+System.out.println(productos.lastKey());       // Keyboard
+System.out.println(productos.headMap("M"));    // {Laptop=1200.0}
+System.out.println(productos.tailMap("M"));    // {Mouse=25.5, Keyboard=89.99}
+```
+
+## Complete Map hierarchy
+
+```
+Map<K,V>
+├── HashMap        — No order, O(1)
+│   └── LinkedHashMap — Insertion/access order
+├── TreeMap        — Natural order/comparator, O(log n)
+├── ConcurrentHashMap  — Thread-safe, O(1)
+└── Hashtable      — Legacy, thread-safe, slow
+```
+
+## When to use each one
+
+| Situation | Implementation |
+|-----------|---------------|
+| No duplicates, no order | `HashSet` |
+| No duplicates, sorted | `TreeSet` |
+| Fast key-value | `HashMap` |
+| Key-value with insertion order | `LinkedHashMap` |
+| Key-value sorted by key | `TreeMap` |
+| LRU Cache | `LinkedHashMap` with accessOrder=true |
+| Concurrency | `ConcurrentHashMap` |
+
+## Frequent errors
+
+### Error 1: Using HashMap when you need order
+```java
+// ❌ HashMap does not guarantee order
+Map<String, Integer> map = new HashMap<>();
+
+// ✅ LinkedHashMap preserves insertion order
+Map<String, Integer> map = new LinkedHashMap<>();
+
+// ✅ TreeMap keeps order by key
+Map<String, Integer> map = new TreeMap<>();
+```
+
+### Error 2: Modifying a Set while iterating
+```java
+Set<String> set = new HashSet<>(Set.of("A", "B", "C"));
+
+// ❌ ConcurrentModificationException
+for (String s : set) {
+    if (s.equals("B")) set.remove(s);
+}
+
+// ✅ Use Iterator.remove() or removeIf()
+set.removeIf(s -> s.equals("B"));
+```
+
+## Best practices
+
+1. **Program against interfaces**: `Set<String> set = new HashSet<>()`, not `HashSet<String> set`
+2. **Choose the implementation based on the use case**, not by habit
+3. **TreeSet/TreeMap require** elements to implement `Comparable` or pass a `Comparator`
+4. **Override `hashCode()` and `equals()`** correctly when using your own objects in HashSet/HashMap
+5. **Use `Set.of()` and `Map.of()`** for small immutable collections (Java 9+)
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

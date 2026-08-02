@@ -1,0 +1,75 @@
+{
+  "id": "quiz-40-optional-basico",
+  "lessonSlug": "optional",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is Optional<T> in Java?",
+      "options": [
+        "A container that may or may not hold a value",
+        "A type of list that allows null values",
+        "An exception thrown when something is empty",
+        "An access modifier"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Optional<T> is a container that represents the presence or absence of a value, helping to avoid NullPointerException.",
+        "It is not a list.",
+        "It is not an exception.",
+        "It is not an access modifier."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How do you create an Optional?",
+      "options": [
+        "Optional.of(value), Optional.empty(), Optional.ofNullable()",
+        "new Optional(value)",
+        "Optional.create(value)",
+        "Optional.from(value)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The three main factories are of() (non-null value), empty() (no value), and ofNullable() (accepts nulls).",
+        "Optional has no public constructor.",
+        "Optional.create() does not exist.",
+        "Optional.from() does not exist."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does orElse() do in an Optional?",
+      "options": [
+        "Returns the value of the Optional or a default value if it is empty",
+        "Always returns the default value",
+        "Throws an exception if it is empty",
+        "Converts the Optional to null"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. orElse(defaultValue) returns the value if it exists, or the default value if the Optional is empty.",
+        "It returns the actual value if it exists, not always the default.",
+        "To throw an exception you use orElseThrow().",
+        "It does not convert to null."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does isPresent() do in an Optional?",
+      "options": [
+        "Returns true if the Optional has a value, false if it is empty",
+        "Returns the value of the Optional",
+        "Removes the value from the Optional",
+        "Returns the value or null"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. isPresent() returns a boolean indicating whether the Optional contains a value.",
+        "To get the value you use get() or orElse().",
+        "It does not remove anything.",
+        "It does not return null."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "id": "quiz-28-expresiones-regulares-basico",
+  "lessonSlug": "expresiones-regulares",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a regular expression?",
+      "options": [
+        "A pattern for searching text",
+        "A type of variable",
+        "A sorting function",
+        "A type of loop structure"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A regular expression (regex) is a pattern used to search, validate or manipulate text.",
+        "No. It is not a type of variable; it is a search pattern.",
+        "No. It is not a sorting function.",
+        "No. It is not a control structure; it is a text pattern."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How are regular expressions used in Java?",
+      "options": [
+        "Pattern and Matcher",
+        "Regex and Search",
+        "Find and Match",
+        "Scan and Parse"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. In Java, Pattern is used to compile the pattern and Matcher to perform the matches.",
+        "No. There are no Regex and Search classes in standard Java.",
+        "No. They are not classes; they are Matcher methods.",
+        "No. There are no Scan and Parse classes for regex."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does \\d do in a regular expression?",
+      "options": [
+        "Matches a digit",
+        "Matches a letter",
+        "Matches a space",
+        "Matches any character"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. \\d is a metacharacter that matches any digit from 0 to 9.",
+        "No. For letters you use \\w or classes like [a-zA-Z].",
+        "No. For spaces you use \\s.",
+        "No. For any character you use the dot (.)."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does the + operator do in a regular expression?",
+      "options": [
+        "One or more occurrences",
+        "Zero or one occurrence",
+        "Exactly one occurrence",
+        "No occurrences"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. + means one or more occurrences of the previous pattern.",
+        "No. Zero or one occurrence is the ? operator.",
+        "No. There is no operator for exactly one; + means one or more.",
+        "No. There is no operator for zero occurrences."
+      ]
+    }
+  ]
+}

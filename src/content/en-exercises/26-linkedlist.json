@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-linkedlist-facil",
+    "title": "Stack of books",
+    "difficulty": "facil",
+    "description": "Use a LinkedList as a stack to store books. Add 3 books with push (addFirst), pop 2 with pop (removeFirst) and show the top book with peek (getFirst).",
+    "template": "import java.util.LinkedList;\n\npublic class PilaLibros {\n    public static void main(String[] args) {\n        LinkedList<String> pila = new LinkedList<>();\n        // TODO: Add 3 books with addFirst()\n        // TODO: Show and pop 2 books with removeFirst()\n        // TODO: Show the top with getFirst()\n        System.out.println(\"Remaining stack: \" + pila);\n    }\n}",
+    "hints": [
+      "addFirst() places an element at the beginning of the LinkedList",
+      "removeFirst() removes the element from the beginning",
+      "getFirst() gets the element from the beginning without removing it"
+    ],
+    "solution": "import java.util.LinkedList;\n\npublic class PilaLibros {\n    public static void main(String[] args) {\n        LinkedList<String> pila = new LinkedList<>();\n        pila.addFirst(\"Cien Años de Soledad\");\n        pila.addFirst(\"Don Quijote\");\n        pila.addFirst(\"La Sombra del Viento\");\n        System.out.println(\"Popping: \" + pila.removeFirst());\n        System.out.println(\"Popping: \" + pila.removeFirst());\n        System.out.println(\"Top: \" + pila.getFirst());\n        System.out.println(\"Remaining stack: \" + pila);\n    }\n}",
+    "solutionExplanation": "In a stack, the last one in is the first one out (LIFO). addFirst() pushes onto the top, removeFirst() pops, and getFirst() peeks without popping.",
+    "expectedOutput": "Popping: La Sombra del Viento\nPopping: Don Quijote\nTop: Cien Años de Soledad\nRemaining stack: [Cien Años de Soledad]",
+    "lessonSlug": "linkedlist"
+  },
+  {
+    "id": "ex-linkedlist-normal",
+    "title": "Customer queue",
+    "difficulty": "normal",
+    "description": "Use a LinkedList as a queue to manage waiting customers. Add customers with offer, serve with poll and show the queue size.",
+    "template": "import java.util.LinkedList;\n\npublic class ColaClientes {\n    public static void main(String[] args) {\n        LinkedList<String> cola = new LinkedList<>();\n        // TODO: Add 4 customers with offer()\n        System.out.println(\"Queue size: \" + cola.size());\n        // TODO: Serve 2 customers with poll()\n        System.out.println(\"Queue size: \" + cola.size());\n        System.out.println(\"Remaining queue: \" + cola);\n    }\n}",
+    "hints": [
+      "offer() adds to the end of the LinkedList",
+      "poll() removes from the beginning of the LinkedList",
+      "size() returns the number of elements"
+    ],
+    "solution": "import java.util.LinkedList;\n\npublic class ColaClientes {\n    public static void main(String[] args) {\n        LinkedList<String> cola = new LinkedList<>();\n        cola.offer(\"Ana\");\n        cola.offer(\"Luis\");\n        cola.offer(\"María\");\n        cola.offer(\"Pedro\");\n        System.out.println(\"Queue size: \" + cola.size());\n        System.out.println(\"Serving: \" + cola.poll());\n        System.out.println(\"Serving: \" + cola.poll());\n        System.out.println(\"Queue size: \" + cola.size());\n        System.out.println(\"Remaining queue: \" + cola);\n    }\n}",
+    "solutionExplanation": "In a queue, the first one in is the first one out (FIFO). offer() enqueues at the end, poll() dequeues from the beginning showing the name of the customer being served.",
+    "expectedOutput": "Queue size: 4\nServing: Ana\nServing: Luis\nQueue size: 2\nRemaining queue: [María, Pedro]",
+    "lessonSlug": "linkedlist"
+  },
+  {
+    "id": "ex-linkedlist-dificil",
+    "title": "Browser history",
+    "difficulty": "dificil",
+    "description": "Implement a browser history with back and forward using a ListIterator. Navigate to 3 pages, go back 1, go forward 1 and show the current page.",
+    "template": "import java.util.LinkedList;\nimport java.util.ListIterator;\n\npublic class HistorialNavegador {\n    public static void main(String[] args) {\n        LinkedList<String> historial = new LinkedList<>();\n        historial.add(\"google.com\");\n        historial.add(\"github.com\");\n        historial.add(\"stackoverflow.com\");\n\n        ListIterator<String> iterador = historial.listIterator();\n        // Move forward to the end (current position: stackoverflow.com)\n        while (iterador.hasNext()) iterador.next();\n\n        // TODO: Go back 1 position with previous()\n        // TODO: Show the current page\n        // TODO: Go forward 1 position with next()\n        // TODO: Show the current page\n    }\n}",
+    "hints": [
+      "next() moves the cursor forward and returns the element",
+      "previous() moves the cursor backward and returns the element",
+      "The cursor position determines the current page"
+    ],
+    "solution": "import java.util.LinkedList;\nimport java.util.ListIterator;\n\npublic class HistorialNavegador {\n    public static void main(String[] args) {\n        LinkedList<String> historial = new LinkedList<>();\n        historial.add(\"google.com\");\n        historial.add(\"github.com\");\n        historial.add(\"stackoverflow.com\");\n\n        ListIterator<String> iterador = historial.listIterator();\n        while (iterador.hasNext()) iterador.next();\n\n        // Go back 1\n        String actual = iterador.previous();\n        System.out.println(\"Back to: \" + actual);\n\n        // Go back 1 more\n        actual = iterador.previous();\n        System.out.println(\"Back to: \" + actual);\n\n        // Go forward 1\n        actual = iterador.next();\n        System.out.println(\"Forward to: \" + actual);\n\n        // Go forward 1 more\n        actual = iterador.next();\n        System.out.println(\"Forward to: \" + actual);\n    }\n}",
+    "solutionExplanation": "ListIterator allows navigating in both directions. It is positioned at the end with next() in a loop. Then previous() moves back and next() moves forward. Each call returns the page the cursor moves to, simulating the browser's back/forward buttons.",
+    "expectedOutput": "Back to: stackoverflow.com\nBack to: github.com\nForward to: stackoverflow.com\nForward to: github.com",
+    "lessonSlug": "linkedlist"
+  }
+]

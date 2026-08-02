@@ -1,0 +1,311 @@
+---
+title: "throw and Throws — Throwing Exceptions"
+slug: "throw-throws"
+module: "06-errores"
+level: "Intermediate"
+objectives:
+  - "Use throw to manually throw exceptions"
+  - "Declare exceptions with throws in the method signature"
+  - "Understand exception propagation up the call stack"
+  - "Create exceptions with descriptive messages"
+  - "Use exception chaining with initCause"
+prerequisites:
+  - "Haber completado Lección 30: try-catch-finally"
+  - "Entender la diferencia entre checked y unchecked"
+history:
+  introducedIn: "throw and throws since Java 1.0"
+  context: "throw and throws are fundamental keywords of exception handling in Java. 'throw' creates and throws an exception. 'throws' declares that a method may throw an exception that the caller must handle."
+  evolution: "Java 1.0 introduced basic throw and throws. Java 7 added suppressed exceptions for when both try and finally throw errors. Modern practice tends to use unchecked exceptions with informative messages."
+realWorldExamples:
+  - domain: "E-commerce — validating order data"
+    description: "An order system validates each field before processing. If any field is invalid, it throws a descriptive exception that indicates exactly what is wrong."
+    code: |
+      public class ValidarPedido {
+          static void validarPedido(String producto, int cantidad,
+                                     double precio) {
+              if (producto == null || producto.isBlank()) {
+                  throw new IllegalArgumentException(
+                      "El nombre del producto no puede estar vacío");
+              }
+              if (cantidad <= 0) {
+                  throw new IllegalArgumentException(
+                      "La cantidad debe ser mayor a 0, recibido: " + cantidad);
+              }
+              if (precio < 0) {
+                  throw new IllegalArgumentException(
+                      "El precio no puede ser negativo: " + precio);
+              }
+              if (cantidad > 1000) {
+                  throw new IllegalArgumentException(
+                      "Cantidad máxima por pedido: 1000, recibido: " + cantidad);
+              }
+          }
+
+          public static void main(String[] args) {
+              String[][] pedidos = {
+                  {"Laptop", "2", "1500.00"},
+                  {"", "1", "50.00"},
+                  {"Mouse", "-3", "25.00"}
+              };
+
+              for (String[] p : pedidos) {
+                  try {
+                      validarPedido(p[0],
+                          Integer.parseInt(p[1]),
+                          Double.parseDouble(p[2]));
+                      System.out.println("✓ Pedido válido: " + p[0]);
+                  } catch (IllegalArgumentException e) {
+                      System.out.println("✗ Error: " + e.getMessage());
+                  }
+              }
+          }
+      }
+    result: |
+      ✓ Valid order: Laptop
+      ✗ Error: The product name cannot be empty
+      ✗ Error: The quantity must be greater than 0, received: -3
+
+  - domain: "Health — patient transfer"
+    description: "A hospital transfers patients between departments. The method validates that the patient exists, that the destination department is valid, and that there is no maximum capacity."
+    code: |
+      import java.util.HashMap;
+
+      public class TransferenciaPaciente {
+          static HashMap<String, Integer> capacidad = new HashMap<>();
+
+          static {
+              capacidad.put("Urgencias", 30);
+              capacidad.put("Cardiología", 15);
+              capacidad.put("Pediatría", 20);
+          }
+
+          static void transferir(String paciente, String destino)
+                  throws IllegalArgumentException {
+              if (!capacidad.containsKey(destino)) {
+                  throw new IllegalArgumentException(
+                      "Departamento no existe: " + destino);
+              }
+              System.out.printf("Paciente %s → %s%n", paciente, destino);
+          }
+
+          public static void main(String[] args) {
+              String[] destinos = {"Urgencias", "Oncología", "Cardiología"};
+              for (String d : destinos) {
+                  try {
+                      transferir("Juan Pérez", d);
+                  } catch (IllegalArgumentException e) {
+                      System.out.println("Error: " + e.getMessage());
+                  }
+              }
+          }
+      }
+    result: |
+      Patient Juan Pérez → Urgencias
+      Error: Department does not exist: Oncología
+      Patient Juan Pérez → Cardiología
+
+hasInteractive: false
+comparisons:
+  - title: "throw vs throws"
+    items:
+      - name: "throw"
+        features:
+          location: "Inside the method body"
+          function: "Throws a new exception"
+          example: "throw new RuntimeException(\"Error\")"
+          when: "When you detect a problem at runtime"
+      - name: "throws"
+        features:
+          location: "In the method signature"
+          function: "Declares that the method may throw the exception"
+          example: "void method() throws IOException"
+          when: "When you can't handle the exception and the caller must do it"
+    recommendation: "Use throw when your method detects an invalid state and needs to signal the error. Use throws when your method works with resources that can fail (files, network) and you delegate the responsibility of handling the error to the caller."
+videos:
+  - url: ""
+    title: "throw and throws in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What's the difference between throw and throws?"
+    answer: "throw is a statement that throws an exception. throws is a clause in the method signature that declares which exceptions it can throw. throw goes inside the method, throws goes in the declaration."
+  - question: "What happens if I don't handle or declare a checked exception?"
+    answer: "The compiler shows an error: 'Unhandled exception type X'. You must wrap the code in try-catch or add throws to the method signature. For unchecked exceptions it's not mandatory, but it's good practice."
+  - question: "Can I rethrow the same exception?"
+    answer: "Yes: catch (Exception e) { throw e; }. This is useful to log the error and then let the caller handle it. You can also create a new exception passing the original as the cause: throw new X(e)."
+sources:
+  - title: "Java 21 Language Specification — throw"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.18"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Declaring Exceptions"
+    url: "https://docs.oracle.com/javase/tutorial/essential/exceptions/declaring.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## throw — throwing exceptions
+
+`throw` creates and throws an exception. Program flow stops at that point and looks for a `catch` that handles the exception:
+
+<CodeBlock lang="java" title="throw to throw exceptions">
+{`public class ThrowBasico {
+    static void dividir(int a, int b) {
+        if (b == 0) {
+            throw new ArithmeticException("Cannot divide by zero");
+        }
+        System.out.println(a + " / " + b + " = " + (a / b));
+    }
+
+    public static void main(String[] args) {
+        dividir(10, 2);   // works
+        dividir(10, 0);   // throws exception
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+10 / 2 = 5
+Exception in thread "main" java.lang.ArithmeticException: Cannot divide by zero
+```
+
+## throws — declaring exceptions
+
+`throws` in the method signature indicates that it may throw an exception that the caller must handle:
+
+<CodeBlock lang="java" title="throws in the method signature">
+{`import java.io.*;
+
+public class ThrowsDemo {
+    static String leerPrimeraLinea(String ruta) throws IOException {
+        // Declares that it may throw IOException (checked)
+        BufferedReader br = new BufferedReader(new FileReader(ruta));
+        String linea = br.readLine();
+        br.close();
+        return linea;
+    }
+
+    public static void main(String[] args) {
+        try {
+            String contenido = leerPrimeraLinea("datos.txt");
+            System.out.println("First line: " + contenido);
+        } catch (IOException e) {
+            System.out.println("Could not read: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Exception propagation
+
+When a method doesn't handle an exception, it **propagates** up the call stack:
+
+<CodeBlock lang="java" title="Propagation up the call stack">
+{`public class Propagacion {
+    static void nivel3() {
+        throw new RuntimeException("Error at level 3");
+    }
+
+    static void nivel2() {
+        nivel3();  // doesn't handle the exception, it propagates
+    }
+
+    static void nivel1() {
+        nivel2();  // doesn't handle it either
+    }
+
+    public static void main(String[] args) {
+        try {
+            nivel1();  // it's handled here
+        } catch (RuntimeException e) {
+            System.out.println("Caught in main: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Caught in main: Error at level 3
+```
+
+## Exceptions with a cause (chaining)
+
+<CodeBlock lang="java" title="Chaining exceptions with initCause">
+{`public class ExcepcionCausa {
+    static void procesar() throws Exception {
+        try {
+            int x = Integer.parseInt("abc");
+        } catch (NumberFormatException e) {
+            Exception nueva = new Exception("Error processing data");
+            nueva.initCause(e);  // preserves the original cause
+            throw nueva;
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            procesar();
+        } catch (Exception e) {
+            System.out.println("Error: " + e.getMessage());
+            System.out.println("Cause: " + e.getCause());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Error: Error processing data
+Cause: java.lang.NumberFormatException: For input string: "abc"
+```
+
+## Exception creation conventions
+
+```java
+// ✅ Good practice: descriptive message
+throw new IllegalArgumentException(
+    "The price cannot be negative: " + precio);
+
+// ❌ Bad: generic message
+throw new IllegalArgumentException("Error");
+
+// ✅ Include the problematic value
+throw new IndexOutOfBoundsException(
+    "Index: " + index + ", Size: " + size);
+
+// ✅ Use specific classes
+throw new FileNotFoundException("File: " + ruta);
+```
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

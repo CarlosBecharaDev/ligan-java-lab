@@ -1,0 +1,92 @@
+{
+  "id": "quiz-29-excepciones-tipos-avanzado",
+  "lessonSlug": "excepciones-tipos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which of the following are checked exceptions in Java?",
+      "options": [
+        "NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException",
+        "IOException, SQLException, ClassNotFoundException",
+        "StackOverflowError, OutOfMemoryError",
+        "RuntimeException, ArithmeticException, NumberFormatException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "These are unchecked exceptions (they inherit from RuntimeException).",
+        "Correct. IOException, SQLException and ClassNotFoundException are checked exceptions that must be handled or declared.",
+        "Errors are not checked exceptions; they represent serious system failures.",
+        "These are unchecked exceptions that inherit from RuntimeException."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which of the following are unchecked exceptions?",
+      "options": [
+        "IOException, FileNotFoundException, ParseException",
+        "NullPointerException, ArrayIndexOutOfBoundsException",
+        "ClassNotFoundException, NoSuchMethodException",
+        "SocketException, ConnectException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "These are checked exceptions from the java.io and java.text packages.",
+        "Correct. NullPointerException and ArrayIndexOutOfBoundsException inherit from RuntimeException and do not require mandatory handling.",
+        "These are checked exceptions that require try-catch or throws.",
+        "These are network checked exceptions that require explicit handling."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does the finally block do in Java?",
+      "options": [
+        "It runs only when there is no exception in the try block",
+        "It always runs, whether there is an exception or not, after the try-catch block",
+        "It runs only when a specific exception is caught",
+        "It replaces the catch block and is used to close connections"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The finally block always runs, not only when there is no exception.",
+        "Correct. The finally block always runs after the try-catch, regardless of whether an exception occurred or not.",
+        "Finally does not depend on catching exceptions; it runs in any case.",
+        "Finally does not replace catch; it complements the try-catch."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Can you have a try block without catch in Java?",
+      "options": [
+        "No, you must always have at least one catch",
+        "Yes, as long as a finally block is included",
+        "Only if throws is declared in the method signature",
+        "No, a try without catch always generates a compilation error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "That is not correct; try can work without catch if it has finally.",
+        "Correct. In Java, try can be used without catch as long as a finally block is included to handle resource cleanup.",
+        "Declaring throws does not replace the need for catch or finally.",
+        "It does not generate an error if finally is included."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is try-with-resources in Java?",
+      "options": [
+        "A try block that uses less memory than a normal try",
+        "A mechanism that automatically closes resources that implement AutoCloseable",
+        "A way to reuse exceptions across multiple try blocks",
+        "A pattern for creating resources without using constructors"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Try-with-resources has no relation to memory consumption.",
+        "Correct. try-with-resources automatically closes any resource that implements the AutoCloseable interface when leaving the block, invoking the close() method.",
+        "Try-with-resources has no relation to exception reuse.",
+        "Try-with-resources is used to declare and close resources, not to create them without constructors."
+      ]
+    }
+  ]
+}

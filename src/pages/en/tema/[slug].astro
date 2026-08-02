@@ -1,0 +1,147 @@
+---
+import { getCollection, render } from 'astro:content';
+import LessonLayout from '@layouts/LessonLayout.astro';
+import QuizCard from '@components/quiz/QuizCard.astro';
+import ExerciseCard from '@components/exercises/ExerciseCard.astro';
+import { lessonCollection, quizCollection, exerciseCollection, moduleCollection } from '@lib/course';
+
+export async function getStaticPaths() {
+  const lessons = await getCollection(lessonCollection('en'));
+  const modules = await getCollection(moduleCollection('en'));
+  const modMap = new Map(modules.map((m) => [m.data.slug, m.data]));
+
+  const orderedLessons = lessons
+    .map((l) => ({ ...l, moduleData: modMap.get(l.data.module) }))
+    .sort((a, b) => {
+      const ma = a.moduleData?.number ?? 99;
+      const mb = b.moduleData?.number ?? 99;
+      if (ma !== mb) return ma - mb;
+      const ia = a.moduleData?.lessons.indexOf(a.data.slug) ?? 99;
+      const ib = b.moduleData?.lessons.indexOf(b.data.slug) ?? 99;
+      return ia - ib;
+    });
+
+  return orderedLessons.map((l, idx) => {
+    const prev = idx > 0 ? orderedLessons[idx - 1] : null;
+    const next = idx < orderedLessons.length - 1 ? orderedLessons[idx + 1] : null;
+    return {
+      params: { slug: l.id },
+      props: {
+        entry: l,
+        prevSlug: prev?.data.slug,
+        prevTitle: prev?.data.title,
+        nextSlug: next?.data.slug,
+        nextTitle: next?.data.title,
+        moduleTitle: l.moduleData?.title,
+      },
+    };
+  });
+}
+
+const { entry, prevSlug, prevTitle, nextSlug, nextTitle, moduleTitle } = Astro.props;
+const { Content, headings } = await render(entry);
+const { title, slug } = entry.data;
+
+const quizzes = await getCollection(quizCollection('en'));
+const exercisesColl = await getCollection(exerciseCollection('en'));
+
+const lessonQuizzes = quizzes
+  .filter((q) => q.data.lessonSlug === slug)
+  .map((q) => q.data);
+
+const lessonExercises = exercisesColl
+  .flatMap((ex) => ex.data)
+  .filter((ex) => ex.lessonSlug === slug);
+---
+
+<LessonLayout
+  title={title}
+  moduleTitle={moduleTitle}
+  prevSlug={prevSlug}
+  prevTitle={prevTitle}
+  nextSlug={nextSlug}
+  nextTitle={nextTitle}
+  currentModuleSlug={entry.data.module}
+  currentSlug={slug}
+  currentId={entry.id}
+  headings={headings ?? []}
+  locale="en"
+>
+  <Content />
+
+  {lessonQuizzes.length > 0 && (
+    <section style="margin-top:var(--space-2xl);padding-top:var(--space-xl);border-top:2px solid var(--win-border)">
+      <h2>🧠 Test what you've learned</h2>
+      <p style="color:var(--win-muted);margin-bottom:var(--space-lg)">
+        Answer the quizzes to verify your understanding.
+      </p>
+      {lessonQuizzes.map((quiz) => (
+        <QuizCard quiz={quiz} />
+      ))}
+    </section>
+  )}
+
+  {lessonExercises.length > 0 && (
+    <section style="margin-top:var(--space-xl);padding-top:var(--space-xl);border-top:2px solid var(--win-border)">
+      <h2>💻 Practical exercises</h2>
+      <p style="color:var(--win-muted);margin-bottom:var(--space-lg)">
+        Put what you've learned into practice by solving these exercises.
+      </p>
+      {lessonExercises.map((exercise) => (
+        <ExerciseCard exercise={exercise} />
+      ))}
+    </section>
+  )}
+
+  <div style="margin-top:var(--space-xl);padding:var(--space-lg);background:rgba(0,0,0,0.05);border:2px solid var(--win-border);text-align:center">
+    <button
+      id="mark-complete-btn"
+      data-slug={slug}
+      style="padding:var(--space-sm) var(--space-lg);background:var(--btn-primary-bg);color:var(--btn-primary-text);font-weight:600;border:2px solid var(--btn-primary-border);border-top-color:var(--btn-primary-border-light);border-left-color:var(--btn-primary-border-light);cursor:pointer;font-family:var(--font-ui);font-size:var(--text-base);box-shadow:2px 2px 0 rgba(0,0,0,0.3)"
+    >
+      ✅ Mark lesson as completed
+    </button>
+    <span id="complete-status" style="display:none;margin-left:var(--space-sm);color:var(--success);font-weight:600;font-family:var(--font-ui)">✓ Completed</span>
+  </div>
+</LessonLayout>
+
+<script>
+  import { loadProgress, saveProgress, type ProgressData } from '@lib/progress';
+
+  (function() {
+    const btn = document.getElementById('mark-complete-btn')!;
+    const status = document.getElementById('complete-status')!;
+    const slug = btn.dataset.slug ?? '';
+
+    function updateUI(data: ProgressData) {
+      if (data.lessons.includes(slug)) {
+        btn.style.display = 'none';
+        status.style.display = 'inline';
+      }
+    }
+
+    updateUI(loadProgress());
+
+    btn.addEventListener('click', () => {
+      const data = loadProgress();
+      if (!data.lessons.includes(slug)) {
+        data.lessons.push(slug);
+
+        const today = new Date().toISOString().split('T')[0];
+        if (data.lastDate === null) {
+          data.streak = 1;
+        } else {
+          const last = new Date(data.lastDate).getTime();
+          const diff = Math.round((new Date(today).getTime() - last) / (1000 * 60 * 60 * 24));
+          if (diff === 1) data.streak++;
+          else if (diff > 1) data.streak = 1;
+        }
+        data.lastDate = today;
+
+        saveProgress(data);
+        updateUI(data);
+        document.dispatchEvent(new CustomEvent('progress-update'));
+      }
+    });
+  })();
+</script>

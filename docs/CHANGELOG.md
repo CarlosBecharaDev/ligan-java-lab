@@ -4,6 +4,32 @@ Historial cronológico de cambios del proyecto.
 
 ---
 
+## [0.2.0] — 2026-08-01
+
+### Internacionalización completa (ES/EN) ✅
+
+- Traducción íntegra del contenido al inglés: colecciones espejo `src/content/en-lessons/` (50 MDX), `en-quizzes/` (92 JSON), `en-exercises/` (46 JSON), `en-modules/` (10 JSON).
+- Páginas `/en/` completas: `index`, `tema/[slug]`, `quiz/[slug]`, `ruta`, `practica`, `progreso`, `historia`, `glosario`, `recursos`, `sobre-el-proyecto`.
+- `src/content.config.ts` registra las 8 colecciones (4 ES + 4 EN) con el mismo schema; `level` admite `Inicial/Intermedio/Avanzado` y `Beginner/Intermediate/Advanced`.
+- `BaseLayout.astro` fuerza idioma EN con `data-i18n-force="en"` en rutas `/en/`.
+- `src/lib/i18n.ts` centraliza traducciones y el script de cambio de idioma (clave `ligan-lang`).
+- `src/lib/course.ts` usa `Lang` (`'es' | 'en'`) para helpers de colecciones.
+
+### Pase de limpieza total ✅
+
+- `npm run check` (astro check): de 81 errores/warnings/hints → **0 errores, 0 warnings, 0 hints** (63 archivos).
+- `npm run build`: 210 páginas en ~8s (antes ~16s).
+- **Shiki singleton** en `src/lib/highlighter.ts` (tema `github-dark-default`, langs `java`, `bash`): elimina warning "410 instances" y duplica velocidad de build.
+- **Progreso unificado** en `src/lib/progress.ts` (`loadProgress`/`saveProgress`/`emptyProgress`/`ProgressData`, clave `ligan-java-lab-progress`): reemplaza la lógica de localStorage duplicada en 6 scripts (ES + EN).
+- `z` importado de `astro/zod` en `content.config.ts` (elimina ~60 warnings por el `z` deprecado de `astro:content`).
+- **Código muerto eliminado**: `components/code-lab/` (CodeEditor, CodeLab, ConsoleOutput), `ui/Modal`, `ui/Badge`, `ui/Button`, `ui/ProgressBar`, `lesson/VideoPlayer`, `lesson/LessonContent`, `quiz/QuizResult`, `desktop/Window`, `features/downloads/`, `features/progress/`, `features/quiz/`, `features/desktop/windowManager.ts`, `src/utils/` entero + alias `@utils/*`.
+- Deps eliminadas: `@codemirror/lang-java`, `@codemirror/state`, `@codemirror/view`, `zod` (Astro trae el suyo). 0 vulnerabilidades.
+- 14 scripts one-off de la raíz eliminados (analyze/check/fix/repro/strip-*).
+- Corrección de tipos en scripts client de `tema/[slug]`, `quiz/[slug]`, `progreso` (ES y EN), `RetroChars`, `Taskbar`, `ThemeSelector`, `QuizCard`, `CodeBlock`, `ruta`.
+- Imports y props muertos eliminados: `localePrefix` (LessonLayout), `prerequisites` (LessonHeader), `type` (InteractiveExample), `exId` (ExerciseCard), `icon` (DesktopIcon), `Window` (Desktop).
+
+---
+
 ## [0.1.1] — 2026-07-30
 
 ### Explorador de lecciones estilo VS Code

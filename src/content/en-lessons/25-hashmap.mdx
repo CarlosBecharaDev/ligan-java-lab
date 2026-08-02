@@ -1,0 +1,375 @@
+---
+title: "HashMap — Key-Value Maps"
+slug: "hashmap"
+module: "05-colecciones"
+level: "Beginner"
+objectives:
+  - "Create and manipulate HashMap with put, get, remove and containsKey"
+  - "Iterate over a HashMap with entrySet, keySet and values"
+  - "Use getOrDefault, putIfAbsent and computeIfAbsent"
+  - "Understand that HashMap does not maintain insertion order"
+  - "Know LinkedHashMap and TreeMap for ordering"
+prerequisites:
+  - "Haber completado Lección 24: ArrayList"
+  - "Entender el concepto de pares clave-valor"
+history:
+  introducedIn: "HashMap since Java 1.2 (Collections Framework)"
+  context: "HashMap implements the Map interface and stores key-value pairs. It uses an internal hash table for near-instant O(1) access to any element. It is the most used Map implementation in Java."
+  evolution: "Java 1.2 introduced HashMap. Java 8 optimized performance by using linked lists inside the buckets when there are many collisions. Java 9 introduced Map.of() to create immutable maps. Java 10+ allows var for type inference. Although HashMap is the fastest, it does not guarantee order — for that use LinkedHashMap or TreeMap."
+realWorldExamples:
+  - domain: "E-commerce — product prices"
+    description: "An online store stores prices in a HashMap where the key is the product ID. This allows finding the price of any product in O(1)."
+    code: |
+      import java.util.HashMap;
+
+      public class PreciosTienda {
+          public static void main(String[] args) {
+              HashMap<String, Double> precios = new HashMap<>();
+
+              precios.put("LAP001", 2500.00);
+              precios.put("MOU002", 45.00);
+              precios.put("TEL003", 899.99);
+              precios.put("MON004", 320.00);
+
+              System.out.println("Precios: " + precios);
+
+              // Buscar precio
+              double precioLaptop = precios.get("LAP001");
+              System.out.printf("Laptop: $%.2f%n", precioLaptop);
+
+              // Verificar si existe
+              if (precios.containsKey("TEL003")) {
+                  System.out.println("Teléfono registrado");
+              }
+
+              // Actualizar precio
+              precios.put("MOU002", 39.99);
+              System.out.println("Mouse actualizado: " + precios.get("MOU002"));
+          }
+      }
+    result: |
+      Prices: {LAP001=2500.0, MOU002=45.0, TEL003=899.99, MON004=320.0}
+      Laptop: $2500.00
+      Phone registered
+      Mouse updated: 39.99
+
+  - domain: "Healthcare — medical history by patient"
+    description: "A hospital uses a HashMap where the key is the patient ID and the value is a list of diagnoses. It allows quickly accessing any patient's history."
+    code: |
+      import java.util.HashMap;
+      import java.util.ArrayList;
+
+      public class HistorialPaciente {
+          public static void main(String[] args) {
+              HashMap<String, ArrayList<String>> historial = new HashMap<>();
+
+              ArrayList<String> diags1 = new ArrayList<>();
+              diags1.add("Gripe");
+              diags1.add("Hipertensión");
+              historial.put("P001", diags1);
+
+              ArrayList<String> diags2 = new ArrayList<>();
+              diags2.add("Diabetes tipo 2");
+              historial.put("P002", diags2);
+
+              // Buscar diagnósticos de un paciente
+              String paciente = "P001";
+              if (historial.containsKey(paciente)) {
+                  System.out.println("Diagnósticos de " + paciente + ":");
+                  for (String d : historial.get(paciente)) {
+                      System.out.println("  - " + d);
+                  }
+              }
+
+              // Total de pacientes
+              System.out.println("Pacientes: " + historial.size());
+          }
+      }
+    result: |
+      Diagnoses of P001:
+        - Flu
+        - Hypertension
+      Patients: 2
+
+hasInteractive: false
+comparisons:
+  - title: "HashMap vs LinkedHashMap vs TreeMap"
+    items:
+      - name: "HashMap"
+        features:
+          order: "None — does not guarantee order"
+          performance: "O(1) average access"
+          use_case: "When order does not matter, only speed"
+          implementation: "Internal hash table"
+      - name: "LinkedHashMap"
+        features:
+          order: "Insertion order"
+          performance: "O(1) average access"
+          use_case: "When you need to keep insertion order"
+          implementation: "Hash table + linked list"
+      - name: "TreeMap"
+        features:
+          order: "Natural order or by Comparator"
+          performance: "O(log n) access"
+          use_case: "When you need sorted keys"
+          implementation: "Red-black tree"
+    recommendation: "Use HashMap by default (fastest). Use LinkedHashMap when you need the keys to keep insertion order. Use TreeMap when you need keys sorted alphabetically or by a custom criterion."
+videos:
+  - url: ""
+    title: "HashMap in Java"
+    channel: "Código Facilito"
+    summary: "Hands-on Java lesson — step-by-step explanation with exercises"
+faqs:
+  - question: "Can I use the same value for different keys?"
+    answer: "Yes. Values can repeat, but keys are unique. If you call put() with a key that already exists, the previous value is silently overwritten. To avoid this, use putIfAbsent()."
+  - question: "What happens if I look up a key that does not exist with get()?"
+    answer: "It returns null. That is why it is good practice to use containsKey() before get(), or use getOrDefault() which returns a default value if the key does not exist."
+  - question: "Can I store null as a key?"
+    answer: "HashMap allows one null key. Only one. But TreeMap does not allow null keys (it throws NullPointerException). LinkedHashMap allows one null key just like HashMap."
+sources:
+  - title: "Java 21 API — HashMap"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/HashMap.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Map Interface"
+    url: "https://docs.oracle.com/javase/tutorial/collections/interfaces/map.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What Is a HashMap?
+
+A **HashMap** stores **key-value** pairs. Each key is unique and allows accessing its value in near-constant time O(1). It is like a dictionary: you search by word (key) and get the definition (value).
+
+```java
+import java.util.HashMap;
+
+HashMap<String, Integer> edades = new HashMap<>();
+edades.put("Ana", 25);
+edades.put("Luis", 30);
+System.out.println(edades.get("Ana"));  // 25
+```
+
+## Creating and Using a HashMap
+
+<CodeBlock lang="java" title="Create HashMap and basic operations">
+{`import java.util.HashMap;
+
+public class CrearHashMap {
+    public static void main(String[] args) {
+        HashMap<String, Double> calificaciones = new HashMap<>();
+
+        // put: add or update
+        calificaciones.put("Math", 9.5);
+        calificaciones.put("Spanish", 8.0);
+        calificaciones.put("Science", 9.2);
+        System.out.println("Grades: " + calificaciones);
+
+        // get: get value by key
+        double notaMate = calificaciones.get("Math");
+        System.out.println("Math grade: " + notaMate);
+
+        // Update value
+        calificaciones.put("Spanish", 8.5);
+        System.out.println("Spanish updated: " + calificaciones.get("Spanish"));
+
+        // size: number of pairs
+        System.out.println("Total subjects: " + calificaciones.size());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Grades: {Math=9.5, Spanish=8.0, Science=9.2}
+Math grade: 9.5
+Spanish updated: 8.5
+Total subjects: 3
+```
+
+## Important Methods
+
+| Method | Description | Returns |
+|--------|-------------|---------|
+| `put(key, value)` | Adds or updates | previous value (or null) |
+| `get(key)` | Gets the value | value or null |
+| `getOrDefault(key, defaultValue)` | Gets or uses the default | value or default |
+| `remove(key)` | Removes the pair | removed value |
+| `containsKey(key)` | Does the key exist? | boolean |
+| `containsValue(value)` | Does the value exist? | boolean |
+| `size()` | Number of pairs | int |
+
+<CodeBlock lang="java" title="Useful HashMap methods">
+{`import java.util.HashMap;
+
+public class MetodosHashMap {
+    public static void main(String[] args) {
+        HashMap<String, Integer> inventario = new HashMap<>();
+        inventario.put("Apples", 50);
+        inventario.put("Pears", 30);
+
+        // getOrDefault: if it does not exist, returns the default value
+        int uvas = inventario.getOrDefault("Grapes", 0);
+        System.out.println("Grapes: " + uvas);  // 0
+
+        // putIfAbsent: only adds if it does not exist
+        inventario.putIfAbsent("Apples", 100);  // does not change
+        inventario.putIfAbsent("Grapes", 25);   // adds
+        System.out.println("After putIfAbsent: " + inventario);
+
+        // containsKey / containsValue
+        System.out.println("Has Pears?: " + inventario.containsKey("Pears"));
+        System.out.println("Has 50?: " + inventario.containsValue(50));
+
+        // remove
+        inventario.remove("Pears");
+        System.out.println("Without Pears: " + inventario);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Grapes: 0
+After putIfAbsent: {Apples=50, Grapes=25}
+Has Pears?: true
+Has 50?: true
+Without Pears: {Apples=50, Grapes=25}
+```
+
+## Iterating over a HashMap
+
+<CodeBlock lang="java" title="Three ways to traverse a HashMap">
+{`import java.util.HashMap;
+import java.util.Map;
+
+public class IterarHashMap {
+    public static void main(String[] args) {
+        HashMap<String, String> capitales = new HashMap<>();
+        capitales.put("Colombia", "Bogotá");
+        capitales.put("México", "Ciudad de México");
+        capitales.put("Argentina", "Buenos Aires");
+
+        // Way 1: entrySet (key + value)
+        System.out.println("--- entrySet ---");
+        for (Map.Entry<String, String> entry : capitales.entrySet()) {
+            System.out.println(entry.getKey() + " → " + entry.getValue());
+        }
+
+        // Way 2: keySet (only keys)
+        System.out.println("--- keySet ---");
+        for (String pais : capitales.keySet()) {
+            System.out.println(pais);
+        }
+
+        // Way 3: values (only values)
+        System.out.println("--- values ---");
+        for (String capital : capitales.values()) {
+            System.out.println(capital);
+        }
+
+        // Way 4: forEach with lambda (Java 8+)
+        System.out.println("--- forEach ---");
+        capitales.forEach((pais, capital) ->
+            System.out.println(pais + " → " + capital));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+--- entrySet ---
+Colombia → Bogotá
+México → Ciudad de México
+Argentina → Buenos Aires
+--- keySet ---
+Colombia
+México
+Argentina
+--- values ---
+Bogotá
+Ciudad de México
+Buenos Aires
+--- forEach ---
+Colombia → Bogotá
+México → Ciudad de México
+Argentina → Buenos Aires
+```
+
+## HashMap with Objects as Values
+
+<CodeBlock lang="java" title="HashMap with complex values">
+{`import java.util.HashMap;
+
+public class HashMapObjetos {
+    public static void main(String[] args) {
+        HashMap<String, double[]> notas = new HashMap<>();
+
+        notas.put("Ana", new double[]{9.0, 8.5, 9.2});
+        notas.put("Luis", new double[]{7.5, 8.0, 7.8});
+        notas.put("María", new double[]{9.5, 9.0, 9.8});
+
+        for (String nombre : notas.keySet()) {
+            double[] exámenes = notas.get(nombre);
+            double promedio = 0;
+            for (double nota : exámenes) promedio += nota;
+            promedio /= exámenes.length;
+            System.out.printf("%s: average %.1f%n",
+                nombre, promedio);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Ana: average 8.9
+Luis: average 7.8
+María: average 9.4
+```
+
+## Creating Maps with Java 9+
+
+```java
+// Immutable map with a single pair
+Map<String, Integer> uno = Map.of("clave", 1);
+
+// Immutable map with several pairs
+Map<String, Integer> varios = Map.of(
+    "A", 1, "B", 2, "C", 3
+);
+
+// Map that allows null
+Map<String, Integer> mutable = new HashMap<>(varios);
+```
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

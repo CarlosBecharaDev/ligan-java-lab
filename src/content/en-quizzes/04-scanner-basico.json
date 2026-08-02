@@ -1,0 +1,48 @@
+{
+  "id": "quiz-basico-scanner",
+  "lessonSlug": "entrada-datos-scanner",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which Scanner method reads an entire line of text?",
+      "options": ["next()", "nextLine()", "nextInt()", "read()"],
+      "correctIndex": 1,
+      "explanations": [
+        "next() reads only one word (up to the first space).",
+        "Correct. nextLine() reads the whole line up to the Enter key.",
+        "nextInt() reads an integer, not text.",
+        "read() is not a Scanner method."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Why does `nextLine()` after `nextInt()` 'skip' the input?",
+      "options": [
+        "It is a Java bug",
+        "nextInt() leaves the Enter in the buffer, nextLine() consumes it",
+        "nextLine() does not work after nextInt",
+        "The Scanner closes automatically"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not a bug; it is the normal behavior of the buffer.",
+        "Correct. nextInt() reads the number but leaves \\n in the buffer. nextLine() reads until \\n, finds the pending one and returns an empty string.",
+        "It does work, but you need to clear the buffer first.",
+        "Scanner does not close automatically."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which package must I import to use Scanner?",
+      "options": ["java.lang", "java.util", "java.io", "java.Scanner"],
+      "correctIndex": 1,
+      "explanations": [
+        "java.lang is imported automatically (String, System, etc.).",
+        "Correct. Scanner is in java.util.",
+        "java.io contains file input/output classes.",
+        "There is no java.Scanner package."
+      ]
+    }
+  ]
+}

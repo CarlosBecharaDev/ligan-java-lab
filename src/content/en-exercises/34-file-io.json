@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-file-io-facil",
+    "title": "Read a file",
+    "difficulty": "facil",
+    "description": "Read a text file line by line using BufferedReader and print each line.",
+    "template": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Read the file \"datos.txt\" line by line and print it\n    }\n}",
+    "hints": [
+      "Use new BufferedReader(new FileReader(\"datos.txt\"))",
+      "Read each line with br.readLine() in a while loop",
+      "Close the BufferedReader in a finally block or with try-with-resources"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (BufferedReader br = new BufferedReader(new FileReader(\"datos.txt\"))) {\n            String linea;\n            while ((linea = br.readLine()) != null) {\n                System.out.println(linea);\n            }\n        } catch (IOException e) {\n            System.out.println(\"Error reading file: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "BufferedReader wraps FileReader and offers readLine() to read each line. try-with-resources automatically closes the resource.",
+    "expectedOutput": "[Contents of the datos.txt file, line by line]",
+    "lessonSlug": "file-io"
+  },
+  {
+    "id": "ex-file-io-normal",
+    "title": "Count lines and words",
+    "difficulty": "normal",
+    "description": "Read a text file and count the total number of lines and words it contains.",
+    "template": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Read \"texto.txt\" and count lines and words\n    }\n}",
+    "hints": [
+      "Each readLine() is a new line, increment the line counter",
+      "To count words, use linea.split(\"\\\\s+\")",
+      "Empty lines must be handled correctly"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.FileReader;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        int totalLineas = 0;\n        int totalPalabras = 0;\n        try (BufferedReader br = new BufferedReader(new FileReader(\"texto.txt\"))) {\n            String linea;\n            while ((linea = br.readLine()) != null) {\n                totalLineas++;\n                if (!linea.trim().isEmpty()) {\n                    String[] palabras = linea.split(\"\\\\s+\");\n                    totalPalabras += palabras.length;\n                }\n            }\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n        System.out.println(\"Lines: \" + totalLineas);\n        System.out.println(\"Words: \" + totalPalabras);\n    }\n}",
+    "solutionExplanation": "A counter is incremented for each line read. Words are counted using split() with whitespace as the delimiter.",
+    "expectedOutput": "Lines: 3\nWords: 12",
+    "lessonSlug": "file-io"
+  },
+  {
+    "id": "ex-file-io-dificil",
+    "title": "Copy a file",
+    "difficulty": "dificil",
+    "description": "Copy a complete file line by line to another file, also showing the progress.",
+    "template": "import java.io.BufferedReader;\nimport java.io.BufferedWriter;\nimport java.io.FileReader;\nimport java.io.FileWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Copy \"origen.txt\" to \"destino.txt\" line by line\n        // Show the progress of each copied line\n    }\n}",
+    "hints": [
+      "Use BufferedReader to read and BufferedWriter to write",
+      "Use try-with-resources for both",
+      "Print the number of the copied line while you work"
+    ],
+    "solution": "import java.io.BufferedReader;\nimport java.io.BufferedWriter;\nimport java.io.FileReader;\nimport java.io.FileWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (\n            BufferedReader br = new BufferedReader(new FileReader(\"origen.txt\"));\n            BufferedWriter bw = new BufferedWriter(new FileWriter(\"destino.txt\"))\n        ) {\n            String linea;\n            int numLinea = 0;\n            while ((linea = br.readLine()) != null) {\n                bw.write(linea);\n                bw.newLine();\n                numLinea++;\n                System.out.println(\"Line \" + numLinea + \" copied: \" + linea);\n            }\n            System.out.println(\"File copied: \" + numLinea + \" lines\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "Both files are opened with try-with-resources. Each line from the source is read, written to the destination with bw.write(), and a new line is added with bw.newLine().",
+    "expectedOutput": "Line 1 copied: Hola mundo\nLine 2 copied: Esta es una prueba\nLine 3 copied: Copia exitosa\nFile copied: 3 lines",
+    "lessonSlug": "file-io"
+  }
+]

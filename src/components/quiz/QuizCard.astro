@@ -15,8 +15,8 @@ const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
 
 <div class="quiz-card" role="region" aria-label={`Quiz ${quiz.level}`} data-quiz-id={quizId}>
   <div class="quiz-card__header">
-    <span class="quiz-card__level">{quiz.level === 'basico' ? '🟢 Comprensión básica' : '🔴 Razonamiento avanzado'}</span>
-    <span class="quiz-card__count">{quiz.questions.length} preguntas</span>
+    <span class="quiz-card__level">{quiz.level === 'basico' ? <span data-i18n="quiz.basic">🟢 Comprensión básica</span> : <span data-i18n="quiz.advanced">🔴 Razonamiento avanzado</span>}</span>
+    <span class="quiz-card__count">{quiz.questions.length} <span data-i18n="quiz.questions">preguntas</span></span>
   </div>
 
   {quiz.questions.map((q, idx) => (
@@ -44,7 +44,7 @@ const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
   ))}
 
   <div class="quiz-card__result" hidden role="region" aria-live="polite">
-    <p class="quiz-card__score">Puntaje: <span class="quiz-card__score-value">0</span>/<span class="quiz-card__score-total">{quiz.questions.length}</span></p>
+    <p class="quiz-card__score"><span data-i18n="quiz.score">Puntaje:</span> <span class="quiz-card__score-value">0</span>/<span class="quiz-card__score-total">{quiz.questions.length}</span></p>
   </div>
 </div>
 
@@ -202,12 +202,14 @@ const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
   // Los scripts de Astro son module-scoped; buscamos por data attributes
   document.querySelectorAll('.quiz-card').forEach((container) => {
     const preguntas = container.querySelectorAll('.quiz-card__question');
-    const resultSection = container.querySelector('.quiz-card__result');
+    const resultSection = container.querySelector<HTMLElement>('.quiz-card__result');
     const scoreValue = resultSection?.querySelector('.quiz-card__score-value');
+    const T = (key: string): string =>
+      ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
 
     preguntas.forEach((pregunta) => {
-      const radios = pregunta.querySelectorAll('input[type="radio"]');
-      const feedback = pregunta.querySelector('.quiz-card__feedback');
+      const radios = pregunta.querySelectorAll<HTMLInputElement>('input[type="radio"]');
+      const feedback = pregunta.querySelector<HTMLElement>('.quiz-card__feedback');
 
       radios.forEach((radio) => {
         radio.addEventListener('change', () => {
@@ -232,7 +234,7 @@ const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
             }
           });
 
-          const selectedRadio = pregunta.querySelector('input[type="radio"]:checked');
+          const selectedRadio = pregunta.querySelector<HTMLInputElement>('input[type="radio"]:checked');
           if (selectedRadio && feedback) {
             const isCorrect = selectedRadio.dataset.correct === 'true';
             const idx = parseInt(selectedRadio.value);
@@ -241,10 +243,10 @@ const quizId = `quiz-${quiz.id}-${Math.random().toString(36).slice(2, 6)}`;
             const explanations = JSON.parse(explanationsRaw);
             feedback.hidden = false;
             feedback.className = `quiz-card__feedback quiz-card__feedback--show ${isCorrect ? 'quiz-card__feedback--correct' : 'quiz-card__feedback--incorrect'}`;
-            feedback.textContent = explanations[idx] || 'Sin explicación disponible.';
+            feedback.textContent = explanations[idx] || T('quiz.no-explanation');
 
             // Deshabilitar opciones después de responder
-            radios.forEach((r) => { (r as HTMLInputElement).disabled = true; });
+            radios.forEach((r) => { r.disabled = true; });
 
             // Mostrar resultado
             if (resultSection && scoreValue) {

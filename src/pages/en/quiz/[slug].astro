@@ -1,0 +1,98 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/ContentLayout.astro';
+import QuizCard from '@components/quiz/QuizCard.astro';
+import { quizCollection, lessonCollection, localePrefix } from '@lib/course';
+
+export async function getStaticPaths() {
+  const quizzes = await getCollection(quizCollection('en'));
+  const lessons = await getCollection(lessonCollection('en'));
+
+  const quizMap = new Map<string, typeof quizzes>();
+  for (const quiz of quizzes) {
+    const slug = quiz.data.lessonSlug;
+    if (!quizMap.has(slug)) quizMap.set(slug, []);
+    quizMap.get(slug)!.push(quiz);
+  }
+
+  return Array.from(quizMap.entries()).map(([slug, quizEntries]) => {
+    const lesson = lessons.find((l) => l.data.slug === slug);
+    return {
+      params: { slug },
+      props: {
+        slug,
+        lessonTitle: lesson?.data.title ?? slug,
+        quizzes: quizEntries.map((q) => q.data),
+      },
+    };
+  });
+}
+
+const { slug, lessonTitle, quizzes } = Astro.props;
+---
+
+<ContentLayout title={`Quiz: ${lessonTitle}`} description="Test your knowledge" lang="en">
+  <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text)">
+    <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-sm)">
+      <span style="font-size:1.5rem">🧠</span>
+      <div>
+        <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin:0">Quiz: {lessonTitle}</h1>
+        <p style="color:var(--win-muted);margin:var(--space-xs) 0 0 0;font-size:var(--text-sm)">
+          Answer all the questions to assess your understanding of the topic.
+        </p>
+      </div>
+    </div>
+
+    {quizzes.length > 0 ? (
+      <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+        {quizzes.map((quiz) => (
+          <QuizCard quiz={quiz} />
+        ))}
+      </div>
+    ) : (
+      <div style="text-align:center;padding:var(--space-2xl);background:rgba(0,0,0,0.05);border:2px solid var(--win-border)">
+        <p style="color:var(--win-muted);font-size:var(--text-lg)">📝 Quizzes for this lesson are coming soon.</p>
+      </div>
+    )}
+
+    <div style="margin-top:var(--space-xl);text-align:center;display:flex;flex-direction:column;align-items:center;gap:var(--space-md)">
+      <button
+        id="mark-quiz-complete-btn"
+        data-slug={slug}
+        style="padding:var(--space-sm) var(--space-lg);background:var(--success);color:var(--btn-primary-text);font-weight:600;border:2px solid var(--success-border);border-top-color:var(--success-border-light);border-left-color:var(--success-border-light);cursor:pointer;font-family:var(--font-ui);font-size:var(--text-base);box-shadow:2px 2px 0 rgba(0,0,0,0.3)"
+      >
+        ✅ Mark quiz as completed
+      </button>
+      <span id="quiz-complete-status" style="display:none;padding:var(--space-sm) var(--space-lg);background:rgba(40,200,64,0.1);border:1px solid var(--success);color:var(--success);font-weight:600;font-family:var(--font-ui)">✓ Completed</span>
+      <a href={`${localePrefix('en')}/tema/${slug}`} style="color:var(--win-link);text-decoration:none;font-family:var(--font-ui);padding:var(--space-sm) var(--space-lg);border:1px solid var(--win-link);transition:background 0.1s" onmouseover="this.style.background='rgba(43,91,168,0.1)'" onmouseout="this.style.background='transparent'">← Back to the lesson</a>
+    </div>
+  </div>
+</ContentLayout>
+
+<script>
+  import { loadProgress, saveProgress, type ProgressData } from '@lib/progress';
+
+  (function() {
+    const btn = document.getElementById('mark-quiz-complete-btn')!;
+    const status = document.getElementById('quiz-complete-status')!;
+    const slug = btn.dataset.slug ?? '';
+
+    function updateUI(data: ProgressData) {
+      if (data.quizzes.includes(slug)) {
+        btn.style.display = 'none';
+        status.style.display = 'inline';
+      }
+    }
+
+    updateUI(loadProgress());
+
+    btn.addEventListener('click', () => {
+      const data = loadProgress();
+      if (!data.quizzes.includes(slug)) {
+        data.quizzes.push(slug);
+        saveProgress(data);
+        updateUI(data);
+      }
+    });
+  })();
+</script>

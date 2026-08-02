@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-constantes-enums-facil",
+    "lessonSlug": "constantes-enums",
+    "title": "Configuration constants",
+    "difficulty": "facil",
+    "description": "Declare constants to configure an application: app name, version, creation year, maximum number of users and price per subscription. Then show all the constants formatted.",
+    "template": "public class ConfigApp {\n    // TODO: Declare class constants (public static final)\n    // APP = \"Gestor de Tareas\"\n    // VERSION = \"1.2.0\"\n    // ANIO_CREACION = 2026\n    // MAX_USUARIOS = 1000\n    // PRECIO_SUSCRIPCION = 9.99 (double)\n\n    public static void main(String[] args) {\n        // TODO: Print all the constants with formatting\n        // E.g.: \"App: Gestor de Tareas v1.2.0\"\n\n    }\n}",
+    "hints": [
+      "All constants must be public static final",
+      "Names go in UPPERCASE with underscores",
+      "Use System.out.printf for formatting with decimals if you wish"
+    ],
+    "solution": "public class ConfigApp {\n    public static final String APP = \"Gestor de Tareas\";\n    public static final String VERSION = \"1.2.0\";\n    public static final int ANIO_CREACION = 2026;\n    public static final int MAX_USUARIOS = 1000;\n    public static final double PRECIO_SUSCRIPCION = 9.99;\n\n    public static void main(String[] args) {\n        System.out.println(\"App: \" + APP + \" v\" + VERSION);\n        System.out.println(\"Creation year: \" + ANIO_CREACION);\n        System.out.println(\"Maximum users: \" + MAX_USUARIOS);\n        System.out.println(\"Subscription price: $\" + PRECIO_SUSCRIPCION);\n\n        System.out.println(\"\\n--- Configuration summary ---\");\n        System.out.println(APP + \" v\" + VERSION + \" (\" + ANIO_CREACION + \")\");\n        System.out.println(\"Users: up to \" + MAX_USUARIOS);\n        System.out.printf(\"Subscription: $%.2f/month%n\", PRECIO_SUSCRIPCION);\n    }\n}",
+    "solutionExplanation": "We declare class constants with public static final following the UPPERCASE naming convention. The constants are used as fixed values throughout the application.",
+    "expectedOutput": "App: Gestor de Tareas v1.2.0\nCreation year: 2026\nMaximum users: 1000\nSubscription price: $9.99\n\n--- Configuration summary ---\nGestor de Tareas v1.2.0 (2026)\nUsers: up to 1000\nSubscription: $9.99/month"
+  },
+  {
+    "id": "ex-constantes-enums-normal",
+    "lessonSlug": "constantes-enums",
+    "title": "Ticket system with Enum",
+    "difficulty": "normal",
+    "description": "Create a TicketPrioridad enum with levels BAJA, MEDIA, ALTA, CRITICA. Each level has a response time in hours and a color. Create a method that receives a priority and shows its configuration.",
+    "template": "public enum TicketPrioridad {\n    // TODO: Define the priorities with properties\n    // BAJA(48, \"🟢\"), MEDIA(24, \"🟡\"), ALTA(8, \"🟠\"), CRITICA(2, \"🔴\")\n\n    // Private constructor with tiempoRespuesta and emoji\n\n    // Methods getTiempoRespuesta() and getEmoji()\n\n    // Method esUrgente() that returns true if ALTA or CRITICA\n}\n\npublic class SistemaTickets {\n    public static void main(String[] args) {\n        // TODO: Test each priority\n        // For each one, print:\n        // \"Priority [ALTA]: ⏱ 8h 🟠 - Urgent? true\"\n\n    }\n}",
+    "hints": [
+      "The enum needs private final fields",
+      "The constructor is private (public is not added)",
+      "Use switch or if for esUrgente(), or better: return prioridad.ordinal() >= 2"
+    ],
+    "solution": "public enum TicketPrioridad {\n    BAJA(48, \"🟢\"),\n    MEDIA(24, \"🟡\"),\n    ALTA(8, \"🟠\"),\n    CRITICA(2, \"🔴\");\n\n    private final int tiempoRespuesta;\n    private final String emoji;\n\n    TicketPrioridad(int tiempoRespuesta, String emoji) {\n        this.tiempoRespuesta = tiempoRespuesta;\n        this.emoji = emoji;\n    }\n\n    public int getTiempoRespuesta() { return tiempoRespuesta; }\n    public String getEmoji() { return emoji; }\n\n    public boolean esUrgente() {\n        return this == ALTA || this == CRITICA;\n    }\n}\n\npublic class SistemaTickets {\n    public static void main(String[] args) {\n        for (TicketPrioridad p : TicketPrioridad.values()) {\n            System.out.printf(\"Priority %s: ⏱ %sh %s - Urgent? %s%n\",\n                p.name(), p.getTiempoRespuesta(),\n                p.getEmoji(), p.esUrgente());\n        }\n    }\n}",
+    "solutionExplanation": "We create an enum with properties (tiempoRespuesta, emoji) and methods (getTiempoRespuesta, esUrgente). We iterate all values with values() and show the formatted information with printf.",
+    "expectedOutput": "Priority BAJA: ⏱ 48h 🟢 - Urgent? false\nPriority MEDIA: ⏱ 24h 🟡 - Urgent? false\nPriority ALTA: ⏱ 8h 🟠 - Urgent? true\nPriority CRITICA: ⏱ 2h 🔴 - Urgent? true"
+  },
+  {
+    "id": "ex-constantes-enums-dificil",
+    "lessonSlug": "constantes-enums",
+    "title": "Subscription plan calculator with Enum",
+    "difficulty": "dificil",
+    "description": "Create a PlanSuscripcion enum (GRATIS, BASICO, PREMIUM, EMPRESARIAL). Each plan has a monthly price, storage in GB and number of allowed users. Implement methods to calculate the annual price with discount and check whether a plan supports certain features.",
+    "template": "public enum PlanSuscripcion {\n    // TODO: Define the plans with properties\n    // GRATIS(0, 0.5, 1), BASICO(9.99, 10, 5),\n    // PREMIUM(29.99, 100, 50), EMPRESARIAL(99.99, 1000, 999)\n\n    // Constructor with price, almacenamientoGB, maxUsuarios\n    // Getter methods for each property\n    // Method precioAnual() that applies a 10% discount\n    // Method soportaAlmacenamiento(double gb) - true if the plan has at least that storage\n    // Method esGratuito()\n}\n\npublic class CalculadoraPlanes {\n    public static void main(String[] args) {\n        // TODO: For each plan, print:\n        // \"PREMIUM: $29.99/month → $323.89/year | 100GB | 50 users\"\n        // Check if each plan supports 50GB of storage\n        // Show the recommended plan for a 20-user startup\n    }\n}",
+    "hints": [
+      "Each enum constant is defined with parameters: BASICO(9.99, 10, 5)",
+      "The constructor runs for each enum constant",
+      "Annual price = precioMensual * 12 * 0.9 (10% discount)",
+      "To recommend a plan, iterate the values and check that maxUsuarios >= 20"
+    ],
+    "solution": "public enum PlanSuscripcion {\n    GRATIS(0, 0.5, 1),\n    BASICO(9.99, 10, 5),\n    PREMIUM(29.99, 100, 50),\n    EMPRESARIAL(99.99, 1000, 999);\n\n    private final double precioMensual;\n    private final double almacenamientoGB;\n    private final int maxUsuarios;\n\n    PlanSuscripcion(double precioMensual, double almacenamientoGB, int maxUsuarios) {\n        this.precioMensual = precioMensual;\n        this.almacenamientoGB = almacenamientoGB;\n        this.maxUsuarios = maxUsuarios;\n    }\n\n    public double getPrecioMensual() { return precioMensual; }\n    public double getAlmacenamientoGB() { return almacenamientoGB; }\n    public int getMaxUsuarios() { return maxUsuarios; }\n    public boolean esGratuito() { return precioMensual == 0; }\n\n    public double precioAnual() {\n        return precioMensual * 12 * 0.9;  // 10% annual discount\n    }\n\n    public boolean soportaAlmacenamiento(double gb) {\n        return almacenamientoGB >= gb;\n    }\n}\n\npublic class CalculadoraPlanes {\n    public static void main(String[] args) {\n        // Show all plans\n        System.out.println(\"=== Subscription plans ===\\n\");\n\n        for (PlanSuscripcion plan : PlanSuscripcion.values()) {\n            System.out.printf(\"%s: $%.2f/month → $%.2f/year | %.0fGB | %d users\",\n                plan.name(), plan.getPrecioMensual(),\n                plan.precioAnual(),\n                plan.getAlmacenamientoGB(),\n                plan.getMaxUsuarios());\n\n            if (plan.esGratuito()) {\n                System.out.print(\" (GRATIS)\");\n            }\n            System.out.println();\n        }\n\n        // Check storage support\n        System.out.println(\"\\n=== 50GB Support ===\");\n        for (PlanSuscripcion plan : PlanSuscripcion.values()) {\n            System.out.printf(\"%s: %s%n\", plan.name(),\n                plan.soportaAlmacenamiento(50) ? \"✅\" : \"❌\");\n        }\n\n        // Recommendation\n        System.out.println(\"\\n=== Recommendation for a 20-user startup ===\");\n        for (PlanSuscripcion plan : PlanSuscripcion.values()) {\n            if (plan.getMaxUsuarios() >= 20 && !plan.esGratuito()) {\n                System.out.printf(\"→ %s: $%.2f/month (%d users, %.0fGB)%n\",\n                    plan.name(), plan.getPrecioMensual(),\n                    plan.getMaxUsuarios(), plan.getAlmacenamientoGB());\n                break;\n            }\n        }\n    }\n}",
+    "solutionExplanation": "We define an enum with 3 properties and business methods (precioAnual, soportaAlmacenamiento, esGratuito). The constructor assigns values to each constant. We iterate the plans to show recommendations based on needs.",
+    "expectedOutput": "=== Subscription plans ===\n\nGRATIS: $0.00/month → $0.00/year | 1GB | 1 user (GRATIS)\nBASICO: $9.99/month → $107.89/year | 10GB | 5 users\nPREMIUM: $29.99/month → $323.89/year | 100GB | 50 users\nEMPRESARIAL: $99.99/month → $1079.89/year | 1000GB | 999 users\n\n=== 50GB Support ===\nGRATIS: ❌\nBASICO: ❌\nPREMIUM: ✅\nEMPRESARIAL: ✅\n\n=== Recommendation for a 20-user startup ===\n→ PREMIUM: $29.99/month (50 users, 100GB)"
+  }
+]

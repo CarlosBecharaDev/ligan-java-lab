@@ -1,0 +1,337 @@
+---
+title: "Multidimensional Arrays and Algorithms"
+slug: "arrays-avanzados"
+module: "03-metodos-y-arrays"
+level: "Intermediate"
+objectives:
+  - "Create and traverse two-dimensional arrays (matrices)"
+  - "Implement linear search algorithms"
+  - "Implement bubble sort"
+  - "Use arrays to solve common problems"
+  - "Understand basic algorithm complexity (O(n), O(n²))"
+prerequisites:
+  - "Have completed Lesson 15: Arrays"
+  - "Understand nested for loops"
+history:
+  introducedIn: "Multidimensional arrays and classic algorithms since Java 1.0"
+  context: "Multidimensional arrays in Java are arrays of arrays (not contiguous matrices as in C). Each row can have a different length, which makes them flexible. Search and sorting algorithms are fundamental to computer science and have existed since the origins of the field, long before Java."
+  evolution: "Java 1.0 introduced multidimensional arrays as arrays of arrays. The classic search and sorting algorithms (linear, bubble, selection, insertion) are universal. Java 8+ added methods such as Arrays.sort() and Arrays.binarySearch() for production use, but understanding the manual algorithms is essential for learning."
+realWorldExamples:
+  - domain: "E-commerce — sales matrix by region and month"
+    description: "A company has quarterly sales in 4 regions. A matrix stores the data and an algorithm computes the region with the highest total sales."
+    code: |
+      public class VentasRegion {
+          public static void main(String[] args) {
+              double[][] ventas = {
+                  {120.5, 135.0, 110.2, 150.8},  // Norte
+                  {85.0, 92.5, 78.3, 95.0},       // Sur
+                  {210.0, 198.5, 225.0, 240.5},   // Este
+                  {95.0, 102.0, 88.5, 110.0}      // Oeste
+              };
+              String[] regiones = {"Norte", "Sur", "Este", "Oeste"};
+
+              double maxTotal = 0;
+              int mejorRegion = 0;
+
+              for (int i = 0; i < ventas.length; i++) {
+                  double total = 0;
+                  for (int j = 0; j < ventas[i].length; j++) {
+                      total += ventas[i][j];
+                  }
+                  System.out.printf("%s: $%.1f%n",
+                      regiones[i], total);
+                  if (total > maxTotal) {
+                      maxTotal = total;
+                      mejorRegion = i;
+                  }
+              }
+
+              System.out.printf("Mejor región: %s ($%.1f)%n",
+                  regiones[mejorRegion], maxTotal);
+          }
+      }
+    result: |
+      North: $516.5
+      South: $350.8
+      East: $874.0
+      West: $395.5
+      Best region: East ($874.0)
+
+  - domain: "Healthcare — patient search in a database"
+    description: "A hospital searches for a patient by ID in a list using linear search, and then by name using binary search on a sorted list."
+    code: |
+      public class BuscarPaciente {
+          static int busquedaLineal(String[] nombres, String busqueda) {
+              for (int i = 0; i < nombres.length; i++) {
+                  if (nombres[i].equalsIgnoreCase(busqueda)) {
+                      return i;
+                  }
+              }
+              return -1;
+          }
+
+          public static void main(String[] args) {
+              String[] pacientes = {
+                  "Ana García", "Carlos López", "María Santos",
+                  "Pedro Ruiz", "Laura Díaz"
+              };
+
+              String buscar = "María Santos";
+              int idx = busquedaLineal(pacientes, buscar);
+
+              if (idx >= 0) {
+                  System.out.printf("Paciente %d: %s%n",
+                      idx + 1, pacientes[idx]);
+              } else {
+                  System.out.println("No encontrado");
+              }
+          }
+      }
+    result: |
+      Patient 3: María Santos
+hasInteractive: false
+comparisons:
+  - title: "Linear search vs Binary search"
+    items:
+      - name: "Linear search"
+        features:
+          precondition: "None — works with an unsorted array"
+          complexity: "O(n) — checks each element"
+          implementation: "A single simple for loop"
+          idealFor: "Small or unsorted arrays"
+      - name: "Binary search"
+        features:
+          precondition: "Array must be sorted"
+          complexity: "O(log n) — divides the space in half"
+          implementation: "Recursion or a loop with low/mid/high"
+          idealFor: "Large sorted arrays"
+    recommendation: "Linear search for small arrays (<50 elements) or unsorted ones. Binary search for large sorted arrays. If you search the same array frequently, sort it once and use binary search."
+videos:
+  - url: ""
+    title: "Multidimensional arrays and algorithms"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "How does a matrix (two-dimensional array) work?"
+    answer: "A matrix is an array of arrays. The first dimension is the rows, the second the columns. To access an element: matrix[row][column]. Rows can have different lengths (jagged array). It is traversed with two nested for loops."
+  - question: "What is time complexity O(n)?"
+    answer: "It describes how the run time grows with the amount of data. O(n) means that if you double the data, the time doubles. O(n²) means that if you double the data, the time quadruples. Searching an unsorted array is O(n); bubble sort is O(n²)."
+  - question: "When should I use Arrays.sort() vs implementing my own sort?"
+    answer: "In production, always use Arrays.sort() — it is optimized (TimSort, O(n log n)). Implement manual algorithms only to learn the concepts. Understanding bubble and selection sort helps you understand why sort() is efficient."
+sources:
+  - title: "Java 21 API — Arrays.sort()"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Multi-Dimensional Arrays"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/multidimensional.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Two-dimensional arrays
+
+A two-dimensional array is an **array of arrays**: each element is another array. It's used to represent tables, matrices, and grids.
+
+<CodeBlock lang="java" title="3x4 matrix — declare and access">
+{`public class MatrizBasica {
+    public static void main(String[] args) {
+        // Declare a 3 row x 4 column matrix
+        int[][] matriz = {
+            {1, 2, 3, 4},
+            {5, 6, 7, 8},
+            {9, 10, 11, 12}
+        };
+
+        // Access an element: [row][column]
+        System.out.println("matriz[1][2] = " + matriz[1][2]); // 7
+
+        // Rows and columns
+        System.out.println("Rows: " + matriz.length);        // 3
+        System.out.println("Columns: " + matriz[0].length);  // 4
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+matriz[1][2] = 7
+Rows: 3
+Columns: 4
+```
+
+**Important:** `matriz.length` gives the number of rows. `matriz[0].length` gives the columns of the first row.
+
+## Traversing a matrix
+
+Use **two nested for loops**: the outer one iterates over rows, the inner one over columns:
+
+<CodeBlock lang="java" title="Traverse a full matrix">
+{`public class RecorrerMatriz {
+    public static void main(String[] args) {
+        int[][] notas = {
+            {85, 92, 78},  // Student 1
+            {90, 88, 95},  // Student 2
+            {72, 80, 85}   // Student 3
+        };
+        String[] materias = {"Math", "Spanish", "Science"};
+
+        // Header
+        System.out.printf("%-10s", "");
+        for (String m : materias) System.out.printf("%-8s", m);
+        System.out.println("Average");
+
+        // Data
+        for (int i = 0; i < notas.length; i++) {
+            System.out.printf("Stud. %d  ", (i + 1));
+            double suma = 0;
+            for (int j = 0; j < notas[i].length; j++) {
+                System.out.printf("%-8d", notas[i][j]);
+                suma += notas[i][j];
+            }
+            System.out.printf("%.1f%n", suma / notas[i].length);
+        }
+    }
+}`}
+</CodeBlock>
+
+## Jagged matrices
+
+Each row can have a **different length**:
+
+<CodeBlock lang="java" title="Jagged matrix — rows of different sizes">
+{`public class MatrizJagged {
+    public static void main(String[] args) {
+        int[][] piramide = {
+            {1},
+            {1, 2},
+            {1, 2, 3},
+            {1, 2, 3, 4},
+            {1, 2, 3, 4, 5}
+        };
+
+        for (int i = 0; i < piramide.length; i++) {
+            for (int j = 0; j < piramide[i].length; j++) {
+                System.out.print(piramide[i][j] + " ");
+            }
+            System.out.println();
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+1
+1 2
+1 2 3
+1 2 3 4
+1 2 3 4 5
+```
+
+## Linear search
+
+The simplest search: it checks **every element** until it finds the target or reaches the end.
+
+<CodeBlock lang="java" title="Linear search">
+{`public class BusquedaLineal {
+    static int buscar(int[] arr, int objetivo) {
+        for (int i = 0; i < arr.length; i++) {
+            if (arr[i] == objetivo) {
+                return i;  // found
+            }
+        }
+        return -1;  // not found
+    }
+
+    public static void main(String[] args) {
+        int[] datos = {34, 12, 45, 7, 89, 23, 56};
+        int idx = buscar(datos, 89);
+        System.out.println("89 at index: " + idx);
+
+        int noExiste = buscar(datos, 100);
+        System.out.println("100 at index: " + noExiste);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+89 at index: 4
+100 at index: -1
+```
+
+**Complexity:** O(n) — in the worst case it traverses the whole array.
+
+## Bubble sort
+
+The simplest sorting algorithm: it compares **adjacent elements** and swaps them if they are in the wrong order, repeating until everything is sorted.
+
+<CodeBlock lang="java" title="Bubble Sort — sort from smallest to largest">
+{`public class BubbleSort {
+    static void burbuja(int[] arr) {
+        int n = arr.length;
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = 0; j < n - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    // Swap
+                    int temp = arr[j];
+                    arr[j] = arr[j + 1];
+                    arr[j + 1] = temp;
+                }
+            }
+        }
+    }
+
+    static void imprimir(int[] arr) {
+        for (int n : arr) System.out.print(n + " ");
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        int[] datos = {64, 34, 25, 12, 22, 11, 90};
+        System.out.print("Original: ");
+        imprimir(datos);
+
+        burbuja(datos);
+        System.out.print("Sorted: ");
+        imprimir(datos);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Original: 64 34 25 12 22 11 90
+Sorted: 11 12 22 25 34 64 90
+```
+
+**How it works:**
+```
+Pass 1: [64 34 25 12 22 11 90] → 34 25 12 22 11 64 90  (64 "bubbles" to the right)
+Pass 2: [34 25 12 22 11 64 90] → 25 12 22 11 34 64 90
+... until completely sorted.
+```
+
+**Complexity:** O(n²) — double nested loop. Not efficient for large arrays, but easy to understand and implement.
+
+## Time complexity — summary
+
+| Algorithm | Complexity | Example: 1000 elements |
+|-----------|------------|------------------------|
+| Linear search | O(n) | ~1000 steps |
+| Binary search | O(log n) | ~10 steps |
+| Bubble Sort | O(n²) | ~1,000,000 steps |
+| Arrays.sort() | O(n log n) | ~10,000 steps |

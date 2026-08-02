@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-excepciones-tipos-facil",
+    "title": "Safe division",
+    "difficulty": "facil",
+    "description": "Create a method called dividir that receives two integers (dividend and divisor) and returns the result of the integer division. If the divisor is 0, it must throw an ArithmeticException with the message 'Cannot divide by zero'.",
+    "template": "public class DivisionSegura {\n    // TODO: Create the dividir method that throws ArithmeticException if divisor is 0\n\n    public static void main(String[] args) {\n        // TODO: Use try-catch to test normal divisions and one by zero\n        // System.out.println(\"10 / 2 = \" + dividir(10, 2));\n    }\n}",
+    "hints": [
+      "Use an if statement to check whether divisor equals 0",
+      "To throw an exception use: throw new ArithmeticException(\"message\")",
+      "If divisor is not 0, simply return dividendo / divisor"
+    ],
+    "solution": "public class DivisionSegura {\n    public static int dividir(int dividendo, int divisor) {\n        if (divisor == 0) {\n            throw new ArithmeticException(\"Cannot divide by zero\");\n        }\n        return dividendo / divisor;\n    }\n\n    public static void main(String[] args) {\n        try {\n            System.out.println(\"10 / 2 = \" + dividir(10, 2));\n            System.out.println(\"15 / 3 = \" + dividir(15, 3));\n            System.out.println(\"10 / 0 = \" + dividir(10, 0));\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "The method checks with an if whether the divisor is 0. If so, it throws ArithmeticException with a descriptive message. If it is not 0, it returns the result of the division. In main, try-catch is used to catch the exception when attempting to divide by zero.",
+    "expectedOutput": "10 / 2 = 5\n15 / 3 = 5\nError: Cannot divide by zero",
+    "lessonSlug": "excepciones-tipos"
+  },
+  {
+    "id": "ex-excepciones-tipos-normal",
+    "title": "Age parser",
+    "difficulty": "normal",
+    "description": "Create a method parsearEdad that receives a String and returns an int with the parsed age. If the String is not a valid number, it must throw NumberFormatException with the message 'Invalid input: ' followed by the received value. If the number is negative, throw IllegalArgumentException with the message 'Age cannot be negative'.",
+    "template": "public class ParserEdades {\n    // TODO: Create parsearEdad that throws NumberFormatException or IllegalArgumentException\n\n    public static void main(String[] args) {\n        String[] entradas = {\"25\", \"abc\", \"-5\", \"30\"};\n        for (String entrada : entradas) {\n            // TODO: call parsearEdad with try-catch for each entry\n        }\n    }\n}",
+    "hints": [
+      "Use Integer.parseInt(input) inside a try to convert the String to an integer",
+      "If NumberFormatException occurs, rethrow it with a custom message including the input",
+      "After parsing successfully, check whether the number is negative before returning it"
+    ],
+    "solution": "public class ParserEdades {\n    public static int parsearEdad(String input) {\n        int edad;\n        try {\n            edad = Integer.parseInt(input);\n        } catch (NumberFormatException e) {\n            throw new NumberFormatException(\"Invalid input: \" + input);\n        }\n        if (edad < 0) {\n            throw new IllegalArgumentException(\"Age cannot be negative\");\n        }\n        return edad;\n    }\n\n    public static void main(String[] args) {\n        String[] entradas = {\"25\", \"abc\", \"-5\", \"30\"};\n        for (String entrada : entradas) {\n            try {\n                int edad = parsearEdad(entrada);\n                System.out.println(\"Age: \" + edad);\n            } catch (Exception e) {\n                System.out.println(\"Error: \" + e.getMessage());\n            }\n        }\n    }\n}",
+    "solutionExplanation": "The method tries to parse the String with Integer.parseInt inside a try-catch. If it fails, it rethrows NumberFormatException with a descriptive message. If parsing succeeds but the number is negative, it throws IllegalArgumentException. In main, an array of entries is iterated and both exception types are handled.",
+    "expectedOutput": "Age: 25\nError: Invalid input: abc\nError: Age cannot be negative\nAge: 30",
+    "lessonSlug": "excepciones-tipos"
+  },
+  {
+    "id": "ex-excepciones-tipos-dificil",
+    "title": "Data validator",
+    "difficulty": "dificil",
+    "description": "Create a class Validar with three static methods: validarNombre(String nombre) that throws IllegalArgumentException if it is null or empty, validarEdad(int edad) that throws IndexOutOfBoundsException if the age is not between 0 and 150, and validarEmail(String email) that throws NullPointerException if it is null or ArithmeticException if it does not contain '@'. Also create a method validarTodo that calls all three and catches each exception showing the error type.",
+    "template": "public class Validar {\n    // TODO: Create validarNombre - throws IllegalArgumentException if null or empty\n\n    // TODO: Create validarEdad - throws IndexOutOfBoundsException if out of range [0, 150]\n\n    // TODO: Create validarEmail - throws NullPointerException if null, ArithmeticException if it does not contain '@'\n\n    // TODO: Create validarTodo that calls all three and handles exceptions separately\n\n    public static void main(String[] args) {\n        validarTodo(\"\", 200, \"test\");\n        System.out.println(\"---\");\n        validarTodo(\"Ana\", 25, \"ana@mail.com\");\n    }\n}",
+    "hints": [
+      "For validarNombre, check whether nombre is null or nombre.isEmpty() and throw IllegalArgumentException",
+      "For validarEdad, check whether edad < 0 or edad > 150 and throw IndexOutOfBoundsException",
+      "For validarEmail, throw NullPointerException if null, and ArithmeticException if it does not contain '@'",
+      "In validarTodo, wrap each call in its own try-catch block to report all errors"
+    ],
+    "solution": "public class Validar {\n    public static void validarNombre(String nombre) {\n        if (nombre == null || nombre.isEmpty()) {\n            throw new IllegalArgumentException(\"Name cannot be null or empty\");\n        }\n    }\n\n    public static void validarEdad(int edad) {\n        if (edad < 0 || edad > 150) {\n            throw new IndexOutOfBoundsException(\"Age must be between 0 and 150\");\n        }\n    }\n\n    public static void validarEmail(String email) {\n        if (email == null) {\n            throw new NullPointerException(\"Email cannot be null\");\n        }\n        if (!email.contains(\"@\")) {\n            throw new ArithmeticException(\"Email must contain '@'\");\n        }\n    }\n\n    public static void validarTodo(String nombre, int edad, String email) {\n        try {\n            validarNombre(nombre);\n        } catch (IllegalArgumentException e) {\n            System.out.println(\"Name error: \" + e.getMessage());\n        }\n        try {\n            validarEdad(edad);\n        } catch (IndexOutOfBoundsException e) {\n            System.out.println(\"Age error: \" + e.getMessage());\n        }\n        try {\n            validarEmail(email);\n        } catch (NullPointerException e) {\n            System.out.println(\"Email error: \" + e.getMessage());\n        } catch (ArithmeticException e) {\n            System.out.println(\"Email error: \" + e.getMessage());\n        }\n    }\n\n    public static void main(String[] args) {\n        validarTodo(\"\", 200, \"test\");\n        System.out.println(\"---\");\n        validarTodo(\"Ana\", 25, \"ana@mail.com\");\n    }\n}",
+    "solutionExplanation": "Each validation method checks a specific condition and throws the corresponding exception: IllegalArgumentException for an invalid name, IndexOutOfBoundsException for an out-of-range age, NullPointerException for a null email, and ArithmeticException for an email without '@'. The validarTodo method runs each validation in its own try-catch to report all possible errors in a single call.",
+    "expectedOutput": "Name error: Name cannot be null or empty\nAge error: Age must be between 0 and 150\nEmail error: Email must contain '@'\n---",
+    "lessonSlug": "excepciones-tipos"
+  }
+]

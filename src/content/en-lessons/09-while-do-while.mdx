@@ -1,0 +1,402 @@
+---
+title: "While and Do-While Loops"
+slug: "while-do-while"
+module: "02-control-de-flujo"
+level: "Beginner"
+objectives:
+  - "Write while loops with an entry-checked condition"
+  - "Distinguish while from do-while regarding the timing of the check"
+  - "Avoid infinite loops by controlling the condition and the counter"
+  - "Use while loops for validated input and data processing"
+  - "Recognize when while is more appropriate than for"
+prerequisites:
+  - "Haber completado Lección 07: if-else"
+  - "Conocer operadores de comparación y lógicos"
+  - "Entender el concepto de variable contador y acumulador"
+history:
+  introducedIn: "while and do-while since Java 1.0"
+  context: "The while and do-while loops have existed since the first version of Java, inherited from C and C++. The while loop checks the condition BEFORE executing the body, while do-while checks it AFTER, guaranteeing at least one execution. Both are indeterminate loops: they repeat an unknown number of times until a condition is met."
+  evolution: "The syntax of while and do-while has not changed since Java 1.0 because of its simplicity and clarity. Java 5 introduced the for-each loop (enhanced for) that covers the common case of iterating collections, replacing many uses of while with iterators. However, while remains essential for loops with a complex condition or an unknown number of iterations."
+realWorldExamples:
+  - domain: "User input validation"
+    description: "A login system uses do-while to ask for the password and repeat while it is incorrect, guaranteeing at least one attempt and limiting the maximum to 3."
+    code: |
+      import java.util.Scanner;
+
+      public class LoginIntentos {
+          public static void main(String[] args) {
+              Scanner sc = new Scanner(System.in);
+              String claveCorrecta = "Java2026";
+              int intentos = 0;
+              boolean acceso = false;
+
+              do {
+                  System.out.print("Introduce la contraseña (intento "
+                      + (intentos + 1) + "/3): ");
+                  String intento = sc.nextLine();
+                  intentos++;
+
+                  if (intento.equals(claveCorrecta)) {
+                      acceso = true;
+                      System.out.println("✅ Acceso concedido");
+                      break;
+                  } else {
+                      System.out.println("❌ Contraseña incorrecta");
+                  }
+              } while (!acceso && intentos < 3);
+
+              if (!acceso) {
+                  System.out.println("🚫 Cuenta bloqueada tras 3 intentos");
+              }
+              sc.close();
+          }
+      }
+    result: |
+      Enter the password (attempt 1/3): 1234
+      ❌ Incorrect password
+      Enter the password (attempt 2/3): Java2026
+      ✅ Access granted
+  - domain: "Compound interest calculation"
+    description: "A financial simulator uses while to calculate how many years an investment needs to double its value with compound interest, a case where the number of iterations is unknown."
+    code: |
+      public class InteresCompuesto {
+          public static void main(String[] args) {
+              double capital = 1000.0;
+              double tasa = 0.05; // 5% anual
+              double objetivo = capital * 2; // duplicar
+              int anios = 0;
+
+              while (capital < objetivo) {
+                  capital = capital + (capital * tasa);
+                  anios++;
+                  System.out.printf("Año %d: $%.2f%n", anios, capital);
+              }
+
+              System.out.println("----");
+              System.out.printf("Se duplicó en %d años%n", anios);
+          }
+      }
+    result: |
+      Year 1: $1050.00
+      Year 2: $1102.50
+      ...
+      Year 15: $2078.93
+      ----
+      It doubled in 15 years
+hasInteractive: false
+comparisons:
+  - title: "while vs do-while"
+    items:
+      - name: "while"
+        features:
+          check: "Before each iteration (pre-test)"
+          min_executions: "0 times if the condition is false at the start"
+          use: "When you can skip the loop entirely"
+          syntax: "while (cond) { ... }"
+      - name: "do-while"
+        features:
+          check: "After each iteration (post-test)"
+          min_executions: "Always 1 time, regardless of the condition"
+          use: "When the body must run at least once"
+          syntax: "do { ... } while (cond);"
+    recommendation: "Use while when the condition can be false from the start (optional processing loop). Use do-while when the body must run at least once (menus, input validation, asking for confirmation). Remember the trailing semicolon in do-while."
+videos:
+  - url: ""
+    title: "While and do-while loops in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Why does do-while end with a semicolon?"
+    answer: "Unlike while (whose body goes between braces and does not end with ;), the do-while structure ends with `while (condition);`. The semicolon is mandatory because it closes the complete statement. Forgetting it causes a compilation error."
+  - question: "How do I avoid an infinite loop with while?"
+    answer: "Make sure that something inside the body modifies the variable that the condition evaluates (an incrementing counter, or a control variable that changes). If the condition never becomes false, the loop runs forever. Use a counter and set a safety limit."
+  - question: "When do I use while instead of for?"
+    answer: "Use for when you know the number of iterations in advance (traversing an array of fixed length). Use while when the number of iterations is unknown or depends on a dynamic condition (read until end of file, validate input, wait for an event)."
+sources:
+  - title: "Java 21 Language Specification — The while Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.12"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The do Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.13"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Indeterminate loops
+
+The while and do-while loops are **indeterminate**: they repeat an *unknown* number of times until a condition becomes false. Unlike the for loop (where you know in advance how many times you'll repeat), these loops are ideal for cases like:
+
+- Reading data until end of file
+- Asking for input until it is valid
+- Waiting until a condition is met
+
+## The while loop
+
+`while` checks the condition **before** each iteration (pre-test). If the condition is false from the start, the body **never runs**:
+
+```java
+while (condicion) {
+    // body that repeats while condicion is true
+    // must modify something so the condition eventually becomes false
+}
+```
+
+<CodeBlock lang="java" title="while — countdown">
+{`public class CuentaRegresiva {
+    public static void main(String[] args) {
+        int contador = 5;
+
+        while (contador > 0) {
+            System.out.println("Count: " + contador);
+            contador--;  // important: modifies the condition
+        }
+
+        System.out.println("Liftoff! 🚀");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Count: 5
+Count: 4
+Count: 3
+Count: 2
+Count: 1
+Liftoff! 🚀
+```
+
+### while with a false condition from the start
+
+If the condition is false at the beginning, the loop does not run:
+
+```java
+int x = 10;
+while (x < 5) {
+    System.out.println("This is never printed");
+}
+System.out.println("End");  // prints "End"
+```
+
+## The do-while loop
+
+`do-while` checks the condition **after** each iteration (post-test). The body **runs at least once**, regardless of the condition:
+
+```java
+do {
+    // body (runs at least 1 time)
+} while (condicion);  // note the trailing semicolon
+```
+
+<CodeBlock lang="java" title="do-while — interactive menu">
+{`public class MenuInteractivo {
+    public static void main(String[] args) {
+        int opcion = 0;
+
+        do {
+            System.out.println("\\n--- MENU ---");
+            System.out.println("1. View profile");
+            System.out.println("2. Settings");
+            System.out.println("3. Exit");
+            // We simulate that the user chooses 3 in the first iteration
+            opcion = 3;
+            System.out.println("Chosen option: " + opcion);
+        } while (opcion != 3);
+
+        System.out.println("Leaving the menu...");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+--- MENU ---
+1. View profile
+2. Settings
+3. Exit
+Chosen option: 3
+Leaving the menu...
+```
+
+> 💡 The menu is shown **at least once** even if the user chooses "Exit" immediately. That is the purpose of do-while.
+
+## Key difference: while vs do-while
+
+| Feature | while | do-while |
+|----------------|-------|----------|
+| Check | Before the body | After the body |
+| Minimum executions | 0 | 1 |
+| Trailing semicolon | No | Yes |
+| Typical use | Conditional processing | Menus, validation |
+
+<CodeBlock lang="java" title="Same value, different check">
+{`public class ComparacionBucles {
+    public static void main(String[] args) {
+        int n = 10;
+
+        // while: does NOT run because 10 < 5 is false at the start
+        System.out.println("--- while ---");
+        while (n < 5) {
+            System.out.println("inside the while");
+        }
+        System.out.println("while ended without printing");
+
+        // do-while: runs ONCE even though the condition is false
+        System.out.println("--- do-while ---");
+        do {
+            System.out.println("inside the do-while");
+        } while (n < 5);
+        System.out.println("do-while ended");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+--- while ---
+while ended without printing
+--- do-while ---
+inside the do-while
+do-while ended
+```
+
+## Accumulators and counters
+
+A common pattern: use while with an **accumulator** (sums values) and a **counter** (counts iterations):
+
+<CodeBlock lang="java" title="while — sum of numbers until zero (sentinel)">
+{`public class SumaSentinela {
+    public static void main(String[] args) {
+        int[] datos = {5, 8, 3, 0};  // 0 is the sentinel value
+        int i = 0;
+        int suma = 0;
+        int cuenta = 0;
+
+        while (i < datos.length && datos[i] != 0) {
+            suma += datos[i];
+            cuenta++;
+            i++;
+        }
+
+        System.out.println("Numbers added: " + cuenta);
+        System.out.println("Total: " + suma);
+        System.out.println("Average: " + (cuenta > 0 ? (double) suma / cuenta : 0));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Numbers added: 3
+Total: 16
+Average: 5.333333333333333
+```
+
+## The danger of the infinite loop
+
+The most common error with while is forgetting to modify the condition variable:
+
+```java
+// ❌ Infinite loop: counter never changes
+int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    // missing i++ → i is always 0 → endless loop
+}
+
+// ✅ Correct: the counter is incremented
+int i = 0;
+while (i < 10) {
+    System.out.println(i);
+    i++;
+}
+```
+
+<CodeBlock lang="java" title="Careful: if the body does not change the condition, it is infinite">
+{`public class CuentaRegresivaBug {
+    public static void main(String[] args) {
+        int x = 5;
+
+        while (x > 0) {
+            System.out.println("x = " + x);
+            x--;  // without this line it would be infinite
+        }
+        System.out.println("End");
+    }
+}`}
+</CodeBlock>
+
+## Pattern: validated input with do-while
+
+The most classic use of do-while is asking for input until it is valid:
+
+<CodeBlock lang="java" title="Grade validation with do-while">
+{`public class NotaValida {
+    public static void main(String[] args) {
+        // We simulate user inputs
+        int[] entradas = {150, -5, 85};
+        int idx = 0;
+        int nota;
+
+        do {
+            nota = entradas[idx++];  // reads the next input
+            if (nota < 0 || nota > 100) {
+                System.out.println("Grade " + nota + " invalid. It must be 0-100.");
+            }
+        } while (nota < 0 || nota > 100);
+
+        System.out.println("Accepted grade: " + nota);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Grade 150 invalid. It must be 0-100.
+Grade -5 invalid. It must be 0-100.
+Accepted grade: 85
+```
+
+## When to use while and when for?
+
+| Situation | Recommended loop |
+|-----------|-------------------|
+| Known number of iterations | ✅ **for** |
+| Iterate until end of file or an external condition | ✅ **while** |
+| Menu shown at least once | ✅ **do-while** |
+| Validate input until it is correct | ✅ **do-while** |
+| Process until a sentinel value is found | ✅ **while** |
+| Traverse a complete array | ✅ **for** (or **for-each**) |
+
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

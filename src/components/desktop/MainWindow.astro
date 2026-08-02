@@ -1,15 +1,19 @@
 ---
 import LiganLogo from '@components/ui/LiganLogo.astro';
 import ThemeSelector from './ThemeSelector.astro';
+import { localePrefix } from '@lib/course';
+
+const { lang = 'es' } = Astro.props;
+const P = localePrefix(lang);
 ---
 
-<div class="win" role="dialog" aria-label="JAVA_WORKSPACE" aria-modal="true">
+<div class="win" role="dialog" aria-label="JAVA_WORKSPACE" aria-modal="true" data-i18n-aria="home.title">
   <div class="win__titlebar">
     <span class="win__title">JAVA_WORKSPACE</span>
     <div class="win__controls">
-      <button class="win__btn" aria-label="Minimizar"></button>
-      <button class="win__btn" aria-label="Maximizar"></button>
-      <button class="win__btn win__btn--close" aria-label="Cerrar"></button>
+      <button class="win__btn" aria-label="Minimizar" data-i18n-aria="win.minimize"></button>
+      <button class="win__btn" aria-label="Maximizar" data-i18n-aria="win.maximize"></button>
+      <button class="win__btn win__btn--close" aria-label="Cerrar" data-i18n-aria="win.close"></button>
     </div>
   </div>
 
@@ -20,11 +24,11 @@ import ThemeSelector from './ThemeSelector.astro';
         <LiganLogo />
       </div>
       <ul class="sidebar__menu">
-        <li><a href="/" class="sidebar__link sidebar__link--active"><span class="sidebar__icon" aria-hidden="true">⌂</span>Inicio</a></li>
-        <li><a href="/ruta" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">☰</span>Módulos</a></li>
-        <li><a href="/practica" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">⚡</span>Code Lab</a></li>
-        <li><a href="/progreso" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📊</span>Progreso</a></li>
-        <li><a href="/recursos" class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📖</span>Recursos</a></li>
+        <li><a href={`${P}/`} class="sidebar__link sidebar__link--active"><span class="sidebar__icon" aria-hidden="true">⌂</span><span data-i18n="nav.home">Inicio</span></a></li>
+        <li><a href={`${P}/ruta`} class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">☰</span><span data-i18n="nav.modules">Módulos</span></a></li>
+        <li><a href={`${P}/practica`} class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">⚡</span><span data-i18n="nav.code-lab">Code Lab</span></a></li>
+        <li><a href={`${P}/progreso`} class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📊</span><span data-i18n="nav.progress">Progreso</span></a></li>
+        <li><a href={`${P}/recursos`} class="sidebar__link"><span class="sidebar__icon" aria-hidden="true">📖</span><span data-i18n="nav.resources">Recursos</span></a></li>
       </ul>
     </nav>
 
@@ -34,46 +38,46 @@ import ThemeSelector from './ThemeSelector.astro';
 
     <main class="main">
       <div class="main__top">
-        <span class="streak">🔥 3 DÍAS</span>
+        <span class="streak">🔥 3 <span data-i18n="home.days">DÍAS</span></span>
       </div>
 
       <div class="main__content">
         <div class="main__welcome">
-          <h1 class="main__heading">Sigue aprendiendo.</h1>
+          <h1 class="main__heading" data-i18n="home.keep-learning">Sigue aprendiendo.</h1>
         </div>
 
         <div class="lesson-card">
-          <span class="lesson-card__module">Módulo 02 · Fundamentos</span>
-          <h2 class="lesson-card__title">Variables y tipos</h2>
-          <p class="lesson-card__desc">Declaración, inicialización y tipos primitivos en Java.</p>
+          <span class="lesson-card__module" data-i18n="home.card-module">Módulo 02 · Fundamentos</span>
+          <h2 class="lesson-card__title" data-i18n="home.card-title">Variables y tipos</h2>
+          <p class="lesson-card__desc" data-i18n="home.card-desc">Declaración, inicialización y tipos primitivos en Java.</p>
           <div class="lesson-card__progress">
             <div class="progress-bar">
               <div class="progress-bar__fill"></div>
             </div>
-            <span class="progress-bar__label">43% completado</span>
+            <span class="progress-bar__label">43% <span data-i18n="home.percent-complete">completado</span></span>
           </div>
           <div class="lesson-card__meta">
-            <span class="lesson-card__duration">⏱ 15 min</span>
-            <a href="/tema/variables-y-tipos" class="cta-btn">CONTINUAR →</a>
+            <span class="lesson-card__duration" data-i18n="home.card-duration">⏱ 15 min</span>
+            <a href={`${P}/tema/variables-y-tipos`} class="cta-btn" data-i18n="home.continue">CONTINUAR →</a>
           </div>
         </div>
 
         <div class="challenge">
           <span class="challenge__icon">✦</span>
-          <span class="challenge__text">Reto del día · Declara una variable · <strong>+50 XP</strong></span>
-          <a href="/tema/variables-y-tipos#ejercicios" class="challenge__link">Iniciar →</a>
+          <span class="challenge__text" data-i18n="home.challenge">Reto del día · Declara una variable · <strong>+50 XP</strong></span>
+          <a href={`${P}/tema/variables-y-tipos#ejercicios`} class="challenge__link" data-i18n="home.start">Iniciar →</a>
         </div>
       </div>
     </main>
 
   </div>
 
-    <nav class="bottom-nav" aria-label="Navegación móvil">
+    <nav class="bottom-nav" aria-label="Navegación móvil" data-i18n-aria="nav.mobile-aria">
     <div class="bottom-nav__links">
-      <a href="/" class="bottom-nav__link bottom-nav__link--active"><span>Inicio</span></a>
-      <a href="/ruta" class="bottom-nav__link"><span>Módulos</span></a>
-      <a href="/practica" class="bottom-nav__link"><span>Lab</span></a>
-      <a href="/progreso" class="bottom-nav__link"><span>Progreso</span></a>
+      <a href={`${P}/`} class="bottom-nav__link bottom-nav__link--active"><span data-i18n="nav.home">Inicio</span></a>
+      <a href={`${P}/ruta`} class="bottom-nav__link"><span data-i18n="nav.modules">Módulos</span></a>
+      <a href={`${P}/practica`} class="bottom-nav__link"><span data-i18n="nav.lab">Lab</span></a>
+      <a href={`${P}/progreso`} class="bottom-nav__link"><span data-i18n="nav.progress">Progreso</span></a>
     </div>
     <div class="bottom-nav__tools">
       <div class="bottom-nav__theme"><ThemeSelector /></div>
@@ -671,7 +675,8 @@ import ThemeSelector from './ThemeSelector.astro';
   function actualizarRelojNav() {
     const reloj = document.getElementById('bottom-nav-clock');
     if (reloj) {
-      reloj.textContent = new Date().toLocaleTimeString('es-ES', {
+      const locale = (window as any).__i18n?.getLang?.() === 'en' ? 'en-US' : 'es-ES';
+      reloj.textContent = new Date().toLocaleTimeString(locale, {
         hour: '2-digit',
         minute: '2-digit',
       });
@@ -679,4 +684,5 @@ import ThemeSelector from './ThemeSelector.astro';
   }
   setInterval(actualizarRelojNav, 60000);
   actualizarRelojNav();
+  window.addEventListener('lang-change', actualizarRelojNav);
 </script>

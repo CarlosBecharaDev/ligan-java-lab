@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-clases-objetos-facil",
+    "title": "Create CuentaBancaria class",
+    "difficulty": "facil",
+    "description": "Create a CuentaBancaria class with an account holder and a balance, and a method to deposit.",
+    "template": "public class CuentaBancaria {\n    // TODO: Attributes titular (String) and saldo (double)\n\n    // TODO: Method depositar(double monto) that adds to the balance\n\n    // TODO: Method mostrarInfo()\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria();\n        // Assign titular, deposit, show info\n    }\n}",
+    "hints": [
+      "Use instance attributes: titular and saldo",
+      "depositar() adds monto to the balance",
+      "mostrarInfo() prints titular and saldo"
+    ],
+    "solution": "public class CuentaBancaria {\n    String titular;\n    double saldo;\n\n    void depositar(double monto) {\n        saldo += monto;\n    }\n\n    void mostrarInfo() {\n        System.out.println(titular + \" | Balance: $\" + saldo);\n    }\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria();\n        c1.titular = \"María\";\n        c1.saldo = 1000;\n        c1.depositar(500);\n        c1.mostrarInfo();\n    }\n}",
+    "solutionExplanation": "Class with instance attributes and a method that modifies state.",
+    "expectedOutput": "María | Balance: $1500.0",
+    "lessonSlug": "clases-objetos"
+  },
+  {
+    "id": "ex-clases-objetos-normal",
+    "title": "Library system with static",
+    "difficulty": "normal",
+    "description": "Create a Libro class with a static attribute that counts how many books are registered.",
+    "template": "public class Libro {\n    // TODO: Static attribute totalLibros\n\n    // TODO: Attributes titulo, autor, disponible (boolean)\n\n    // TODO: Constructor that increments totalLibros\n\n    // TODO: Method prestar() that sets disponible to false\n\n    // TODO: Static method getTotalLibros()\n\n    public static void main(String[] args) {\n        // Create 3 books, lend one, show total\n    }\n}",
+    "hints": [
+      "static int totalLibros = 0",
+      "In the constructor: totalLibros++",
+      "prestar() changes disponible to false"
+    ],
+    "solution": "public class Libro {\n    static int totalLibros = 0;\n    String titulo;\n    String autor;\n    boolean disponible;\n\n    Libro(String titulo, String autor) {\n        this.titulo = titulo;\n        this.autor = autor;\n        this.disponible = true;\n        totalLibros++;\n    }\n\n    void prestar() {\n        if (disponible) {\n            disponible = false;\n            System.out.println(\"\\\"\" + titulo + \"\\\" borrowed\");\n        } else {\n            System.out.println(\"\\\"\" + titulo + \"\\\" not available\");\n        }\n    }\n\n    static int getTotalLibros() {\n        return totalLibros;\n    }\n\n    void mostrar() {\n        System.out.println(titulo + \" - \" + autor + (disponible ? \" [Available]\" : \" [Borrowed]\"));\n    }\n\n    public static void main(String[] args) {\n        Libro l1 = new Libro(\"Java Básico\", \"Juan\");\n        Libro l2 = new Libro(\"POO\", \"Ana\");\n        Libro l3 = new Libro(\"Algoritmos\", \"Luis\");\n        l1.prestar();\n        l1.mostrar();\n        l2.mostrar();\n        System.out.println(\"Total: \" + Libro.getTotalLibros());\n    }\n}",
+    "solutionExplanation": "Use of static for shared counting and instance methods for individual state.",
+    "expectedOutput": "\"Java Básico\" borrowed\nJava Básico - Juan [Borrowed]\nPOO - Ana [Available]\nTotal: 3",
+    "lessonSlug": "clases-objetos"
+  },
+  {
+    "id": "ex-clases-objetos-dificil",
+    "title": "Employee management",
+    "difficulty": "dificil",
+    "description": "Create an Empleado class with salary, bonus, and a method to calculate total pay. Use static for the counter.",
+    "template": "public class Empleado {\n    // TODO: static totalEmpleados, totalSalarios\n\n    // TODO: nombre, cargo, salarioBase, bono\n\n    // TODO: Constructor that registers the employee\n\n    // TODO: calcularSueldo() = salarioBase + bono\n\n    // TODO: static promedioSueldo()\n\n    public static void main(String[] args) {\n        // Create 3 employees, calculate each salary, average\n    }\n}",
+    "hints": [
+      "Use static int totalEmpleados and static double totalSalarios",
+      "In each constructor, add the salary to totalSalarios",
+      "promedioSueldo() = totalSalarios / totalEmpleados"
+    ],
+    "solution": "public class Empleado {\n    static int totalEmpleados = 0;\n    static double totalSalarios = 0;\n    String nombre;\n    String cargo;\n    double salarioBase;\n    double bono;\n\n    Empleado(String nombre, String cargo, double salarioBase, double bono) {\n        this.nombre = nombre;\n        this.cargo = cargo;\n        this.salarioBase = salarioBase;\n        this.bono = bono;\n        totalEmpleados++;\n        totalSalarios += calcularSueldo();\n    }\n\n    double calcularSueldo() {\n        return salarioBase + bono;\n    }\n\n    void mostrarSueldo() {\n        System.out.println(nombre + \" (\" + cargo + \") - Salary: $\" + calcularSueldo());\n    }\n\n    static double promedioSueldo() {\n        return totalSalarios / totalEmpleados;\n    }\n\n    public static void main(String[] args) {\n        Empleado e1 = new Empleado(\"Ana\", \"Desarrolladora\", 2500, 500);\n        Empleado e2 = new Empleado(\"Luis\", \"Diseñador\", 2200, 300);\n        Empleado e3 = new Empleado(\"María\", \"Líder\", 3500, 800);\n        e1.mostrarSueldo();\n        e2.mostrarSueldo();\n        e3.mostrarSueldo();\n        System.out.println(\"Average: $\" + Empleado.promedioSueldo());\n    }\n}",
+    "solutionExplanation": "Static for shared statistics, instance for individual data.",
+    "expectedOutput": "Ana (Desarrolladora) - Salary: $3000.0\nLuis (Diseñador) - Salary: $2500.0\nMaría (Líder) - Salary: $4300.0\nAverage: $3266.6666666666665",
+    "lessonSlug": "clases-objetos"
+  }
+]

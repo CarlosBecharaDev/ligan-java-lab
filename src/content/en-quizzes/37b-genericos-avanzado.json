@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-genericos",
+  "lessonSlug": "genericos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does the wildcard ? extends T allow in a method parameter?",
+      "options": ["Inserting elements of type T", "Reading elements as type T", "Inserting and reading elements of type T", "Only working with null"],
+      "correctIndex": 1,
+      "explanations": [
+        "With ? extends T you cannot insert (except null).",
+        "Correct. ? extends T (covariance) allows reading elements as type T, but not inserting.",
+        "You cannot insert, only read.",
+        "You can read elements and work with them."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which principle summarizes when to use ? extends T vs ? super T?",
+      "options": ["DRY (Don't Repeat Yourself)", "PECS (Producer Extends, Consumer Super)", "SOLID", "KISS (Keep It Simple)"],
+      "correctIndex": 1,
+      "explanations": [
+        "DRY is about not repeating code, not about generics.",
+        "Correct. PECS: Producer Extends (read-only), Consumer Super (write-only).",
+        "SOLID is a set of OOP design principles.",
+        "KISS is about general simplicity."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Why can't you create a generic array like new T[10]?",
+      "options": ["Because T has no constructor", "Due to type erasure: arrays have a reified type", "Because Java does not support arrays", "Because new T[10] is invalid syntax"],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not related to the constructor.",
+        "Correct. Arrays know their type at runtime (reified), but generics use type erasure, so they are incompatible.",
+        "Java does support arrays.",
+        "The syntax new T[10] is not valid, but the underlying reason is type erasure."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which Collections.copy() method signature demonstrates the PECS pattern?",
+      "options": ["copy(List<?> src, List<?> dest)", "copy(List<? extends T> src, List<? super T> dest)", "copy(List<T> src, List<T> dest)", "copy(List<? super T> src, List<? extends T> dest)"],
+      "correctIndex": 1,
+      "explanations": [
+        "Without type parameters there is no safety.",
+        "Correct. src produces elements (? extends T), dest consumes elements (? super T).",
+        "It only allows copying between lists of the exact same type.",
+        "Reversed: src must be Producer Extends, dest Consumer Super."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the main criticism of Java's generics implementation?",
+      "options": ["They are too slow", "They use type erasure instead of reification", "They do not allow multiple parameters", "They only work with JDK classes"],
+      "correctIndex": 1,
+      "explanations": [
+        "Performance is not a significant criticism.",
+        "Correct. Type erasure prevents reflection on generic types and creates incompatibility with arrays. .NET implements reification, which preserves types at runtime.",
+        "They do allow multiple parameters: Map<K, V>.",
+        "They work with any class."
+      ]
+    }
+  ]
+}

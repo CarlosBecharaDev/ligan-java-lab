@@ -1,0 +1,92 @@
+{
+  "id": "quiz-35-file-writer-avanzado",
+  "lessonSlug": "file-writer",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the main advantage of BufferedWriter over writing directly with FileWriter?",
+      "options": [
+        "BufferedWriter can write binary data",
+        "BufferedWriter is more efficient thanks to an internal buffer that reduces writes to disk",
+        "BufferedWriter allows writing to multiple files at once",
+        "BufferedWriter supports UTF-8 encoding and FileWriter does not"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "BufferedWriter works with text, not binary.",
+        "Correct. BufferedWriter accumulates data in an in-memory buffer and writes it to disk in blocks, significantly reducing I/O operations.",
+        "BufferedWriter only writes to one file at a time.",
+        "Both classes support UTF-8 through the appropriate encoding."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the correct pattern for copying a text file in Java?",
+      "options": [
+        "File.copy(source, destination)",
+        "Read with BufferedReader and write with BufferedWriter line by line",
+        "Files.copy() is the only possible way",
+        "new FileWriter(destination).write(new FileReader(source))"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "File does not have a static copy() method.",
+        "Correct. The classic pattern is to read each line with BufferedReader and write it with BufferedWriter for an efficient copy.",
+        "Files.copy() is an NIO alternative, but it is not the only way.",
+        "You cannot pass a FileReader directly to the write() method of FileWriter."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is PrintWriter in Java?",
+      "options": [
+        "A class for printing to the console only",
+        "A Writer with formatting methods such as println() and printf()",
+        "A formatted file reader",
+        "A tool for generating PDF files"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "PrintWriter is not limited to the console; it can write to files.",
+        "Correct. PrintWriter extends Writer and offers convenient methods such as println() and printf() for writing formatted text.",
+        "PrintWriter writes, it does not read files.",
+        "PrintWriter does not generate PDF files."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is the difference between pw.write() and pw.println()?",
+      "options": [
+        "write() writes binary and println() writes text",
+        "write() writes without a line break and println() adds a line break automatically",
+        "There is no difference, they are interchangeable",
+        "write() only accepts Strings and println() only accepts numbers"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Both methods work with text.",
+        "Correct. write() writes the text as is without adding anything extra, while println() adds a line break after the content.",
+        "They are different in their behavior regarding line breaks.",
+        "Both methods accept several data types."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "When is it preferable to use Files.writeString() over FileWriter?",
+      "options": [
+        "When you need to write character by character",
+        "When you already have the entire content and want to write it in a single operation",
+        "When you need to use try-with-resources",
+        "Files.writeString() only works for small files"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Files.writeString() is not designed for character-by-character writing.",
+        "Correct. Files.writeString() is ideal when you already have the full content as a String and want to write it in a simple and concise way.",
+        "Both can be used with try-with-resources.",
+        "Files.writeString() has no size restriction."
+      ]
+    }
+  ]
+}

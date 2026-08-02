@@ -1,0 +1,92 @@
+{
+  "id": "quiz-24-arraylist-basico",
+  "lessonSlug": "arraylist",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is ArrayList?",
+      "options": [
+        "A dynamic collection that grows automatically",
+        "An array with a fixed size",
+        "A data structure for graphs",
+        "A primitive type of Java"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. ArrayList is a dynamic collection that grows automatically according to the number of elements added.",
+        "No. Arrays are the ones with a fixed size, not ArrayList.",
+        "No. ArrayList is a linear structure, not designed for graphs.",
+        "No. ArrayList is a class of the standard library, not a primitive type."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How do you add an element to an ArrayList?",
+      "options": [
+        "add()",
+        "insert()",
+        "append()",
+        "put()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The add() method adds an element to the end of the ArrayList.",
+        "No. There is no insert() method in ArrayList.",
+        "No. append() is a StringBuilder method, not an ArrayList one.",
+        "No. put() is used in Map such as HashMap, not in ArrayList."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you get an element from an ArrayList?",
+      "options": [
+        "get(index)",
+        "at(index)",
+        "fetch(index)",
+        "element(index)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The get(index) method returns the element at the specified position.",
+        "No. There is no at() method in ArrayList.",
+        "No. There is no fetch() method in ArrayList.",
+        "No. There is no element() method in ArrayList."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you remove an element from an ArrayList?",
+      "options": [
+        "remove(index) or remove(object)",
+        "delete(index)",
+        "drop(index)",
+        "erase(index)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. You can use remove(index) to remove by position or remove(object) to remove a specific instance.",
+        "No. There is no delete() method in ArrayList.",
+        "No. There is no drop() method in ArrayList.",
+        "No. There is no erase() method in ArrayList."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you get the size of an ArrayList?",
+      "options": [
+        "size()",
+        "length()",
+        "count()",
+        "getLength()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The size() method returns the number of elements in the ArrayList.",
+        "No. length() is a String method, not an ArrayList one.",
+        "No. count() is not an ArrayList method.",
+        "No. There is no getLength() method in ArrayList."
+      ]
+    }
+  ]
+}

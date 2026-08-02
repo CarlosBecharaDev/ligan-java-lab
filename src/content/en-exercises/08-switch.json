@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-switch-facil",
+    "lessonSlug": "switch",
+    "title": "Number to day translator",
+    "difficulty": "facil",
+    "description": "Create a program that receives a number from 1 to 7 and shows the corresponding day of the week using switch.",
+    "template": "public class DiaSemanaSwitch {\n    public static void main(String[] args) {\n        int dia = 4;\n\n        // TODO: Use switch to display:\n        // 1 → \"Monday\", 2 → \"Tuesday\", 3 → \"Wednesday\",\n        // 4 → \"Thursday\", 5 → \"Friday\",\n        // 6 → \"Saturday\", 7 → \"Sunday\"\n        // default → \"Invalid number\"\n        // Don't forget the breaks\n\n    }\n}",
+    "hints": [
+      "Each case needs its break to avoid fall-through",
+      "The default covers numbers outside 1-7"
+    ],
+    "solution": "public class DiaSemanaSwitch {\n    public static void main(String[] args) {\n        int dia = 4;\n\n        switch (dia) {\n            case 1:\n                System.out.println(\"Monday\");\n                break;\n            case 2:\n                System.out.println(\"Tuesday\");\n                break;\n            case 3:\n                System.out.println(\"Wednesday\");\n                break;\n            case 4:\n                System.out.println(\"Thursday\");\n                break;\n            case 5:\n                System.out.println(\"Friday\");\n                break;\n            case 6:\n                System.out.println(\"Saturday\");\n                break;\n            case 7:\n                System.out.println(\"Sunday\");\n                break;\n            default:\n                System.out.println(\"Invalid number\");\n        }\n    }\n}",
+    "solutionExplanation": "Each case prints its day and ends with break to avoid fall-through. The default handles inputs outside the 1-7 range.",
+    "expectedOutput": "Thursday"
+  },
+  {
+    "id": "ex-switch-normal",
+    "lessonSlug": "switch",
+    "title": "Calculator with switch expression",
+    "difficulty": "normal",
+    "description": "Use a switch expression (Java 14+) to implement a calculator that receives an operation String and two numbers, and returns the result.",
+    "template": "public class CalculadoraSwitch {\n    public static void main(String[] args) {\n        String operacion = \"multiplicar\";\n        double a = 8.0;\n        double b = 3.0;\n\n        // TODO: Use a switch expression with arrow syntax (->)\n        // to assign the result according to:\n        // \"sumar\" → a + b\n        // \"restar\" → a - b\n        // \"multiplicar\" → a * b\n        // \"dividir\" → if b != 0, a / b; otherwise, show an error and use 0\n        // default → 0\n        // Use yield for division (needs a block)\n        // Prints: \"8.0 multiplicar 3.0 = 24.0\"\n\n    }\n}",
+    "hints": [
+      "Arrow syntax does not need break",
+      "For division use a block { } and yield to return the value",
+      "Format: %.1f %s %.1f = %.1f"
+    ],
+    "solution": "public class CalculadoraSwitch {\n    public static void main(String[] args) {\n        String operacion = \"multiplicar\";\n        double a = 8.0;\n        double b = 3.0;\n\n        double resultado = switch (operacion) {\n            case \"sumar\" -> a + b;\n            case \"restar\" -> a - b;\n            case \"multiplicar\" -> a * b;\n            case \"dividir\" -> {\n                if (b == 0) {\n                    System.out.println(\"Error: cannot divide by zero\");\n                    yield 0;\n                }\n                yield a / b;\n            }\n            default -> 0;\n        };\n\n        System.out.printf(\"%.1f %s %.1f = %.1f%n\", a, operacion, b, resultado);\n    }\n}",
+    "solutionExplanation": "The switch expression assigns the result directly. The simple cases use the arrow; the division case uses a block with yield because it needs to validate b != 0 before returning a value.",
+    "expectedOutput": "8.0 multiplicar 3.0 = 24.0"
+  },
+  {
+    "id": "ex-switch-dificil",
+    "lessonSlug": "switch",
+    "title": "Toll system with enum and switch",
+    "difficulty": "dificil",
+    "description": "Define an enum TipoVehiculo (COCHE, MOTO, CAMION, AUTOBUS) with a base fee. Use a switch expression to calculate the toll based on the type and a factor, with premium discount handling.",
+    "template": "public class Peaje {\n    enum TipoVehiculo { COCHE, MOTO, CAMION, AUTOBUS }\n\n    public static void main(String[] args) {\n        TipoVehiculo tipo = TipoVehiculo.CAMION;\n        boolean esPremium = true;\n\n        // TODO: Base fee per type (use a switch expression):\n        //   COCHE → 5.0, MOTO → 2.5, CAMION → 10.0, AUTOBUS → 15.0\n        // If esPremium, apply a 20% discount on the fee\n        // Prints: \"CAMION - Fee: $10.0 - Premium: true - Total: $8.0\"\n\n    }\n}",
+    "hints": [
+      "First use a switch expression to get the base fee based on the enum",
+      "Then apply the discount with an if or ternary",
+      "Enum cases do not need qualification: case COCHE (not TipoVehiculo.COCHE)"
+    ],
+    "solution": "public class Peaje {\n    enum TipoVehiculo { COCHE, MOTO, CAMION, AUTOBUS }\n\n    public static void main(String[] args) {\n        TipoVehiculo tipo = TipoVehiculo.CAMION;\n        boolean esPremium = true;\n\n        double tarifaBase = switch (tipo) {\n            case COCHE -> 5.0;\n            case MOTO -> 2.5;\n            case CAMION -> 10.0;\n            case AUTOBUS -> 15.0;\n        };\n\n        double total = esPremium ? tarifaBase * 0.8 : tarifaBase;\n\n        System.out.printf(\"%s - Fee: $%.1f - Premium: %s - Total: $%.1f%n\",\n                tipo, tarifaBase, esPremium, total);\n    }\n}",
+    "solutionExplanation": "The switch expression on the enum gets the base fee. Since we cover all enum values, we do not need a default. Then we apply a 20% discount with the ternary operator if esPremium is true.",
+    "expectedOutput": "CAMION - Fee: $10.0 - Premium: true - Total: $8.0"
+  }
+]

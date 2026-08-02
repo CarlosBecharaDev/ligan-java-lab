@@ -12,14 +12,16 @@ import { THEME_CLIENT_SCRIPT } from '@lib/theme';
 export interface Props {
   title: string;
   description?: string;
+  lang?: 'es' | 'en';
 }
 
-const { title, description } = Astro.props;
+const { title, description, lang = 'es' } = Astro.props;
 const siteTitle = `${title} — Ligan Java Lab`;
+const htmlLang = lang;
 ---
 
 <!DOCTYPE html>
-<html lang="es" data-lang="es">
+<html lang={htmlLang} data-lang={htmlLang} {...(lang === 'en' ? { 'data-i18n-force': 'en' } : {})}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -39,7 +41,7 @@ const siteTitle = `${title} — Ligan Java Lab`;
   </head>
   <body>
     <div class="app-container" style="padding-bottom: 48px; height: 100vh; display: flex; flex-direction: column;">
-      <Desktop>
+      <Desktop lang={lang}>
         <slot />
       </Desktop>
       <Taskbar />

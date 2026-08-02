@@ -1,4 +1,5 @@
-import { defineCollection, z } from 'astro:content';
+import { defineCollection } from 'astro:content';
+import { z } from 'astro/zod';
 import { glob } from 'astro/loaders';
 
 // --- Esquema para lecciones MDX ---
@@ -6,7 +7,7 @@ const lessonSchema = z.object({
   title: z.string(),
   slug: z.string(),
   module: z.string(),
-  level: z.enum(['Inicial', 'Intermedio', 'Avanzado']),
+  level: z.enum(['Inicial', 'Intermedio', 'Avanzado', 'Beginner', 'Intermediate', 'Advanced']),
   objectives: z.array(z.string()),
   prerequisites: z.array(z.string()),
   history: z.object({
@@ -106,6 +107,23 @@ export const collections = {
   }),
   modules: defineCollection({
     loader: glob({ pattern: '**/*.json', base: './src/content/modules' }),
+    schema: moduleSchema,
+  }),
+  // --- Versiones en inglés (rutas /en/) ---
+  lessonsEn: defineCollection({
+    loader: glob({ pattern: '**/*.mdx', base: './src/content/en-lessons' }),
+    schema: lessonSchema,
+  }),
+  quizzesEn: defineCollection({
+    loader: glob({ pattern: '**/*.json', base: './src/content/en-quizzes' }),
+    schema: quizSchema,
+  }),
+  exercisesEn: defineCollection({
+    loader: glob({ pattern: '**/*.json', base: './src/content/en-exercises' }),
+    schema: z.array(exerciseSchema),
+  }),
+  modulesEn: defineCollection({
+    loader: glob({ pattern: '**/*.json', base: './src/content/en-modules' }),
     schema: moduleSchema,
   }),
 };

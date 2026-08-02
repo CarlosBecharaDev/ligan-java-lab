@@ -1,0 +1,92 @@
+{
+  "id": "quiz-27-string-avanzado-basico",
+  "lessonSlug": "string-avanzado",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is immutability in String?",
+      "options": [
+        "It cannot be modified after creation",
+        "The content can be changed at any time",
+        "It is only immutable in Java 8",
+        "It depends on the type of operation"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Strings in Java are immutable; once created, their content cannot be changed.",
+        "No. Quite the opposite; the content cannot be changed after creation.",
+        "No. Strings are immutable in all versions of Java.",
+        "No. Immutability is a fixed characteristic; it does not depend on the operation."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which class is used to create mutable strings?",
+      "options": [
+        "StringBuilder",
+        "StringBuffer is the only option",
+        "StringMod",
+        "MutableString"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. StringBuilder is the recommended class for efficiently building mutable strings.",
+        "No. StringBuffer also exists, but StringBuilder is faster in a single-threaded environment.",
+        "No. There is no StringMod class in Java.",
+        "No. There is no MutableString class in Java."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you split a String into parts?",
+      "options": [
+        "split()",
+        "divide()",
+        "separate()",
+        "parts()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The split() method divides a String into an array of Strings using a delimiter.",
+        "No. There is no divide() method in String.",
+        "No. There is no separate() method in String.",
+        "No. There is no parts() method in String."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you replace text in a String?",
+      "options": [
+        "replace() or replaceAll()",
+        "substitute()",
+        "change()",
+        "overwrite()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. replace() replaces a character/string, and replaceAll() replaces using regular expressions.",
+        "No. There is no substitute() method in String.",
+        "No. There is no change() method in String.",
+        "No. There is no overwrite() method in String."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you format a String in Java?",
+      "options": [
+        "format() or printf()",
+        "sprintf()",
+        "template()",
+        "interpolate()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. String.format() creates a formatted String, and printf() prints directly with formatting.",
+        "No. There is no sprintf() in Java; that is the C function.",
+        "No. There is no template() method in String.",
+        "No. There is no interpolate() method in String."
+      ]
+    }
+  ]
+}

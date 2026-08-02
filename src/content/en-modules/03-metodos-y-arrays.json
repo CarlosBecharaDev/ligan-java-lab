@@ -1,0 +1,11 @@
+{
+  "id": "mod-03",
+  "slug": "03-metodos-y-arrays",
+  "number": 3,
+  "title": "Methods and Arrays",
+  "description": "Organize your code with methods and manage collections of data with arrays.",
+  "icon": "Layers",
+  "status": "disponible",
+  "lessonCount": 6,
+  "lessons": ["metodos", "metodos-avanzados", "sobrecarga", "arrays", "arrays-avanzados", "matrices"]
+}

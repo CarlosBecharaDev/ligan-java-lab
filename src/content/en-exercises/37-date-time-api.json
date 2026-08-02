@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-date-time-facil",
+    "title": "Exact age",
+    "difficulty": "facil",
+    "description": "Calculate the exact age of a person using Period between two dates.",
+    "template": "import java.time.LocalDate;\nimport java.time.Period;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate fechaNacimiento = LocalDate.of(1994, 6, 15);\n        // Calculate the exact age\n        // Show the age\n    }\n}",
+    "hints": [
+      "Use Period.between(fechaNacimiento, LocalDate.now())",
+      "Get the difference with getYears(), getMonths() and getDays()",
+      "Today: LocalDate.now()"
+    ],
+    "solution": "import java.time.LocalDate;\nimport java.time.Period;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate fechaNacimiento = LocalDate.of(1994, 6, 15);\n\n        Period edad = Period.between(fechaNacimiento, LocalDate.now());\n        System.out.println(\"Age: \" + edad.getYears() + \" years, \" + edad.getMonths() + \" months, \" + edad.getDays() + \" days\");\n    }\n}",
+    "solutionExplanation": "Period.between() returns the difference between two dates as a Period object. The getYears(), getMonths() and getDays() methods extract the components.",
+    "expectedOutput": "Age: 31 years, 1 months, 12 days",
+    "lessonSlug": "date-time-api"
+  },
+  {
+    "id": "ex-date-time-normal",
+    "title": "Days remaining",
+    "difficulty": "normal",
+    "description": "Calculate the days remaining until a future date using ChronoUnit.",
+    "template": "import java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate hoy = LocalDate.now();\n        LocalDate navidad = LocalDate.of(2025, 12, 25);\n        // Calculate and show the days remaining until Christmas\n    }\n}",
+    "hints": [
+      "Use ChronoUnit.DIAS.between(hoy, navidad)",
+      "If the date has already passed, the result will be negative",
+      "Print an appropriate message according to the days remaining"
+    ],
+    "solution": "import java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate hoy = LocalDate.now();\n        LocalDate navidad = LocalDate.of(2025, 12, 25);\n        long diasRestantes = ChronoUnit.DIAS.between(hoy, navidad);\n        System.out.println(\"Today: \" + hoy);\n        System.out.println(\"Christmas: \" + navidad);\n        if (diasRestantes > 0) {\n            System.out.println(\"There are \" + diasRestantes + \" days left until Christmas\");\n        } else if (diasRestantes == 0) {\n            System.out.println(\"Today is Christmas!\");\n        } else {\n            System.out.println(\"Christmas already passed \" + Math.abs(diasRestantes) + \" days ago\");\n        }\n    }\n}",
+    "solutionExplanation": "ChronoUnit.DIAS.between() calculates the exact number of days between two dates. It returns a positive value if the final date is later, negative if it is earlier.",
+    "expectedOutput": "Today: 2025-07-27\nChristmas: 2025-12-25\nThere are 151 days left until Christmas",
+    "lessonSlug": "date-time-api"
+  },
+  {
+    "id": "ex-date-time-dificil",
+    "title": "Event calendar",
+    "difficulty": "dificil",
+    "description": "Create a list of events with LocalDateTime, sort them by date and filter the next 7 days.",
+    "template": "import java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.Comparator;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<String[]> eventos = new ArrayList<>();\n        eventos.add(new String[]{\"Reunión equipo\", \"2025-07-28 10:00\"});\n        eventos.add(new String[]{\"Presentación cliente\", \"2025-08-05 14:00\"});\n        eventos.add(new String[]{\"Workshop Java\", \"2025-07-30 09:00\"});\n        eventos.add(new String[]{\"Cierre trimestre\", \"2025-09-15 16:00\"});\n        eventos.add(new String[]{\"Almuerzo equipo\", \"2025-07-29 12:30\"});\n        // Parse dates, sort them and filter the next 7 days\n    }\n}",
+    "hints": [
+      "Use LocalDateTime.parse(date, DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\"))",
+      "Sort with Collections.sort() using a custom Comparator",
+      "Filter events whose date is between now and 7 days later"
+    ],
+    "solution": "import java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter;\nimport java.util.ArrayList;\nimport java.util.Collections;\nimport java.util.Comparator;\n\npublic class Main {\n    public static void main(String[] args) {\n        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm\");\n        LocalDateTime ahora = LocalDateTime.now();\n        LocalDateTime limite = ahora.plusDays(7);\n\n        ArrayList<String[]> eventos = new ArrayList<>();\n        eventos.add(new String[]{\"Reunión equipo\", \"2025-07-28 10:00\"});\n        eventos.add(new String[]{\"Presentación cliente\", \"2025-08-05 14:00\"});\n        eventos.add(new String[]{\"Workshop Java\", \"2025-07-30 09:00\"});\n        eventos.add(new String[]{\"Cierre trimestre\", \"2025-09-15 16:00\"});\n        eventos.add(new String[]{\"Almuerzo equipo\", \"2025-07-29 12:30\"});\n\n        // Sort by date\n        Collections.sort(eventos, Comparator.comparing(e -> LocalDateTime.parse(e[1], formatter)));\n\n        System.out.println(\"=== All events (sorted) ===\");\n        for (String[] e : eventos) {\n            System.out.println(e[1] + \" - \" + e[0]);\n        }\n\n        System.out.println(\"\\n=== Next 7 days ===\");\n        for (String[] e : eventos) {\n            LocalDateTime fecha = LocalDateTime.parse(e[1], formatter);\n            if (!fecha.isBefore(ahora) && !fecha.isAfter(limite)) {\n                System.out.println(e[1] + \" - \" + e[0]);\n            }\n        }\n    }\n}",
+    "solutionExplanation": "The dates are parsed with LocalDateTime.parse() and sorted with Collections.sort() using a Comparator. The events are filtered using isBefore() and isAfter() to compare with the 7-day range.",
+    "expectedOutput": "=== All events (sorted) ===\n2025-07-28 10:00 - Reunión equipo\n2025-07-29 12:30 - Almuerzo equipo\n2025-07-30 09:00 - Workshop Java\n2025-08-05 14:00 - Presentación cliente\n2025-09-15 16:00 - Cierre trimestre\n\n=== Next 7 days ===\n2025-07-28 10:00 - Reunión equipo\n2025-07-29 12:30 - Almuerzo equipo\n2025-07-30 09:00 - Workshop Java",
+    "lessonSlug": "date-time-api"
+  }
+]

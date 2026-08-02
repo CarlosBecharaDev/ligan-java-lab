@@ -16,7 +16,7 @@ for (const l of lessons) {
 
 <ContentLayout title="Ruta de aprendizaje" description="Mapa de módulos con progreso">
   <div class="ruta">
-    <h1 class="ruta__title" data-i18n="path.title">🗺️ Ruta de aprendizaje</h1>
+    <h1 class="ruta__title" data-i18n="path.title" data-i18n-title>🗺️ Ruta de aprendizaje</h1>
     <p class="ruta__subtitle" data-i18n="path.description">
       Sigue esta ruta guiada para dominar Java desde cero. Cada módulo se construye sobre el anterior.
     </p>
@@ -65,7 +65,6 @@ for (const l of lessons) {
                         <a
                           class="ruta__content-link"
                           href={`/tema/${id}`}
-                          onclick="event.stopPropagation()"
                         >
                           <span class="ruta__content-file" aria-hidden="true"></span>
                           <span class="ruta__content-label">{titleById.get(id)}</span>
@@ -93,7 +92,7 @@ for (const l of lessons) {
       <p class="ruta__general-desc" data-i18n="path.keep-learning">La práctica hace al maestro. ¡Sigue aprendiendo!</p>
       <div class="ruta__general-bar">
         <div class="ruta__general-fill"></div>
-        <span class="ruta__general-label" data-i18n="path.completed">5% Completado</span>
+        <span class="ruta__general-label">5% <span data-i18n="path.completed">Completado</span></span>
       </div>
     </div>
   </div>
@@ -111,6 +110,11 @@ for (const l of lessons) {
         if (caret) caret.textContent = expanded ? '▸' : '▾';
         if (list) list.hidden = expanded;
       });
+    });
+
+    // Evita que el clic en un enlace del contenido navegue la tarjeta completa
+    document.querySelectorAll('.ruta__content-link').forEach((link) => {
+      link.addEventListener('click', (e) => e.stopPropagation());
     });
   })();
 </script>

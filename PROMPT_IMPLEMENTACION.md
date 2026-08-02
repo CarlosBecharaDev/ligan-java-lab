@@ -1,5 +1,11 @@
 # Prompt de Inicio para IA Implementadora — Ligan Java Lab
 
+> ⚠️ **Documento histórico.** Este es el prompt original con el que se construyó el **MVP (Fase 1)** el 2026-07-26.
+> Desde entonces el proyecto avanzó (contenido completo, internacionalización EN, pase de limpieza).
+> El **estado actual** vive en `docs/STATE.md` y en `CLAUDE.md`; las decisiones nuevas en `docs/DECISIONS.md` (ADR-014 en adelante).
+> Algunas referencias de este documento quedaron obsoletas: `src/types/` es ahora `src/lib/`, Astro es 7.x (no 4.x),
+> el Code Lab (CodeMirror) fue eliminado por código muerto (ADR-017), y la práctica se hace con ejercicios/soluciones revelables.
+
 ## Tu rol
 
 Actúas como **desarrollador frontend senior, diseñador UX/UI y editor técnico de Java**.

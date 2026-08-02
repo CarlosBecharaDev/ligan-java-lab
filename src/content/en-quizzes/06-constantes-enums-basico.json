@@ -1,0 +1,53 @@
+{
+  "id": "quiz-basico-constantes-enums",
+  "lessonSlug": "constantes-enums",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which keyword is used to declare a constant in Java?",
+      "options": ["const", "final", "static", "immutable"],
+      "correctIndex": 1,
+      "explanations": [
+        "'const' is a reserved word but it is not used for constants in Java.",
+        "Correct. final declares that the value of the variable cannot change after assignment.",
+        "'static' indicates that something belongs to the class, not that it is a constant.",
+        "'immutable' does not exist in Java."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between `final` and `static final`?",
+      "options": [
+        "They are equivalent",
+        "final per instance, static final per class",
+        "static final can be reassigned, final cannot",
+        "Only static final can be private"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They have different scopes.",
+        "Correct. final is a constant per instance. static final is a class constant, shared among all instances.",
+        "Neither can be reassigned.",
+        "Both can be private."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "When were enums introduced in Java?",
+      "options": [
+        "Java 1.0",
+        "Java 5",
+        "Java 8",
+        "Java 11"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java 1.0 only had 'final' for constants.",
+        "Correct. Enums were introduced in JDK 5 (2004) as a replacement for the int enum pattern.",
+        "Java 8 improved default methods, it did not introduce enums.",
+        "Java 11 did not introduce enums."
+      ]
+    }
+  ]
+}

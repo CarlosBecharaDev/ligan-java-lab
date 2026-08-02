@@ -1,0 +1,92 @@
+{
+  "id": "quiz-30-try-catch-finally-basico",
+  "lessonSlug": "try-catch-finally",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "When does the catch block run in Java?",
+      "options": [
+        "Always, before the try block",
+        "When an exception is thrown inside the try block",
+        "Only when the program finishes without errors",
+        "After the finally block no matter what happens"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The catch block does not run before try; it runs afterward when there is an exception.",
+        "Correct. The catch block runs only when an exception matching the type declared in the catch is thrown.",
+        "If the program finishes without errors, the catch block does not run.",
+        "The finally block runs after catch, not the other way around."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does the finally block do?",
+      "options": [
+        "It runs only if an exception occurs in the try block",
+        "It always runs, whether an exception occurs or not",
+        "It runs only when no catch block is defined",
+        "It runs only the first time the method is called"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The finally block is not limited to when an exception occurs; it always runs.",
+        "Correct. The finally block always runs after the try-catch, regardless of whether an exception was thrown or not.",
+        "The finally block always runs, not just when there is no catch block.",
+        "The finally block runs on every pass through the try-catch, not just the first time."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Can you have multiple catch blocks in Java?",
+      "options": [
+        "No, you can only have one catch block per try",
+        "Yes, but they must go from most specific to most general",
+        "Only if you use the multi-catch keyword",
+        "Only when using unchecked exceptions"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is possible to have multiple catch blocks; the idea of having only one is incorrect.",
+        "Correct. You can have multiple catch blocks, and they must be ordered from most specific (e.g. FileNotFoundException) to most general (e.g. IOException).",
+        "Multi-catch lets you combine types, but it is not the only way to handle multiple exceptions.",
+        "The ordering of multiple catch blocks does not depend on whether the exceptions are checked or unchecked."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does multi-catch syntax do in Java?",
+      "options": [
+        "It allows a single catch block to handle multiple exception types with the syntax catch(A | B e)",
+        "It allows throwing multiple exceptions at once",
+        "It allows having multiple finally blocks in a single try",
+        "It allows a method to return multiple error types"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Multi-catch lets you handle multiple exception types in a single catch block using the | operator, for example: catch(IOException | SQLException e).",
+        "Multi-catch does not throw exceptions; it catches them.",
+        "You can only have one finally block per try.",
+        "Multi-catch does not affect the method's return value."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is try-with-resources in Java?",
+      "options": [
+        "A try block that uses less memory than a normal try",
+        "A way to declare resources that close automatically when leaving the block",
+        "A pattern to reuse the same resource across multiple methods",
+        "An alternative to using constructors to create objects"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Try-with-resources has nothing to do with memory usage.",
+        "Correct. try-with-resources (try(Resource r = ...) { }) declares a resource that closes automatically when the block ends, without the need to call close() manually.",
+        "Try-with-resources closes the resource when leaving, it does not reuse it between methods.",
+        "Try-with-resources is used for resources (streams, connections), not to replace constructors."
+      ]
+    }
+  ]
+}

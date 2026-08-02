@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-sobrecarga-facil",
+    "title": "Overloaded calculator",
+    "difficulty": "facil",
+    "description": "Create two overloaded methods called calcular: one adds two integers, the other adds three integers.",
+    "template": "public class Calculadora {\n    // TODO: Two methods called calcular\n    // calcular(int a, int b) -> a + b\n    // calcular(int a, int b, int c) -> a + b + c\n\n    public static void main(String[] args) {\n        System.out.println(calcular(5, 3));\n        System.out.println(calcular(5, 3, 7));\n    }\n}",
+    "hints": [
+      "Both methods are called calcular but with a different number of parameters",
+      "Both return int",
+      "The compiler chooses based on the number of arguments"
+    ],
+    "solution": "public class Calculadora {\n    static int calcular(int a, int b) { return a + b; }\n    static int calcular(int a, int b, int c) { return a + b + c; }\n\n    public static void main(String[] args) {\n        System.out.println(calcular(5, 3));\n        System.out.println(calcular(5, 3, 7));\n    }\n}",
+    "solutionExplanation": "Two methods with the same name but a different number of parameters.",
+    "expectedOutput": "8\n15",
+    "lessonSlug": "sobrecarga"
+  },
+  {
+    "id": "ex-sobrecarga-normal",
+    "title": "Multiplier with type overloading",
+    "difficulty": "normal",
+    "description": "Create overloaded multiplicar: int*int, double*double, String repeated N times.",
+    "template": "public class Multiplicador {\n    // TODO: Three methods called multiplicar\n    // multiplicar(int, int) -> int\n    // multiplicar(double, double) -> double\n    // multiplicar(String, int) -> String\n\n    public static void main(String[] args) {\n        System.out.println(multiplicar(4, 5));\n        System.out.println(multiplicar(2.5, 3.0));\n        System.out.println(multiplicar(\"Java\", 3));\n    }\n}",
+    "hints": [
+      "Three methods with different parameter types",
+      "For the String use a for loop or StringBuilder",
+      "The compiler chooses based on the types"
+    ],
+    "solution": "public class Multiplicador {\n    static int multiplicar(int a, int b) { return a * b; }\n    static double multiplicar(double a, double b) { return a * b; }\n    static String multiplicar(String t, int n) {\n        StringBuilder sb = new StringBuilder();\n        for (int i = 0; i < n; i++) sb.append(t);\n        return sb.toString();\n    }\n\n    public static void main(String[] args) {\n        System.out.println(multiplicar(4, 5));\n        System.out.println(multiplicar(2.5, 3.0));\n        System.out.println(multiplicar(\"Java\", 3));\n    }\n}",
+    "solutionExplanation": "Three methods with the same name but different types. There is no ambiguity.",
+    "expectedOutput": "20\n7.5\nJavaJavaJava",
+    "lessonSlug": "sobrecarga"
+  },
+  {
+    "id": "ex-sobrecarga-dificil",
+    "title": "Overloaded temperature converter",
+    "difficulty": "dificil",
+    "description": "Create overloaded convertir temperature: one returns a String with all units, the other converts between two specific units.",
+    "template": "public class Temperatura {\n    // TODO: Two methods called convertir\n    // convertir(double, String origen) -> String\n    // convertir(double, String origen, String destino) -> double\n\n    public static void main(String[] args) {\n        System.out.println(convertir(100, \"C\"));\n        System.out.printf(\"%.2f%n\", convertir(100, \"C\", \"F\"));\n        System.out.printf(\"%.2f%n\", convertir(0, \"C\", \"K\"));\n    }\n}",
+    "hints": [
+      "Convert everything to Celsius as an intermediate step",
+      "Then from Celsius to the destination",
+      "Use a switch for each case"
+    ],
+    "solution": "public class Temperatura {\n    static String convertir(double g, String o) {\n        double c = o.equalsIgnoreCase(\"C\") ? g : o.equalsIgnoreCase(\"F\") ? (g-32)*5.0/9.0 : g-273.15;\n        return String.format(\"%.1f C = %.1f F = %.1f K\", c, (c*9.0/5.0)+32, c+273.15);\n    }\n    static double convertir(double g, String o, String d) {\n        double c = o.equalsIgnoreCase(\"C\") ? g : o.equalsIgnoreCase(\"F\") ? (g-32)*5.0/9.0 : g-273.15;\n        return d.equalsIgnoreCase(\"C\") ? c : d.equalsIgnoreCase(\"F\") ? (c*9.0/5.0)+32 : c+273.15;\n    }\n    public static void main(String[] args) {\n        System.out.println(convertir(100, \"C\"));\n        System.out.printf(\"%.2f%n\", convertir(100, \"C\", \"F\"));\n        System.out.printf(\"%.2f%n\", convertir(0, \"C\", \"K\"));\n    }\n}",
+    "solutionExplanation": "Both methods use Celsius as an intermediate step to simplify the combinations.",
+    "expectedOutput": "100.0 C = 212.0 F = 373.1 K\n212.00\n273.15",
+    "lessonSlug": "sobrecarga"
+  }
+]

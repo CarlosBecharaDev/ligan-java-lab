@@ -1,0 +1,75 @@
+{
+  "id": "quiz-26-linkedlist-avanzado",
+  "lessonSlug": "linkedlist",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Why does LinkedList implement the Deque interface?",
+      "options": [
+        "To work as a queue (Queue) and a stack (Stack)",
+        "To have fast access by index",
+        "To automatically sort elements",
+        "To store only unique elements"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Deque (Double Ended Queue) allows using LinkedList as a queue and a stack, adding methods like offer(), poll(), push(), pop().",
+        "No. Fast index access is better in ArrayList.",
+        "No. LinkedList does not automatically sort elements.",
+        "No. LinkedList allows duplicates; it is not for unique elements."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the main disadvantage of LinkedList?",
+      "options": [
+        "Slow random access O(n)",
+        "It does not allow duplicates",
+        "It does not support generics",
+        "It does not allow nulls"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. LinkedList has O(n) random access because it must traverse the list from one end to the desired position.",
+        "No. LinkedList allows duplicates.",
+        "No. LinkedList supports generics just like ArrayList.",
+        "No. LinkedList allows null values."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is a node in a LinkedList?",
+      "options": [
+        "An element with a reference to the previous and next one",
+        "An element with a numeric index",
+        "An element with a hash value",
+        "An element with a memory pointer"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Each node contains the data and two references: one to the previous node and another to the next node.",
+        "No. It does not use numeric indexes; it uses references to nodes.",
+        "No. It does not use hashes; it uses direct references to other nodes.",
+        "No. Although it uses references, they are not direct memory pointers but references to objects."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "When is it preferable to use LinkedList over ArrayList?",
+      "options": [
+        "When there are many insertions/removals and few lookups",
+        "When fast access by index is needed",
+        "When many elements need to be stored",
+        "When an alphabetical order is needed"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. LinkedList is better when the main operations are insertions and removals at the ends.",
+        "No. For fast access by index, ArrayList is better.",
+        "No. Both can store many elements, but ArrayList is more memory efficient.",
+        "No. Neither of them sorts automatically."
+      ]
+    }
+  ]
+}

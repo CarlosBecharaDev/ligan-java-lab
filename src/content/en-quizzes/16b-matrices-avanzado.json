@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-matrices",
+  "lessonSlug": "matrices",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What condition must the indices meet to be on the main diagonal of a square matrix?",
+      "options": ["row + col == n - 1", "row == col", "row * col == 0", "row != col"],
+      "correctIndex": 1,
+      "explanations": [
+        "That is the condition of the secondary or anti-diagonal.",
+        "Correct. On the main diagonal, the row index equals the column index.",
+        "row * col == 0 corresponds to the first row or the first column.",
+        "row != col are the elements outside the main diagonal."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What allows matrices in Java to have rows of different lengths?",
+      "options": ["Class inheritance", "That they are arrays of arrays", "The garbage collector", "Java does not allow jagged rows"],
+      "correctIndex": 1,
+      "explanations": [
+        "Inheritance is not related to array structure.",
+        "Correct. Each row is an independent array, so they can have different lengths.",
+        "The garbage collector frees memory; it does not affect array structure.",
+        "Java does allow jagged rows (ragged arrays)."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the time complexity of accessing an element matriz[i][j]?",
+      "options": ["O(n)", "O(1)", "O(n²)", "O(log n)"],
+      "correctIndex": 1,
+      "explanations": [
+        "It does not require traversing elements; access is direct by index.",
+        "Correct. As with 1D arrays, index-based access to any element is O(1).",
+        "It does not require traversing all the elements.",
+        "It does not use binary search or a tree structure."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you define a jagged matrix of 3 rows where the first has 2 columns, the second 4, and the third 3?",
+      "options": ["int[][] m = {{2,4,3}}", "int[][] m = new int[3][]; m[0]=new int[2]; m[1]=new int[4]; m[2]=new int[3]", "int[3][] m = {{2},{4},{3}}", "int[][] m = new int[3][ ]{2,4,3}"],
+      "correctIndex": 1,
+      "explanations": [
+        "That syntax is not valid for jagged matrices.",
+        "Correct. The rows are declared without specifying columns, then each row is assigned individually.",
+        "The declaration syntax is incorrect.",
+        "That syntax does not exist in Java."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What import is needed to use Arrays.deepToString()?",
+      "options": ["java.lang.Arrays", "java.util.Arrays", "java.io.Arrays", "None, it is in java.lang"],
+      "correctIndex": 1,
+      "explanations": [
+        "java.lang does not contain Arrays.",
+        "Correct. Arrays is in java.util.",
+        "java.io is for input/output; it does not contain Arrays.",
+        "Arrays is in java.util, not in java.lang."
+      ]
+    }
+  ]
+}

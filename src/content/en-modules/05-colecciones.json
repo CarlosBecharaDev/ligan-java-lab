@@ -1,0 +1,11 @@
+{
+  "id": "mod-05",
+  "slug": "05-colecciones",
+  "number": 5,
+  "title": "Collections and Strings",
+  "description": "Handle groups of data efficiently with Java's collections.",
+  "icon": "Database",
+  "status": "disponible",
+  "lessonCount": 6,
+  "lessons": ["arraylist", "hashmap", "linkedlist", "set-map-avanzados", "string-avanzado", "expresiones-regulares"]
+}

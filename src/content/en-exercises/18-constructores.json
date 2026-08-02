@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-constructores-facil",
+    "title": "Pet constructor",
+    "difficulty": "facil",
+    "description": "Create a Mascota class with 3 constructors: full, name-only, and empty with default values.",
+    "template": "public class Mascota {\n    String nombre;\n    String especie;\n    int edad;\n\n    // TODO: Full constructor (3 params)\n    // TODO: Name-only constructor\n    // TODO: Empty constructor (using this)\n\n    void mostrar() {\n        System.out.println(nombre + \" | \" + especie + \" | \" + edad);\n    }\n\n    public static void main(String[] args) {\n        Mascota m1 = new Mascota(\"Max\", \"Perro\", 5);\n        Mascota m2 = new Mascota(\"Luna\");\n        Mascota m3 = new Mascota();\n        m1.mostrar();\n        m2.mostrar();\n        m3.mostrar();\n    }\n}",
+    "hints": [
+      "Empty constructor: this(\"Unknown\")",
+      "Name-only constructor: this(nombre, \"Unspecified\", 0)",
+      "Use this() as the first line"
+    ],
+    "solution": "public class Mascota {\n    String nombre;\n    String especie;\n    int edad;\n\n    Mascota(String nombre, String especie, int edad) {\n        this.nombre = nombre;\n        this.especie = especie;\n        this.edad = edad;\n    }\n\n    Mascota(String nombre) {\n        this(nombre, \"Unspecified\", 0);\n    }\n\n    Mascota() {\n        this(\"Unknown\");\n    }\n\n    void mostrar() {\n        System.out.println(nombre + \" | \" + especie + \" | \" + edad);\n    }\n\n    public static void main(String[] args) {\n        Mascota m1 = new Mascota(\"Max\", \"Perro\", 5);\n        Mascota m2 = new Mascota(\"Luna\");\n        Mascota m3 = new Mascota();\n        m1.mostrar();\n        m2.mostrar();\n        m3.mostrar();\n    }\n}",
+    "solutionExplanation": "Constructor overloading with this() to reuse initialization.",
+    "expectedOutput": "Max | Perro | 5\nLuna | Unspecified | 0\nUnknown | Unspecified | 0",
+    "lessonSlug": "constructores"
+  },
+  {
+    "id": "ex-constructores-normal",
+    "title": "Constructor with validation",
+    "difficulty": "normal",
+    "description": "Create a CuentaBancaria class that validates in the constructor that the initial balance is not negative.",
+    "template": "public class CuentaBancaria {\n    String titular;\n    double saldo;\n\n    // TODO: Constructor that validates saldo >= 0\n    // If negative, show an error and use 0\n\n    // TODO: Titular-only constructor (saldo 0)\n\n    void mostrar() {\n        System.out.println(titular + \" | Balance: $\" + saldo);\n    }\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria(\"María\", 500);\n        CuentaBancaria c2 = new CuentaBancaria(\"Carlos\", -100);\n        CuentaBancaria c3 = new CuentaBancaria(\"Ana\");\n        c1.mostrar();\n        c2.mostrar();\n        c3.mostrar();\n    }\n}",
+    "hints": [
+      "Validate: if (saldo < 0) show an error and use 0",
+      "Titular-only constructor: this(titular, 0)",
+      "Math.max(0, saldo) is another option"
+    ],
+    "solution": "public class CuentaBancaria {\n    String titular;\n    double saldo;\n\n    CuentaBancaria(String titular, double saldo) {\n        this.titular = titular;\n        if (saldo < 0) {\n            System.out.println(\"Error: balance cannot be negative. $0 used\");\n            this.saldo = 0;\n        } else {\n            this.saldo = saldo;\n        }\n    }\n\n    CuentaBancaria(String titular) {\n        this(titular, 0);\n    }\n\n    void mostrar() {\n        System.out.println(titular + \" | Balance: $\" + saldo);\n    }\n\n    public static void main(String[] args) {\n        CuentaBancaria c1 = new CuentaBancaria(\"María\", 500);\n        CuentaBancaria c2 = new CuentaBancaria(\"Carlos\", -100);\n        CuentaBancaria c3 = new CuentaBancaria(\"Ana\");\n        c1.mostrar();\n        c2.mostrar();\n        c3.mostrar();\n    }\n}",
+    "solutionExplanation": "Constructors with validation protect the integrity of the object.",
+    "expectedOutput": "María | Balance: $500.0\nError: balance cannot be negative. $0 used\nCarlos | Balance: $0.0\nAna | Balance: $0.0",
+    "lessonSlug": "constructores"
+  },
+  {
+    "id": "ex-constructores-dificil",
+    "title": "Product system with constructor inheritance",
+    "difficulty": "dificil",
+    "description": "Create two classes: Producto and ProductoDigital. ProductoDigital inherits from Producto and adds descargaMax.",
+    "template": "public class Producto {\n    String nombre;\n    double precio;\n\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n\n    void mostrar() {\n        System.out.println(nombre + \" - $\" + precio);\n    }\n}\n\n// TODO: Create ProductoDigital that inherits from Producto\n// Additional attribute: int descargaMax\n// Constructor: ProductoDigital(nombre, precio, descargaMax)\n// Use super() to call the parent constructor\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        ProductoDigital p2 = new ProductoDigital(\"Java Guide\", 29.99, 1000);\n        p1.mostrar();\n        p2.mostrar();\n        System.out.println(\"Max downloads: \" + p2.descargaMax);\n    }\n}",
+    "hints": [
+      "ProductoDigital extends Producto",
+      "super(nombre, precio) calls the Producto constructor",
+      "Order: super first, then your own attributes"
+    ],
+    "solution": "public class Producto {\n    String nombre;\n    double precio;\n\n    Producto(String nombre, double precio) {\n        this.nombre = nombre;\n        this.precio = precio;\n    }\n\n    void mostrar() {\n        System.out.println(nombre + \" - $\" + precio);\n    }\n}\n\npublic class ProductoDigital extends Producto {\n    int descargaMax;\n\n    ProductoDigital(String nombre, double precio, int descargaMax) {\n        super(nombre, precio);\n        this.descargaMax = descargaMax;\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        ProductoDigital p2 = new ProductoDigital(\"Java Guide\", 29.99, 1000);\n        p1.mostrar();\n        p2.mostrar();\n        System.out.println(\"Max downloads: \" + p2.descargaMax);\n    }\n}",
+    "solutionExplanation": "super() calls the parent class constructor. It must be the first line of the constructor.",
+    "expectedOutput": "Laptop - $1200.0\nJava Guide - $29.99\nMax downloads: 1000",
+    "lessonSlug": "constructores"
+  }
+]

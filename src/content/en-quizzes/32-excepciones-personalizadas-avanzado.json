@@ -1,0 +1,92 @@
+{
+  "id": "quiz-32-excepciones-personalizadas-avanzado",
+  "lessonSlug": "excepciones-personalizadas",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which useful fields can be added to a custom exception?",
+      "options": [
+        "A Runnable field to execute code when the exception is thrown",
+        "Error code, invalid field, timestamp, or other relevant context information",
+        "A static field containing all the system's exceptions",
+        "A field that stores the object that caused the error directly"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Exceptions should not contain Runnable or execute code when thrown.",
+        "Correct. You can add fields such as an error code (int or String), the name of the invalid field, a timestamp, or any information that helps diagnose the problem.",
+        "An exception should not store all the system's exceptions.",
+        "The cause of the error is stored through the cause mechanism, not as a direct field."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "When is it appropriate to use a checked custom exception vs an unchecked one?",
+      "options": [
+        "Checked for programming errors, unchecked for recoverable errors",
+        "Checked for recoverable errors that the caller must handle; unchecked for programming errors",
+        "Always use checked because it forces error handling",
+        "Always use unchecked because it does not force writing try-catch"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The usage is reversed; checked is for recoverable errors.",
+        "Correct. Checked exceptions are for errors that the caller can and must handle (e.g. file not found). Unchecked exceptions are for programming errors that should be fixed during development (e.g. null argument).",
+        "Forcing error handling is not always beneficial; it depends on the context.",
+        "Avoiding try-catch is not a valid reason to use unchecked exceptions."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which methods does the Throwable class offer for inspecting an exception?",
+      "options": [
+        "getName(), getStack(), getLevel()",
+        "getMessage(), getCause(), printStackTrace(), getStackTrace()",
+        "getError(), getWarning(), getInfo()",
+        "getDescription(), getReason(), getDetail()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "These methods do not exist in Throwable.",
+        "Correct. Throwable offers getMessage() for the message, getCause() for the original exception, printStackTrace() to print the stack trace, and getStackTrace() to obtain the stack trace as an array.",
+        "These methods do not exist in the Throwable API.",
+        "These methods do not exist in Throwable."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is an error code in the context of custom exceptions?",
+      "options": [
+        "A number indicating how many times the exception has been thrown",
+        "An int or String field that identifies the specific type of error for programmatic handling",
+        "The source code where the exception was thrown",
+        "A code used to disable the exception in production"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The error code does not count exception throws.",
+        "Correct. An error code is a field (int or String) inside the exception that allows identifying the specific type of error programmatically, useful for distinguishing between multiple causes of the same exception type.",
+        "The source code is obtained from the stack trace, not from an error code field.",
+        "Errors are not disabled with codes; they are handled or prevented."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Can you extend an existing exception in Java to create a custom exception?",
+      "options": [
+        "No, all custom exceptions must extend Exception directly",
+        "Yes, for example: custom ValidationException extends IllegalArgumentException",
+        "Only if the parent exception is a checked exception",
+        "Only if the parent exception has a public constructor"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "You can extend existing exceptions, not just Exception directly.",
+        "Correct. You can extend any existing exception to create a more specific one. For example: custom ValidationException extends IllegalArgumentException lets you create a more descriptive validation exception.",
+        "You can extend both checked and unchecked exceptions.",
+        "The public constructor is not the only restriction; it can be worked around with constructors that call super."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-constantes-enums",
+  "lessonSlug": "constantes-enums",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\n```java\npublic enum Color { ROJO, VERDE, AZUL }\nSystem.out.println(Color.VERDE.ordinal());\n```",
+      "options": ["0", "1", "VERDE", "2"],
+      "correctIndex": 1,
+      "explanations": [
+        "ordinal() starts at 0.",
+        "Correct. ordinal() returns the 0-based position. ROJO=0, VERDE=1, AZUL=2.",
+        "It prints the number, not the name.",
+        "2 is the position of AZUL."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Why is it better to use an enum instead of integer constants (public static final int) to represent states?",
+      "options": [
+        "Enums use less memory",
+        "Enums are type-safe — you cannot pass an invalid value",
+        "Enums are faster when comparing",
+        "There is no difference"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Memory size is not the main advantage.",
+        "Correct. With an int enum, anyone can pass 99 even if the valid states are only 3. With an enum, the compiler validates that you only use defined constants.",
+        "== works the same for primitives and enums.",
+        "There are significant differences in type safety."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Can enums in Java have a public constructor?",
+      "options": [
+        "Yes, like any class",
+        "No, the constructor is always private in an enum",
+        "It depends on whether the enum is public or package-private",
+        "It can only have a no-argument constructor"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Enum constructors are always private.",
+        "Correct. In Java, the constructor of an enum is always private or package-private. An enum cannot be instantiated from outside.",
+        "The access modifier of the enum does not affect the constructor.",
+        "It can have parameters, as long as the constructor is private."
+      ]
+    }
+  ]
+}

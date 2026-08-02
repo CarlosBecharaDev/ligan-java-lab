@@ -1,0 +1,51 @@
+[
+  {
+    "id": "ex-try-catch-finally-facil",
+    "title": "Division with try-catch",
+    "difficulty": "facil",
+    "description": "Create a method that receives two integers and shows the result of the division. Use try-catch to catch ArithmeticException when dividing by zero, showing 'Error: Cannot divide by zero'. Use finally to always show 'Operation completed'.",
+    "template": "public class DivisionTryCatch {\n    public static void dividir(int a, int b) {\n        // TODO: Wrap the division in try-catch with finally\n    }\n\n    public static void main(String[] args) {\n        dividir(10, 2);\n        System.out.println(\"---\");\n        dividir(10, 0);\n    }\n}",
+    "hints": [
+      "Wrap the division operation in a try block",
+      "In the catch, capture ArithmeticException and show the error message",
+      "The finally block always runs; put 'Operation completed' there"
+    ],
+    "solution": "public class DivisionTryCatch {\n    public static void dividir(int a, int b) {\n        try {\n            int resultado = a / b;\n            System.out.println(\"Result: \" + resultado);\n        } catch (ArithmeticException e) {\n            System.out.println(\"Error: Cannot divide by zero\");\n        } finally {\n            System.out.println(\"Operation completed\");\n        }\n    }\n\n    public static void main(String[] args) {\n        dividir(10, 2);\n        System.out.println(\"---\");\n        dividir(10, 0);\n    }\n}",
+    "solutionExplanation": "The try block executes the division. If the divisor is 0, ArithmeticException is thrown and caught in the catch block. The finally block always runs, whether the exception occurred or not, guaranteeing that 'Operation completed' is shown in both cases.",
+    "expectedOutput": "Result: 5\nOperation completed\n---\nError: Cannot divide by zero\nOperation completed",
+    "lessonSlug": "try-catch-finally"
+  },
+  {
+    "id": "ex-try-catch-finally-normal",
+    "title": "Safe reading",
+    "difficulty": "normal",
+    "description": "Create a method called leerArchivo that receives a String with the path of a file. Use try-catch to attempt to read the file. If it fails, show a friendly message: 'Could not read file: {ruta}'. Always show 'Reading finished' in a finally block.",
+    "template": "import java.io.*;\nimport java.nio.file.*;\n\npublic class LecturaSegura {\n    public static void leerArchivo(String ruta) {\n        // TODO: Use try-catch to read the file with a friendly message if it fails\n        // TODO: Use finally to show 'Reading finished'\n    }\n\n    public static void main(String[] args) {\n        leerArchivo(\"datos.txt\");\n        System.out.println(\"---\");\n        leerArchivo(\"inexistente.txt\");\n    }\n}",
+    "hints": [
+      "Use Files.readAllBytes(Paths.get(ruta)) to read the file inside a try block",
+      "Catch IOException in the catch block and show the message with the file path",
+      "Put 'Reading finished' in the finally block so it is always shown"
+    ],
+    "solution": "import java.io.*;\nimport java.nio.file.*;\n\npublic class LecturaSegura {\n    public static void leerArchivo(String ruta) {\n        try {\n            String contenido = new String(Files.readAllBytes(Paths.get(ruta)));\n            System.out.println(\"Content: \" + contenido.trim());\n        } catch (IOException e) {\n            System.out.println(\"Could not read file: \" + ruta);\n        } finally {\n            System.out.println(\"Reading finished\");\n        }\n    }\n\n    public static void main(String[] args) {\n        leerArchivo(\"datos.txt\");\n        System.out.println(\"---\");\n        leerArchivo(\"inexistente.txt\");\n    }\n}",
+    "solutionExplanation": "The method uses Files.readAllBytes to attempt to read the whole file. If the file does not exist or there is an I/O error, IOException is caught and a friendly message with the path is shown. The finally block always runs, showing 'Reading finished' regardless of the result.",
+    "expectedOutput": "Could not read file: datos.txt\nReading finished\n---\nCould not read file: inexistente.txt\nReading finished",
+    "lessonSlug": "try-catch-finally"
+  },
+  {
+    "id": "ex-try-catch-finally-dificil",
+    "title": "Connection manager",
+    "difficulty": "dificil",
+    "description": "Create a Conexion class implementing AutoCloseable with a name. Its close() method must show 'Closing connection: {nombre}'. Then create a method that uses try-with-resources to open two connections (one valid and one that throws IOException). Observe how the connections close automatically in reverse order.",
+    "template": "import java.io.*;\n\n// TODO: Create the Conexion class implementing AutoCloseable\n// TODO: Constructor with a name that shows 'Opening connection: {nombre}'\n// TODO: close() method that shows 'Closing connection: {nombre}'\n\npublic class GestorConexiones {\n    public static Conexion abrirConexion(String nombre) throws IOException {\n        // TODO: Throw IOException if the name contains 'Respaldo'\n    }\n\n    public static void main(String[] args) {\n        try (Conexion c1 = abrirConexion(\"BD-Principal\");\n             Conexion c2 = abrirConexion(\"BD-Respaldo\")) {\n            System.out.println(\"Using connections...\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "hints": [
+      "An AutoCloseable class must have a close() method that may throw Exception",
+      "In the constructor, show 'Opening connection: {nombre}' when creating the instance",
+      "try-with-resources automatically closes the resources in reverse order of opening",
+      "Make abrirConexion throw IOException if the name contains 'Respaldo' to simulate a failure"
+    ],
+    "solution": "import java.io.*;\n\nclass Conexion implements AutoCloseable {\n    private String nombre;\n\n    public Conexion(String nombre) {\n        this.nombre = nombre;\n        System.out.println(\"Opening connection: \" + nombre);\n    }\n\n    @Override\n    public void close() throws Exception {\n        System.out.println(\"Closing connection: \" + nombre);\n    }\n}\n\npublic class GestorConexiones {\n    public static Conexion abrirConexion(String nombre) throws IOException {\n        if (nombre.contains(\"Respaldo\")) {\n            throw new IOException(\"Could not connect to: \" + nombre);\n        }\n        return new Conexion(nombre);\n    }\n\n    public static void main(String[] args) {\n        try (Conexion c1 = abrirConexion(\"BD-Principal\");\n             Conexion c2 = abrirConexion(\"BD-Respaldo\")) {\n            System.out.println(\"Using connections...\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "The Conexion class implements AutoCloseable to be used in try-with-resources. Its constructor shows a message when opening and close() when closing. The abrirConexion method throws IOException if the name contains 'Respaldo'. In the try-with-resources, the first connection (BD-Principal) opens correctly, but the second one throws an exception. Java automatically closes BD-Principal in reverse order before handling the exception. If both opened successfully, both would be closed at the end of the block.",
+    "expectedOutput": "Opening connection: BD-Principal\nClosing connection: BD-Principal\nError: Could not connect to: BD-Respaldo",
+    "lessonSlug": "try-catch-finally"
+  }
+]

@@ -1,0 +1,446 @@
+---
+title: "Switch Statement and Switch Expressions"
+slug: "switch"
+module: "02-control-de-flujo"
+level: "Beginner"
+objectives:
+  - "Write switch statements with case and break correctly"
+  - "Understand fall-through behavior and the role of break"
+  - "Use default to handle unexpected cases"
+  - "Apply switch expressions with arrow syntax (Java 14+)"
+  - "Use switch with enums, Strings, and primitive types"
+prerequisites:
+  - "Haber completado Lección 07: if-else"
+  - "Conocer operadores de comparación y tipos primitivos"
+  - "Haber visto enums en Lección 06"
+history:
+  introducedIn: "switch since Java 1.0; switch expression since Java 14"
+  context: "The switch statement has existed since Java 1.0, inherited from C. Originally it only worked with int and types convertible to int. Java 5 added support for enums. Java 7 added Strings. However, the classic switch suffered from two problems: fall-through from forgetting break (a frequent error) and verbose code for simply assigning a value based on a case."
+  evolution: "Java 12 introduced switch expressions in preview. Java 14 standardized them with the arrow (->) syntax that eliminates fall-through and allows returning a value directly. Java 17 added pattern matching for switch in preview, stable in Java 21, allowing switching on the object's type."
+realWorldExamples:
+  - domain: "Coffee shop menu"
+    description: "A digital coffee shop uses switch to show the price based on the selected product, with a case for each drink."
+    code: |
+      public class MenuCafeteria {
+          public static void main(String[] args) {
+              String bebida = "Capuchino";
+
+              switch (bebida) {
+                  case "Espresso":
+                      System.out.println("Espresso - $1.50");
+                      break;
+                  case "Capuchino":
+                      System.out.println("Capuchino - $2.50");
+                      break;
+                  case "Latte":
+                      System.out.println("Latte - $3.00");
+                      break;
+                  case "Mocha":
+                      System.out.println("Mocha - $3.50");
+                      break;
+                  default:
+                      System.out.println("Bebida no disponible");
+              }
+          }
+      }
+    result: |
+      Cappuccino - $2.50
+  - domain: "Traffic light with switch expression"
+    description: "A traffic system uses a switch expression (Java 14+) to return the action to take based on the traffic light color, concisely and without fall-through."
+    code: |
+      public class Semaforo {
+          enum Color { ROJO, AMARILLO, VERDE }
+
+          public static void main(String[] args) {
+              Color color = Color.AMARILLO;
+
+              String accion = switch (color) {
+                  case ROJO -> "Detener";
+                  case AMARILLO -> "Precaución";
+                  case VERDE -> "Avanzar";
+              };
+
+              System.out.println("Color: " + color + " → " + accion);
+          }
+      }
+    result: |
+      Color: AMARILLO → Caution
+hasInteractive: false
+comparisons:
+  - title: "classic switch vs switch expression"
+    items:
+      - name: "classic switch (Java 1.0)"
+        features:
+          syntax: "case X: ... break;"
+          fallthrough: "Yes — forgetting break causes a fall"
+          return: "Does not return a value, uses variables"
+          default: "Optional but recommended"
+      - name: "switch expression (Java 14+)"
+        features:
+          syntax: "case X -> result;"
+          fallthrough: "No — each branch is independent"
+          return: "Yes — returns a value directly"
+          default: "Mandatory if it does not cover all cases"
+    recommendation: "Prefer switch expression (Java 14+) when you need to assign a value based on a case: it is safer, more concise, and does not suffer from fall-through. Use the classic switch only when you have multiple statements per case or side effects."
+videos:
+  - url: ""
+    title: "Switch and Switch Expressions in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Why is break needed in the classic switch?"
+    answer: "Without break, Java runs the code of the matching case and then continues executing the following cases without checking their labels — this is called fall-through. It is a very frequent error. The arrow (->) syntax in switch expressions eliminates this problem."
+  - question: "Can I switch on a String?"
+    answer: "Yes, since Java 7. The switch compares with equals(), so it is case-sensitive. It is more readable than a long chain of else-if when comparing strings."
+  - question: "What types does a switch accept?"
+    answer: "Primitive types byte, short, char, int (not long or boolean), their wrappers (Byte, Short, Character, Integer), String (Java 7+) and enums (Java 5+). Java 21 adds pattern matching for arbitrary types."
+sources:
+  - title: "Java 21 Language Specification — The switch Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.11"
+    date: "2026-07-27"
+  - title: "JEP 361: Switch Expressions (Standard)"
+    url: "https://openjdk.org/jeps/361"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is switch?
+
+The `switch` statement evaluates an expression and jumps to the `case` whose value matches. It is a cleaner alternative to chaining `else-if` when you compare **a single variable against multiple constant values**.
+
+```java
+switch (variable) {
+    case valor1:
+        // code
+        break;
+    case valor2:
+        // code
+        break;
+    default:
+        // code if no case matches
+}
+```
+
+> ⚠️ Switch only compares **exact equality**. It cannot evaluate ranges (`> 10`) or complex conditions — use `if-else` for that.
+
+## Classic switch with break
+
+`break` terminates the switch. **Omitting it causes fall-through**: the following cases are executed without checking their labels.
+
+<CodeBlock lang="java" title="Classic switch — days of the week">
+{`public class DiaSemana {
+    public static void main(String[] args) {
+        int dia = 3;
+
+        switch (dia) {
+            case 1:
+                System.out.println("Monday");
+                break;
+            case 2:
+                System.out.println("Tuesday");
+                break;
+            case 3:
+                System.out.println("Wednesday");
+                break;
+            case 4:
+                System.out.println("Thursday");
+                break;
+            case 5:
+                System.out.println("Friday");
+                break;
+            default:
+                System.out.println("Weekend");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Wednesday
+```
+
+## The danger of fall-through
+
+Forgetting `break` is one of the most common errors:
+
+```java
+// ❌ Without break: everything that follows is printed
+switch (dia) {
+    case 1:
+        System.out.println("Monday");
+    case 2:
+        System.out.println("Tuesday");
+    case 3:
+        System.out.println("Wednesday");
+}
+// If dia == 1, prints "Monday", "Tuesday", and "Wednesday"
+```
+
+<CodeBlock lang="java" title="Grouping cases (intentional use of fall-through)">
+{`public class TipoDia {
+    public static void main(String[] args) {
+        int dia = 6;
+
+        switch (dia) {
+            case 1: case 2: case 3:
+            case 4: case 5:
+                System.out.println("Workday");
+                break;
+            case 6: case 7:
+                System.out.println("Weekend");
+                break;
+            default:
+                System.out.println("Invalid day");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Weekend
+```
+
+## The default block
+
+`default` runs when no `case` matches. It is **optional but highly recommended** to handle unexpected values:
+
+```java
+switch (opcion) {
+    case 1: /* ... */ break;
+    case 2: /* ... */ break;
+    default:
+        System.out.println("Invalid option");
+}
+```
+
+## Switch with String (Java 7+)
+
+Since Java 7, switch accepts `String`. The comparison is case-sensitive:
+
+<CodeBlock lang="java" title="Switch on String">
+{`public class ComandoConsola {
+    public static void main(String[] args) {
+        String comando = "guardar";
+
+        switch (comando) {
+            case "abrir":
+                System.out.println("Opening file...");
+                break;
+            case "guardar":
+                System.out.println("Saving...");
+                break;
+            case "cerrar":
+                System.out.println("Closing...");
+                break;
+            default:
+                System.out.println("Unknown command: " + comando);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Saving...
+```
+
+## Switch with enums (Java 5+)
+
+Enums work naturally with switch. You don't need to qualify the enum name inside the cases:
+
+<CodeBlock lang="java" title="Switch on enum">
+{`public class NivelLog {
+    enum Nivel { DEBUG, INFO, WARN, ERROR }
+
+    public static void main(String[] args) {
+        Nivel nivel = Nivel.WARN;
+
+        switch (nivel) {
+            case DEBUG:
+                System.out.println("[DEBUG] Detailed message");
+                break;
+            case INFO:
+                System.out.println("[INFO] Normal operation");
+                break;
+            case WARN:
+                System.out.println("[WARN] Possible problem");
+                break;
+            case ERROR:
+                System.out.println("[ERROR] Failure detected");
+                break;
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+[WARN] Possible problem
+```
+
+## Switch Expressions (Java 14+)
+
+A **switch expression** returns a value and uses the arrow `->` syntax. **There is no fall-through** — each branch is independent:
+
+<CodeBlock lang="java" title="Switch expression with arrow">
+{`public class TamañoTexto {
+    public static void main(String[] args) {
+        int codigo = 2;
+
+        String tamaño = switch (codigo) {
+            case 1 -> "Small";
+            case 2 -> "Medium";
+            case 3 -> "Large";
+            default -> "Unknown";
+        };
+
+        System.out.println("Selected size: " + tamaño);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Selected size: Medium
+```
+
+### Multiple values with commas
+
+In switch expressions you can group values with commas:
+
+```java
+String tipo = switch (número) {
+    case 1, 2, 3 -> "Low";
+    case 4, 5, 6 -> "Medium";
+    case 7, 8, 9 -> "High";
+    default -> "Invalid";
+};
+```
+
+### Blocks with yield
+
+If a branch needs several statements, use a block and `yield` to return the value:
+
+<CodeBlock lang="java" title="Switch expression with yield">
+{`public class CalculadoraBasica {
+    public static void main(String[] args) {
+        String operacion = "sumar";
+        int a = 10, b = 5;
+
+        int resultado = switch (operacion) {
+            case "sumar" -> a + b;
+            case "restar" -> a - b;
+            case "multiplicar" -> a * b;
+            case "dividir" -> {
+                if (b == 0) {
+                    System.out.println("Error: division by zero");
+                    yield 0;
+                }
+                yield a / b;
+            }
+            default -> 0;
+        };
+
+        System.out.println("Result: " + resultado);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Result: 15
+```
+
+## When to use switch and when if-else?
+
+| Situation | Recommendation |
+|-----------|---------------|
+| Comparing one variable against many constant values | ✅ **switch** |
+| Evaluating ranges (`x > 10 && x < 20`) | ✅ **if-else** |
+| Complex conditions with `&&`, `\|\|` | ✅ **if-else** |
+| Assigning a value based on a case | ✅ **switch expression** |
+| Comparing Strings with several values | ✅ **switch** (more readable than else-if) |
+
+## Common mistakes
+
+### Mistake 1: Forgetting break (fall-through)
+```java
+// ❌ Without break, it falls to the next case
+switch (x) {
+    case 1:
+        System.out.println("one");
+    case 2:
+        System.out.println("two");  // prints if x == 1
+}
+
+// ✅ With break or using arrow syntax
+switch (x) {
+    case 1 -> System.out.println("one");
+    case 2 -> System.out.println("two");
+}
+```
+
+### Mistake 2: Comparing ranges (not supported)
+```java
+// ❌ Does not compile — switch does not evaluate boolean expressions
+switch (edad) {
+    case edad > 18:  // error
+}
+
+// ✅ Use if-else for ranges
+if (edad > 18) { /* ... */ }
+```
+
+### Mistake 3: Switch expression without default and without covering all cases
+```java
+// ❌ Error: if you don't cover all enum values you need default
+String desc = switch (color) {
+    case ROJO -> "red";
+    case VERDE -> "green";
+    // missing AMARILLO and no default → compilation error
+};
+
+// ✅ Cover all or add default
+String desc = switch (color) {
+    case ROJO -> "red";
+    case VERDE -> "green";
+    case AMARILLO -> "yellow";
+};
+```
+
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

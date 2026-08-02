@@ -1,0 +1,467 @@
+---
+import { getCollection } from 'astro:content';
+import ContentLayout from '@layouts/ContentLayout.astro';
+import { lessonCollection, moduleCollection, localePrefix } from '@lib/course';
+
+const lessons = await getCollection(lessonCollection('en'));
+const modules = await getCollection(moduleCollection('en'));
+modules.sort((a, b) => a.data.number - b.data.number);
+
+const P = localePrefix('en');
+
+const idBySlug = new Map<string, string>();
+const titleById = new Map<string, string>();
+for (const l of lessons) {
+  idBySlug.set(l.data.slug, l.id);
+  titleById.set(l.id, l.data.title);
+}
+---
+
+<ContentLayout title="Learning path" description="Module map with progress" lang="en">
+  <div class="ruta">
+    <h1 class="ruta__title">🗺️ Learning path</h1>
+    <p class="ruta__subtitle">
+      Follow this guided path to master Java from scratch. Each module builds on the previous one.
+    </p>
+
+    <div class="ruta__list">
+      {modules.map((mod) => {
+        const firstSlug = mod.data.lessons.length > 0
+          ? lessons.find((l) => l.data.slug === mod.data.lessons[0])?.data.slug
+          : null;
+        const firstLessonSlug = firstSlug ?? 'variables-y-tipos';
+        return (
+          <div class="ruta__card"
+               onclick={`window.location.href='${P}/tema/${firstLessonSlug}'`}
+               role="button"
+               tabindex="0"
+               aria-label={`Module ${mod.data.number}: ${mod.data.title}`}>
+            <div class="ruta__num-box">
+              <span class="ruta__num">{mod.data.number}</span>
+            </div>
+            <div class="ruta__info">
+              <div class="ruta__title-row">
+                <h2 class="ruta__heading">{mod.data.title}</h2>
+              </div>
+              <div class="ruta__badge-row">
+                {mod.data.status === 'disponible' && <span class="ruta__badge ruta__badge--available">Available</span>}
+                {mod.data.status === 'en-progreso' && <span class="ruta__badge ruta__badge--progress">In progress</span>}
+                {mod.data.status === 'proximamente' && <span class="ruta__badge ruta__badge--soon">Coming soon</span>}
+              </div>
+              <p class="ruta__desc">{mod.data.description}</p>
+              <div class="ruta__content">
+                <button
+                  type="button"
+                  class="ruta__content-toggle"
+                  data-content-toggle
+                  aria-expanded="false"
+                  aria-controls={`ruta-content-${mod.data.slug}`}
+                >
+                  <span class="ruta__content-caret" data-caret aria-hidden="true">▸</span>
+                  <span>View content</span>
+                </button>
+                <ul id={`ruta-content-${mod.data.slug}`} class="ruta__content-list" hidden>
+                  {mod.data.lessons.map((slug) => {
+                    const id = idBySlug.get(slug);
+                    return id ? (
+                      <li class="ruta__content-item">
+                        <a
+                          class="ruta__content-link"
+                          href={`${P}/tema/${id}`}
+                        >
+                          <span class="ruta__content-file" aria-hidden="true"></span>
+                          <span class="ruta__content-label">{titleById.get(id)}</span>
+                        </a>
+                      </li>
+                    ) : null;
+                  })}
+                </ul>
+              </div>
+            </div>
+            {mod.data.status !== 'proximamente' && (
+              <div class="ruta__progress-wrap">
+                <div class="ruta__progress-bar">
+                  <div class="ruta__progress-fill"></div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+
+    <div class="ruta__general">
+      <h3 class="ruta__general-title">📊 Your overall progress</h3>
+      <p class="ruta__general-desc">Practice makes perfect. Keep learning!</p>
+      <div class="ruta__general-bar">
+        <div class="ruta__general-fill"></div>
+        <span class="ruta__general-label">5% Completed</span>
+      </div>
+    </div>
+  </div>
+</ContentLayout>
+
+<script>
+  (function() {
+    document.querySelectorAll('[data-content-toggle]').forEach((btn) => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const list = document.getElementById(btn.getAttribute('aria-controls') || '');
+        const caret = btn.querySelector('[data-caret]');
+        const expanded = btn.getAttribute('aria-expanded') === 'true';
+        btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+        if (caret) caret.textContent = expanded ? '▸' : '▾';
+        if (list) list.hidden = expanded;
+      });
+    });
+
+    document.querySelectorAll('.ruta__content-link').forEach((link) => {
+      link.addEventListener('click', (e) => e.stopPropagation());
+    });
+  })();
+</script>
+
+<style>
+  .ruta {
+    max-width: var(--content-width);
+    margin: 0 auto;
+    color: var(--win-text);
+    font-family: var(--font-ui);
+  }
+
+  .ruta__title {
+    font-family: var(--font-pixel);
+    font-size: 24px;
+    margin-bottom: var(--space-md);
+    color: var(--win-text);
+    text-align: center;
+  }
+
+  .ruta__subtitle {
+    color: var(--win-muted);
+    margin-bottom: var(--space-xl);
+    font-size: 18px;
+    text-align: center;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .ruta__list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+  }
+
+  .ruta__card {
+    display: flex;
+    gap: var(--space-lg);
+    padding: var(--space-lg);
+    background: var(--win-bg);
+    border: 2px solid var(--win-border);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+    align-items: flex-start;
+    transition: transform 0.12s, box-shadow 0.12s;
+  }
+
+  .ruta__card:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .ruta__num-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    background: var(--win-bevel-bg);
+    border: 2px solid var(--win-border);
+    flex-shrink: 0;
+    color: var(--win-text);
+  }
+
+  .ruta__num {
+    font-family: var(--font-pixel);
+    font-size: 20px;
+    margin-top: 4px;
+  }
+
+  .ruta__info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .ruta__title-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    flex-wrap: wrap;
+  }
+
+  .ruta__badge-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+
+  .ruta__heading {
+    font-family: var(--font-pixel);
+    font-size: 14px;
+    margin: 0;
+    color: var(--win-text);
+  }
+
+  .ruta__desc {
+    color: var(--win-muted);
+    margin: 8px 0 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .ruta__content {
+    margin-top: var(--space-md);
+  }
+
+  .ruta__content-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    color: var(--win-text);
+    background: var(--win-bevel-bg);
+    border: 2px solid var(--win-border-dark);
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+  }
+
+  .ruta__content-toggle:hover,
+  .ruta__content-toggle:focus-visible {
+    color: var(--win-link);
+  }
+
+  .ruta__content-toggle[aria-expanded="true"] {
+    background: var(--win-bg-alt);
+  }
+
+  .ruta__content-caret {
+    font-size: 0.6rem;
+    color: var(--win-muted);
+    line-height: 1;
+  }
+
+  .ruta__content-list {
+    list-style: none;
+    margin: var(--space-sm) 0 0;
+    padding: 6px 0;
+    background: var(--win-bg-alt);
+    border: 2px solid var(--win-border);
+    border-top-color: var(--win-bevel);
+    border-left-color: var(--win-bevel);
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .ruta__content-list[hidden] {
+    display: none;
+  }
+
+  .ruta__content-item {
+    margin: 0;
+  }
+
+  .ruta__content-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    font-family: var(--font-ui);
+    font-size: var(--text-xs);
+    color: var(--win-muted);
+    text-decoration: none;
+    border-left: 3px solid transparent;
+  }
+
+  .ruta__content-link:hover {
+    background: rgba(0, 0, 0, 0.06);
+    color: var(--win-link);
+    text-decoration: none;
+    border-left-color: var(--accent);
+  }
+
+  .ruta__content-file {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    background: var(--win-link);
+    outline: 1px solid var(--win-border);
+  }
+
+  .ruta__content-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .ruta__badge {
+    font-size: 10px;
+    padding: 4px 6px;
+    border: 1px solid var(--win-border-dark);
+    box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+    font-family: var(--font-pixel);
+  }
+
+  .ruta__badge--available {
+    background: var(--success);
+    color: var(--btn-primary-text);
+  }
+
+  .ruta__badge--progress {
+    background: var(--taskbar-active);
+    color: var(--btn-primary-text);
+  }
+
+  .ruta__badge--soon {
+    background: var(--win-border);
+    color: var(--text);
+  }
+
+  .ruta__progress-wrap {
+    min-width: 180px;
+  }
+
+  .ruta__progress-bar {
+    border: 2px solid var(--win-border-dark);
+    background: var(--progress-track);
+    height: 16px;
+    width: 100%;
+    position: relative;
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .ruta__progress-fill {
+    height: 100%;
+    width: 0%;
+    background: var(--win-link);
+    border-right: 2px solid var(--win-border-dark);
+  }
+
+  .ruta__general {
+    margin-top: var(--space-2xl);
+    padding: var(--space-lg);
+    background: var(--win-bg);
+    border: 2px solid var(--win-border);
+    box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.5);
+    text-align: center;
+  }
+
+  .ruta__general-title {
+    font-family: var(--font-pixel);
+    font-size: 16px;
+    margin-bottom: var(--space-md);
+    color: var(--win-text);
+  }
+
+  .ruta__general-desc {
+    color: var(--win-muted);
+    margin-bottom: var(--space-lg);
+    font-size: 18px;
+  }
+
+  .ruta__general-bar {
+    border: 2px solid var(--win-border-dark);
+    background: var(--progress-track);
+    height: 24px;
+    width: 100%;
+    position: relative;
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.2);
+  }
+
+  .ruta__general-fill {
+    height: 100%;
+    width: 5%;
+    background: var(--win-link);
+    border-right: 2px solid var(--win-border-dark);
+  }
+
+  .ruta__general-label {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: var(--font-pixel);
+    font-size: 10px;
+    line-height: 24px;
+    color: var(--btn-primary-text);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 767px) {
+    .ruta__title {
+      font-size: 18px;
+    }
+
+    .ruta__subtitle {
+      font-size: 15px;
+    }
+
+    .ruta__card {
+      flex-direction: column;
+      gap: var(--space-md);
+      padding: var(--space-md);
+      text-align: center;
+      align-items: center;
+    }
+
+    .ruta__num-box {
+      width: 48px;
+      height: 48px;
+    }
+
+    .ruta__num {
+      font-size: 16px;
+    }
+
+    .ruta__info {
+      width: 100%;
+    }
+
+    .ruta__title-row {
+      justify-content: center;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+
+    .ruta__badge-row {
+      justify-content: center;
+    }
+
+    .ruta__heading {
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .ruta__desc {
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    .ruta__progress-wrap {
+      min-width: 100%;
+    }
+
+    .ruta__general-title {
+      font-size: 14px;
+    }
+
+    .ruta__general-desc {
+      font-size: 15px;
+    }
+  }
+</style>

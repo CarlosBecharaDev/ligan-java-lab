@@ -1,0 +1,109 @@
+{
+  "id": "quiz-17-clases-objetos-avanzado",
+  "lessonSlug": "clases-objetos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does it print?\nPersona a = new Persona();\na.nombre = \"Ana\";\nPersona b = a;\nb.nombre = \"Luis\";\nSystem.out.println(a.nombre);",
+      "options": [
+        "Ana",
+        "Luis",
+        "null",
+        "Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "a.nombre is no longer 'Ana' after the change.",
+        "Correct. a and b point to the same object; changing b changes a.",
+        "It is not null.",
+        "It is valid code."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the main difference between static and instance?",
+      "options": [
+        "static is faster",
+        "static is shared among all objects, instance is unique to each one",
+        "static cannot have values",
+        "instance is only for methods"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Speed is not the key difference.",
+        "Correct. static = shared, instance = unique per object.",
+        "static can have values.",
+        "instance is for attributes and methods."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What error does this code make?\nPersona p = new Persona();\np = null;\np.saludar();",
+      "options": [
+        "Compilation error",
+        "NullPointerException at runtime",
+        "It compiles but prints nothing",
+        "It compiles and prints null"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It compiles because Java cannot know at compile time.",
+        "Correct. p points to null, it cannot execute methods.",
+        "It does not print anything; it throws an exception.",
+        "It does not print null; it throws an exception."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is true about the new operator?",
+      "options": [
+        "It allocates memory on the stack",
+        "It returns a copy of the object",
+        "It reserves memory on the heap and returns a reference",
+        "It initializes attributes with random values"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "The heap stores objects; the stack stores references.",
+        "It does not return a copy; it returns a reference.",
+        "Correct. new + heap + reference.",
+        "It initializes with default values, not random ones."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What value does totalMascotas have afterwards?\nContador.totalMascotas = 0;\nnew Contador(\"Max\");\nnew Contador(\"Luna\");",
+      "options": [
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "0 was the initial value.",
+        "A single constructor does not justify 1.",
+        "Correct. Each new increments it by 1.",
+        "It would be three if there were a third object."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "When is it appropriate to use a static attribute?",
+      "options": [
+        "For the name of each object",
+        "For a counter shared among all objects",
+        "For a method that only uses one object",
+        "For a boolean that changes per object"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The name is unique to each object (instance).",
+        "Correct. Shared counters are the typical case for static.",
+        "Static methods do not depend on an object.",
+        "Booleans that change per object are instance."
+      ]
+    }
+  ]
+}

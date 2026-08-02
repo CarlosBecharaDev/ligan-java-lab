@@ -1,0 +1,109 @@
+{
+  "id": "quiz-22-clases-abstractas-interfaces-avanzado",
+  "lessonSlug": "clases-abstractas-interfaces",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What advantage does an abstract class have over an interface?",
+      "options": [
+        "Allows multiple inheritance",
+        "It can have constructors and implemented code",
+        "It is faster",
+        "It does not require inheritance"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java does not allow multiple inheritance.",
+        "Correct. Abstract classes can have constructors and methods with a body.",
+        "There is no difference in speed.",
+        "It requires inheritance."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a default method in an interface?",
+      "options": [
+        "A method that returns null",
+        "A method with a body that is not mandatory to override",
+        "A static method",
+        "A private method"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is unrelated to null.",
+        "Correct. default void doSomething() { ... } has a body; Override is not mandatory.",
+        "It is not static.",
+        "It is not private."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What happens if a class implements two interfaces with the same default method?",
+      "options": [
+        "Compilation error always",
+        "The class must override the method to resolve the ambiguity",
+        "Java picks one automatically",
+        "It cannot implement both"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not always an error.",
+        "Correct. The class must Override to choose which one to use.",
+        "Java does not pick automatically.",
+        "It can implement both."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Can an interface extend another interface?",
+      "options": [
+        "No",
+        "Yes, with extends",
+        "Only one",
+        "Only with multiple inheritance"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It can.",
+        "Correct. interface B extends A { } is valid.",
+        "It can extend from multiple ones.",
+        "It is not multiple class inheritance."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Which pattern uses an interface with a single abstract method?",
+      "options": [
+        "Singleton",
+        "Functional Interface",
+        "Builder",
+        "Factory"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Singleton controls instances.",
+        "Correct. @FunctionalInterface allows using lambdas.",
+        "Builder builds objects.",
+        "Factory creates objects."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "What is the key difference between abstract class and interface?",
+      "options": [
+        "There is no difference",
+        "Abstract class: single inheritance + shared code. Interface: contract + multiple implementation",
+        "Interface is more secure",
+        "Abstract class is faster"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "There is a difference.",
+        "Correct. Single inheritance vs multiple implementation is the fundamental difference.",
+        "It is not about security.",
+        "It is not about speed."
+      ]
+    }
+  ]
+}

@@ -1,25 +1,24 @@
 ---
 // src/components/desktop/RetroPlayer.astro
-// Reproductor de Spotify con skin inspirado en Windows Media Player clásico.
-import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lucide-astro';
+// Reproductor de Spotify con estética retro-Win95 fusionada con un HUD
+// futurista inspirado en Blade Runner 2049 (tonos violeta / negro).
+import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
 ---
-<div id="retro-player" class="wmp-player" aria-label="Reproductor de Spotify">
-  <!-- Barra de título estilo WMP (arrástrala para mover el reproductor) -->
+<div id="retro-player" class="wmp-player" aria-label="Reproductor de Spotify" data-i18n-aria="player.aria">
+  <!-- Barra de título (arrástrala para mover el reproductor) -->
   <div class="wmp-titlebar" data-wmp-drag>
-    <span class="wmp-title">Reproductor de Spotify</span>
+    <span class="wmp-title" data-i18n="player.title">Reproductor de Spotify</span>
     <div class="wmp-title-actions">
-      <button id="wmp-lyrics-btn" type="button" aria-label="Mostrar letra" aria-pressed="false" title="Letra">
-        <FileText size={14} />
-      </button>
-      <button id="wmp-collapse" type="button" aria-label="Minimizar reproductor"><Minus size={14} /></button>
+      <button id="wmp-collapse" type="button" aria-label="Minimizar reproductor" data-i18n-aria="player.minimize">−</button>
+      <button id="wmp-close" type="button" aria-label="Cerrar reproductor" data-i18n-aria="player.close">×</button>
     </div>
   </div>
 
   <div id="wmp-body" class="wmp-body">
     <!-- Estado de conexión -->
     <div id="wmp-connect-panel" class="wmp-panel">
-      <p class="wmp-msg">Conecta tu cuenta de Spotify para reproducir música.</p>
-      <button id="wmp-connect-btn" type="button" class="wmp-btn-primary">
+      <p class="wmp-msg" data-i18n="player.connect-msg">Conecta tu cuenta de Spotify para reproducir música.</p>
+      <button id="wmp-connect-btn" type="button" class="wmp-btn-primary" data-i18n="player.connect">
         Conectar con Spotify
       </button>
     </div>
@@ -29,27 +28,31 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       <div class="wmp-user-row">
         <span id="wmp-username">—</span>
         <span id="wmp-plan" class="wmp-plan-badge">—</span>
-        <button id="wmp-disconnect-btn" type="button" aria-label="Desconectar cuenta de Spotify">
+        <button id="wmp-disconnect-btn" type="button" aria-label="Desconectar cuenta de Spotify" data-i18n-aria="player.disconnect-aria" data-i18n="player.disconnect">
           Desconectar
         </button>
       </div>
 
-      <div class="wmp-nowplaying">
-        <div class="wmp-art-frame">
-          <img id="wmp-art" alt="" src="" class="hidden" />
-          <div id="wmp-art-placeholder" class="wmp-art-placeholder" aria-hidden="true"></div>
+      <!-- Panel holográfico integrado: portada + nombre + letra (karaoke) -->
+      <div id="wmp-lyrics-panel" class="wmp-lyrics wmp-lyrics--closed" aria-live="off">
+        <canvas id="wmp-lyrics-canvas" class="wmp-lyrics-canvas" aria-hidden="true"></canvas>
+        <div class="wmp-lyrics-noise" aria-hidden="true"></div>
+        <div class="wmp-lyrics-holo">
+          <div class="wmp-lyrics-head">
+            <div class="wmp-art-frame wmp-lyrics-art">
+              <img id="wmp-art" alt="" src="" class="hidden" />
+              <div id="wmp-art-placeholder" class="wmp-art-placeholder" aria-hidden="true"></div>
+            </div>
+            <div class="wmp-lyrics-track">
+              <p id="wmp-track-name" class="wmp-track-name" data-i18n="player.no-playback">Sin reproducción</p>
+              <p id="wmp-artist-name" class="wmp-artist-name"></p>
+              <p id="wmp-device-name" class="wmp-device-name"></p>
+            </div>
+          </div>
+          <p id="wmp-lyrics-status" class="wmp-lyrics-status" data-i18n="player.loading-lyrics">Cargando letra...</p>
+          <p id="wmp-lyrics-current" class="wmp-lyrics-current" aria-live="polite"></p>
+          <p id="wmp-lyrics-next" class="wmp-lyrics-next"></p>
         </div>
-        <div class="wmp-track-info">
-          <p id="wmp-track-name" class="wmp-track-name">Sin reproducción</p>
-          <p id="wmp-artist-name" class="wmp-artist-name"></p>
-          <p id="wmp-device-name" class="wmp-device-name"></p>
-        </div>
-      </div>
-
-      <!-- Panel de letras sincronizadas -->
-      <div id="wmp-lyrics-panel" class="wmp-lyrics hidden" aria-live="off">
-        <p id="wmp-lyrics-status" class="wmp-lyrics-status">Cargando letra...</p>
-        <ol id="wmp-lyrics-body" class="wmp-lyrics-body"></ol>
       </div>
 
       <!-- Barra de progreso -->
@@ -62,52 +65,48 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
           max="1000"
           value="0"
           aria-label="Progreso de la canción"
+          data-i18n-aria="player.progress"
         />
         <span id="wmp-time-total" class="wmp-time">0:00</span>
       </div>
 
-      <!-- Controles de transporte -->
+      <!-- Controles de transporte (centrados): botón de letra a la izquierda -->
       <div class="wmp-controls">
-        <button id="wmp-prev" type="button" aria-label="Canción anterior"><SkipBack size={16} /></button>
-        <button id="wmp-playpause" type="button" aria-label="Reproducir">
+        <button id="wmp-lyrics-toggle" type="button" class="wmp-lyrics-toggle" aria-pressed="false" aria-label="Mostrar letra">
+          🎵
+        </button>
+        <button id="wmp-prev" type="button" aria-label="Canción anterior" data-i18n-aria="player.prev"><SkipBack size={16} /></button>
+        <button id="wmp-playpause" type="button" aria-label="Reproducir" data-i18n-aria="player.play">
           <span id="wmp-icon-play"><Play size={18} /></span>
           <span id="wmp-icon-pause" class="hidden"><Pause size={18} /></span>
         </button>
-        <button id="wmp-next" type="button" aria-label="Siguiente canción"><SkipForward size={16} /></button>
-        <div class="wmp-volume">
-          <label for="wmp-volume-slider" class="visually-hidden">Volumen</label>
-          <span aria-hidden="true" class="wmp-volume-icon"><Volume2 size={14} /></span>
-          <input id="wmp-volume-slider" type="range" min="0" max="100" value="70" aria-label="Volumen" />
-        </div>
+        <button id="wmp-next" type="button" aria-label="Siguiente canción" data-i18n-aria="player.next"><SkipForward size={16} /></button>
+      </div>
+
+      <!-- Volumen: fila propia para no cortarse en móvil -->
+      <div class="wmp-volume">
+        <label for="wmp-volume-slider" class="visually-hidden" data-i18n="player.volume">Volumen</label>
+        <button id="wmp-volume-toggle" type="button" class="wmp-volume-icon" aria-pressed="false" aria-label="Silenciar" title="Silenciar">
+          <Volume2 size={14} />
+        </button>
+        <input id="wmp-volume-slider" type="range" min="0" max="100" value="70" aria-label="Volumen" data-i18n-aria="player.volume" />
       </div>
 
       <!-- Mensaje de estado (errores / avisos) -->
       <p id="wmp-status" class="wmp-status hidden" role="status"></p>
-
-      <!-- Búsqueda -->
-      <div class="wmp-search">
-        <label for="wmp-search-input" class="visually-hidden">Buscar canciones</label>
-        <input
-          id="wmp-search-input"
-          type="text"
-          placeholder="Buscar canción o artista..."
-          aria-label="Buscar canciones por artista o título"
-        />
-        <ul id="wmp-search-results" class="wmp-search-results" aria-label="Resultados de búsqueda"></ul>
-      </div>
     </div>
   </div>
 </div>
 
 <!-- Botón flotante de música: muestra/oculta el reproductor (móvil) -->
-<button id="wmp-fab" type="button" class="wmp-fab hidden" aria-label="Mostrar reproductor de Spotify">
+<button id="wmp-fab" type="button" class="wmp-fab hidden" aria-label="Mostrar reproductor de Spotify" data-i18n-aria="player.fab-aria">
   <svg viewBox="0 0 16 16" width="22" height="22" fill="none" shape-rendering="crispEdges" aria-hidden="true">
     <rect x="10" y="1" width="2" height="11" fill="#fff"/>
     <rect x="11" y="1" width="3" height="2" fill="#fff"/>
-    <rect x="4" y="9" width="4" height="4" fill="#1ed760"/>
-    <rect x="3" y="10" width="4" height="2" fill="#1ed760"/>
-    <rect x="4" y="13" width="3" height="1" fill="#1ed760"/>
-    <rect x="3" y="9" width="1" height="1" fill="#2a2a2a"/>
+    <rect x="4" y="9" width="4" height="4" style="fill: var(--wmp-violet)"/>
+    <rect x="3" y="10" width="4" height="2" style="fill: var(--wmp-glow)"/>
+    <rect x="4" y="13" width="3" height="1" style="fill: var(--wmp-glow)"/>
+    <rect x="3" y="9" width="1" height="1" style="fill: var(--wmp-deep)"/>
   </svg>
 </button>
 
@@ -123,23 +122,36 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     display: none !important;
   }
 
+  /* --- Paleta: consume los tokens del tema activo (nebula / terminal) --- */
   .wmp-player {
-    --wmp-green: #1ed760;
-    --wmp-warn: #ffd700;
-    --wmp-bg: #0a0a0a;
-    --wmp-error: #ff5f57;
+    --wmp-violet: var(--brand-accent);
+    --wmp-violet-deep: var(--brand-accent-dark);
+    --wmp-glow: var(--brand-accent-light);
+    --wmp-deep: var(--bg-alt);
+    --wmp-bg: var(--surface-strong);
+    --wmp-text: var(--text);
+    --wmp-dim: var(--muted);
+    --wmp-warn: var(--accent);
+    --wmp-error: var(--danger);
+    --wmp-line: var(--line);
+    --wmp-btn-top: var(--surface-raised);
+    --wmp-btn-bottom: var(--bg-alt);
 
     position: fixed;
     top: 12px;
     right: 12px;
-    width: 270px;
-    max-width: 280px;
+    width: 250px;
+    max-width: 270px;
     z-index: 500;
-    font-family: "Perfect DOS VGA 437", "MS Sans Serif", monospace;
-    border: 2px solid #000;
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+    font-family: "Perfect DOS VGA 437", "VT323", "MS Sans Serif", monospace;
+    border: 2px solid var(--wmp-line);
+    border-top-color: var(--wmp-line);
+    box-shadow:
+      0 0 24px color-mix(in srgb, var(--wmp-violet) 22%, transparent),
+      0 0 60px color-mix(in srgb, var(--wmp-violet) 12%, transparent),
+      4px 4px 0 rgba(0, 0, 0, 0.6);
     background: var(--wmp-bg);
-    color: #e6e6e6;
+    color: var(--wmp-text);
     image-rendering: pixelated;
     transition:
       opacity 0.2s ease,
@@ -148,8 +160,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     transform-origin: center;
   }
 
-  /* Estado oculto: usa visibility (mantiene las dimensiones medibles) y
-     anima la aparición/desaparición en vez de cortarse bruscamente. */
+  /* Estado oculto: anima la aparición/desaparición en vez de cortarse. */
   .wmp-player--hide {
     opacity: 0;
     transform: scale(0.92) translateY(6px);
@@ -157,35 +168,84 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     pointer-events: none;
   }
 
-  /* Barra de título tipo WMP (chrome azul con bisel) */
+  /* Minimizado: mini-player compacto (solo el recuadro holo con la portada) */
+  .wmp-player--min .wmp-titlebar {
+    display: none;
+  }
+  .wmp-player--min .wmp-body {
+    display: block;
+    padding: 0;
+  }
+  .wmp-player--min .wmp-user-row,
+  .wmp-player--min .wmp-progress-row,
+  .wmp-player--min .wmp-controls,
+  .wmp-player--min .wmp-volume,
+  .wmp-player--min .wmp-status {
+    display: none;
+  }
+  .wmp-player--min .wmp-lyrics {
+    min-height: 0;
+    padding: 4px;
+    cursor: pointer;
+  }
+  .wmp-player--min .wmp-lyrics-status,
+  .wmp-player--min .wmp-lyrics-current,
+  .wmp-player--min .wmp-lyrics-next {
+    display: none;
+  }
+  .wmp-player--min .wmp-lyrics-holo {
+    min-height: 0;
+  }
+  .wmp-player--min .wmp-lyrics-head {
+    margin-bottom: 0;
+    justify-content: flex-start;
+  }
+
+  /* --- Barra de título tipo WMP con toque neón --- */
   .wmp-titlebar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 3px 6px;
-    background: linear-gradient(180deg, #be6cb0 0%, #a85499 50%, #803878 100%);
+    background: linear-gradient(180deg, var(--wmp-deep) 0%, var(--wmp-deep) 55%, var(--wmp-bg) 100%);
     border-bottom: 2px solid #000;
+    box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--wmp-violet) 35%, transparent);
     cursor: move;
     touch-action: none;
     user-select: none;
   }
   .wmp-title {
     font-size: 11px;
-    color: #fff;
-    letter-spacing: 0.5px;
+    color: var(--wmp-text);
+    letter-spacing: 1.5px;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--wmp-glow) 60%, transparent);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
+  .wmp-title-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
   .wmp-title-actions button {
-    background: #c0c0c0;
-    border: 1px solid #000;
-    color: #000;
-    font-size: 10px;
-    width: 16px;
-    height: 16px;
+    background: linear-gradient(180deg, #2a1b45 0%, #170a2b 100%);
+    border: 1px solid color-mix(in srgb, var(--wmp-violet) 70%, transparent);
+    color: var(--wmp-text);
+    font-size: 12px;
+    width: 20px;
+    height: 18px;
     line-height: 1;
     cursor: pointer;
+    box-shadow:
+      inset 1px 1px 0 color-mix(in srgb, var(--wmp-glow) 28%, transparent),
+      inset -1px -1px 0 rgba(0, 0, 0, 0.6);
+    transition: box-shadow 0.2s ease, color 0.2s ease, background 0.2s ease;
+  }
+  .wmp-title-actions button:hover {
+    color: var(--wmp-glow);
+    background: linear-gradient(180deg, #38206b 0%, #1e0f3d 100%);
+    box-shadow: 0 0 12px color-mix(in srgb, var(--wmp-violet) 50%, transparent);
   }
 
   .wmp-body {
@@ -204,22 +264,30 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     font-size: 11px;
     color: var(--wmp-warn);
     margin: 0;
+    text-shadow: 0 0 6px color-mix(in srgb, var(--wmp-glow) 40%, transparent);
   }
 
   .wmp-btn-primary {
-    background: var(--wmp-green);
-    color: #000;
+    background: linear-gradient(180deg, var(--wmp-violet) 0%, var(--wmp-violet-deep) 100%);
+    color: var(--wmp-text);
     border: 2px solid #000;
-    box-shadow: 2px 2px 0 #000;
+    box-shadow: 0 0 14px color-mix(in srgb, var(--wmp-violet) 35%, transparent);
     padding: 6px 8px;
     font-family: inherit;
     font-size: 11px;
     cursor: pointer;
+    transition: box-shadow 0.2s ease, transform 0.15s ease;
+  }
+  .wmp-btn-primary:hover {
+    box-shadow: 0 0 22px color-mix(in srgb, var(--wmp-glow) 60%, transparent);
+  }
+  .wmp-btn-primary:active {
+    transform: translateY(1px);
   }
   .wmp-btn-primary:focus-visible,
   button:focus-visible,
   input:focus-visible {
-    outline: 2px solid var(--wmp-warn);
+    outline: 2px solid var(--wmp-glow);
     outline-offset: 2px;
   }
 
@@ -238,15 +306,16 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     max-width: 100px;
   }
   .wmp-plan-badge {
-    background: var(--wmp-green);
-    color: #000;
+    background: linear-gradient(180deg, var(--wmp-violet) 0%, var(--wmp-violet-deep) 100%);
+    color: var(--wmp-text);
     padding: 1px 4px;
     font-size: 9px;
     text-transform: uppercase;
+    box-shadow: 0 0 8px color-mix(in srgb, var(--wmp-violet) 40%, transparent);
   }
   #wmp-disconnect-btn {
     margin-left: auto;
-    background: #1a1a1a;
+    background: var(--wmp-deep);
     color: var(--wmp-error);
     border: 1px solid var(--wmp-error);
     font-size: 9px;
@@ -254,89 +323,278 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     padding: 2px 5px;
   }
 
-  .wmp-nowplaying {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-  }
-  .wmp-art-frame {
+  /* --- Portada + nombre dentro del recuadro holográfico --- */
+  .wmp-lyrics-art {
     width: 56px;
     height: 56px;
     flex-shrink: 0;
-    background: radial-gradient(circle at 30% 30%, #3a1f5c, #0a0a0a 70%);
-    border: 2px solid #000;
-    box-shadow: inset 1px 1px 0 rgba(255, 255, 255, 0.15);
+    background: radial-gradient(circle at 30% 30%, var(--wmp-btn-top), var(--wmp-deep) 72%);
+    border: 2px solid color-mix(in srgb, var(--wmp-violet) 60%, transparent);
+    box-shadow:
+      inset 0 0 10px color-mix(in srgb, var(--wmp-violet) 35%, transparent),
+      0 0 10px color-mix(in srgb, var(--wmp-violet) 25%, transparent);
     overflow: hidden;
   }
-  .wmp-art-frame img {
+  .wmp-lyrics-art img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
-  .wmp-art-placeholder {
+  .wmp-lyrics-art .wmp-art-placeholder {
     width: 100%;
     height: 100%;
   }
 
-  .wmp-track-info {
-    min-width: 0;
-    flex: 1;
+  .wmp-lyrics-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 2px;
   }
-  .wmp-track-name,
-  .wmp-artist-name,
-  .wmp-device-name {
+  .wmp-lyrics-track {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  .wmp-lyrics-track .wmp-track-name,
+  .wmp-lyrics-track .wmp-artist-name,
+  .wmp-lyrics-track .wmp-device-name {
     margin: 0;
+    max-width: 100%;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .wmp-track-name {
-    font-size: 11px;
-    color: var(--wmp-green);
-    font-weight: bold;
-  }
-  .wmp-artist-name {
+  .wmp-lyrics-track .wmp-track-name {
     font-size: 10px;
-    color: #ccc;
+    color: var(--wmp-text);
+    font-weight: bold;
+    text-shadow: 0 0 8px color-mix(in srgb, var(--wmp-glow) 50%, transparent);
   }
-  .wmp-device-name {
+  .wmp-lyrics-track .wmp-artist-name {
     font-size: 9px;
-    color: #888;
+    color: var(--wmp-glow);
+  }
+  .wmp-lyrics-track .wmp-device-name {
+    font-size: 8px;
+    color: var(--wmp-dim);
   }
 
-  .wmp-lyrics {
-    border: 1px solid #333;
-    background: #050505;
-    max-height: 132px;
-    overflow-y: auto;
-    padding: 4px 6px;
+  /* --- Botón de letra (solo emoji, flotando a la izquierda) --- */
+  .wmp-lyrics-toggle {
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 24px;
+    font-size: 13px;
+    line-height: 1;
+    animation: wmp-toggle-holo 2.6s ease-in-out infinite;
   }
+  .wmp-lyrics-toggle:hover,
+  .wmp-lyrics-toggle:active {
+    transform: translateY(-50%) !important;
+  }
+  @keyframes wmp-toggle-holo {
+    0%, 100% {
+      box-shadow:
+        1px 1px 0 #000,
+        0 0 6px color-mix(in srgb, var(--wmp-violet) 45%, transparent);
+      border-color: var(--wmp-line);
+    }
+    50% {
+      box-shadow:
+        1px 1px 0 #000,
+        0 0 12px color-mix(in srgb, var(--wmp-glow) 80%, transparent);
+      border-color: var(--wmp-glow);
+    }
+  }
+  /* Raya diagonal cuando la letra está visible (toggle activo) */
+  .wmp-lyrics-toggle::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 50%;
+    height: 2px;
+    background: var(--wmp-text);
+    box-shadow: 0 0 5px color-mix(in srgb, var(--wmp-glow) 70%, transparent);
+    transform: translateY(-50%) rotate(-45deg);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .wmp-lyrics-toggle[aria-pressed="true"]::after {
+    opacity: 1;
+  }
+
+  /* --- Panel de letras: pantalla holográfica --- */
+  .wmp-lyrics {
+    position: relative;
+    min-height: 122px;
+    padding: 12px 12px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--wmp-violet) 55%, transparent);
+    border-radius: 3px;
+    box-shadow:
+      0 0 18px color-mix(in srgb, var(--wmp-violet) 25%, transparent),
+      inset 0 0 34px color-mix(in srgb, var(--wmp-violet) 14%, transparent);
+    background:
+      radial-gradient(ellipse at 50% 130%, color-mix(in srgb, var(--wmp-violet) 28%, transparent), transparent 60%),
+      radial-gradient(ellipse at 20% -10%, color-mix(in srgb, var(--wmp-violet) 20%, transparent), transparent 55%),
+      linear-gradient(180deg, #0d0518 0%, #080309 70%);
+    transition:
+      opacity 0.35s ease,
+      transform 0.35s ease;
+    text-align: center;
+  }
+  .wmp-lyrics--closed {
+    min-height: 66px;
+  }
+  .wmp-lyrics--closed .wmp-lyrics-status,
+  .wmp-lyrics--closed .wmp-lyrics-current,
+  .wmp-lyrics--closed .wmp-lyrics-next {
+    display: none;
+  }
+
+  /* Niebla / humo violeta que se desplaza lentamente */
+  .wmp-lyrics::before {
+    content: "";
+    position: absolute;
+    inset: -40%;
+    pointer-events: none;
+    background:
+      radial-gradient(circle at 30% 40%, color-mix(in srgb, var(--wmp-glow) 22%, transparent), transparent 42%),
+      radial-gradient(circle at 72% 70%, color-mix(in srgb, var(--wmp-violet) 26%, transparent), transparent 45%),
+      radial-gradient(circle at 85% 20%, rgba(90, 31, 214, 0.2), transparent 40%);
+    filter: blur(26px);
+    animation: wmp-fog 16s ease-in-out infinite alternate;
+  }
+  @keyframes wmp-fog {
+    from { transform: translate3d(-4%, -2%, 0) scale(1); }
+    to { transform: translate3d(5%, 3%, 0) scale(1.1); }
+  }
+
+  /* Líneas CRT (scanlines) */
+  .wmp-lyrics::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: repeating-linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.03) 0 1px,
+      transparent 1px 3px
+    );
+    mix-blend-mode: overlay;
+  }
+
+  /* Ruido digital estático sutil */
+  .wmp-lyrics-noise {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.055;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='0.6'/%3E%3C/svg%3E");
+    animation: wmp-noise 0.4s steps(2) infinite;
+  }
+  @keyframes wmp-noise {
+    0% { transform: translate(0, 0); }
+    50% { transform: translate(1px, -1px); }
+    100% { transform: translate(-1px, 1px); }
+  }
+
+  /* Capa de partículas (canvas) */
+  .wmp-lyrics-canvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* Capa de texto holográfico */
+  .wmp-lyrics-holo {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
+  }
+
   .wmp-lyrics-status {
     margin: 0;
     font-size: 9px;
-    color: #888;
+    color: var(--wmp-dim);
     white-space: pre-wrap;
   }
-  .wmp-lyrics-body {
-    list-style: none;
+
+  /* Frase actual (karaoke) */
+  .wmp-lyrics-current {
     margin: 0;
-    padding: 0;
+    color: var(--wmp-text);
+    font-weight: 600;
+    line-height: 1.3;
+    font-size: 0.92rem;
+    max-width: 100%;
+    text-shadow:
+      0 0 10px color-mix(in srgb, var(--wmp-glow) 85%, transparent),
+      0 0 28px color-mix(in srgb, var(--wmp-violet) 55%, transparent);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: none;
+    transform-origin: center;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
   }
-  .wmp-lyric-line {
-    padding: 3px 2px;
-    font-size: 10px;
-    line-height: 1.35;
-    color: #9b9b9b;
-    transition: color 0.15s ease, background 0.15s ease;
+  .wmp-lyrics-current.lyric-pop {
+    animation: wmp-pop 0.6s cubic-bezier(0.2, 0.7, 0.3, 1);
   }
-  .wmp-lyric-line.active {
-    color: var(--wmp-green);
-    font-weight: bold;
-    background: rgba(30, 215, 96, 0.08);
+  @keyframes wmp-pop {
+    0% {
+      opacity: 0;
+      filter: blur(8px);
+      transform: scale(0.9) translateY(8px);
+    }
+    55% {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1.04) translateY(0);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1) translateY(0);
+    }
   }
-  #wmp-lyrics-btn[aria-pressed="true"] {
-    background: var(--wmp-green);
-    color: #000;
+
+  /* Siguiente frase, muy tenue */
+  .wmp-lyrics-next {
+    display: none;
+  }
+
+  /* Onda luminosa al cambiar de frase */
+  .wmp-lyrics--flash .wmp-lyrics-holo::after {
+    content: "";
+    position: absolute;
+    inset: -25%;
+    pointer-events: none;
+    background: radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--wmp-glow) 32%, transparent), transparent 62%);
+    animation: wmp-flash 0.55s ease-out;
+  }
+  @keyframes wmp-flash {
+    from { opacity: 1; transform: scale(0.6); }
+    to { opacity: 0; transform: scale(1.35); }
   }
 
   .wmp-progress-row {
@@ -346,25 +604,27 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
   }
   .wmp-time {
     font-size: 9px;
-    color: #aaa;
+    color: var(--wmp-dim);
     width: 28px;
   }
   #wmp-progress {
     flex: 1;
     min-width: 0;
-    accent-color: var(--wmp-green);
+    accent-color: var(--wmp-violet);
   }
 
   .wmp-controls {
+    position: relative;
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    justify-content: center;
     gap: 6px;
   }
   .wmp-controls button {
-    background: #1a1a1a;
-    color: #fff;
-    border: 2px solid #444;
+    background: linear-gradient(180deg, var(--wmp-btn-top) 0%, var(--wmp-btn-bottom) 100%);
+    color: var(--wmp-text);
+    border: 2px solid var(--wmp-line);
     box-shadow: 1px 1px 0 #000;
     width: 28px;
     height: 24px;
@@ -376,10 +636,12 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       transform 0.15s ease,
       border-color 0.15s ease,
       color 0.15s ease,
-      background 0.15s ease;
+      background 0.15s ease,
+      box-shadow 0.15s ease;
   }
   .wmp-controls button:hover {
-    border-color: #888;
+    border-color: color-mix(in srgb, var(--wmp-violet) 90%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--wmp-violet) 35%, transparent);
     transform: translateY(-1px);
   }
   .wmp-controls button:active {
@@ -387,83 +649,84 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     box-shadow: none;
   }
   #wmp-playpause {
-    border-color: var(--wmp-green);
-    color: var(--wmp-green);
-    background: #0d1f14;
+    border-color: var(--wmp-violet);
+    color: var(--wmp-glow);
+    background: linear-gradient(180deg, var(--wmp-btn-top) 0%, var(--wmp-btn-bottom) 100%);
   }
   #wmp-playpause:hover {
-    border-color: var(--wmp-green);
-    color: #2af57e;
-    background: #12331f;
-    box-shadow: 0 0 8px rgba(30, 215, 96, 0.35);
+    border-color: var(--wmp-glow);
+    color: var(--wmp-text);
+    box-shadow: 0 0 14px color-mix(in srgb, var(--wmp-violet) 65%, transparent);
   }
   .wmp-volume {
     display: flex;
     align-items: center;
-    gap: 4px;
-    margin-left: auto;
+    justify-content: center;
+    gap: 6px;
+    margin-top: 6px;
+    width: 100%;
   }
   .wmp-volume-icon {
     display: grid;
     place-items: center;
-    color: #aaa;
+    width: 24px;
+    height: 22px;
+    background: linear-gradient(180deg, var(--wmp-btn-top) 0%, var(--wmp-btn-bottom) 100%);
+    border: 2px solid var(--wmp-line);
+    box-shadow: 1px 1px 0 #000;
+    color: var(--wmp-glow);
+    cursor: pointer;
+    position: relative;
+    transition:
+      border-color 0.15s ease,
+      color 0.15s ease,
+      box-shadow 0.15s ease,
+      background 0.15s ease;
+  }
+  .wmp-volume-icon:hover {
+    border-color: color-mix(in srgb, var(--wmp-violet) 90%, transparent);
+    box-shadow: 0 0 10px color-mix(in srgb, var(--wmp-violet) 35%, transparent);
+  }
+  .wmp-volume-icon:active {
+    box-shadow: none;
+  }
+  /* Barrita diagonal cuando está silenciado (como el toggle de letra) */
+  .wmp-volume-icon::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    right: 2px;
+    top: 50%;
+    height: 2px;
+    background: var(--wmp-text);
+    box-shadow: 0 0 5px color-mix(in srgb, var(--wmp-glow) 70%, transparent);
+    transform: translateY(-50%) rotate(-45deg);
+    opacity: 0;
+    transition: opacity 0.15s ease;
+  }
+  .wmp-volume-icon[aria-pressed="true"]::after {
+    opacity: 1;
   }
   .wmp-volume input {
-    width: 60px;
-    accent-color: var(--wmp-green);
+    width: 90px;
+    accent-color: var(--wmp-violet);
   }
 
   .wmp-status {
     font-size: 10px;
     color: var(--wmp-warn);
-    background: #1a1a1a;
+    background: var(--wmp-btn-bottom);
     border: 1px solid var(--wmp-warn);
     padding: 4px 6px;
     margin: 0;
+    box-shadow: 0 0 10px color-mix(in srgb, var(--wmp-violet) 20%, transparent);
   }
   .wmp-status[data-kind="error"] {
     color: var(--wmp-error);
     border-color: var(--wmp-error);
+    box-shadow: 0 0 10px rgba(255, 95, 143, 0.25);
   }
 
-  .wmp-search input {
-    width: 100%;
-    box-sizing: border-box;
-    background: #000;
-    color: #fff;
-    border: 1px solid #444;
-    font-family: inherit;
-    font-size: 10px;
-    padding: 4px;
-  }
-  .wmp-search-results {
-    list-style: none;
-    margin: 4px 0 0;
-    padding: 0;
-    max-height: 130px;
-    overflow-y: auto;
-    border: 1px solid #333;
-  }
-  .wmp-search-results li {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 3px 4px;
-    font-size: 9px;
-    border-bottom: 1px solid #222;
-    cursor: pointer;
-  }
-  .wmp-search-results li:hover,
-  .wmp-search-results li:focus-visible {
-    background: #1a2f1e;
-  }
-  .wmp-search-results .wmp-result-title {
-    flex: 1;
-    min-width: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 
   /* --- Botón flotante de música (mostrar/ocultar en móvil) --- */
   .wmp-fab {
@@ -475,27 +738,29 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     height: 44px;
     border-radius: 0;
     border: 2px solid #000;
-    border-top-color: #c0c0c0;
-    border-left-color: #c0c0c0;
-    border-bottom-color: #444;
-    border-right-color: #444;
-    background: linear-gradient(180deg, #be6cb0 0%, #a85499 50%, #803878 100%);
-    color: #fff;
+    border-top-color: var(--wmp-violet);
+    border-left-color: var(--wmp-violet);
+    border-bottom-color: var(--wmp-deep);
+    border-right-color: var(--wmp-deep);
+    background: linear-gradient(180deg, var(--wmp-violet) 0%, var(--wmp-violet-deep) 50%, var(--wmp-deep) 100%);
+    color: var(--wmp-text);
     font-family: "Perfect DOS VGA 437", "MS Sans Serif", monospace;
     font-size: 18px;
     line-height: 1;
     cursor: pointer;
-    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.6);
+    box-shadow:
+      0 0 16px color-mix(in srgb, var(--wmp-violet) 40%, transparent),
+      3px 3px 0 rgba(0, 0, 0, 0.6);
     display: grid;
     place-items: center;
     image-rendering: pixelated;
     touch-action: none;
   }
   .wmp-fab:active {
-    border-top-color: #444;
-    border-left-color: #444;
-    border-bottom-color: #c0c0c0;
-    border-right-color: #c0c0c0;
+    border-top-color: var(--wmp-deep);
+    border-left-color: var(--wmp-deep);
+    border-bottom-color: var(--wmp-violet);
+    border-right-color: var(--wmp-violet);
     box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.6);
     transform: translate(1px, 1px);
   }
@@ -507,11 +772,11 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     animation: wmp-fab-pulse 1.6s ease-in-out infinite;
   }
   @keyframes wmp-fab-pulse {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(30, 215, 96, 0.5); }
-    50% { box-shadow: 0 0 0 8px rgba(30, 215, 96, 0); }
+    0%, 100% { box-shadow: 0 0 0 0 color-mix(in srgb, var(--wmp-violet) 50%, transparent); }
+     50% { box-shadow: 0 0 0 8px color-mix(in srgb, var(--wmp-violet) 0%, transparent); }
   }
 
-  /* --- Responsive móvil --- */
+  /* --- Responsive móvil / tablet --- */
   @media (max-width: 640px) {
     .wmp-player {
       top: auto;
@@ -519,7 +784,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       right: 6px;
       left: 6px;
       width: auto;
-      max-width: 200px;
+      max-width: 260px;
       margin-left: auto;
       max-height: calc(100dvh - 72px);
     }
@@ -530,6 +795,19 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       top: auto;
       right: 10px;
       bottom: calc(58px + env(safe-area-inset-bottom, 0px));
+    }
+    .wmp-lyrics {
+      min-height: 110px;
+    }
+    .wmp-lyrics--closed {
+      min-height: 62px;
+    }
+    .wmp-lyrics-holo {
+      min-height: 72px;
+    }
+    .wmp-volume input {
+      width: 100%;
+      max-width: 140px;
     }
   }
 </style>
@@ -547,7 +825,6 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     previousTrack,
     seek,
     setVolume,
-    searchTracks,
     SpotifyAppError,
   } from "@lib/spotify";
   import type { PlaybackState } from "@lib/spotify";
@@ -556,6 +833,10 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
 
   const $ = <T extends Element = HTMLElement>(sel: string) =>
     document.querySelector<T>(sel)!;
+
+  // Traducción dinámica: usa el diccionario global expuesto por i18n.
+  const T = (key: string): string =>
+    ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
 
   const connectPanel = $("#wmp-connect-panel");
   const mainPanel = $("#wmp-main-panel");
@@ -575,17 +856,87 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
   const prevBtn = $("#wmp-prev");
   const nextBtn = $("#wmp-next");
   const volumeSlider = $<HTMLInputElement>("#wmp-volume-slider");
+  const volumeToggle = $("#wmp-volume-toggle");
   const statusEl = $("#wmp-status");
-  const searchInput = $<HTMLInputElement>("#wmp-search-input");
-  const resultsList = $("#wmp-search-results");
   const collapseBtn = $("#wmp-collapse");
-  const lyricsBtn = $("#wmp-lyrics-btn");
+  const closeBtn = $("#wmp-close");
+  const lyricsToggle = $("#wmp-lyrics-toggle");
   const lyricsPanel = $("#wmp-lyrics-panel");
   const lyricsStatus = $("#wmp-lyrics-status");
-  const lyricsBody = $("#wmp-lyrics-body");
+  const lyricsCurrent = $("#wmp-lyrics-current");
   const titlebar = $(".wmp-titlebar");
   const player = $("#retro-player");
   const fab = $("#wmp-fab");
+
+  // --- Fondo animado de partículas (canvas ligero) ---
+  const lyricsCanvas = document.getElementById("wmp-lyrics-canvas") as HTMLCanvasElement | null;
+  const lyricsCtx = lyricsCanvas ? lyricsCanvas.getContext("2d") : null;
+  let particles: { x: number; y: number; r: number; s: number; a: number; tw: number }[] = [];
+  let particleRaf: number | null = null;
+  let canvasW = 0;
+  let canvasH = 0;
+
+  function sizeCanvas() {
+    if (!lyricsCanvas) return;
+    const rect = lyricsPanel.getBoundingClientRect();
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvasW = Math.max(1, Math.round(rect.width));
+    canvasH = Math.max(1, Math.round(rect.height));
+    lyricsCanvas.width = Math.round(canvasW * dpr);
+    lyricsCanvas.height = Math.round(canvasH * dpr);
+    if (lyricsCtx) lyricsCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    const count = Math.min(46, Math.max(14, Math.floor((canvasW * canvasH) / 1800)));
+    particles = [];
+    for (let i = 0; i < count; i++) {
+      particles.push({
+        x: Math.random() * canvasW,
+        y: Math.random() * canvasH,
+        r: 0.6 + Math.random() * 1.4,
+        s: 0.06 + Math.random() * 0.22,
+        a: 0.14 + Math.random() * 0.4,
+        tw: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+
+  const lyricsGlowColor = () =>
+    getComputedStyle(player).getPropertyValue("--wmp-glow").trim() || "#c874bb";
+  const lyricsVioletColor = () =>
+    getComputedStyle(player).getPropertyValue("--wmp-violet").trim() || "#a85499";
+
+  function drawParticles(now: number) {
+    if (!lyricsCtx) return;
+    lyricsCtx.clearRect(0, 0, canvasW, canvasH);
+    for (const p of particles) {
+      p.y -= p.s;
+      if (p.y < -4) {
+        p.y = canvasH + 4;
+        p.x = Math.random() * canvasW;
+      }
+      const twinkle = p.a * (0.55 + 0.45 * Math.sin(now / 720 + p.tw));
+      lyricsCtx.beginPath();
+      lyricsCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      lyricsCtx.fillStyle = lyricsGlowColor();
+      lyricsCtx.globalAlpha = Math.max(0.05, twinkle);
+      lyricsCtx.shadowColor = lyricsVioletColor();
+      lyricsCtx.shadowBlur = 6;
+      lyricsCtx.fill();
+      lyricsCtx.globalAlpha = 1;
+    }
+    particleRaf = requestAnimationFrame(drawParticles);
+  }
+
+  function startParticles() {
+    if (!lyricsCanvas || particleRaf !== null) return;
+    sizeCanvas();
+    particleRaf = requestAnimationFrame(drawParticles);
+  }
+  function stopParticles() {
+    if (particleRaf !== null) {
+      cancelAnimationFrame(particleRaf);
+      particleRaf = null;
+    }
+  }
 
   let pollHandle: number | null = null;
   let userIsDraggingProgress = false;
@@ -599,10 +950,10 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
   let lastProgressMs = 0;
   let lastPollAt = 0;
   let lastPlaying = false;
+  // Volumen recordado para restaurar al desmutear
+  let lastVolumeBeforeMute = 70;
 
   // --- Mostrar / ocultar reproductor con el botón flotante ---
-  // En móvil se abre centrado sobre el FAB (donde se pulsó), dentro del
-  // viewport. En escritorio vuelve al CSS: arriba a la derecha.
   const PLAYER_POS_KEY = "wmp-player-pos";
 
   function savePlayerPos() {
@@ -639,6 +990,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
 
   function setPlayerVisible(visible: boolean) {
     if (visible) {
+      player.classList.remove("wmp-player--min");
       const edge = 8;
       const playerWidth = player.offsetWidth;
       const playerHeight = player.offsetHeight;
@@ -682,7 +1034,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     fab.classList.toggle("hidden", visible);
     collapseBtn.setAttribute(
       "aria-label",
-      visible ? "Minimizar reproductor" : "Mostrar reproductor"
+      visible ? T("player.minimize") : T("player.show")
     );
   }
 
@@ -775,41 +1127,25 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     statusEl.textContent = "";
   }
 
-  // --- Letras sincronizadas (LRCLIB) ---
+  // --- Letras sincronizadas: modo karaoke (una frase a la vez) ---
+  function updateLyricsToggleLabel(open: boolean) {
+    const label = open ? T("player.hide-lyrics") : T("player.show-lyrics");
+    lyricsToggle.setAttribute("aria-label", label);
+  }
+
   function setLyricsStatus(message: string) {
     lyricsLines = [];
     lyricsActiveIndex = -1;
-    lyricsBody.innerHTML = "";
+    lyricsCurrent.textContent = "";
     lyricsStatus.textContent = message;
     lyricsStatus.classList.remove("hidden");
   }
 
-  async function loadLyrics(track: string, artist: string, durationMs: number) {
-    const data = await getSyncedLyrics(track, artist, durationMs);
-    if (`${track}\u0000${artist}` !== lyricsKey) return;
-    if (!data || (!data.plainText && data.lines.length === 0)) {
-      setLyricsStatus("No se encontró letra para esta canción.");
+  function renderLyric(force = false) {
+    if (lyricsLines.length === 0) {
+      lyricsCurrent.textContent = "";
       return;
     }
-    if (data.lines.length > 0) {
-      lyricsLines = data.lines;
-      lyricsStatus.classList.add("hidden");
-      lyricsBody.innerHTML = "";
-      data.lines.forEach((line, i) => {
-        const li = document.createElement("li");
-        li.className = "wmp-lyric-line";
-        li.textContent = line.text || "…";
-        li.dataset.index = String(i);
-        lyricsBody.appendChild(li);
-      });
-      updateLyricHighlight();
-    } else if (data.plainText) {
-      setLyricsStatus(data.plainText);
-    }
-  }
-
-  function updateLyricHighlight() {
-    if (lyricsLines.length === 0) return;
     const elapsed = lastPlaying ? performance.now() - lastPollAt : 0;
     const progress = lastProgressMs + elapsed;
 
@@ -820,45 +1156,117 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     ) {
       index++;
     }
-    if (index === lyricsActiveIndex) return;
+    if (index === lyricsActiveIndex && !force) return;
     lyricsActiveIndex = index;
 
-    const items = lyricsBody.children;
-    for (let i = 0; i < items.length; i++) {
-      items[i].classList.toggle("active", i === index);
+    // No animar si la letra está oculta (ahorro de recursos)
+    if (lyricsPanel.classList.contains("wmp-lyrics--closed")) return;
+
+    const line = lyricsLines[index];
+
+    // Tamaño adaptativo: frases cortas grandes, largas un poco más pequeñas
+    const len = (line?.text || "").length;
+    const size = Math.max(0.68, Math.min(1.05, 1.6 - len * 0.014));
+    lyricsCurrent.textContent = line ? line.text || "…" : "";
+    lyricsCurrent.style.fontSize = `${size}rem`;
+
+    // Re-dispara la animación de la frase actual
+    lyricsCurrent.classList.remove("lyric-pop");
+    void lyricsCurrent.offsetWidth;
+    lyricsCurrent.classList.add("lyric-pop");
+
+    // Onda luminosa al cambiar de frase
+    lyricsPanel.classList.remove("wmp-lyrics--flash");
+    void lyricsPanel.offsetWidth;
+    lyricsPanel.classList.add("wmp-lyrics--flash");
+  }
+
+  function updateLyricHighlight() {
+    renderLyric();
+  }
+
+  async function loadLyrics(track: string, artist: string, durationMs: number) {
+    const data = await getSyncedLyrics(track, artist, durationMs);
+    if (`${track}\u0000${artist}` !== lyricsKey) return;
+    if (!data || (!data.plainText && data.lines.length === 0)) {
+      setLyricsStatus(T("player.lyrics-not-found"));
+      return;
     }
-    const active = items[index] as HTMLElement | undefined;
-    if (active) active.scrollIntoView({ block: "nearest" });
+    if (data.lines.length > 0) {
+      lyricsLines = data.lines;
+    } else if (data.plainText) {
+      // Sin timestamps: reparte las frases a lo largo de la duración
+      const parts = data.plainText
+        .split(/\r?\n/)
+        .map((s) => s.trim())
+        .filter(Boolean);
+      if (parts.length === 0) {
+        setLyricsStatus(T("player.lyrics-not-found"));
+        return;
+      }
+      const usable = Math.max(1500, durationMs - 1200);
+      lyricsLines = parts.map((text, i) => ({
+        timeMs: Math.round((usable * i) / parts.length),
+        text,
+      }));
+    } else {
+      setLyricsStatus(T("player.lyrics-not-found"));
+      return;
+    }
+    lyricsStatus.classList.add("hidden");
+    lyricsActiveIndex = -1;
+    renderLyric(true);
   }
 
   function toggleLyrics() {
-    const isOpen = !lyricsPanel.classList.contains("hidden");
-    lyricsPanel.classList.toggle("hidden", isOpen);
-    lyricsBtn.setAttribute("aria-pressed", String(!isOpen));
-    lyricsBtn.setAttribute("aria-label", isOpen ? "Mostrar letra" : "Ocultar letra");
-    if (!isOpen) updateLyricHighlight();
+    const isOpen = !lyricsPanel.classList.contains("wmp-lyrics--closed");
+    lyricsPanel.classList.toggle("wmp-lyrics--closed", isOpen);
+    lyricsToggle.setAttribute("aria-pressed", String(!isOpen));
+    updateLyricsToggleLabel(!isOpen);
+    if (!isOpen) {
+      startParticles();
+      renderLyric(true);
+      // En móvil el reproductor crece hacia abajo: re-posicionarlo para que
+      // el recuadro expandido (con la letra) quede dentro del viewport.
+      if (window.matchMedia("(max-width: 640px)").matches) {
+        setPlayerVisible(true);
+      }
+      scrollLyricsIntoView();
+    } else {
+      stopParticles();
+    }
+  }
+
+  // Desplaza el cuerpo del reproductor para que la frase actual quede a la vista
+  function scrollLyricsIntoView() {
+    const bodyEl = document.querySelector<HTMLElement>(".wmp-body");
+    if (!bodyEl) return;
+    const target: HTMLElement = lyricsCurrent.textContent ? lyricsCurrent : lyricsStatus;
+    const bodyRect = bodyEl.getBoundingClientRect();
+    const targetRect = target.getBoundingClientRect();
+    bodyEl.scrollTop += targetRect.top - bodyRect.top - 6;
   }
 
   function messageForError(err: unknown): string {
     if (err instanceof SpotifyAppError) {
       switch (err.kind) {
         case "no_device":
-          return "No hay ningún dispositivo activo. Abre Spotify en un dispositivo.";
+          return T("player.err.no-device");
         case "no_playback":
-          return "No hay ninguna reproducción en curso.";
+          return T("player.err.no-playback");
         case "premium_required":
-          return "Esta función requiere una cuenta Spotify Premium.";
+          return T("player.err.premium");
         case "missing_scope":
-          return "Faltan permisos autorizados para esta acción.";
+          return T("player.err.scope");
         case "token_expired":
-          return "Tu sesión expiró. Conéctate de nuevo.";
+          return T("player.err.expired");
         case "network_error":
-          return "Problema de red al hablar con Spotify.";
+          return T("player.err.network");
         default:
-          return "Spotify respondió con un error.";
+          return T("player.err.generic");
       }
     }
-    return "Ocurrió un error inesperado.";
+    return T("player.err.unexpected");
   }
 
   function setPlayingIcon(playing: boolean) {
@@ -866,7 +1274,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     const pauseIcon = document.getElementById("wmp-icon-pause");
     if (playIcon) playIcon.classList.toggle("hidden", playing);
     if (pauseIcon) pauseIcon.classList.toggle("hidden", !playing);
-    playPauseBtn.setAttribute("aria-label", playing ? "Pausar" : "Reproducir");
+    playPauseBtn.setAttribute("aria-label", playing ? T("player.pause") : T("player.play"));
+    playPauseBtn.dataset.playing = String(playing);
   }
 
   async function refreshNowPlaying() {
@@ -874,27 +1283,27 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       const state: PlaybackState | null = await getPlaybackState();
       clearStatus();
       if (!state) {
-        trackNameEl.textContent = "Sin reproducción";
+        trackNameEl.textContent = T("player.no-playback");
         artistNameEl.textContent = "";
         deviceNameEl.textContent = "";
         artImg.classList.add("hidden");
         artPlaceholder.classList.remove("hidden");
         setPlayingIcon(false);
         lastPlaying = false;
-        setLyricsStatus("Sin reproducción activa.");
-        showStatus("No hay ninguna reproducción en curso.");
+        setLyricsStatus(T("player.no-playback-active"));
+        showStatus(T("player.err.no-playback"));
         return;
       }
       trackNameEl.textContent = state.trackName || "—";
       artistNameEl.textContent = state.artistNames || "";
       deviceNameEl.textContent = state.deviceName
-        ? `Dispositivo: ${state.deviceName}`
-        : "Sin dispositivo activo";
-      if (!state.deviceName) showStatus("No hay ningún dispositivo activo.");
+        ? T("player.device") + state.deviceName
+        : T("player.no-device");
+      if (!state.deviceName) showStatus(T("player.no-device"));
 
       if (state.albumImageUrl) {
         artImg.src = state.albumImageUrl;
-        artImg.alt = `Portada de ${state.trackName}`;
+        artImg.alt = T("player.album-art") + state.trackName;
         artImg.classList.remove("hidden");
         artPlaceholder.classList.add("hidden");
       } else {
@@ -923,16 +1332,17 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
       if (key !== lyricsKey) {
         lyricsKey = key;
         if (state.trackName && state.artistNames) {
-          setLyricsStatus("Cargando letra...");
+          setLyricsStatus(T("player.loading-lyrics"));
           void loadLyrics(state.trackName, state.artistNames, state.durationMs);
         } else {
-          setLyricsStatus("Sin letra disponible.");
+          setLyricsStatus(T("player.lyrics-unavailable"));
         }
       }
 
       if (state.volumePercent !== null && !document.activeElement?.isSameNode(volumeSlider)) {
         volumeSlider.value = String(state.volumePercent);
       }
+      updateVolumeToggle(state.volumePercent !== null ? state.volumePercent : Number(volumeSlider.value));
     } catch (err) {
       showStatus(messageForError(err), "error");
     }
@@ -955,12 +1365,10 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     mainPanel.classList.remove("hidden");
     try {
       const me = await getMe();
-      usernameEl.textContent = me.display_name || "Usuario";
+      usernameEl.textContent = me.display_name || T("player.user");
       planEl.textContent = me.product === "premium" ? "Premium" : "Free";
       if (me.product !== "premium") {
-        showStatus(
-          "Con cuenta Free solo puedes ver lo que suenas, no controlar la reproducción."
-        );
+        showStatus(T("player.free-status"));
       }
     } catch (err) {
       showStatus(messageForError(err), "error");
@@ -978,7 +1386,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     try {
       await startLogin();
     } catch {
-      showStatus("No se pudo iniciar la conexión con Spotify.", "error");
+      showStatus(T("player.err.connect"), "error");
     }
   });
 
@@ -1038,69 +1446,79 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
     if (volumeDebounce) clearTimeout(volumeDebounce);
     volumeDebounce = window.setTimeout(async () => {
       try {
-        await setVolume(Number(volumeSlider.value));
+        const next = Number(volumeSlider.value);
+        lastVolumeBeforeMute = next;
+        volumeToggle.setAttribute("aria-pressed", next === 0 ? "true" : "false");
+        volumeToggle.setAttribute("aria-label", next === 0 ? T("player.unmute") : T("player.mute"));
+        await setVolume(next);
       } catch (err) {
         showStatus(messageForError(err), "error");
       }
     }, 250);
   });
 
-  let searchDebounce: number | null = null;
-  searchInput.addEventListener("input", () => {
-    if (searchDebounce) clearTimeout(searchDebounce);
-    const query = searchInput.value;
-    searchDebounce = window.setTimeout(async () => {
-      resultsList.innerHTML = "";
-      if (!query.trim()) return;
-      try {
-        const results = await searchTracks(query);
-        for (const track of results) {
-          const li = document.createElement("li");
-          li.setAttribute("role", "button");
-          li.tabIndex = 0;
+  volumeSlider.addEventListener(
+    "wheel",
+    (event) => {
+      event.preventDefault();
+      const current = Number(volumeSlider.value);
+      const step = 5;
+      const next = Math.max(0, Math.min(100, current + (event.deltaY > 0 ? -step : step)));
+      volumeSlider.value = String(next);
+      volumeSlider.dispatchEvent(new Event("input"));
+    },
+    { passive: false },
+  );
 
-          if (track.albumImageUrl) {
-            const img = document.createElement("img");
-            img.src = track.albumImageUrl;
-            img.alt = "";
-            img.width = 20;
-            img.height = 20;
-            li.appendChild(img);
-          }
+  function updateVolumeToggle(current: number) {
+    const muted = current === 0;
+    volumeToggle.setAttribute("aria-pressed", muted ? "true" : "false");
+    volumeToggle.setAttribute("aria-label", muted ? T("player.unmute") : T("player.mute"));
+    if (!muted) lastVolumeBeforeMute = current;
+  }
 
-          const titleSpan = document.createElement("span");
-          titleSpan.className = "wmp-result-title";
-          titleSpan.textContent = `${track.name} — ${track.artistNames}`;
-          li.appendChild(titleSpan);
-
-          const activate = async () => {
-            try {
-              await play(track.uri);
-              setTimeout(refreshNowPlaying, 400);
-            } catch (err) {
-              showStatus(messageForError(err), "error");
-            }
-          };
-          li.addEventListener("click", activate);
-          li.addEventListener("keydown", (e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              activate();
-            }
-          });
-
-          resultsList.appendChild(li);
-        }
-      } catch (err) {
-        showStatus(messageForError(err), "error");
+  volumeToggle.addEventListener("click", async () => {
+    const muted = volumeToggle.getAttribute("aria-pressed") === "true";
+    try {
+      if (muted) {
+        const restore = Math.max(1, lastVolumeBeforeMute || 70);
+        volumeSlider.value = String(restore);
+        volumeToggle.setAttribute("aria-pressed", "false");
+        volumeToggle.setAttribute("aria-label", T("player.mute"));
+        await setVolume(restore);
+      } else {
+        lastVolumeBeforeMute = Number(volumeSlider.value) || 70;
+        volumeSlider.value = "0";
+        volumeToggle.setAttribute("aria-pressed", "true");
+        volumeToggle.setAttribute("aria-label", T("player.unmute"));
+        await setVolume(0);
       }
-    }, 400);
+    } catch (err) {
+      showStatus(messageForError(err), "error");
+    }
   });
 
-  collapseBtn.addEventListener("click", () => setPlayerVisible(false));
-  lyricsBtn.addEventListener("click", toggleLyrics);
+  // [-] minimiza el cuerpo; [X] oculta el reproductor
+  collapseBtn.addEventListener("click", () => {
+    player.classList.toggle("wmp-player--min");
+  });
+  // Al minimizar, clic en el recuadro holo restaura el reproductor completo
+  lyricsPanel.addEventListener("click", () => {
+    if (player.classList.contains("wmp-player--min")) {
+      player.classList.remove("wmp-player--min");
+    }
+  });
+  closeBtn.addEventListener("click", () => setPlayerVisible(false));
+  lyricsToggle.addEventListener("click", toggleLyrics);
 
-  // Resalta la línea de letra activa según el progreso estimado
+  // Redimensionar el canvas cuando cambie el tamaño del panel
+  window.addEventListener("resize", () => {
+    if (!lyricsPanel.classList.contains("wmp-lyrics--closed") && particleRaf !== null) {
+      sizeCanvas();
+    }
+  });
+
+  // Resalta la frase de letra activa según el progreso estimado
   window.setInterval(updateLyricHighlight, 500);
 
   // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB).
@@ -1116,4 +1534,15 @@ import { SkipBack, Play, Pause, SkipForward, Volume2, Minus, FileText } from 'lu
   } else {
     showDisconnectedUI();
   }
+
+  updateLyricsToggleLabel(false);
+
+  // Al cambiar de idioma, re-traduce los estados dinámicos del reproductor
+  window.addEventListener("lang-change", () => {
+    setPlayerVisible(!player.classList.contains("wmp-player--hide"));
+    setPlayingIcon(playPauseBtn.dataset.playing === "true");
+    const lyricsOpen = !lyricsPanel.classList.contains("wmp-lyrics--closed");
+    updateLyricsToggleLabel(lyricsOpen);
+    refreshNowPlaying();
+  });
 </script>

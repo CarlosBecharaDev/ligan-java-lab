@@ -1,0 +1,109 @@
+{
+  "id": "quiz-17-clases-objetos-basico",
+  "lessonSlug": "clases-objetos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which operator creates an object in Java?",
+      "options": [
+        "new",
+        "create",
+        "instance",
+        "object"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. new allocates memory and returns the reference.",
+        "create does not exist as an operator.",
+        "instance is not an operator.",
+        "object is not an operator."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does 'Persona b = a;' do if 'a' is an object?",
+      "options": [
+        "It creates a new equal object",
+        "It makes b point to the same object",
+        "It copies all the attributes",
+        "Compilation error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It does not create a new object; it only copies the reference.",
+        "Correct. Both variables point to the same object in memory.",
+        "It does not copy attributes, only the address.",
+        "It is valid code."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the default value of an int in a class?",
+      "options": [
+        "null",
+        "1",
+        "0",
+        "-1"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "null is for object types.",
+        "It does not start at 1.",
+        "Correct. Java assigns 0 to integers.",
+        "It does not start at -1."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which keyword makes a member belong to the class?",
+      "options": [
+        "global",
+        "shared",
+        "static",
+        "public"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "global does not exist in Java.",
+        "shared does not exist in Java.",
+        "Correct. static makes the member belong to the class.",
+        "public only controls visibility, not ownership."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you access a static method?",
+      "options": [
+        "Only from an object",
+        "From the class or an object",
+        "Only with inheritance",
+        "From any package"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It can be accessed without creating an object.",
+        "Correct. static is accessed via Class.method() or object.method().",
+        "Inheritance has nothing to do with it.",
+        "It depends on the access modifier."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "How many objects does this code create?\nPersona a = new Persona();\nPersona b = a;\nPersona c = new Persona();",
+      "options": [
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "2 objects: 'a' and 'c'. 'b = a' only copies the reference.",
+        "Correct. There are only 2 calls to new.",
+        "3 would be the case if b were independent.",
+        "Overstated."
+      ]
+    }
+  ]
+}

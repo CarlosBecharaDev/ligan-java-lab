@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-strings",
+  "lessonSlug": "strings",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\n```java\nString a = \"hello\";\nString b = \"hello\";\nString c = new String(\"hello\");\nSystem.out.println(a == b);\nSystem.out.println(a == c);\nSystem.out.println(a.equals(c));\n```",
+      "options": [
+        "true, true, true",
+        "true, false, true",
+        "false, false, true",
+        "true, false, false"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "a and c are different objects in memory.",
+        "Correct. a and b point to the same literal in the Pool (true). a and c are different objects (false). equals() compares content (true).",
+        "a and b are indeed the same object in the Pool.",
+        "a.equals(c) is true because it compares content."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "When should you use StringBuilder instead of concatenation with `+`?",
+      "options": [
+        "Always, StringBuilder is faster",
+        "When building strings in loops or concatenating more than 3-4 parts",
+        "Only when working with strings longer than 1000 characters",
+        "StringBuilder is deprecated, never use it"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "For 2-3 concatenations, + is more readable and the compiler optimizes it.",
+        "Correct. In loops, each + creates a new String object. StringBuilder modifies a single object, avoiding intermediate garbage.",
+        "Size is not the deciding factor; it is the number of operations.",
+        "StringBuilder is still relevant for efficient construction."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does `\"  Hola  \".trim().length()` return?",
+      "options": ["7", "9", "5", "4"],
+      "correctIndex": 2,
+      "explanations": [
+        "7 would count the 2 extra spaces.",
+        "9 would be the original length.",
+        "Correct. trim() removes the 2 spaces at the start and 2 at the end, leaving 'Hola' with 4 characters.",
+        "4 is the correct length of 'Hola'."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "id": "quiz-basico-ifelse",
+  "lessonSlug": "if-else",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\n```java\nint x = 10;\nif (x > 5) {\n    System.out.println(\"A\");\n} else {\n    System.out.println(\"B\");\n}\n```",
+      "options": ["A", "B", "Error", "Nothing"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. 10 > 5 is true, the if block is executed.",
+        "10 > 5 is true, the else block is not executed.",
+        "The code compiles without errors.",
+        "The if is executed because the condition is true."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which operator do you use to compare whether two primitive values are equal?",
+      "options": ["=", "==", "equals", "!="],
+      "correctIndex": 1,
+      "explanations": [
+        "= is assignment, not comparison.",
+        "Correct. == compares whether two primitive values are equal.",
+        "equals() is for comparing String objects.",
+        "!= is the inequality (different) operator."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What happens if an if has no block (no braces)?",
+      "options": [
+        "Compilation error",
+        "Nothing, the if executes no code",
+        "It executes the else automatically",
+        "It throws a runtime exception"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "An empty if compiles, it just does nothing.",
+        "Correct. An if without a block executes no code and continues.",
+        "The else only runs if it exists and the condition is false.",
+        "It does not throw an exception."
+      ]
+    }
+  ]
+}

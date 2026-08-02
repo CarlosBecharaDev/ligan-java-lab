@@ -1,0 +1,58 @@
+{
+  "id": "quiz-14-sobrecarga-basico",
+  "lessonSlug": "sobrecarga",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does it print?\nstatic void f(int x) { System.out.print(\"A\"); }\nstatic void f(double x) { System.out.print(\"B\"); }\nf(5); f(5.0);",
+      "options": [
+        "AB",
+        "BA",
+        "AA",
+        "BB"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. f(5) calls f(int) because 5 is an int; f(5.0) calls f(double) because 5.0 is a double.",
+        "The order depends on the types, not on the definition.",
+        "5.0 is a double, not an int.",
+        "5 is an int, not a double."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Is this overloading valid?\nstatic int sumar(int a, int b)\nstatic double sumar(int a, int b)",
+      "options": [
+        "Yes, because they return different types",
+        "No, because the parameters are identical",
+        "Yes, but only with static",
+        "It depends on the Java version"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The return type does not determine overloading.",
+        "Correct. You cannot overload by changing only the return type.",
+        "Static does not affect the validity of overloading.",
+        "This rule is the same in all versions."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does procesar(3.14f) call if procesar(int) and procesar(double) exist?",
+      "options": [
+        "procesar(int)",
+        "procesar(double)",
+        "Compilation error",
+        "procesar(float)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "float is not converted to int directly.",
+        "Correct. float is promoted to double (the closest conversion in the hierarchy).",
+        "There is no error; there is a valid conversion.",
+        "There is no float method, but double accepts the promotion."
+      ]
+    }
+  ]
+}

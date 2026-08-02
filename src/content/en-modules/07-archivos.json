@@ -1,0 +1,11 @@
+{
+  "id": "mod-07",
+  "slug": "07-archivos",
+  "number": 7,
+  "title": "Files and Standard APIs",
+  "description": "Read and write files, serialize objects and handle dates with the modern API.",
+  "icon": "FileText",
+  "status": "disponible",
+  "lessonCount": 4,
+  "lessons": ["file-io", "file-writer", "serializacion", "date-time-api"]
+}

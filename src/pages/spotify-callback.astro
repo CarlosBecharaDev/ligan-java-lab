@@ -6,8 +6,8 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 <BaseLayout title="Conectando con Spotify...">
   <main class="callback-screen">
     <div class="callback-box">
-      <p id="callback-status">Conectando con Spotify...</p>
-      <button id="callback-back" class="hidden" type="button">Volver</button>
+      <p id="callback-status" data-i18n="callback.connecting">Conectando con Spotify...</p>
+      <button id="callback-back" class="hidden" type="button" data-i18n="callback.back">Volver</button>
     </div>
   </main>
 </BaseLayout>
@@ -51,16 +51,19 @@ import BaseLayout from "../layouts/BaseLayout.astro";
   const statusEl = document.getElementById("callback-status")!;
   const backBtn = document.getElementById("callback-back")!;
 
+  const T = (key: string): string =>
+    ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
+
   (async () => {
     try {
       const params = new URLSearchParams(window.location.search);
       await handleAuthCallback(params);
-      statusEl.textContent = "Cuenta conectada. Redirigiendo...";
+      statusEl.textContent = T("callback.connected");
       window.location.replace("/");
     } catch (err: any) {
       statusEl.setAttribute("data-error", "true");
       statusEl.textContent =
-        err?.message || "No se pudo completar la conexión con Spotify.";
+        err?.message || T("callback.error");
       backBtn.classList.remove("hidden");
       backBtn.addEventListener("click", () => window.location.replace("/"));
     }

@@ -1,0 +1,43 @@
+{
+  "id": "quiz-basico-casting",
+  "lessonSlug": "casting",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What result does `(int) 3.99` produce?",
+      "options": ["4", "3.99", "3", "4.0"],
+      "correctIndex": 2,
+      "explanations": [
+        "Java truncates, it does not round.",
+        "The result is an int, it has no decimals.",
+        "Correct. (int) truncates the decimal part, 3.99 → 3.",
+        "The result is int, which has no decimal part."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which of these conversions does NOT require an explicit cast?",
+      "options": ["double → int", "int → byte", "long → int", "int → double"],
+      "correctIndex": 3,
+      "explanations": [
+        "double → int is narrowing, it requires a cast.",
+        "int → byte is narrowing, it requires a cast.",
+        "long → int is narrowing, it requires a cast.",
+        "Correct. int → double is widening (implicit, safe)."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which method converts a String to int?",
+      "options": ["String.toInt()", "Integer.parseInt()", "int.valueOf()", "String.getInt()"],
+      "correctIndex": 1,
+      "explanations": [
+        "String has no toInt() method.",
+        "Correct. Integer.parseInt(str) converts a String to the int primitive.",
+        "int.valueOf does not exist; Integer.valueOf() returns Integer (wrapper).",
+        "String has no getInt() method."
+      ]
+    }
+  ]
+}

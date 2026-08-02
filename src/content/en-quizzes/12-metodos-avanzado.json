@@ -1,0 +1,58 @@
+{
+  "id": "quiz-12-metodos-avanzado",
+  "lessonSlug": "metodos",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\nstatic void modificar(int x) { x = 100; }\npublic static void main(String[] args) {\n    int valor = 5;\n    modificar(valor);\n    System.out.println(valor);\n}",
+      "options": [
+        "100",
+        "5",
+        "0",
+        "Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java passes primitives by value, not by reference.",
+        "Correct. The method receives a copy of 'valor'. Changing x inside the method does not affect the original variable.",
+        "The value is not set to 0.",
+        "The code compiles and runs without errors."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the best reason to use methods?",
+      "options": [
+        "To make the code shorter in terms of lines",
+        "To reuse code and separate responsibilities",
+        "So the compiler optimizes better",
+        "To avoid using variables"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "A method can make the code longer overall, but more organized.",
+        "Correct. Methods let you reuse logic (write once, use many times) and separate responsibilities (each method does one specific thing).",
+        "The compiler optimizes regardless of whether you use methods.",
+        "Methods work with variables; they do not replace them."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does this method return?\nstatic String verificar(int nota) {\n    if (nota >= 6) return \"Aprobado\";\n    return \"Reprobado\";\n}",
+      "options": [
+        "\"Aprobado\" always",
+        "\"Reprobado\" always",
+        "\"Aprobado\" if nota >= 6, \"Reprobado\" otherwise",
+        "It depends on the return value of main"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "It only returns \"Aprobado\" if the condition is met.",
+        "It only returns \"Reprobado\" when the first condition fails.",
+        "Correct. The first return runs only if nota >= 6; the second return covers all other cases.",
+        "The return value does not depend on main; it depends on the method's internal logic."
+      ]
+    }
+  ]
+}

@@ -14,7 +14,7 @@
 - **Audiencia:** Principiantes absolutos, estudiantes y personas con nociones básicas que necesitan ordenar y practicar.
 - **Autor y propietario del repositorio:** **Carlos Bechara** (`CarlosBecharaDev`)
 - **Símbolo de marca:** `</>` en SVG propio con tipografía `JetBrains Mono` y color `--sky` (#57B8FF)
-- **Idioma:** Español latino. Toda la interfaz, lecciones y comentarios de código en español.
+- **Idioma:** Español latino. Toda la interfaz, lecciones y comentarios de código en español. Desde 2026-08-01 el contenido también está en inglés (colecciones `en-*` y rutas `/en/`), con ids/slugs/niveles idénticos.
 - El código, README, commits y metadatos **no deben incluir** firmas, créditos ni texto atribuido a IA.
 - Nunca añadir `Co-authored-by`, `Generated-by` ni coautores ajenos a Carlos.
 - No copiar cursos, artículos ni código de terceros sin permiso. Conservar enlace y atribución cuando se use material externo.
@@ -30,14 +30,15 @@
 | Nombre del producto | `Ligan Java Lab` | 2026-07-26 |
 | Autor / propietario del repositorio | Carlos Bechara (`CarlosBecharaDev`) | 2026-07-26 |
 | Versión Java de referencia | Java 21 LTS | 2026-07-26 |
-| Idioma de la plataforma | Español latino | 2026-07-26 |
+| Idioma de la plataforma | Español latino (ES) + inglés (EN) desde 2026-08-01 | 2026-07-26 |
 | Símbolo de marca | `</>` SVG propio | 2026-07-26 |
 | Stack frontend | Astro + TypeScript + HTML/CSS modular | 2026-07-26 |
 | Ubicación del proyecto | `C:\Users\Usuario\Documents\ligan-java-lab` | 2026-07-26 |
 | Navegación pedagógica | Ruta guiada (recomendada) + exploración libre (enciclopedia) | 2026-07-26 |
-| Code Lab Fase 1 | Simulación con salidas predefinidas, claramente etiquetada | 2026-07-26 |
-| Code Lab permanente | Sin ejecución real de Java. El Code Lab usa simulación etiquetada en todas las fases | 2026-07-26 |
+| Code Lab Fase 1 | ~~Simulación con salidas predefinidas~~ **Eliminado (ADR-017)** | 2026-08-01 |
+| Code Lab permanente | ~~Sin ejecución real de Java~~ **El Code Lab completo se eliminó por código muerto; la práctica es con ejercicios y soluciones revelables** | 2026-08-01 |
 | Despliegue | Vercel (integración directa con GitHub) | 2026-07-26 |
+| Internacionalización | ES/EN — colecciones espejo `en-*` y rutas `/en/` (ADR-018) | 2026-08-01 |
 | Licencia | Pendiente de decisión de Carlos | Pendiente |
 
 ---
@@ -71,7 +72,7 @@ La plataforma debe sentirse como un **laboratorio elegante de desarrollo**, no c
 - La página de inicio (`/`) es un escritorio llamado `JAVA_WORKSPACE`.
 - Las carpetas representan módulos del curso.
 - Al hacer clic/Enter en una carpeta se abre una ventana de lección.
-- La app `Code Lab` abre un IDE educativo con simulación de ejecución.
+- La app `Practica` muestra los ejercicios (3 niveles con solución revelable). El antiguo Code Lab con editor fue eliminado (ADR-017).
 - La app `Progreso` muestra temas completados desde localStorage.
 - En móvil, las ventanas se convierten en navegación por capas/pantallas.
 - Existe siempre una **ruta alternativa normal** (menú, mapa de aprendizaje) para accesibilidad y SEO.
@@ -79,18 +80,19 @@ La plataforma debe sentirse como un **laboratorio elegante de desarrollo**, no c
 ### Módulos Visibles en el Escritorio
 
 ```
+00_Introduccion
 01_Fundamentos
 02_Control_de_flujo
-03_Métodos_y_Arrays
-04_Programación_Orientada_a_Objetos
-05_Colecciones_y_Strings
+03_Metodos_y_Arrays
+04_POO
+05_Colecciones
 06_Errores_y_Debug
 07_Archivos_y_APIs
 08_Java_Moderno
 09_Proyectos
 Historia_de_Java
 Recursos
-Code_Lab
+Code_Lab   (enlace a /practica — ejercicios; el editor fue eliminado)
 Progreso
 ```
 
@@ -197,7 +199,7 @@ type Lesson = {
   slug: string;
   module: string;
   title: string;
-  level: 'Inicial' | 'Intermedio' | 'Avanzado';
+  level: 'Inicial' | 'Intermedio' | 'Avanzado' | 'Beginner' | 'Intermediate' | 'Advanced'; // EN para en-lessons
   objectives: string[];
   prerequisites: string[];
   sections: ContentSection[];
@@ -338,16 +340,15 @@ type Quiz = {
 
 | Tecnología | Versión | Rol |
 |-----------|---------|-----|
-| Astro | 4.x+ | Framework principal, rutas y Content Collections |
-| TypeScript | 5.x | Tipado en componentes y features |
+| Astro | 7.1.3 | Framework principal, rutas y Content Collections |
+| TypeScript | 6.0.3 | Tipado en componentes y features |
 | CSS (custom) | — | Sistema de diseño sin frameworks |
-| Lucide | Última | Iconos SVG consistentes |
-| Shiki | Última | Resaltado de sintaxis Java |
-| CodeMirror 6 | 6.x | Editor Java en Code Lab (cargado bajo demanda) |
-| Zod | 3.x | Validación de esquemas de contenido |
-| localStorage | Web API | Progreso y borradores locales |
+| Lucide | 0.556.0 | Iconos SVG consistentes |
+| Shiki | Última | Resaltado de sintaxis Java (singleton en `src/lib/highlighter.ts`) |
+| Zod | (de Astro) | Validación de esquemas de contenido (`z` de `astro/zod`) |
+| localStorage | Web API | Progreso (`ligan-java-lab-progress`) e idioma (`ligan-lang`) |
 
-**No usar** Tailwind, frameworks UI (MUI, Chakra), ni dependencias pesadas innecesarias.
+**No usar** Tailwind, frameworks UI (MUI, Chakra), ni dependencias pesadas innecesarias. El CodeMirror del antiguo Code Lab fue eliminado (ADR-017).
 
 ---
 
@@ -361,7 +362,8 @@ ligan-java-lab/
 │   ├── CHANGELOG.md            ← Registro cronológico de cambios
 │   ├── DECISIONS.md            ← Decisiones de arquitectura (ADR)
 │   ├── CONTENT_REGISTRY.md     ← Catálogo de lecciones y fuentes
-│   └── ROADMAP.md              ← Hoja de ruta por fases
+│   ├── ROADMAP.md              ← Hoja de ruta por fases
+│   └── STATE.md                ← Estado actual del proyecto
 ├── public/
 │   ├── fonts/
 │   ├── icons/
@@ -370,59 +372,56 @@ ligan-java-lab/
 │   ├── assets/
 │   │   └── icons/
 │   ├── components/
-│   │   ├── desktop/            ← Desktop, DesktopIcon, Window, Taskbar
-│   │   ├── lesson/             ← LessonHeader, CodeBlock, VideoPlayer
-│   │   ├── code-lab/           ← CodeEditor, ConsoleOutput, CodeLab
-│   │   ├── quiz/               ← QuizCard, QuizResult
+│   │   ├── desktop/            ← Desktop, DesktopIcon, MainWindow, Taskbar, RetroChars, RetroPlayer, ThemeSelector
+│   │   ├── lesson/             ← LessonHeader, LessonExplorer, CodeBlock, LessonNav, ComparisonTable...
+│   │   ├── quiz/               ← QuizCard
 │   │   ├── exercises/          ← ExerciseCard, SolutionReveal
-│   │   └── ui/                 ← Button, Badge, Card, Modal, ProgressBar
+│   │   └── ui/                 ← Card, LiganLogo
 │   ├── content/
-│   │   ├── config.ts           ← Esquemas Zod (Content Collections)
-│   │   ├── lessons/            ← Archivos .mdx por lección
-│   │   ├── quizzes/            ← JSON de quizzes
-│   │   ├── exercises/          ← JSON de ejercicios
-│   │   ├── modules/            ← Metadatos de módulos
-│   │   └── resources/          ← Recursos externos verificados
+│   │   ├── config.ts           ← NO existe: el esquema está en `src/content.config.ts` (8 colecciones)
+│   │   ├── lessons/            ← 50 archivos .mdx (ES)
+│   │   ├── quizzes/            ← 92 JSON (ES)
+│   │   ├── exercises/          ← 46 JSON (ES)
+│   │   ├── modules/            ← 10 JSON (ES)
+│   │   ├── en-lessons/         ← 50 .mdx (EN)
+│   │   ├── en-quizzes/         ← 92 JSON (EN)
+│   │   ├── en-exercises/       ← 46 JSON (EN)
+│   │   └── en-modules/         ← 10 JSON (EN)
 │   ├── features/
-│   │   ├── desktop/            ← windowManager.ts, desktopState.ts
-│   │   ├── progress/           ← progressStore.ts
-│   │   ├── quiz/               ← quizEngine.ts
-│   │   └── downloads/          ← fileDownload.ts
+│   │   └── desktop/            ← desktopState.ts (config de iconos de módulos)
 │   ├── layouts/
-│   │   ├── BaseLayout.astro    ← Meta, fonts, tokens globales
+│   │   ├── BaseLayout.astro    ← Meta, fonts, tokens globales; fuerza `data-i18n-force="en"` en /en/
 │   │   ├── AppLayout.astro     ← Shell del escritorio
-│   │   ├── LessonLayout.astro  ← Layout de lección con sidebar
+│   │   ├── LessonLayout.astro  ← Explorador lateral + contenido principal
 │   │   └── ContentLayout.astro ← Páginas de contenido simple
 │   ├── pages/
 │   │   ├── index.astro         ← / — Escritorio
 │   │   ├── ruta.astro          ← /ruta
 │   │   ├── tema/[slug].astro   ← /tema/:slug
-│   │   ├── practica.astro      ← /practica
+│   │   ├── practica.astro      ← /practica (ejercicios)
 │   │   ├── quiz/[slug].astro   ← /quiz/:slug
 │   │   ├── progreso.astro      ← /progreso
 │   │   ├── historia.astro      ← /historia
 │   │   ├── glosario.astro      ← /glosario
 │   │   ├── recursos.astro      ← /recursos
 │   │   ├── sobre-el-proyecto.astro
-│   │   └── 404.astro
+│   │   ├── spotify-callback.astro ← callback OAuth PKCE de Spotify
+│   │   ├── 404.astro
+│   │   └── en/                 ← Espejo EN de las páginas
 │   ├── styles/
 │   │   ├── tokens.css          ← Variables CSS
 │   │   ├── global.css          ← Reset y base
 │   │   ├── desktop.css         ← Escritorio y ventanas
 │   │   ├── lesson.css          ← Lecciones
-│   │   ├── code.css            ← Bloques de código y editor
+│   │   ├── code.css            ← Bloques de código
 │   │   └── animations.css      ← Keyframes
-│   ├── types/
-│   │   ├── lesson.ts
-│   │   ├── quiz.ts
-│   │   ├── exercise.ts
-│   │   ├── module.ts
-│   │   └── desktop.ts
-│   └── utils/
-│       ├── download.ts         ← Generación blob .java
-│       ├── format.ts           ← Fechas, slugs, duración
-│       ├── storage.ts          ← Wrappers seguros de localStorage
-│       └── a11y.ts             ← Helpers de accesibilidad
+│   └── lib/
+│       ├── course.ts           ← Helpers de colecciones por idioma
+│       ├── lesson.ts, quiz.ts, exercise.ts, module.ts, desktop.ts ← Tipos del contenido
+│       ├── progress.ts         ← Progreso unificado y tipado (ADR-016)
+│       ├── highlighter.ts      ← Singleton Shiki (ADR-015)
+│       ├── i18n.ts             ← Traducciones ES/EN y cambio de idioma
+│       ├── glossary.ts, theme.ts, spotify.ts, lyrics.ts
 ├── astro.config.mjs
 ├── tsconfig.json
 ├── package.json
@@ -435,11 +434,11 @@ ligan-java-lab/
 | Carpeta | Por qué existe así |
 |---------|-------------------|
 | `components/` agrupados por dominio | Cada subcarpeta es cohesiva: los componentes del escritorio no saben nada de las lecciones. Facilita encontrar y mantener componentes. |
-| `features/` separada de `components/` | La lógica de negocio (gestión de ventanas, motor de quiz, progreso) no depende del framework. Puede moverse al backend sin reescribir. |
+| `features/` separada de `components/` | Lógica de negocio sin framework. Hoy solo queda `features/desktop/desktopState.ts`; el resto se movió a `lib/` o se eliminó (ADR-017). |
 | `content/` con esquemas Zod | El contenido se valida en tiempo de build. Ninguna lección puede publicarse con campos faltantes. |
-| `types/` centralizado | Un único contrato de datos compartido entre contenido, componentes y features. Evita duplicación y divergencia. |
+| `lib/` centralizado | Un único contrato de datos y utilidades compartidas entre contenido, componentes y features. Reemplaza a `types/` (ADR-011) y a `utils/` (eliminado). |
 | `styles/` por dominio | `tokens.css` es la única fuente de tokens. Los demás archivos solo los consumen. Cambiar un color = cambiar una línea. |
-| `utils/` con funciones puras | Funciones sin efectos secundarios: testeables, portables y predecibles. |
+| Colecciones espejo `en-*` | 1:1 con ES (ids/slugs/niveles idénticos) para habilitar `/en/` sin duplicar componentes (ADR-018). |
 | `docs/` en raíz | Los documentos de contexto están al mismo nivel que el código, no enterrados. La IA los encuentra siempre. |
 
 ---
@@ -521,13 +520,11 @@ git push → GitHub (CarlosBecharaDev)
 - El adaptador de Astro para Vercel NO es necesario en modo estático puro.
 - Si en el futuro se necesitan funciones serverless, se añade `@astrojs/vercel` y se registra en `docs/DECISIONS.md`.
 
-### Code Lab — Decisión Final
+### Code Lab — Eliminado (ADR-017)
 
-El Code Lab usa **simulación con salidas predefinidas** de forma permanente en esta versión del proyecto. No se implementará ejecución real de Java. El botón "Ejecutar" muestra siempre:
+El Code Lab con editor (CodeMirror) y consola simulada se eliminó el 2026-08-01 por ser **código muerto**: ninguna página lo usaba tras el MVP. La práctica ahora se hace con **ejercicios** (3 niveles con plantilla, pistas y solución revelable) en `/practica`.
 
-> `⚠️ Modo de práctica — los resultados son de ejemplo. La ejecución real de Java no está disponible en esta versión.`
-
-Esta decisión simplifica la arquitectura, elimina costos de servidor y es completamente compatible con Vercel estático.
+> Si en el futuro se quisiera ejecución real de Java, se registraría como decisión nueva (sandbox propio o Judge0/Piston) en `docs/DECISIONS.md`.
 
 ---
 
@@ -616,4 +613,4 @@ Consecuencias: [beneficios, límites y siguiente paso]
 
 ---
 
-*Última actualización: 2026-07-26 — Creación del contexto maestro mejorado con decisiones iniciales confirmadas.*
+*Última actualización: 2026-08-01 — Contenido completo (50 lecciones), internacionalización EN (ADR-018), pase de limpieza (ADR-014 a ADR-017).*

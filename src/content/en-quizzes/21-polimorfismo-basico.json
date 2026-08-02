@@ -1,0 +1,58 @@
+{
+  "id": "quiz-21-polimorfismo-basico",
+  "lessonSlug": "polimorfismo",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is polymorphism in Java?",
+      "options": [
+        "Having multiple attributes",
+        "The same reference type with different behaviors at runtime",
+        "Creating multiple constructors",
+        "Using multiple classes"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not about attributes.",
+        "Correct. Polymorphism allows a parent type to execute different versions of a method depending on the actual object.",
+        "That is constructor overloading.",
+        "It is not about creating multiple classes."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between overloading and overriding?",
+      "options": [
+        "They are the same",
+        "Overloading: same name, different parameters. Overriding: same signature in a subclass.",
+        "Overloading happens in subclasses, overriding in the same class",
+        "Overloading uses @Override, overriding does not"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They are not the same.",
+        "Correct. Overloading = same class, different parameters. Overriding = subclass, same signature.",
+        "It is the other way around: overloading in the same class, overriding in a subclass.",
+        "Overriding uses @Override, overloading does not."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which operator verifies the actual type of an object before a downcast?",
+      "options": [
+        "cast",
+        "instanceof",
+        "typeof",
+        "getClass"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "cast is not a verification operator.",
+        "Correct. instanceof returns true if the object is of the specified type.",
+        "typeof does not exist in Java.",
+        "getClass() returns the type but does not directly check against a given type."
+      ]
+    }
+  ]
+}

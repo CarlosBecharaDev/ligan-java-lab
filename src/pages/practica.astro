@@ -29,7 +29,7 @@ const sorted = Array.from(exerciseMap.entries()).sort(([a], [b]) => a.localeComp
 
 <ContentLayout title="Code Lab" description="Editor de Java interactivo con simulación de consola">
   <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui)">
-    <h1 data-i18n="practice.title" style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md);color:var(--win-text)">Code Lab</h1>
+    <h1 data-i18n="practice.title" data-i18n-title style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md);color:var(--win-text)">Code Lab</h1>
     <p data-i18n="practice.description" style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:18px">
       Practica con ejercicios de todas las lecciones. Escribe código Java, descárgalo y verifica tu comprensión.
     </p>
@@ -44,10 +44,10 @@ const sorted = Array.from(exerciseMap.entries()).sort(([a], [b]) => a.localeComp
               <div style="flex:1">
                 <strong style="font-family:var(--font-pixel);font-size:12px;color:var(--win-text)"><span data-i18n="practice.exercises-of">Ejercicios de</span> {entry.title}</strong>
                 <p style="color:var(--win-muted);margin:0;font-size:16px;margin-top:8px">
-                  {'🟢'.repeat(counts.facil)} Fácil · {'🟡'.repeat(counts.normal)} Normal · {'🔴'.repeat(counts.dificil)} Difícil
+                  {'🟢'.repeat(counts.facil)} <span data-i18n="practice.easy">Fácil</span> · {'🟡'.repeat(counts.normal)} <span data-i18n="practice.normal">Normal</span> · {'🔴'.repeat(counts.dificil)} <span data-i18n="practice.hard">Difícil</span>
                 </p>
               </div>
-              <span style="color:var(--win-link);font-family:var(--font-pixel);font-size:10px">{entry.exercises.length} <span data-i18n="practice.exercises-link">ejercicios</span> →</span>
+              <span style="color:var(--win-link);font-family:var(--font-pixel);font-size:10px">{entry.exercises.length} <span data-i18n="practice.exercises">ejercicios</span> →</span>
             </a>
           );
         })}

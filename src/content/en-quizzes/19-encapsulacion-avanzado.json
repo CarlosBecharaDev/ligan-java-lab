@@ -1,0 +1,58 @@
+{
+  "id": "quiz-19-encapsulacion-avanzado",
+  "lessonSlug": "encapsulacion",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the difference between an immutable object and an encapsulated one?",
+      "options": [
+        "They are the same",
+        "The immutable one has final fields without setters; the encapsulated one has private fields with setters",
+        "The encapsulated one cannot have getters",
+        "The immutable one uses public instead of private"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They are not the same: one protects access, the other forbids changes.",
+        "Correct. Immutable = final fields + no setters. Encapsulated = private + setters with validation.",
+        "Both use getters to expose data.",
+        "Both use private to protect fields."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What happens if you try to access a private attribute from another class?",
+      "options": [
+        "null is returned",
+        "The default value is used",
+        "Compilation error",
+        "0 is returned"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "null is not returned.",
+        "The default value is not used.",
+        "Correct. Java does not allow accessing private fields outside their class. It fails to compile.",
+        "0 is not returned."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "When is it recommended to use a final (immutable) field instead of a private field with a setter?",
+      "options": [
+        "When the value can change frequently",
+        "When the value should only be set in the constructor and not change afterwards",
+        "When validation is needed on every modification",
+        "When a default value is needed"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Fields that change frequently need setters.",
+        "Correct. final + no setter = immutable. Ideal for IDs, dates, and instance constants.",
+        "Frequent validation requires setters, not final.",
+        "Default values do not determine whether to use final."
+      ]
+    }
+  ]
+}

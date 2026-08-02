@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-setmap",
+  "lessonSlug": "set-map-avanzados",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which interface extends SortedSet adding methods like ceiling(), floor() and pollFirst()?",
+      "options": ["SequencedSet", "NavigableSet", "TreeSet", "SortedSet"],
+      "correctIndex": 1,
+      "explanations": [
+        "SequencedSet is new in Java 21; it does not add ceiling/floor.",
+        "Correct. NavigableSet (Java 6) extends SortedSet with proximity navigation.",
+        "TreeSet is a concrete implementation, not an interface.",
+        "SortedSet only has first(), last(), headSet(), tailSet(), subSet()."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which LinkedHashMap method allows creating an LRU cache?",
+      "options": ["removeEldestEntry()", "clearOldEntries()", "evictEntries()", "trimToSize()"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. removeEldestEntry() is invoked after each put() and returns true if the oldest entry should be removed.",
+        "That method does not exist in LinkedHashMap.",
+        "That method does not exist in LinkedHashMap.",
+        "That method does not exist in LinkedHashMap."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the time complexity of a contains() operation in TreeSet?",
+      "options": ["O(1)", "O(n)", "O(log n)", "O(n log n)"],
+      "correctIndex": 2,
+      "explanations": [
+        "TreeSet does not use a hash table; it uses a balanced tree.",
+        "It is not linear; the tree allows binary search.",
+        "Correct. TreeSet uses a red-black tree, with O(log n) operations.",
+        "It does not need to sort on each operation; the tree is already balanced."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which of the following Maps does NOT allow null keys?",
+      "options": ["HashMap", "LinkedHashMap", "TreeMap", "ConcurrentHashMap"],
+      "correctIndex": 2,
+      "explanations": [
+        "HashMap does allow one null key.",
+        "LinkedHashMap does allow null keys.",
+        "Correct. TreeMap does not allow null keys because it needs to compare them to sort them.",
+        "ConcurrentHashMap does not allow null keys (nor null values) for concurrency safety."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Which NavigableSet method returns the element greater than or equal to the given value?",
+      "options": ["higher()", "ceiling()", "floor()", "lower()"],
+      "correctIndex": 1,
+      "explanations": [
+        "higher() returns the strictly greater element.",
+        "Correct. ceiling(e) returns the smallest element >= e, or null if it does not exist.",
+        "floor(e) returns the largest element <= e.",
+        "lower(e) returns the strictly smaller element."
+      ]
+    }
+  ]
+}

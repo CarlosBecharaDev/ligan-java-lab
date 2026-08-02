@@ -1,0 +1,92 @@
+{
+  "id": "quiz-25-hashmap-basico",
+  "lessonSlug": "hashmap",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a HashMap?",
+      "options": [
+        "A collection of key-value pairs",
+        "An ordered list of elements",
+        "A type of associative array",
+        "A LIFO structure"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. HashMap is a collection that stores key-value pairs, allowing fast lookups by key.",
+        "No. HashMap does not guarantee any order of its elements.",
+        "No. Although it stores associations, it is not an array. It is an implementation of the Map interface.",
+        "No. HashMap is not a LIFO (Last In First Out) structure."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How do you insert a key-value pair into a HashMap?",
+      "options": [
+        "put(key, value)",
+        "add(key, value)",
+        "insert(key, value)",
+        "set(key, value)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The put(key, value) method inserts a new key-value pair into the HashMap.",
+        "No. The add() method is for collections like ArrayList.",
+        "No. There is no insert() method in HashMap.",
+        "No. The set() method is for List, not for Map."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you look up a value by key in a HashMap?",
+      "options": [
+        "get(key)",
+        "find(key)",
+        "search(key)",
+        "lookup(key)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The get(key) method returns the value associated with the key, or null if it does not exist.",
+        "No. There is no find() method in HashMap.",
+        "No. There is no search() method in HashMap.",
+        "No. There is no lookup() method in HashMap."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What happens if put() is used with a key that already exists?",
+      "options": [
+        "It overwrites the previous value",
+        "It throws an exception",
+        "It does nothing",
+        "It creates a second entry with the same key"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. If the key already exists, put() overwrites the previous value with the new one.",
+        "No. It does not throw an exception; it simply updates the value.",
+        "No. It does modify the existing value.",
+        "No. HashMap does not allow duplicate keys."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "How do you check if a key exists in a HashMap?",
+      "options": [
+        "containsKey()",
+        "hasKey()",
+        "existsKey()",
+        "keyExists()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The containsKey() method returns true if the key exists in the HashMap.",
+        "No. There is no hasKey() method in HashMap.",
+        "No. There is no existsKey() method in HashMap.",
+        "No. There is no keyExists() method in HashMap."
+      ]
+    }
+  ]
+}

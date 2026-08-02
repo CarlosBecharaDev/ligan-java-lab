@@ -2,23 +2,28 @@
 
 Catálogo completo del contenido educativo del proyecto.
 
+> ⚠️ Documento parcialmente obsoleto: describe en detalle solo las primeras lecciones (01-11). El catálogo completo vive en el propio contenido (`src/content/lessons/`, `src/content/modules/`) y en `docs/STATE.md`.
+
 ---
 
-## Mapa de Módulos (9 módulos)
+## Mapa de Módulos (10 módulos, ES + EN)
 
-| # | Módulo | Slug | Estado | Lecciones |
-|---|--------|------|--------|-----------|
-| 01 | Fundamentos de Java | fundamentos | 🟢 Disponible | 6 |
-| 02 | Control de Flujo | control-de-flujo | 🟢 Disponible | 5 |
-| 03 | Programación Orientada a Objetos | poo | ⚪ Próximamente | 7 |
-| 04 | Manejo de Excepciones | excepciones | ⚪ Próximamente | 4 |
-| 05 | Colecciones y Generics | colecciones | ⚪ Próximamente | 6 |
-| 06 | Entrada/Salida de Datos | entrada-salida | ⚪ Próximamente | 5 |
-| 07 | Expresiones Lambda y Streams | lambdas-streams | ⚪ Próximamente | 5 |
-| 08 | Concurrencia y Multihilo | concurrencia | ⚪ Próximamente | 4 |
-| 09 | Proyectos Integradores | proyectos | ⚪ Próximamente | 5 |
+| # | Módulo | Slug | Estado | Lecciones | Quizzes | Ejercicios |
+|---|--------|------|--------|-----------|---------|------------|
+| 00 | Introducción a Java | 00-introduccion | 🟢 Disponible | 1 | 2 | 1 |
+| 01 | Fundamentos de Java | 01-fundamentos | 🟢 Disponible | 6 | 12 | 6 |
+| 02 | Control de Flujo | 02-control-de-flujo | 🟢 Disponible | 5 | 10 | 5 |
+| 03 | Métodos y Arreglos | 03-metodos-y-arrays | 🟢 Disponible | 6 | 12 | 6 |
+| 04 | Programación Orientada a Objetos | 04-poo | 🟢 Disponible | 7 | 14 | 7 |
+| 05 | Colecciones y Strings | 05-colecciones | 🟢 Disponible | 6 | 12 | 6 |
+| 06 | Errores y Depuración | 06-errores | 🟢 Disponible | 5 | 10 | 5 |
+| 07 | Archivos y APIs Estándar | 07-archivos | 🟢 Disponible | 4 | 8 | 4 |
+| 08 | Java Moderno | 08-java-moderno | 🟢 Disponible | 6 | 12 | 6 |
+| 09 | Proyectos Guiados | 09-proyectos | 🟢 Disponible | 4 | 0 | 0 |
 
-**Total planificado:** 47 lecciones
+**Total publicado (por idioma):** 50 lecciones · 92 quizzes · 46 ejercicios · 10 módulos
+
+> Todo el contenido tiene su espejo en inglés en `src/content/en-*/` (rutas `/en/`), 1:1 en ids/slugs/niveles, solo texto traducido.
 
 ---
 
@@ -161,8 +166,8 @@ Cada lección debe incluir:
 - **Ejemplos del mundo real** (mín. 2, con dominio, código y resultado)
 - **Ejemplo interactivo** (opcional, CSS/JS puro)
 - **Comparativa** (opcional, con recomendación)
-- **Quiz básico** (3 preguntas)
-- **Quiz avanzado** (3 preguntas)
+- **Quiz básico** (5 preguntas)
+- **Quiz avanzado** (5 preguntas)
 - **Ejercicios** (3 niveles: fácil, normal, difícil)
 - **FAQ** (2-3 preguntas frecuentes)
 - **Fuentes** (URLs verificadas)

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-file-writer-facil",
+    "title": "Write a file",
+    "difficulty": "facil",
+    "description": "Create a text file with 5 lines using PrintWriter.",
+    "template": "import java.io.PrintWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Create \"salida.txt\" with 5 lines of text\n    }\n}",
+    "hints": [
+      "Use new PrintWriter(new FileWriter(\"salida.txt\"))",
+      "Write 5 lines with pw.println()",
+      "Close the PrintWriter in a finally block or with try-with-resources"
+    ],
+    "solution": "import java.io.PrintWriter;\nimport java.io.IOException;\n\npublic class Main {\n    public static void main(String[] args) {\n        try (PrintWriter pw = new PrintWriter(new java.io.FileWriter(\"salida.txt\"))) {\n            pw.println(\"Primera línea\");\n            pw.println(\"Segunda línea\");\n            pw.println(\"Tercera línea\");\n            pw.println(\"Cuarta línea\");\n            pw.println(\"Quinta línea\");\n            System.out.println(\"File created with 5 lines\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "PrintWriter with try-with-resources creates the file and writes each line with println(). It is closed automatically when leaving the block.",
+    "expectedOutput": "File created with 5 lines",
+    "lessonSlug": "file-writer"
+  },
+  {
+    "id": "ex-file-writer-normal",
+    "title": "Save notes",
+    "difficulty": "normal",
+    "description": "Save the notes of an ArrayList to a text file, one per line.",
+    "template": "import java.io.PrintWriter;\nimport java.io.FileWriter;\nimport java.io.IOException;\nimport java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<String> notas = new ArrayList<>();\n        notas.add(\"Revisar examen de matematicas\");\n        notas.add(\"Entregar proyecto de programacion\");\n        notas.add(\"Estudiar para final de historia\");\n        notas.add(\"Comprar material de laboratorio\");\n\n        // Save the notes to \"notas.txt\"\n    }\n}",
+    "hints": [
+      "Use a for or for-each loop to iterate over the ArrayList",
+      "Write each note with pw.println()",
+      "Print how many notes were saved"
+    ],
+    "solution": "import java.io.PrintWriter;\nimport java.io.FileWriter;\nimport java.io.IOException;\nimport java.util.ArrayList;\n\npublic class Main {\n    public static void main(String[] args) {\n        ArrayList<String> notas = new ArrayList<>();\n        notas.add(\"Revisar examen de matematicas\");\n        notas.add(\"Entregar proyecto de programacion\");\n        notas.add(\"Estudiar para final de historia\");\n        notas.add(\"Comprar material de laboratorio\");\n\n        try (PrintWriter pw = new PrintWriter(new FileWriter(\"notas.txt\"))) {\n            for (String nota : notas) {\n                pw.println(nota);\n            }\n            System.out.println(\"Saved \" + notas.size() + \" notes to notas.txt\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "The ArrayList is iterated with a for-each and each element is written to the file using println().",
+    "expectedOutput": "Saved 4 notes to notas.txt",
+    "lessonSlug": "file-writer"
+  },
+  {
+    "id": "ex-file-writer-dificil",
+    "title": "Log append",
+    "difficulty": "dificil",
+    "description": "Add timestamped entries to the end of a file (append mode) without deleting existing content.",
+    "template": "import java.io.FileWriter;\nimport java.io.BufferedWriter;\nimport java.io.IOException;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter;\n\npublic class Main {\n    public static void main(String[] args) {\n        // Add 3 log entries with timestamp to \"log.txt\"\n        // Each entry must have the format: [2025-01-15 10:30:00] Log message\n    }\n}",
+    "hints": [
+      "Use new FileWriter(\"log.txt\", true) to enable append mode",
+      "Format the date with DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm:ss\")",
+      "Use BufferedWriter for better performance"
+    ],
+    "solution": "import java.io.FileWriter;\nimport java.io.BufferedWriter;\nimport java.io.IOException;\nimport java.time.LocalDateTime;\nimport java.time.format.DateTimeFormatter;\n\npublic class Main {\n    public static void main(String[] args) {\n        DateTimeFormatter formatter = DateTimeFormatter.ofPattern(\"yyyy-MM-dd HH:mm:ss\");\n        try (BufferedWriter bw = new BufferedWriter(new FileWriter(\"log.txt\", true))) {\n            String[] mensajes = {\n                \"Sistema iniciado correctamente\",\n                \"Usuario admin ha iniciado sesion\",\n                \"Base de datos conectada\"\n            };\n            for (String mensaje : mensajes) {\n                String timestamp = LocalDateTime.now().format(formatter);\n                bw.write(\"[\" + timestamp + \"] \" + mensaje);\n                bw.newLine();\n            }\n            System.out.println(\"3 entries added to log.txt\");\n        } catch (IOException e) {\n            System.out.println(\"Error: \" + e.getMessage());\n        }\n    }\n}",
+    "solutionExplanation": "The second parameter true in FileWriter enables append mode. LocalDateTime.now() obtains the current date and time, formatted with the specified pattern.",
+    "expectedOutput": "3 entries added to log.txt",
+    "lessonSlug": "file-writer"
+  }
+]

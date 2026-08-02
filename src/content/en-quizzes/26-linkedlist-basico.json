@@ -1,0 +1,75 @@
+{
+  "id": "quiz-26-linkedlist-basico",
+  "lessonSlug": "linkedlist",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a LinkedList?",
+      "options": [
+        "A doubly linked list",
+        "A simple list without references",
+        "A linked array",
+        "A FIFO structure"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. LinkedList is a doubly linked list where each element has a reference to the previous and the next one.",
+        "No. LinkedList is doubly linked, not singly.",
+        "No. It is not an array; it is a collection of linked nodes.",
+        "No. Although it can be used as FIFO, its definition is a doubly linked list."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What advantage does LinkedList have over ArrayList?",
+      "options": [
+        "Efficient insertion and removal at the ends",
+        "Faster random access",
+        "Lower memory usage",
+        "Automatic element ordering"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. LinkedList is more efficient for insertions and removals at the ends of the list.",
+        "No. ArrayList has better random access because it uses an internal array.",
+        "No. LinkedList uses more memory because of the node references.",
+        "No. LinkedList does not automatically sort elements."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you add an element to the beginning of a LinkedList?",
+      "options": [
+        "addFirst()",
+        "add(0, element)",
+        "insertFirst()",
+        "prepend()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The addFirst() method adds an element to the beginning of the LinkedList.",
+        "No. Although add(0, element) works, addFirst() is more semantic and efficient.",
+        "No. There is no insertFirst() method in LinkedList.",
+        "No. There is no prepend() method in LinkedList."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you remove the last element of a LinkedList?",
+      "options": [
+        "removeLast()",
+        "remove()",
+        "deleteLast()",
+        "popLast()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The removeLast() method removes and returns the last element of the LinkedList.",
+        "No. remove() without parameters removes the first one, not the last.",
+        "No. There is no deleteLast() method in LinkedList.",
+        "No. There is no popLast() method in LinkedList."
+      ]
+    }
+  ]
+}

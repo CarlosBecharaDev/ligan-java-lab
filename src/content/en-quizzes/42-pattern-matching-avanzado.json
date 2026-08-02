@@ -1,0 +1,92 @@
+{
+  "id": "quiz-42-pattern-matching-avanzado",
+  "lessonSlug": "pattern-matching",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a pattern guard in Java?",
+      "options": [
+        "case Pattern p when condition: adds an extra condition to the pattern",
+        "A type of pattern that protects against NullPointerException",
+        "A clause that protects against compilation errors",
+        "An access modifier for patterns"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A pattern guard uses the when keyword to add an additional condition to the pattern: case Pattern p when p.isValid().",
+        "It is not specifically for NPE.",
+        "It is not a compilation protection clause.",
+        "It is not an access modifier."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a record pattern?",
+      "options": [
+        "case Persona(String n, int e): decomposes a record into its components",
+        "A pattern that only works with abstract classes",
+        "A pattern for creating records",
+        "A way of serializing a record"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A record pattern decomposes a record into its components directly in the case: case Persona(String name, int age).",
+        "It works with records, not abstract classes.",
+        "It is not for creating records.",
+        "It is not related to serialization."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is exhaustiveness in switch with pattern matching?",
+      "options": [
+        "The compiler verifies that all possible cases are covered",
+        "An error that occurs from using too many case labels",
+        "A compiler warning about dead code",
+        "A restriction that limits the number of patterns"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. With sealed types or enums, the compiler can verify that all cases are covered and report if any are missing.",
+        "It is not about the number of cases.",
+        "It is not a warning about dead code.",
+        "There is no limit on the number of patterns."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is a sealed interface?",
+      "options": [
+        "An interface that can only be implemented by a set of permitted classes",
+        "An interface with private methods",
+        "An interface that cannot have default methods",
+        "An interface with all static methods"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A sealed interface restricts which classes can implement it through the permits clause.",
+        "It has nothing to do with private methods.",
+        "It can have default methods.",
+        "It has nothing to do with static methods."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What are the permits in a sealed class?",
+      "options": [
+        "The list of classes allowed to extend or implement the sealed class/interface",
+        "The access permissions of the methods",
+        "The exceptions the class can throw",
+        "The fields the class can have"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The permits clause defines the specific classes (or interfaces) allowed to extend/implement the sealed class.",
+        "They have nothing to do with access permissions.",
+        "They have nothing to do with exceptions.",
+        "They have nothing to do with fields."
+      ]
+    }
+  ]
+}

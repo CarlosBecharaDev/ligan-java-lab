@@ -1,0 +1,368 @@
+---
+title: "Decision Statements: if-else"
+slug: "if-else"
+module: "02-control-de-flujo"
+level: "Beginner"
+objectives:
+  - "Evaluate boolean conditions with the if statement"
+  - "Build branches with if-else and else-if"
+  - "Nest if statements correctly"
+  - "Use code blocks with braces to avoid logic errors"
+  - "Resolve the dangling else problem"
+prerequisites:
+  - "Haber completado Módulo 01 — Fundamentos de Java"
+  - "Conocer operadores de comparación (==, !=, >, <, >=, <=)"
+  - "Conocer operadores lógicos (&&, ||, !)"
+history:
+  introducedIn: "Java 1.0"
+  context: "The if-else statements have existed since the first version of Java, inherited from C and C++. Unlike languages such as Python, Java uses braces to delimit blocks and requires the condition to be an explicit boolean expression, avoiding confusions such as 'truthy/falsy'."
+  evolution: "Java 1.4 removed the need for break in switch. Java 12-14 introduced switch expressions and arrow syntax. The if statement, however, has remained practically the same since Java 1.0 because of its clarity and simplicity."
+realWorldExamples:
+  - domain: "Access control"
+    description: "An access control system evaluates multiple conditions: age, license, and membership to decide whether a user can enter."
+    code: |
+      public class ControlAcceso {
+          public static void main(String[] args) {
+              int edad = 22;
+              boolean tieneLicencia = true;
+              boolean esMiembro = false;
+
+              if (edad >= 18) {
+                  if (tieneLicencia) {
+                      System.out.println("✅ Acceso permitido");
+                      if (esMiembro) {
+                          System.out.println("🎉 Bienvenido, miembro VIP");
+                      } else {
+                          System.out.println("ℹ️  Considere hacerse miembro");
+                      }
+                  } else {
+                      System.out.println("❌ Necesita licencia válida");
+                  }
+              } else {
+                  System.out.println("❌ Debe ser mayor de edad");
+              }
+          }
+      }
+    result: |
+      ✅ Access granted
+      ℹ️  Consider becoming a member
+  - domain: "Tax calculator"
+    description: "A tax system applies different tax rates based on income brackets using else-if scales."
+    code: |
+      public class CalculadoraImpuestos {
+          public static void main(String[] args) {
+              double ingreso = 52000.0;
+              double impuesto;
+
+              if (ingreso <= 10000) {
+                  impuesto = ingreso * 0.05;
+              } else if (ingreso <= 30000) {
+                  impuesto = 10000 * 0.05 + (ingreso - 10000) * 0.10;
+              } else if (ingreso <= 60000) {
+                  impuesto = 10000 * 0.05 + 20000 * 0.10 + (ingreso - 30000) * 0.15;
+              } else {
+                  impuesto = 10000 * 0.05 + 20000 * 0.10 + 30000 * 0.15 + (ingreso - 60000) * 0.30;
+              }
+
+              System.out.printf("Ingreso: $%.2f%n", ingreso);
+              System.out.printf("Impuesto: $%.2f%n", impuesto);
+              System.out.printf("Tasa efectiva: %.1f%%%n", (impuesto / ingreso) * 100);
+          }
+      }
+    result: |
+      Income: $52000.00
+      Tax: $8800.00
+      Effective rate: 16.9%
+hasInteractive: false
+comparisons:
+  - title: "if-else vs ternary operator"
+    items:
+      - name: "if-else"
+        features:
+          syntax: "Multiple lines, with braces"
+          readability: "Clear for complex logic"
+          use: "When there are side effects or multiple statements"
+          nesting: "Supports deep nesting"
+      - name: "Ternary (? :)"
+        features:
+          syntax: "One line: cond ? valTrue : valFalse"
+          readability: "Compact for simple assignments"
+          use: "Inline assignments with two options"
+          nesting: "Possible but unreadable"
+    recommendation: "Use if-else for logic with multiple steps or complex conditions. Use the ternary operator only for quick two-option assignments."
+videos:
+  - url: ""
+    title: "Decision statements in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Is it mandatory to use braces `{}` in if-else?"
+    answer: "No. If the block has a single statement, the braces are optional. But omitting them is a bad practice because it can lead to logic errors (dangling else). Always use braces even for a single line."
+  - question: "What is the 'dangling else'?"
+    answer: "It is a classic readability error where an else is associated with the wrong if. Java associates each else with the closest if that does not have an else. Braces solve this problem by clearly delimiting the blocks."
+  - question: "Can I use if without else?"
+    answer: "Yes. The else is optional. If you only need to run code when a condition is met, use if alone."
+sources:
+  - title: "Java 21 Language Specification — The if Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.9"
+    date: "2026-07-27"
+  - title: "Java Tutorials — The if-then and if-then-else Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/if.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a decision statement?
+
+Decision statements allow a program to **take different paths** depending on specific conditions. They are the foundation of logic in any programming language.
+
+In Java, the fundamental decision statement is `if`:
+
+```java
+if (condicion) {
+    // block that runs if condicion is true
+}
+```
+
+## The if statement
+
+`if` executes a block of code **only if** the condition is `true`:
+
+<CodeBlock lang="java" title="Basic if statement">
+{`public class IfBasico {
+    public static void main(String[] args) {
+        int edad = 20;
+
+        if (edad >= 18) {
+            System.out.println("You are an adult");
+        }
+
+        System.out.println("This line always runs");
+
+        // if with a single line (no braces, not recommended)
+        if (edad >= 18) System.out.println("Adult");
+
+        // Always use braces to avoid errors
+        if (edad >= 18) {
+            System.out.println("Adult");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+You are an adult
+This line always runs
+Adult
+Adult
+```
+
+## If-else: two paths
+
+`else` executes a block when the condition is `false`:
+
+```java
+if (condicion) {
+    // when it is true
+} else {
+    // when it is false
+}
+```
+
+<CodeBlock lang="java" title="If-else">
+{`public class IfElse {
+    public static void main(String[] args) {
+        int temperatura = 5;
+
+        if (temperatura > 25) {
+            System.out.println("It's hot 🥵");
+        } else {
+            System.out.println("It's cold 🥶");
+        }
+
+        System.out.println("Inside or outside, the program continues");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+It's cold 🥶
+Inside or outside, the program continues
+```
+
+## Else-if: multiple conditions
+
+When you have more than two paths, chain `else if`:
+
+<CodeBlock lang="java" title="Else-if">
+{`public class ElseIf {
+    public static void main(String[] args) {
+        int nota = 85;
+
+        if (nota >= 90) {
+            System.out.println("Excellent 🏆");
+        } else if (nota >= 80) {
+            System.out.println("Very good 👍");
+        } else if (nota >= 70) {
+            System.out.println("Good 👌");
+        } else if (nota >= 60) {
+            System.out.println("Enough 📖");
+        } else {
+            System.out.println("Failed ❌");
+        }
+
+        System.out.println("Final grade: " + nota);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Very good 👍
+Final grade: 85
+```
+
+## Complex boolean conditions
+
+You can combine multiple conditions with logical operators:
+
+<CodeBlock lang="java" title="Compound conditions">
+{`public class CondicionesCompuestas {
+    public static void main(String[] args) {
+        int edad = 25;
+        boolean tieneLicencia = true;
+        boolean tieneMultas = false;
+
+        // AND: both must hold
+        if (edad >= 18 && tieneLicencia) {
+            System.out.println("Can drive legally");
+        }
+
+        // OR: at least one must hold
+        if (edad < 12 || tieneMultas) {
+            System.out.println("Has restrictions");
+        }
+
+        // NOT + AND: combination
+        if (edad >= 18 && !tieneMultas) {
+            System.out.println("Has no tickets and is an adult");
+        }
+
+        // Complex compound condition
+        if ((edad >= 18 && tieneLicencia) && !tieneMultas) {
+            System.out.println("✅ Driver without restrictions");
+        } else {
+            System.out.println("⚠️ Cannot drive");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Can drive legally
+Has no tickets and is an adult
+✅ Driver without restrictions
+```
+
+## If-else vs ternary operator
+
+The ternary operator is a compact version of `if-else` for assignments:
+
+```java
+// traditional if-else
+String mensaje;
+if (edad >= 18) {
+    mensaje = "Adult";
+} else {
+    mensaje = "Minor";
+}
+
+// Equivalent ternary (one line)
+String mensaje = (edad >= 18) ? "Adult" : "Minor";
+```
+
+## Common mistakes
+
+### Mistake 1: Using `=` instead of `==`
+```java
+// ❌ Assigns 5 to x, does not compare. The condition is always true
+if (x = 5) { }  // Compilation error
+
+// ✅ Correct comparison
+if (x == 5) { }
+```
+
+### Mistake 2: Forgetting the braces
+```java
+// ❌ Only "Check..." is inside the if
+if (edad >= 18)
+    System.out.println("Check...");
+    System.out.println("Adult");  // always runs
+
+// ✅ With braces, both lines are inside
+if (edad >= 18) {
+    System.out.println("Check...");
+    System.out.println("Adult");
+}
+```
+
+### Mistake 3: Semicolon after the if
+```java
+// ❌ The ; ends the if statement, the block always runs
+if (edad >= 18); {
+    System.out.println("Adult");  // always prints
+}
+
+// ✅ Without semicolon
+if (edad >= 18) {
+    System.out.println("Adult");
+}
+```
+
+### Mistake 4: Comparing Strings with ==
+```java
+// ❌ Compares references, not content
+if (nombre == "Carlos") { }
+
+// ✅ Compares content correctly
+if ("Carlos".equals(nombre)) { }
+```
+
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

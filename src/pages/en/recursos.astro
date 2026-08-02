@@ -1,0 +1,115 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import Card from '@components/ui/Card.astro';
+---
+
+<ContentLayout title="Resources" description="Verified external resources to learn Java" lang="en">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);">🔗 Resources</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:1.2rem;">
+      Tools, documentation and verified sites to complement your learning.
+    </p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-bottom:1rem;">📖 Official documentation</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Java 21 API Docs</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Official Java 21 LTS API documentation</p>
+        <a href="https://docs.oracle.com/en/java/javase/21/docs/api/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">OpenJDK</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Java reference implementation</p>
+        <a href="https://openjdk.org/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">openjdk.org ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Java Language Spec</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Complete Java language specification</p>
+        <a href="https://docs.oracle.com/javase/specs/jls/se21/html/index.html" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;">🛠️ Tools</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">IntelliJ IDEA Community</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Recommended free IDE for Java</p>
+        <a href="https://www.jetbrains.com/idea/download/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">jetbrains.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">JDK 21 — Adoptium</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">JDK 21 LTS download (Temurin)</p>
+        <a href="https://adoptium.net/temurin/releases/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">adoptium.net ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Visual Studio Code</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Lightweight editor with Java support (Extension Pack)</p>
+        <a href="https://code.visualstudio.com/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">code.visualstudio.com ↗</a>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;">📚 Learning</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Oracle Java Tutorials</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Official Oracle tutorials to learn Java</p>
+        <a href="https://docs.oracle.com/javase/tutorial/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">docs.oracle.com ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Dev.java</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Oracle's official portal for the Java community</p>
+        <a href="https://dev.java/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">dev.java ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">More videos coming soon</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;">Recommended English channels are being verified</p>
+        <p style="color:var(--win-muted);font-size:1.1rem;">⚪ Pending verification</p>
+      </Card>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:var(--space-xl);margin-bottom:1rem;">🎥 Recommended YouTube channels</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Amigoscode</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Complete Java courses from zero to advanced. Clear English explanations and real-world projects.</p>
+        <a href="https://www.youtube.com/@amigoscode" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visit channel ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Telusko</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Java and Spring tutorials for beginners. Simple explanations with practical examples.</p>
+        <a href="https://www.youtube.com/@Telusko" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visit channel ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Coding with John</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Modern Java content with a focus on fundamentals, testing and best practices.</p>
+        <a href="https://www.youtube.com/@CodingWithJohn" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visit channel ↗</a>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);">Programming with Mosh</h3>
+        <p style="color:var(--win-muted);font-size:1.1rem;margin-bottom:1rem;">Structured courses and clear explanations. Great starting point for absolute beginners.</p>
+        <a href="https://www.youtube.com/@programmingwithmosh" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);font-family:var(--font-ui);font-weight:bold;">Visit channel ↗</a>
+      </Card>
+    </div>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-card {
+    background-color: var(--win-bg) !important;
+    border: 2px solid var(--win-border) !important;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+  }
+</style>

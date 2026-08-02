@@ -1,0 +1,92 @@
+{
+  "id": "quiz-28-expresiones-regulares-avanzado",
+  "lessonSlug": "expresiones-regulares",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does .* do in a regular expression?",
+      "options": [
+        "Any character (0 or more times)",
+        "Exactly one character",
+        "A digit or letter",
+        "A whitespace"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. . matches any character and * means 0 or more times; together they match any sequence.",
+        "No. For exactly one character it would be just the dot (.).",
+        "No. For digits or letters it would be \\w.",
+        "No. For spaces it would be \\s."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is greedy vs lazy in regular expressions?",
+      "options": [
+        "Greedy takes the maximum, lazy takes the minimum",
+        "Greedy is fast, lazy is slow",
+        "Greedy matches everything, lazy matches nothing",
+        "There is no difference"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Greedy tries to match the largest amount possible; lazy tries to match the smallest amount possible.",
+        "No. Speed is not the difference; it is the amount of text they try to match.",
+        "No. Lazy does not match nothing; it matches the smallest amount possible.",
+        "No. There is a difference; greedy uses * and lazy uses *?."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you check if an email is valid using regex?",
+      "options": [
+        "Pattern with an email regex",
+        "Use the isEmail() method",
+        "Validate with contains(@)",
+        "It cannot be validated"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A Pattern is created with a regular expression that defines the email format and is validated with Matcher.",
+        "No. There is no isEmail() method in Java.",
+        "No. contains(@) only checks that it has @; it does not validate the full format.",
+        "No. It can be validated using regular expressions."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is a capture group in regular expressions?",
+      "options": [
+        "Parentheses that group part of the pattern",
+        "Braces that define a set",
+        "Brackets that search for characters",
+        "Angle brackets that mark start and end"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Parentheses () create capture groups that allow extracting specific parts of the matched text.",
+        "No. Braces {} are used for quantifiers, not for capture.",
+        "No. Brackets [] define character classes.",
+        "No. Angle brackets <> are not used in regex."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What does \\b do in a regular expression?",
+      "options": [
+        "Word boundary",
+        "A whitespace",
+        "A line break",
+        "A backspace"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. \\b represents a boundary between a word and a whitespace, useful for searching whole words.",
+        "No. For spaces you use \\s, not \\b.",
+        "No. For line breaks you use \\n, not \\b.",
+        "No. It is not a backspace; it is a word boundary."
+      ]
+    }
+  ]
+}

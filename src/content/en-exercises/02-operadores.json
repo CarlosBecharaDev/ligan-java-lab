@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-operadores-facil",
+    "lessonSlug": "operadores",
+    "title": "Basic calculator",
+    "difficulty": "facil",
+    "description": "Declare two numeric variables and print the result of adding, subtracting, multiplying, dividing them and getting the modulus.",
+    "template": "public class CalculadoraBasica {\n    public static void main(String[] args) {\n        // TODO: Declare two int variables with values of your choice\n        // Print the result of the 5 basic arithmetic operations\n\n    }\n}",
+    "hints": [
+      "Use System.out.println for each operation",
+      "Remember that integer division truncates the decimals"
+    ],
+    "solution": "public class CalculadoraBasica {\n    public static void main(String[] args) {\n        int a = 15;\n        int b = 4;\n\n        System.out.println(\"Sum: \" + (a + b));\n        System.out.println(\"Difference: \" + (a - b));\n        System.out.println(\"Product: \" + (a * b));\n        System.out.println(\"Division: \" + (a / b));\n        System.out.println(\"Modulus: \" + (a % b));\n    }\n}",
+    "solutionExplanation": "We declare two integer variables and perform the 5 basic arithmetic operations. Integer division gives 3 (truncating 3.75), and the modulus gives 3 (the remainder of 15/4).",
+    "expectedOutput": "Sum: 19\nDifference: 11\nProduct: 60\nDivision: 3\nModulus: 3"
+  },
+  {
+    "id": "ex-operadores-normal",
+    "lessonSlug": "operadores",
+    "title": "Age comparator",
+    "difficulty": "normal",
+    "description": "Create a program that compares two ages using comparison and logical operators. Determine if both people can vote, if at least one is over 65 years old, and if they have the same age.",
+    "template": "public class ComparadorEdades {\n    public static void main(String[] args) {\n        // TODO: Define two age variables\n        // Determine with boolean whether each one can vote (>= 18)\n        // Determine if BOTH can vote (AND)\n        // Determine if AT LEAST ONE is over 65 (OR)\n        // Determine if they have the same age\n        // Print all the results\n\n    }\n}",
+    "hints": [
+      "Use >= to compare with the minimum age",
+      "Use && to check if BOTH meet the condition",
+      "Use || to check if AT LEAST ONE meets it"
+    ],
+    "solution": "public class ComparadorEdades {\n    public static void main(String[] args) {\n        int edad1 = 25;\n        int edad2 = 70;\n\n        boolean puedeVotar1 = edad1 >= 18;\n        boolean puedeVotar2 = edad2 >= 18;\n        boolean ambosVotan = puedeVotar1 && puedeVotar2;\n        boolean algunoMayor65 = edad1 > 65 || edad2 > 65;\n        boolean mismaEdad = edad1 == edad2;\n\n        System.out.println(\"Person 1 can vote: \" + puedeVotar1);\n        System.out.println(\"Person 2 can vote: \" + puedeVotar2);\n        System.out.println(\"Both can vote: \" + ambosVotan);\n        System.out.println(\"Someone over 65: \" + algunoMayor65);\n        System.out.println(\"Same age: \" + mismaEdad);\n    }\n}",
+    "solutionExplanation": "We use comparison operators (>=, >, ==) to evaluate each condition, and logical operators (&&, ||) to combine them. Each result is stored in a descriptive boolean.",
+    "expectedOutput": "Person 1 can vote: true\nPerson 2 can vote: true\nBoth can vote: true\nSomeone over 65: true\nSame age: false"
+  },
+  {
+    "id": "ex-operadores-dificil",
+    "lessonSlug": "operadores",
+    "title": "Tax calculator with discounts",
+    "difficulty": "dificil",
+    "description": "Calculate the final price of a product applying: base price, conditional discount (15% if buying more than 10 units, 10% if more than 5, no discount if 5 or less), 16% tax, and rounding to 2 decimals.",
+    "template": "public class CalculadoraImpuestos {\n    public static void main(String[] args) {\n        // TODO: Define unit price, quantity\n        // Calculate subtotal\n        // Apply conditional discount with ternary:\n        //   quantity > 10 → 15%\n        //   quantity > 5 → 10%\n        //   otherwise → 0%\n        // Calculate 16% tax on the discounted price\n        // Calculate the total and print everything formatted\n\n    }\n}",
+    "hints": [
+      "You can nest ternary operators for the discounts",
+      "Use printf with %.2f to format to 2 decimals",
+      "The tax is calculated on the ALREADY discounted price"
+    ],
+    "solution": "public class CalculadoraImpuestos {\n    public static void main(String[] args) {\n        final double PRECIO_UNITARIO = 49.99;\n        final double IMPUESTO = 0.16;\n        int cantidad = 12;\n\n        double subtotal = PRECIO_UNITARIO * cantidad;\n\n        // Conditional discount with nested ternary\n        double porcentajeDescuento = cantidad > 10 ? 0.15\n            : cantidad > 5 ? 0.10\n            : 0.0;\n\n        double montoDescuento = subtotal * porcentajeDescuento;\n        double precioConDescuento = subtotal - montoDescuento;\n        double impuestoMonto = precioConDescuento * IMPUESTO;\n        double total = precioConDescuento + impuestoMonto;\n\n        System.out.printf(\"Unit price: $%.2f%n\", PRECIO_UNITARIO);\n        System.out.printf(\"Quantity: %d%n\", cantidad);\n        System.out.printf(\"Subtotal: $%.2f%n\", subtotal);\n        System.out.printf(\"Discount (%.0f%%): -$%.2f%n\",\n            porcentajeDescuento * 100, montoDescuento);\n        System.out.printf(\"Discounted price: $%.2f%n\", precioConDescuento);\n        System.out.printf(\"Tax (16%%): $%.2f%n\", impuestoMonto);\n        System.out.printf(\"Total: $%.2f%n\", total);\n    }\n}",
+    "solutionExplanation": "We use a nested ternary to determine the discount percentage based on the quantity. The tax is calculated on the already discounted price. printf with %.2f formats the decimals to 2 digits.",
+    "expectedOutput": "Unit price: $49.99\nQuantity: 12\nSubtotal: $599.88\nDiscount (15%): -$89.98\nDiscounted price: $509.90\nTax (16%): $81.58\nTotal: $591.48"
+  }
+]

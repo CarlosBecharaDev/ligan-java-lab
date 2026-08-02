@@ -1,0 +1,303 @@
+---
+title: "Project: Task Manager"
+slug: "gestor-tareas"
+module: "09-proyectos"
+level: "Intermediate"
+objectives:
+  - "Design a Task class with attributes and business methods"
+  - "Use ArrayList to manage a dynamic list of tasks"
+  - "Implement task filtering by status (pending/completed)"
+  - "Save and load tasks in a CSV file"
+  - "Apply SRP (Single Responsibility) principles in code organization"
+prerequisites:
+  - "Haber completado Módulo 05: Colecciones y Strings"
+  - "Conocer lectura/escritura de archivos (FileWriter, BufferedReader)"
+history:
+  introducedIn: "Guided task management project"
+  context: "A task manager (todo list) is the classic project for learning CRUD (Create, Read, Update, Delete) in any language. We will implement the 4 operations with CSV file persistence."
+  evolution: "The base version uses an in-memory ArrayList. You can extend it with priorities, due dates, categories, and database persistence."
+realWorldExamples: []
+hasInteractive: false
+comparisons: []
+videos:
+  - url: ""
+    title: "Project: Task Manager in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "What are the advantages of separating business logic from the interface?"
+    answer: "The SRP (Single Responsibility) principle says each class should have a single reason to change. GestorTareas handles business logic, while the interface (menu) handles user interaction. This way you can change the interface without affecting the logic."
+  - question: "How do I make tasks have priorities?"
+    answer: "Add an enum Prioridad {ALTA, MEDIA, BAJA} as a field in Task. When displaying tasks, sort them by priority using Comparator."
+  - question: "How do I add due dates?"
+    answer: "Add a LocalDate vencimiento field. Use DateTimeFormatter to display/parse dates. When displaying tasks, highlight the overdue ones by comparing with LocalDate.now()."
+sources:
+  - title: "Java Tutorials — Collections"
+    url: "https://docs.oracle.com/javase/tutorial/collections/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Project description
+
+You will create a **task manager** (todo list) with these features:
+
+- Add tasks with name and status
+- Mark tasks as completed
+- List tasks (all, pending, or completed)
+- Delete tasks
+- Persistence in a CSV file
+
+## Step 1: Task class
+
+<CodeBlock lang="java" title="Task model">
+{`import java.time.LocalDate;
+
+public class Tarea {
+    private static int contador = 1;
+    private int id;
+    private String nombre;
+    private boolean completada;
+    private LocalDate fechaCreacion;
+
+    public Tarea(String nombre) {
+        this.id = contador++;
+        this.nombre = nombre;
+        this.completada = false;
+        this.fechaCreacion = LocalDate.now();
+    }
+
+    // constructor to load from CSV
+    public Tarea(int id, String nombre, boolean completada, LocalDate fecha) {
+        this.id = id;
+        this.nombre = nombre;
+        this.completada = completada;
+        this.fechaCreacion = fecha;
+        if (id >= contador) contador = id + 1;
+    }
+
+    public int getId() { return id; }
+    public String getNombre() { return nombre; }
+    public boolean isCompletada() { return completada; }
+    public void marcarCompletada() { this.completada = true; }
+    public LocalDate getFechaCreacion() { return fechaCreacion; }
+
+    @Override
+    public String toString() {
+        String estado = completada ? "✓" : "○";
+        return String.format("%d. [%s] %s (%s)",
+            id, estado, nombre, fechaCreacion);
+    }
+
+    public String toCSV() {
+        return id + "," + nombre + "," + completada + "," + fechaCreacion;
+    }
+}`}
+</CodeBlock>
+
+## Step 2: Task Manager (business logic)
+
+<CodeBlock lang="java" title="Manager class with CRUD">
+{`import java.util.*;
+import java.util.stream.Collectors;
+
+public class GestorTareas {
+    private ArrayList<Tarea> tareas;
+
+    public GestorTareas() {
+        this.tareas = new ArrayList<>();
+    }
+
+    public void agregar(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            System.out.println("⚠ The name cannot be empty");
+            return;
+        }
+        tareas.add(new Tarea(nombre));
+        System.out.println("✓ Task added: " + nombre);
+    }
+
+    public void marcarCompletada(int id) {
+        Tarea tarea = buscarPorId(id);
+        if (tarea == null) {
+            System.out.println("⚠ Task not found: " + id);
+            return;
+        }
+        tarea.marcarCompletada();
+        System.out.println("✓ Task completed: " + tarea.getNombre());
+    }
+
+    public void eliminar(int id) {
+        Tarea tarea = buscarPorId(id);
+        if (tarea == null) {
+            System.out.println("⚠ Task not found: " + id);
+            return;
+        }
+        tareas.remove(tarea);
+        System.out.println("✓ Task deleted: " + tarea.getNombre());
+    }
+
+    public void listar() {
+        listarFiltrado(null);
+    }
+
+    public void listarPendientes() {
+        listarFiltrado(false);
+    }
+
+    public void listarCompletadas() {
+        listarFiltrado(true);
+    }
+
+    private void listarFiltrado(Boolean estado) {
+        if (tareas.isEmpty()) {
+            System.out.println("📋 No tasks registered");
+            return;
+        }
+
+        List<Tarea> filtradas = estado == null
+            ? tareas
+            : tareas.stream()
+                .filter(t -> t.isCompletada() == estado)
+                .collect(Collectors.toList());
+
+        if (filtradas.isEmpty()) {
+            System.out.println("📋 No tasks " +
+                (estado == Boolean.TRUE ? "completed" : "pending"));
+            return;
+        }
+
+        String titulo = estado == null ? "ALL"
+            : estado ? "COMPLETED" : "PENDING";
+        System.out.println("\\n📋 " + titulo + ":");
+        filtradas.forEach(t -> System.out.println("  " + t));
+    }
+
+    private Tarea buscarPorId(int id) {
+        for (Tarea t : tareas) {
+            if (t.getId() == id) return t;
+        }
+        return null;
+    }
+}`}
+</CodeBlock>
+
+## Step 3: CSV persistence
+
+<CodeBlock lang="java" title="Save and load tasks">
+{`import java.io.*;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+public class PersistenciaTareas {
+    public static void guardar(ArrayList<Tarea> tareas, String archivo) {
+        try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
+            pw.println("id,nombre,completada,fecha");
+            for (Tarea t : tareas) {
+                pw.println(t.toCSV());
+            }
+        } catch (IOException e) {
+            System.out.println("Error saving: " + e.getMessage());
+        }
+    }
+
+    public static ArrayList<Tarea> cargar(String archivo) {
+        ArrayList<Tarea> tareas = new ArrayList<>();
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea = br.readLine(); // skip header
+            while ((linea = br.readLine()) != null) {
+                String[] partes = linea.split(",", 4);
+                int id = Integer.parseInt(partes[0]);
+                boolean comp = Boolean.parseBoolean(partes[2]);
+                LocalDate fecha = LocalDate.parse(partes[3]);
+                tareas.add(new Tarea(id, partes[1], comp, fecha));
+            }
+        } catch (FileNotFoundException e) {
+            // new file — no previous data
+        } catch (IOException e) {
+            System.out.println("Error loading: " + e.getMessage());
+        }
+        return tareas;
+    }
+}`}
+</CodeBlock>
+
+## Step 4: Main menu
+
+<CodeBlock lang="java" title="User interface">
+{`import java.util.Scanner;
+
+public class Main {
+    public static void main(String[] args) {
+        GestorTareas gestor = new GestorTareas();
+        Scanner sc = new Scanner(System.in);
+        int opcion;
+
+        do {
+            System.out.println("\\n=== TASK MANAGER ===");
+            System.out.println("1. Add task");
+            System.out.println("2. Mark completed");
+            System.out.println("3. Delete task");
+            System.out.println("4. List all");
+            System.out.println("5. List pending");
+            System.out.println("6. List completed");
+            System.out.println("7. Exit");
+            System.out.print("Option: ");
+            opcion = sc.nextInt();
+            sc.nextLine(); // consume newline
+
+            switch (opcion) {
+                case 1 -> {
+                    System.out.print("Name: ");
+                    gestor.agregar(sc.nextLine());
+                }
+                case 2 -> {
+                    System.out.print("Task ID: ");
+                    gestor.marcarCompletada(sc.nextInt());
+                }
+                case 3 -> {
+                    System.out.print("Task ID: ");
+                    gestor.eliminar(sc.nextInt());
+                }
+                case 4 -> gestor.listar();
+                case 5 -> gestor.listarPendientes();
+                case 6 -> gestor.listarCompletadas();
+                case 7 -> System.out.println("Goodbye!");
+                default -> System.out.println("Invalid option");
+            }
+        } while (opcion != 7);
+
+        sc.close();
+    }
+}`}
+</CodeBlock>
+
+## Extension exercises
+
+1. **Priorities**: add enum Priority {'{'}HIGH, MEDIUM, LOW{'}'}
+2. **Dates**: add a due date with highlighting of overdue tasks
+3. **Categories**: group tasks by categories (work, personal, study)
+4. **Search**: allow searching tasks by text in the name
+5. **Sort**: sort by date, priority, or name
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

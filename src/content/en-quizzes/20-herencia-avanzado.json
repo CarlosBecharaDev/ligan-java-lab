@@ -1,0 +1,58 @@
+{
+  "id": "quiz-20-herencia-avanzado",
+  "lessonSlug": "herencia",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What happens if a child class does not call super() in its constructor?",
+      "options": [
+        "Compilation error if the parent has no no-arg constructor",
+        "Java always calls super() automatically",
+        "The parent is not initialized",
+        "The object is not created"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Java inserts an implicit super() call, but if the parent has no parameterless constructor, it fails.",
+        "Java does it only if you do not write any super call, but it does not always work.",
+        "The parent is indeed initialized via the implicit super() call.",
+        "The object is indeed created."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "In a hierarchy Person -> Doctor -> Surgeon, which constructor runs FIRST when creating a Surgeon?",
+      "options": [
+        "Surgeon",
+        "Doctor",
+        "Person",
+        "They run in parallel"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "It is not the first one.",
+        "Doctor runs after Person.",
+        "Correct. The super() chain goes from the child up to the parent: Surgeon -> Doctor -> Person.",
+        "Java is sequential, not parallel."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Why is it recommended to use inheritance only for is-a relationships?",
+      "options": [
+        "For performance",
+        "Because inheritance creates strong coupling and rigid hierarchies",
+        "Because Java requires it",
+        "Because there is no alternative"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not about performance.",
+        "Correct. Inheritance creates strong dependency. Composition is more flexible for has-a relationships.",
+        "Java does not require it, it is a design recommendation.",
+        "There are always alternatives such as composition and interfaces."
+      ]
+    }
+  ]
+}

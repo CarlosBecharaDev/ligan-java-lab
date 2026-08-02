@@ -108,24 +108,14 @@ const lessonExercises = exercisesColl
 </LessonLayout>
 
 <script>
+  import { loadProgress, saveProgress, type ProgressData } from '@lib/progress';
+
   (function() {
-    const KEY = 'ligan-java-lab-progress';
-    const slug = '{slug}';
-    const btn = document.getElementById('mark-complete-btn');
-    const status = document.getElementById('complete-status');
+    const btn = document.getElementById('mark-complete-btn')!;
+    const status = document.getElementById('complete-status')!;
+    const slug = btn.dataset.slug ?? '';
 
-    function loadProgress() {
-      try {
-        const raw = localStorage.getItem(KEY);
-        return raw ? JSON.parse(raw) : { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
-      } catch { return { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null }; }
-    }
-
-    function saveProgress(data) {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    }
-
-    function updateUI(data) {
+    function updateUI(data: ProgressData) {
       if (data.lessons.includes(slug)) {
         btn.style.display = 'none';
         status.style.display = 'inline';
@@ -134,18 +124,17 @@ const lessonExercises = exercisesColl
 
     updateUI(loadProgress());
 
-    btn?.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
       const data = loadProgress();
       if (!data.lessons.includes(slug)) {
         data.lessons.push(slug);
 
-        // Update streak
         const today = new Date().toISOString().split('T')[0];
         if (data.lastDate === null) {
           data.streak = 1;
         } else {
-          const last = new Date(data.lastDate);
-          const diff = Math.round((new Date(today) - last) / (1000 * 60 * 60 * 24));
+          const last = new Date(data.lastDate).getTime();
+          const diff = Math.round((new Date(today).getTime() - last) / (1000 * 60 * 60 * 24));
           if (diff === 1) data.streak++;
           else if (diff > 1) data.streak = 1;
         }

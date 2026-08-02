@@ -1,0 +1,67 @@
+{
+  "id": "quiz-avanzado-introduccion",
+  "lessonSlug": "introduccion-java",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which JDK component is responsible for converting bytecode into native operating system instructions?",
+      "options": ["javac", "The JVM (Just-In-Time compiler)", "The classloader", "The garbage collector"],
+      "correctIndex": 1,
+      "explanations": [
+        "javac compiles source code (.java) into bytecode (.class), not into native instructions.",
+        "Correct. The JVM includes the JIT compiler that converts bytecode into native machine code during execution.",
+        "The classloader loads classes into memory, it does not convert bytecode.",
+        "The garbage collector frees memory, it does not convert instructions."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Why are LTS JDK versions recommended for enterprise projects?",
+      "options": ["They are the only ones that work with IntelliJ", "They offer extended support and long-term stability", "They are faster than non-LTS versions", "They include more experimental features"],
+      "correctIndex": 1,
+      "explanations": [
+        "IntelliJ works with any modern JDK version.",
+        "Correct. LTS versions receive security updates and patches for years.",
+        "They are not necessarily faster; speed depends on the JVM, not on the version number.",
+        "Non-LTS versions usually have more experimental features, not LTS ones."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What exactly does the JRE contain that the JVM does not?",
+      "options": ["The javac compiler", "The standard Java libraries", "The debugger", "All of the above"],
+      "correctIndex": 1,
+      "explanations": [
+        "javac is in the JDK, not in the JRE.",
+        "Correct. The JRE contains the JVM plus the standard libraries (java.lang, java.util, java.io, etc.).",
+        "The debugger is in the JDK, not in the JRE.",
+        "javac and the debugger are part of the JDK, not the JRE."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What happens if you run `java HolaMundo` without compiling first?",
+      "options": ["It compiles automatically and runs", "Java shows an error: 'class not found'", "Java compiles and runs in a single step", "HolaMundo.class is created automatically"],
+      "correctIndex": 1,
+      "explanations": [
+        "There is no automatic compilation with the java command.",
+        "Correct. java expects a .class file. If it does not exist, it throws ClassNotFoundException.",
+        "Java does not compile automatically; you must use javac first.",
+        "No .class file is created with the java command."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the correct order of the process from writing code to getting output?",
+      "options": ["Compile → Run → Write code → Output", "Write code → Run → Compile → Output", "Write code → Compile → Run → Output", "Run → Compile → Write code → Output"],
+      "correctIndex": 2,
+      "explanations": [
+        "First you write, then you compile, then you run.",
+        "Execution happens after compiling, not before.",
+        "Correct. The flow is: 1) write .java, 2) compile with javac to .class, 3) run with java, 4) see the output.",
+        "You cannot run code that has not been written or compiled."
+      ]
+    }
+  ]
+}

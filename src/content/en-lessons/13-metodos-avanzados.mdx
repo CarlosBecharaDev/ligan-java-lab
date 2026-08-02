@@ -1,0 +1,325 @@
+---
+title: "Advanced Methods"
+slug: "metodos-avanzados"
+module: "03-metodos-y-arrays"
+level: "Intermediate"
+objectives:
+  - "Understand recursion and when to use it"
+  - "Compose methods that call other methods"
+  - "Distinguish between static and instance methods"
+  - "Use varargs to accept a variable number of arguments"
+  - "Apply documentation with Javadoc comments"
+prerequisites:
+  - "Have completed Lesson 12: Defining and Calling Methods"
+  - "Understand return types, parameters, and return"
+history:
+  introducedIn: "Recursion since Java 1.0; varargs since Java 5"
+  context: "Recursion is a fundamental concept in computer science that has existed since the origins of the field. In Java, any method can call itself (recursion) or call other methods (composition). Java 5 introduced varargs (variable arguments) to simplify the signature of methods that accept an indeterminate number of parameters of the same type."
+  evolution: "Java 5 (2004) added varargs with the `Type... args` syntax. Java 8 introduced static methods in interfaces. Direct and indirect recursion has been available since Java 1.0, and although Java does not optimize tail recursion like some functional languages, it remains a powerful tool for problems such as trees, fractals, and divide and conquer."
+realWorldExamples:
+  - domain: "Finance — factorial calculation with recursion"
+    description: "A financial calculation system uses factorial to determine the number of possible combinations in an investment. The factorial is calculated recursively."
+    code: |
+      public class FactorialRecursivo {
+          static long factorial(int n) {
+              if (n <= 1) return 1;           // caso base
+              return n * factorial(n - 1);    // caso recursivo
+          }
+
+          public static void main(String[] args) {
+              for (int i = 0; i <= 10; i++) {
+                  System.out.printf("%2d! = %d%n", i, factorial(i));
+              }
+          }
+      }
+    result: |
+      0! = 1
+      1! = 1
+      2! = 2
+      3! = 6
+      4! = 24
+      5! = 120
+      6! = 720
+      7! = 5040
+      8! = 40320
+      9! = 362880
+      10! = 3628800
+
+  - domain: "Text processing — word count"
+    description: "A text analysis system composes methods to clean, split, and count the words of a paragraph, each method responsible for a specific task."
+    code: |
+      public class ContadorPalabras {
+          static String limpiar(String texto) {
+              return texto.trim().toLowerCase()
+                  .replaceAll("[^a-záéíóúñ ]", "");
+          }
+
+          static int contar(String texto) {
+              String limpio = limpiar(texto);
+              if (limpio.isEmpty()) return 0;
+              String[] palabras = limpio.split("\\\\s+");
+              return palabras.length;
+          }
+
+          static String larga(String texto) {
+              String[] palabras = limpiar(texto).split("\\\\s+");
+              String max = "";
+              for (String p : palabras) {
+                  if (p.length() > max.length()) max = p;
+              }
+              return max;
+          }
+
+          public static void main(String[] args) {
+              String texto = "  Hola, esto es una prueba de Java!  ";
+              System.out.println("Palabras: " + contar(texto));
+              System.out.println("Más larga: " + larga(texto));
+          }
+      }
+    result: |
+      Words: 6
+      Longest: java
+hasInteractive: false
+comparisons:
+  - title: "Recursion vs Iteration"
+    items:
+      - name: "Recursion"
+        features:
+          syntax: "The method calls itself"
+          clarity: "Cleaner code for hierarchical problems (trees)"
+          memory: "Uses more memory (call stack)"
+          risk: "StackOverflowError if there is no base case"
+      - name: "Iteration (loops)"
+        features:
+          syntax: "Uses for, while, do-while"
+          clarity: "Better for linear sequences"
+          memory: "Constant memory usage"
+          risk: "Infinite loop if the condition is never false"
+    recommendation: "Use recursion for problems that have subproblems of the same type (trees, Fibonacci, divide and conquer). Use iteration for linear traversals and accumulators. In Java, recursion has no tail call optimization, so for very deep problems, iteration is safer."
+videos:
+  - url: ""
+    title: "Advanced methods and recursion in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What is recursion and when should I use it?"
+    answer: "Recursion is when a method calls itself. It must have a base case (stop condition) to avoid an infinite loop of calls. It is useful for problems such as factorials, Fibonacci, traversing trees, or solving divide and conquer problems."
+  - question: "What are varargs and when should I use them?"
+    answer: "Varargs (Type... args) let you pass a variable number of arguments of the same type. Internally they are treated as an array. Use them when a method can receive 0, 1, 2 or more arguments of the same type, like System.out.printf which uses Object... args."
+  - question: "What is the difference between static and instance?"
+    answer: "A static method belongs to the class and is called without creating an object: Class.method(). An instance method belongs to the object and is called on an object: object.method(). In these modules we use static because we haven't yet seen how to create objects (OOP)."
+sources:
+  - title: "Java 21 Language Specification — Method Declarations"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-8.html#jls-8.4"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Arbitrary Number of Arguments"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/varargs.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Method composition
+
+A method can **call other methods**. This lets you split a complex problem into smaller, more manageable parts. Each method does one specific, well-defined thing.
+
+<CodeBlock lang="java" title="Methods that call other methods">
+{`public class Composicion {
+    static double calcularDescuento(double monto, double porcentaje) {
+        return monto * porcentaje / 100;
+    }
+
+    static double calcularImpuesto(double base, double tasa) {
+        return base * tasa / 100;
+    }
+
+    static double precioFinal(double monto, double desc, double imp) {
+        double descuento = calcularDescuento(monto, desc);
+        double base = monto - descuento;
+        double impuesto = calcularImpuesto(base, imp);
+        return base + impuesto;
+    }
+
+    public static void main(String[] args) {
+        double total = precioFinal(50000, 15, 16);
+        System.out.printf("Final price: $%.2f%n", total);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Final price: $45800.00
+```
+
+`precioFinal` calls `calcularDescuento` and `calcularImpuesto`, which are helper methods that each encapsulate a separate calculation.
+
+## Recursion
+
+A method can **call itself**. This is called recursion, a powerful technique for solving problems that have subproblems of the same type.
+
+<CodeBlock lang="java" title="Recursion — factorial">
+{`public class Factorial {
+    static long factorial(int n) {
+        if (n <= 1) return 1;          // base case
+        return n * factorial(n - 1);   // recursive case
+    }
+
+    public static void main(String[] args) {
+        System.out.println("5! = " + factorial(5));
+        System.out.println("10! = " + factorial(10));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+5! = 120
+10! = 3628800
+```
+
+Recursion has **two essential parts**:
+
+```
+factorial(5)
+= 5 * factorial(4)
+= 5 * 4 * factorial(3)
+= 5 * 4 * 3 * factorial(2)
+= 5 * 4 * 3 * 2 * factorial(1)
+= 5 * 4 * 3 * 2 * 1
+= 120
+```
+
+**Without a base case**, recursion would be infinite and cause a `StackOverflowError`.
+
+## Recursive Fibonacci
+
+<CodeBlock lang="java" title="Recursion — Fibonacci">
+{`public class Fibonacci {
+    static int fibonacci(int n) {
+        if (n <= 0) return 0;
+        if (n == 1) return 1;
+        return fibonacci(n - 1) + fibonacci(n - 2);
+    }
+
+    public static void main(String[] args) {
+        for (int i = 0; i <= 10; i++) {
+            System.out.printf("fib(%d) = %d%n", i, fibonacci(i));
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+fib(0) = 0
+fib(1) = 1
+fib(2) = 1
+fib(3) = 2
+fib(4) = 3
+fib(5) = 5
+fib(6) = 8
+fib(7) = 13
+fib(8) = 21
+fib(9) = 34
+fib(10) = 55
+```
+
+**Note:** For large values of `n`, this recursive version is slow because it recomputes the same values many times. The iterative version is more efficient for this particular case.
+
+## Recursion with arrays
+
+Recursion is natural for processing arrays, especially when looking for a repeating pattern:
+
+<CodeBlock lang="java" title="Recursion — sum of elements">
+{`public class SumaArreglo {
+    static int suma(int[] arr, int indice) {
+        if (indice >= arr.length) return 0;  // base case
+        return arr[indice] + suma(arr, indice + 1);
+    }
+
+    public static void main(String[] args) {
+        int[] numeros = {3, 7, 2, 9, 5};
+        System.out.println("Sum: " + suma(numeros, 0));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Sum: 26
+```
+
+## Varargs — variable arguments
+
+Java lets you receive an **indeterminate number of arguments** of the same type with the `Type... args` syntax:
+
+<CodeBlock lang="java" title="Varargs — sum any number of values">
+{`public class Varargs {
+    static double sumar(double... numeros) {
+        double total = 0;
+        for (double n : numeros) {
+            total += n;
+        }
+        return total;
+    }
+
+    static void imprimir(String separador, String... palabras) {
+        for (int i = 0; i < palabras.length; i++) {
+            System.out.print(palabras[i]);
+            if (i < palabras.length - 1) {
+                System.out.print(separador);
+            }
+        }
+        System.out.println();
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Sum: " + sumar(1, 2, 3));
+        System.out.println("Sum: " + sumar(10, 20, 30, 40));
+        imprimir(", ", "Java", "Python", "C++");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Sum: 6.0
+Sum: 100.0
+Java, Python, C++
+```
+
+Internally, `double... numeros` is a `double[]`. You can pass it as a regular array or as separate arguments.
+
+## Javadoc documentation
+
+Methods are documented with Javadoc comments that describe what they do, their parameters, and what they return:
+
+```java
+/**
+ * Computes the average of an array of doubles.
+ * @param notas Array with the grades
+ * @return The average of all grades
+ * @throws IllegalArgumentException if the array is empty
+ */
+static double promedio(double[] notas) {
+    if (notas.length == 0) {
+        throw new IllegalArgumentException("Empty array");
+    }
+    double suma = 0;
+    for (double n : notas) suma += n;
+    return suma / notas.length;
+}
+```

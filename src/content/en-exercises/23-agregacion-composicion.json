@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-agregacion-composicion-facil",
+    "title": "Computer with components",
+    "difficulty": "facil",
+    "description": "Create Computadora with composition: CPU and RAM as internal objects.",
+    "template": "class CPU {\n    String modelo;\n    double velocidad;\n    CPU(String modelo, double v) { this.modelo = modelo; this.velocidad = v; }\n    void mostrar() { System.out.println(\"CPU: \" + modelo + \" @\" + velocidad + \"GHz\"); }\n}\n\nclass RAM {\n    int gb;\n    RAM(int gb) { this.gb = gb; }\n    void mostrar() { System.out.println(\"RAM: \" + gb + \"GB\"); }\n}\n\nclass Computadora {\n    CPU cpu;\n    RAM ram;\n    String marca;\n    Computadora(String m, double v, int r, String marca) {\n        this.cpu = new CPU(m, v);\n        this.ram = new RAM(r);\n        this.marca = marca;\n    }\n    void mostrar() {\n        System.out.println(\"Computer: \" + marca);\n        cpu.mostrar();\n        ram.mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Computadora pc = new Computadora(\"Intel i7\", 3.6, 16, \"Dell\");\n        pc.mostrar();\n    }\n}",
+    "hints": [
+      "Computadora creates CPU and RAM in its constructor",
+      "this.cpu = new CPU(modelo, v);",
+      "Show each component"
+    ],
+    "solution": "class CPU {\n    String modelo;\n    double velocidad;\n    CPU(String m, double v) { modelo = m; velocidad = v; }\n    void mostrar() { System.out.println(\"CPU: \" + modelo + \" @\" + velocidad + \"GHz\"); }\n}\n\nclass RAM {\n    int gb;\n    RAM(int g) { gb = g; }\n    void mostrar() { System.out.println(\"RAM: \" + gb + \"GB\"); }\n}\n\nclass Computadora {\n    CPU cpu;\n    RAM ram;\n    String marca;\n    Computadora(String m, double v, int r, String marca) {\n        cpu = new CPU(m, v);\n        ram = new RAM(r);\n        this.marca = marca;\n    }\n    void mostrar() {\n        System.out.println(\"Computer: \" + marca);\n        cpu.mostrar();\n        ram.mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Computadora pc = new Computadora(\"Intel i7\", 3.6, 16, \"Dell\");\n        pc.mostrar();\n    }\n}",
+    "solutionExplanation": "Composition: Computadora creates and owns the CPU and RAM.",
+    "expectedOutput": "Computer: Dell\nCPU: Intel i7 @3.6GHz\nRAM: 16GB",
+    "lessonSlug": "agregacion-composicion"
+  },
+  {
+    "id": "ex-agregacion-composicion-normal",
+    "title": "Order with Products",
+    "difficulty": "normal",
+    "description": "Create Pedido and Producto. The order uses existing products (aggregation).",
+    "template": "class Producto {\n    String nombre;\n    double precio;\n    Producto(String nombre, double precio) { this.nombre = nombre; this.precio = precio; }\n}\n\nclass Pedido {\n    Producto[] productos = new Producto[10];\n    int cantidad = 0;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        Producto p2 = new Producto(\"Mouse\", 25);\n        Pedido pedido = new Pedido();\n        pedido.agregarProducto(p1);\n        pedido.agregarProducto(p2);\n        pedido.mostrar();\n    }\n}",
+    "hints": [
+      "agregarProducto() stores the reference",
+      "total() adds up the prices",
+      "mostrar() lists each product"
+    ],
+    "solution": "class Producto {\n    String nombre;\n    double precio;\n    Producto(String n, double p) { nombre = n; precio = p; }\n}\n\nclass Pedido {\n    Producto[] productos = new Producto[10];\n    int cantidad = 0;\n    void agregarProducto(Producto p) { if (cantidad < 10) productos[cantidad++] = p; }\n    double total() { double s = 0; for (int i = 0; i < cantidad; i++) s += productos[i].precio; return s; }\n    void mostrar() {\n        System.out.println(\"Order:\");\n        for (int i = 0; i < cantidad; i++)\n            System.out.println(\"  - \" + productos[i].nombre + \": $\" + productos[i].precio);\n        System.out.println(\"Total: $\" + total());\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Producto p1 = new Producto(\"Laptop\", 1200);\n        Producto p2 = new Producto(\"Mouse\", 25);\n        Pedido pedido = new Pedido();\n        pedido.agregarProducto(p1);\n        pedido.agregarProducto(p2);\n        pedido.mostrar();\n    }\n}",
+    "solutionExplanation": "Aggregation: Pedido uses references to Producto objects.",
+    "expectedOutput": "Order:\n  - Laptop: $1200.0\n  - Mouse: $25.0\nTotal: $1225.0",
+    "lessonSlug": "agregacion-composicion"
+  },
+  {
+    "id": "ex-agregacion-composicion-dificil",
+    "title": "Hospital with mixed relationship",
+    "difficulty": "dificil",
+    "description": "Create Hospital (composition with Consulta) and Doctor (aggregation with Hospital).",
+    "template": "class Paciente {\n    String nombre;\n    Paciente(String nombre) { this.nombre = nombre; }\n}\n\nclass Consulta {\n    Paciente paciente;\n    String diagnostico;\n}\n\nclass Doctor {\n    String nombre;\n}\n\nclass Hospital {\n    String nombre;\n    Consulta[] consultas = new Consulta[10];\n    int cantidad = 0;\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Doctor doc = new Doctor(\"Dr. Perez\");\n        Hospital hospital = new Hospital(\"Hospital Central\");\n        Consulta c1 = doc.atender(new Paciente(\"Ana\"), \"Dolor de pecho\");\n        Consulta c2 = doc.atender(new Paciente(\"Luis\"), \"Check-up\");\n        hospital.agregarConsulta(c1);\n        hospital.agregarConsulta(c2);\n        hospital.mostrar();\n    }\n}",
+    "hints": [
+      "Consulta contains Paciente (composition)",
+      "Doctor.atender() creates a Consulta",
+      "Hospital stores references (aggregation)"
+    ],
+    "solution": "class Paciente {\n    String nombre;\n    Paciente(String n) { nombre = n; }\n}\n\nclass Consulta {\n    Paciente paciente;\n    String diagnostico;\n    Consulta(Paciente p, String d) { paciente = p; diagnostico = d; }\n    void mostrar() { System.out.println(\"Appointment: \" + paciente.nombre + \" - \" + diagnostico); }\n}\n\nclass Doctor {\n    String nombre;\n    Doctor(String n) { nombre = n; }\n    Consulta atender(Paciente p, String d) {\n        System.out.println(\"Dr. \" + nombre + \" attends to \" + p.nombre);\n        return new Consulta(p, d);\n    }\n}\n\nclass Hospital {\n    String nombre;\n    Consulta[] consultas = new Consulta[10];\n    int cantidad = 0;\n    Hospital(String n) { nombre = n; }\n    void agregarConsulta(Consulta c) { if (cantidad < 10) consultas[cantidad++] = c; }\n    void mostrar() {\n        System.out.println(\"Hospital: \" + nombre);\n        for (int i = 0; i < cantidad; i++) consultas[i].mostrar();\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Doctor doc = new Doctor(\"Dr. Perez\");\n        Hospital hospital = new Hospital(\"Hospital Central\");\n        Consulta c1 = doc.atender(new Paciente(\"Ana\"), \"Dolor de pecho\");\n        Consulta c2 = doc.atender(new Paciente(\"Luis\"), \"Check-up\");\n        hospital.agregarConsulta(c1);\n        hospital.agregarConsulta(c2);\n        hospital.mostrar();\n    }\n}",
+    "solutionExplanation": "A mix of composition and aggregation.",
+    "expectedOutput": "Dr. Perez attends to Ana\nDr. Perez attends to Luis\nHospital: Hospital Central\nAppointment: Ana - Dolor de pecho\nAppointment: Luis - Check-up",
+    "lessonSlug": "agregacion-composicion"
+  }
+]

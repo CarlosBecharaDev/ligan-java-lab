@@ -20,13 +20,12 @@ El estudiante aprende **leyendo, practicando y verificando su progreso** — tod
 ### ✨ Características
 
 - 🖥️ **Escritorio interactivo** tipo Windows 95 con ventanas, taskbar e iconos
-- 📚 **46 lecciones** en MDX con sintaxis resaltada (Shiki)
-- 🧠 **84 quizzes** interactivos para evaluar conocimientos
-- 💻 **42 ejercicios prácticos** con 3 niveles de dificultad
+- 📚 **50 lecciones** en MDX con sintaxis resaltada (Shiki)
+- 🧠 **92 quizzes** interactivos para evaluar conocimientos
+- 💻 **46 ejercicios prácticos** con 3 niveles de dificultad
 - 🎥 **Videos recomendados** de canales educativos en español
-- 🌐 **Internacionalización** (ES/EN) con cambio de idioma en vivo
+- 🌐 **Bilingüe ES/EN**: toda la plataforma y el contenido también en inglés bajo `/en/`
 - 📊 **Progreso persistente** en localStorage con racha de estudio
-- 📝 **Code Lab** con editor de código simulado y descarga de archivos `.java`
 - 📖 **Glosario** con más de 60 términos clave de Java
 - 🗺️ **Ruta de aprendizaje** guiada progresivamente
 
@@ -41,7 +40,6 @@ El estudiante aprende **leyendo, practicando y verificando su progreso** — tod
 | **Content Collections** | Gestión de contenido con esquemas Zod |
 | **MDX** | Lecciones con componentes embebidos |
 | **CSS Custom Properties** | Sistema de tokens de diseño retro |
-| **CodeMirror 6** | Editor de código en el Code Lab |
 | **Shiki** | Resaltado de sintaxis en lecciones |
 | **Lucide** | Iconografía |
 | **Vercel** | Hosting y despliegue continuo |
@@ -60,21 +58,25 @@ ligan-java-lab/
 ├── public/                     # Archivos estáticos
 ├── src/
 │   ├── components/
-│   │   ├── desktop/            # Ventanas, iconos, taskbar
+│   │   ├── desktop/            # Escritorio, ventanas, taskbar, reproductor
 │   │   ├── lesson/             # Componentes de lección
-│   │   ├── code-lab/           # Editor + consola simulada
 │   │   ├── quiz/               # Componentes de quiz
 │   │   ├── exercises/          # Componentes de ejercicios
-│   │   └── ui/                 # Button, Card, Modal, Badge
+│   │   └── ui/                 # Card, LiganLogo
 │   ├── content/
-│   │   ├── lessons/            # 46 lecciones en MDX
-│   │   ├── quizzes/            # 84 quizzes en JSON
-│   │   ├── exercises/          # 42 ejercicios en JSON
-│   │   └── modules/            # 9 módulos del curso
+│   │   ├── lessons/            # 50 lecciones en MDX (ES)
+│   │   ├── quizzes/            # 92 quizzes en JSON (ES)
+│   │   ├── exercises/          # 46 ejercicios en JSON (ES)
+│   │   ├── modules/            # 10 módulos del curso (ES)
+│   │   ├── en-lessons/         # Espejo en inglés
+│   │   ├── en-quizzes/         # Espejo en inglés
+│   │   ├── en-exercises/       # Espejo en inglés
+│   │   └── en-modules/         # Espejo en inglés
 │   ├── layouts/                # BaseLayout, AppLayout, ContentLayout, LessonLayout
-│   ├── pages/                  # Rutas: index, ruta, temas, quiz, glosario...
+│   ├── pages/                  # Rutas ES + espejo /en/ (tema, quiz, ruta, glosario...)
 │   ├── styles/                 # tokens.css, global.css, desktop.css, code.css...
-│   └── features/               # Lógica: ventanas, progreso, quizzes, descargas
+│   ├── features/               # Lógica del escritorio (desktopState.ts)
+│   └── lib/                    # course, progress, highlighter, i18n, glossary, theme...
 ├── astro.config.mjs
 ├── tsconfig.json
 └── vercel.json
@@ -107,7 +109,7 @@ npm run build         # Genera sitio estático en dist/
 npm run preview       # Previsualizar build local
 
 # Verificación
-npm run astro check   # Verificar tipos
+npm run check      # Verificar tipos (astro check, 0 errores/warnings/hints)
 ```
 
 ## 🎵 Spotify
@@ -144,19 +146,22 @@ Cada `git push` a `main` activa un despliegue automático.
 | 06 — Errores y Debug | 5 | 10 | 5 | ✅ |
 | 07 — Archivos y APIs | 4 | 8 | 4 | ✅ |
 | 08 — Java Moderno | 6 | 12 | 6 | ✅ |
-| 09 — Proyectos | 4 | 8 | 4 | ✅ |
+| 09 — Proyectos | 4 | 0 | 0 | ⚪ Pendiente |
 
-**Total:** 50 lecciones · 100 quizzes · 50 ejercicios · 10 módulos
+**Total (por idioma):** 50 lecciones · 92 quizzes · 46 ejercicios · 10 módulos
+
+> Todo el contenido está disponible también en **inglés** (colecciones `en-*` y rutas `/en/`).
 
 ---
 
 ## 📝 Cómo Añadir una Lección
 
 1. Crear el archivo MDX en `src/content/lessons/[slug].mdx`
-2. Crear el quiz en `src/content/quizzes/[slug].json`
-3. Crear los ejercicios en `src/content/exercises/[slug].json`
+2. Crear el quiz en `src/content/quizzes/[slug].json` (2 por lección: `basico` + `avanzado`)
+3. Crear los ejercicios en `src/content/exercises/[slug].json` (array con 3 niveles)
 4. Registrar en `docs/CONTENT_REGISTRY.md`
-5. Ejecutar `npm run build` y verificar sin errores
+5. Si se desea la versión en inglés, replicar en `src/content/en-lessons/`, `en-quizzes/`, `en-exercises/` y la ruta `/en/tema/[slug]`
+6. Ejecutar `npm run check` y `npm run build` y verificar sin errores
 
 ---
 

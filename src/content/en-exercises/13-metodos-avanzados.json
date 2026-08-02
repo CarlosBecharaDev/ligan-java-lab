@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-metodos-avanzados-facil",
+    "title": "Power with recursion",
+    "difficulty": "facil",
+    "description": "Create a recursive method potencia(base, exponent) that calculates base^exponent without using Math.pow.",
+    "template": "public class Potencia {\n    // TODO: Recursive method potencia(int base, int exp)\n    // base case: potencia(n, 0) = 1\n    // recursive case: n * potencia(n, exp-1)\n\n    public static void main(String[] args) {\n        System.out.println(\"2^10 = \" + potencia(2, 10));\n        System.out.println(\"3^5 = \" + potencia(3, 5));\n        System.out.println(\"7^0 = \" + potencia(7, 0));\n    }\n}",
+    "hints": [
+      "The base case is when the exponent is 0, which returns 1",
+      "The recursive case multiplies the base by potencia(base, exp-1)"
+    ],
+    "solution": "public class Potencia {\n    static long potencia(int base, int exp) {\n        if (exp == 0) return 1;\n        return base * potencia(base, exp - 1);\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"2^10 = \" + potencia(2, 10));\n        System.out.println(\"3^5 = \" + potencia(3, 5));\n        System.out.println(\"7^0 = \" + potencia(7, 0));\n    }\n}",
+    "solutionExplanation": "Base case: any number raised to 0 is 1. Recursive case: n^exp = n * n^(exp-1). long is used to avoid overflow.",
+    "expectedOutput": "2^10 = 1024\n3^5 = 243\n7^0 = 1",
+    "lessonSlug": "metodos-avanzados"
+  },
+  {
+    "id": "ex-metodos-avanzados-normal",
+    "title": "Maximum with varargs",
+    "difficulty": "normal",
+    "description": "Create a method maximo that uses varargs to receive any number of integers and returns the maximum.",
+    "template": "public class Maximo {\n    // TODO: Method maximo(int... numeros)\n    // Use for-each to iterate and compare\n\n    public static void main(String[] args) {\n        System.out.println(\"Max: \" + maximo(5, 3, 9, 1, 7));\n        System.out.println(\"Max: \" + maximo(42));\n        System.out.println(\"Max: \" + maximo());\n    }\n}",
+    "hints": [
+      "The first element can be the initial candidate",
+      "Use for-each to compare",
+      "If there are no arguments, return Integer.MIN_VALUE"
+    ],
+    "solution": "public class Maximo {\n    static int maximo(int... numeros) {\n        if (numeros.length == 0) return Integer.MIN_VALUE;\n        int max = numeros[0];\n        for (int n : numeros) {\n            if (n > max) max = n;\n        }\n        return max;\n    }\n\n    public static void main(String[] args) {\n        System.out.println(\"Max: \" + maximo(5, 3, 9, 1, 7));\n        System.out.println(\"Max: \" + maximo(42));\n        System.out.println(\"Max: \" + maximo());\n    }\n}",
+    "solutionExplanation": "The method uses varargs and iterates over the arguments comparing with the current maximum.",
+    "expectedOutput": "Max: 9\nMax: 42\nMax: -2147483648",
+    "lessonSlug": "metodos-avanzados"
+  },
+  {
+    "id": "ex-metodos-avanzados-dificil",
+    "title": "Recursive binary search",
+    "difficulty": "dificil",
+    "description": "Implement recursive binary search on a sorted array that returns the index of the target or -1.",
+    "template": "public class BusquedaBinaria {\n    // TODO: busquedaBinaria(int[] arr, int objetivo, int bajo, int alto)\n    // base case: bajo > alto → -1\n    // compute the middle, compare, recurse into the correct half\n\n    public static void main(String[] args) {\n        int[] datos = {2, 5, 8, 12, 16, 23, 38, 45, 67, 91};\n        System.out.println(\"23 at: \" + busquedaBinaria(datos, 23, 0, datos.length - 1));\n        System.out.println(\"50 at: \" + busquedaBinaria(datos, 50, 0, datos.length - 1));\n    }\n}",
+    "hints": [
+      "The array must be sorted",
+      "Base case: bajo > alto means it does not exist",
+      "Compare arr[medio] with the target"
+    ],
+    "solution": "public class BusquedaBinaria {\n    static int busquedaBinaria(int[] arr, int obj, int bajo, int alto) {\n        if (bajo > alto) return -1;\n        int medio = (bajo + alto) / 2;\n        if (arr[medio] == obj) return medio;\n        if (arr[medio] < obj) return busquedaBinaria(arr, obj, medio + 1, alto);\n        return busquedaBinaria(arr, obj, bajo, medio - 1);\n    }\n\n    public static void main(String[] args) {\n        int[] datos = {2, 5, 8, 12, 16, 23, 38, 45, 67, 91};\n        System.out.println(\"23 at: \" + busquedaBinaria(datos, 23, 0, datos.length - 1));\n        System.out.println(\"50 at: \" + busquedaBinaria(datos, 50, 0, datos.length - 1));\n    }\n}",
+    "solutionExplanation": "Binary search divides the space in half at each step. Complexity O(log n). The base case is bajo > alto (not found).",
+    "expectedOutput": "23 at: 5\n50 at: -1",
+    "lessonSlug": "metodos-avanzados"
+  }
+]

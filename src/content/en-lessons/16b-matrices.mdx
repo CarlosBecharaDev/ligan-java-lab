@@ -1,0 +1,306 @@
+---
+title: "Matrices (Two-Dimensional Arrays)"
+slug: "matrices"
+module: "03-metodos-y-arrays"
+level: "Intermediate"
+objectives:
+  - "Declare and initialize matrices of different types in Java"
+  - "Traverse a matrix with nested for loops"
+  - "Distinguish between matriz.length and matriz[i].length"
+  - "Access and modify individual elements of a matrix"
+  - "Identify the main diagonal of a square matrix"
+prerequisites:
+  - "arrays"
+  - "for"
+history:
+  introducedIn: "Java 1.0"
+  context: "Matrices (two-dimensional arrays) have existed since the first version of Java. They are simply 'arrays of arrays', which allows rows of different lengths (jagged matrices). Unlike C, Java automatically checks index bounds."
+  evolution: "Java 5 introduced Arrays.deepToString() to easily print matrices. Java 8 added streams, which allow processing matrices with Arrays.stream(). Modern Java prefers List<List<T>> for dynamic data, but int[][] remains the standard for algorithms and numeric computations due to its performance."
+realWorldExamples:
+  - domain: "Education — Student grades"
+    description: "A matrix stores the grades of N students in M subjects. Each row is a student, each column a subject."
+    code: |
+      public class Calificaciones {
+          public static void main(String[] args) {
+              int[][] califs = {
+                  {85, 90, 78, 92},
+                  {70, 88, 95, 80},
+                  {91, 82, 87, 94}
+              };
+              for (int est = 0; est < califs.length; est++) {
+                  int suma = 0;
+                  for (int mat = 0; mat < califs[est].length; mat++) {
+                      suma += califs[est][mat];
+                  }
+                  double prom = (double) suma / califs[est].length;
+                  System.out.printf("Estudiante %d: %.1f%n", est + 1, prom);
+              }
+          }
+      }
+    result: |
+      Student 1: 86.2
+      Student 2: 83.2
+      Student 3: 88.5
+  - domain: "Gaming — Game board"
+    description: "A Tic-Tac-Toe board is modeled with a 3x3 matrix of characters."
+    code: |
+      public class Tablero {
+          public static void main(String[] args) {
+              char[][] tablero = {
+                  {'X', 'O', 'X'},
+                  {'O', 'X', 'O'},
+                  {'O', 'X', 'X'}
+              };
+              for (int ren = 0; ren < tablero.length; ren++) {
+                  for (int col = 0; col < tablero[ren].length; col++) {
+                      System.out.print(tablero[ren][col] + " ");
+                  }
+                  System.out.println();
+              }
+              boolean ganoX = tablero[0][0] == 'X' && tablero[1][1] == 'X' && tablero[2][2] == 'X';
+              System.out.println("¿Ganó X en diagonal?: " + ganoX);
+          }
+      }
+    result: |
+      X O X
+      O X O
+      O X X
+      Did X win diagonally?: true
+hasInteractive: false
+comparisons:
+  - title: "1D Array vs 2D Matrix"
+    items:
+      - name: "1D Array"
+        features:
+          dimensions: "A single row"
+          indexes: "One index: arr[i]"
+          length: "arr.length"
+          representation: "Linear list"
+          example: "int[] a = {1,2,3}"
+      - name: "2D Matrix"
+        features:
+          dimensions: "Rows and columns"
+          indexes: "Two indexes: mat[row][col]"
+          length: "mat.length (rows), mat[i].length (cols)"
+          representation: "Table / grid"
+          example: "int[][] m = {{1,2},{3,4}}"
+    recommendation: "Use 1D arrays for simple lists. Use 2D matrices for tabular data, boards, or any structure that requires two coordinates. If you need more dimensions, consider 3D matrices or custom classes."
+videos:
+  - url: ""
+    title: "Matrices in Java - Course from scratch"
+    channel: "Píldoras Informáticas"
+    summary: "Explanation of two-dimensional arrays with practical examples of traversal and manipulation"
+faqs:
+  - question: "How do I get the number of columns of a matrix?"
+    answer: "Use matriz[0].length. Each row is an independent array, so matriz.length gives the number of rows and matriz[i].length gives the columns of row i."
+  - question: "In what order are the elements traversed with nested loops?"
+    answer: "The outer loop iterates over the rows and the inner loop iterates over the columns. The order is: [0][0] → [0][1] → [0][2] → ... → [1][0] → [1][1] → ... until all rows are complete."
+  - question: "What is a jagged matrix and how is it handled?"
+    answer: "In Java, rows can have a different number of columns. They are declared without specifying the second dimension: int[][] m = new int[3][]; then each row is assigned individually. When traversing, use m[i].length as the limit of the inner loop."
+  - question: "How do I print a matrix without using loops?"
+    answer: "Use Arrays.deepToString(matriz), which returns a string representation of the matrix. You need to import java.util.Arrays."
+  - question: "What is the difference between matriz.length and matriz[i].length?"
+    answer: "matriz.length returns the number of rows. matriz[i].length returns the number of columns of row i. In a rectangular matrix (all rows equal), matriz[0].length is enough."
+sources:
+  - title: "Java Tutorials — Arrays (Oracle)"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    date: "2026-07-29"
+  - title: "Java 21 Language Specification — Array Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a matrix?
+
+A **matrix** (two-dimensional array) is a data structure that organizes elements into rows and columns. In Java, a matrix is simply an "array of arrays": each element of the matrix is another array.
+
+Imagine an **Excel spreadsheet**: you need a row and a column to access a cell. In Java, that is written `matriz[row][column]`.
+
+## Declaration and initialization
+
+```java
+// Full syntax: 3 rows, 4 columns
+int[][] matriz = new int[3][4];
+
+// Simplified syntax with values
+int[][] tabla = {
+    {100, 200, 300},
+    {400, 500, 600}
+};
+
+// Jagged matrix (each row with a different size)
+int[][] irregular = new int[3][];
+irregular[0] = new int[2];
+irregular[1] = new int[4];
+irregular[2] = new int[3];
+```
+
+## lengths: rows vs columns
+
+```java
+int[][] m = {
+    {100, 200, 300},
+    {400, 500, 600}
+};
+
+System.out.println(m.length);      // 2 (rows)
+System.out.println(m[0].length);   // 3 (columns of row 0)
+System.out.println(m[1].length);   // 3 (columns of row 1)
+```
+
+## Traversing a matrix with nested loops
+
+<CodeBlock lang="java" title="Traverse a matrix with nested for loops">
+{`public class RecorrerMatriz {
+    public static void main(String[] args) {
+        int[][] matriz = {
+            {100, 200, 300},
+            {400, 500, 600}
+        };
+
+        for (int ren = 0; ren < matriz.length; ren++) {
+            for (int col = 0; col < matriz[ren].length; col++) {
+                System.out.printf("[%d][%d] = %d%n", ren, col, matriz[ren][col]);
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+[0][0] = 100
+[0][1] = 200
+[0][2] = 300
+[1][0] = 400
+[1][1] = 500
+[1][2] = 600
+```
+
+### Traversal order
+
+```
+2x3 matrix: [0][0] → [0][1] → [0][2] → (row moves to 1) → [1][0] → [1][1] → [1][2] → end
+```
+
+- **Outer loop** (`row`): iterates over rows
+- **Inner loop** (`col`): iterates over the columns of the current row
+
+## How it lives in memory
+
+```
+STACK                    HEAP (array of arrays)
+┌─────────────┐
+│ matriz ──────┼──► [ ref0 | ref1 ]
+└─────────────┘       │       │
+                      ▼       ▼
+               [100|200|300] [400|500|600]
+```
+
+The `matriz` variable on the Stack holds a reference to an array that contains two references, each pointing to an array of integers on the Heap.
+
+## Square matrix and main diagonal
+
+A **square matrix** has the same number of rows and columns (`n x n`). The **main diagonal** is the cells where the row index equals the column index.
+
+```java
+int[][] m = {
+    {100, 200, 300},
+    {400, 500, 600},
+    {700, 800, 900}
+};
+// Diagonal: [0][0]=100, [1][1]=500, [2][2]=900
+```
+
+<CodeBlock lang="java" title="Sum of the main diagonal">
+{`public class SumaDiagonal {
+    public static void main(String[] args) {
+        int[][] m = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        int suma = 0;
+        for (int i = 0; i < m.length; i++) {
+            suma += m[i][i];
+        }
+        System.out.println("Diagonal sum: " + suma);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Diagonal sum: 15
+```
+
+## Common errors
+
+### Error 1: Swapping the indexes
+```java
+// ❌ Error: first index is row, second is column
+matriz[col][ren] = 10;
+
+// ✅ Correct
+matriz[ren][col] = 10;
+```
+
+### Error 2: Using matriz.length for columns
+```java
+// ❌ Error: matriz.length gives the number of rows
+for (int col = 0; col < matriz.length; col++)
+
+// ✅ Correct: matriz[0].length gives the columns
+for (int col = 0; col < matriz[0].length; col++)
+```
+
+### Error 3: Printing the matrix directly
+```java
+// ❌ Prints the memory address: [[I@1540e19d
+System.out.println(matriz);
+
+// ✅ Use Arrays.deepToString()
+System.out.println(Arrays.deepToString(matriz));
+```
+
+## Best practices
+
+1. **Name clearly** the variables that represent rows and columns: `for (int row = 0; row < matriz.length; row++)`
+2. **Use `matriz[i].length`** in the inner loop, not a fixed number
+3. **`Arrays.deepToString(matriz)`** for quick debugging
+4. **`List<List<T>>`** when the size of the matrix may change dynamically
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

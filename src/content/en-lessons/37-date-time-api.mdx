@@ -1,0 +1,329 @@
+---
+title: "Modern Date and Time API (java.time)"
+slug: "date-time-api"
+module: "07-archivos"
+level: "Intermediate"
+objectives:
+  - "Create dates and times with LocalDate, LocalTime and LocalDateTime"
+  - "Format and parse dates with DateTimeFormatter"
+  - "Do temporal calculations with plusDays, minusMonths, Period"
+  - "Measure time with Instant and Duration"
+  - "Understand ZonedDateTime for time zones"
+prerequisites:
+  - "Haber completado Lección 27: Métodos Avanzados de String"
+  - "Conocer números y operaciones básicas"
+history:
+  introducedIn: "java.time since Java 8 (2014)"
+  context: "Before Java 8, Java used java.util.Date and java.util.Calendar, which were confusing, mutable, and hard to use. The java.time API is based on Joda-Time (an external library created by Stephen Colebourne) and is part of the JSR-310 standard."
+  evolution: "Java 1.0: java.util.Date (mostly deprecated). Java 1.1: java.util.Calendar (better but still deficient). Java 8: java.time API (JSR-310) — definitive, immutable, fluent, and correct. Java 9+: minor formatting improvements."
+realWorldExamples:
+  - domain: "E-commerce — shipping calculation"
+    description: "A system calculates the estimated delivery date by adding business days to the current date."
+    code: |
+      import java.time.*;
+      import java.time.format.*;
+
+      public class FechaEnvio {
+          static String calcularEntrega(int diasHabiles) {
+              LocalDate hoy = LocalDate.now();
+              LocalDate entrega = hoy;
+              int contados = 0;
+
+              while (contados < diasHabiles) {
+                  entrega = entrega.plusDays(1);
+                  if (entrega.getDayOfWeek() != DayOfWeek.SATURDAY
+                      && entrega.getDayOfWeek() != DayOfWeek.SUNDAY) {
+                      contados++;
+                  }
+              }
+
+              DateTimeFormatter fmt =
+                  DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy");
+              return "Pedido: " + hoy.format(fmt)
+                  + " → Entrega: " + entrega.format(fmt);
+          }
+
+          public static void main(String[] args) {
+              System.out.println(calcularEntrega(5));
+              System.out.println(calcularEntrega(10));
+          }
+      }
+    result: |
+      Order: Monday, July 27, 2026 → Delivery: Monday, August 3, 2026
+      Order: Monday, July 27, 2026 → Delivery: Monday, August 10, 2026
+
+  - domain: "Health — treatment duration"
+    description: "A hospital calculates the exact duration of a medical treatment using Period and Duration."
+    code: |
+      import java.time.*;
+      import java.time.format.DateTimeFormatter;
+
+      public class Tratamiento {
+          static void calcularDuracion(String inicio, String fin) {
+              DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+              LocalDate fechaInicio = LocalDate.parse(inicio, fmt);
+              LocalDate fechaFin = LocalDate.parse(fin, fmt);
+
+              Period periodo = Period.between(fechaInicio, fechaFin);
+              System.out.printf("Tratamiento: %s a %s%n", inicio, fin);
+              System.out.printf("Duración: %d años, %d meses, %d días%n",
+                  periodo.getYears(),
+                  periodo.getMonths(),
+                  periodo.getDays());
+              System.out.printf("Total días: %d%n",
+                  Duration.between(
+                      fechaInicio.atStartOfDay(),
+                      fechaFin.atStartOfDay()
+                  ).toDays());
+          }
+
+          public static void main(String[] args) {
+              calcularDuracion("2026-01-15", "2026-07-27");
+          }
+      }
+    result: |
+      Treatment: 2026-01-15 to 2026-07-27
+      Duration: 0 years, 6 months, 12 days
+      Total days: 193
+
+hasInteractive: false
+comparisons:
+  - title: "java.util.Date (legacy) vs java.time (modern)"
+    items:
+      - name: "java.util.Date (deprecated)"
+        features:
+          mutability: "Mutable — modifies the same object"
+          readability: "Months are 0-based (January = 0)"
+          thread_safety: "No — Date is not thread-safe"
+          time: "Represents an instant, not a pure date"
+      - name: "java.time (Java 8+)"
+        features:
+          mutability: "Immutable — every operation creates a new object"
+          readability: "Months are 1-based (January = 1)"
+          thread_safety: "Yes — all classes are immutable"
+          time: "Separates date (LocalDate), time (LocalTime), instant (Instant)"
+    recommendation: "Always use java.time for new code. Never use Date, Calendar, or SimpleDateFormat in new code. If you work with legacy APIs that return Date, convert it to Instant with date.toInstant()."
+videos:
+  - url: ""
+    title: "Java Date and Time API (Java 8+)"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and good practices"
+faqs:
+  - question: "What is the difference between LocalDate and LocalDateTime?"
+    answer: "LocalDate only has the date (day, month, year). LocalDateTime has date and time. If you need a time zone, use ZonedDateTime. If you only need the time without a date, use LocalTime."
+  - question: "How do I parse dates in different formats?"
+    answer: "Use DateTimeFormatter.ofPattern(\"dd/MM/yyyy\") to define the format, and LocalDate.parse(fecha, formatter) to convert. Always specify the formatter instead of using the default one."
+  - question: "How do I calculate differences between dates?"
+    answer: "Use Period.between() for dates (years, months, days) and Duration.between() for times (hours, minutes, seconds). Period works with LocalDate, Duration with LocalDateTime or Instant."
+sources:
+  - title: "Java 21 API — java.time"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/time/package-summary.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Date Time"
+    url: "https://docs.oracle.com/javase/tutorial/datetime/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## The java.time API
+
+The modern date and time API in Java lives in the `java.time` package. It is **immutable**, **fluent**, and **thread-safe**.
+
+```java
+import java.time.*;
+
+// Main classes
+LocalDate fecha = LocalDate.now();           // 2026-07-27
+LocalTime hora = LocalTime.now();            // 14:30:00
+LocalDateTime fechaHora = LocalDateTime.now(); // 2026-07-27T14:30:00
+```
+
+## LocalDate — date without time
+
+<CodeBlock lang="java" title="LocalDate operations">
+{`import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+public class LocalDateDemo {
+    public static void main(String[] args) {
+        // Create dates
+        LocalDate hoy = LocalDate.now();
+        LocalDate navidad = LocalDate.of(2026, 12, 25);
+        LocalDate parseada = LocalDate.parse("2026-07-27");
+
+        System.out.println("Today: " + hoy);
+        System.out.println("Christmas: " + navidad);
+        System.out.println("Parsed: " + parseada);
+
+        // Access fields
+        System.out.println("Year: " + hoy.getYear());
+        System.out.println("Month: " + hoy.getMonth());
+        System.out.println("Day: " + hoy.getDayOfMonth());
+        System.out.println("Day of week: " + hoy.getDayOfWeek());
+
+        // Add/subtract
+        System.out.println("Tomorrow: " + hoy.plusDays(1));
+        System.out.println("Next month: " + hoy.plusMonths(1));
+        System.out.println("Yesterday: " + hoy.minusDays(1));
+        System.out.println("Leap year?: " + hoy.isLeapYear());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Today: 2026-07-27
+Christmas: 2026-12-25
+Parsed: 2026-07-27
+Year: 2026
+Month: JULY
+Day: 27
+Day of week: MONDAY
+Tomorrow: 2026-07-28
+Next month: 2026-08-27
+Yesterday: 2026-07-26
+Leap year?: false
+```
+
+## LocalTime and LocalDateTime
+
+<CodeBlock lang="java" title="Working with times and combined dates">
+{`import java.time.*;
+
+public class TimeDemo {
+    public static void main(String[] args) {
+        // LocalTime — time only
+        LocalTime ahora = LocalTime.now();
+        System.out.println("Now: " + ahora);
+
+        LocalTime reunion = LocalTime.of(15, 30);
+        System.out.println("Meeting: " + reunion);
+        System.out.println("Is it after?: " + ahora.isAfter(reunion));
+        System.out.println("In 2 hours: " + ahora.plusHours(2));
+
+        // LocalDateTime — date and time combined
+        LocalDateTime cita = LocalDateTime.of(2026, 7, 27, 10, 30);
+        System.out.println("Appointment: " + cita);
+        System.out.println("Appointment + 3 days: " + cita.plusDays(3));
+    }
+}`}
+</CodeBlock>
+
+## Formatting dates
+
+<CodeBlock lang="java" title="DateTimeFormatter">
+{`import java.time.*;
+import java.time.format.DateTimeFormatter;
+
+public class FormatearFechas {
+    public static void main(String[] args) {
+        LocalDateTime ahora = LocalDateTime.now();
+
+        DateTimeFormatter[] formatos = {
+            DateTimeFormatter.ofPattern("dd/MM/yyyy"),
+            DateTimeFormatter.ofPattern("yyyy-MM-dd"),
+            DateTimeFormatter.ofPattern("EEEE, d 'de' MMMM 'de' yyyy"),
+            DateTimeFormatter.ofPattern("HH:mm:ss"),
+            DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm"),
+            DateTimeFormatter.ISO_LOCAL_DATE,
+        };
+
+        for (DateTimeFormatter fmt : formatos) {
+            System.out.println(ahora.format(fmt));
+        }
+
+        // Parse from string
+        String texto = "27/07/2026";
+        DateTimeFormatter fmt = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate fecha = LocalDate.parse(texto, fmt);
+        System.out.println("Parsed: " + fecha);
+    }
+}`}
+</CodeBlock>
+
+## Period and Duration — calculating differences
+
+<CodeBlock lang="java" title="Period (dates) and Duration (time)">
+{`import java.time.*;
+
+public class PeriodDurationDemo {
+    public static void main(String[] args) {
+        // Period — between dates
+        LocalDate inicio = LocalDate.of(2026, 1, 1);
+        LocalDate fin = LocalDate.of(2026, 12, 31);
+        Period periodo = Period.between(inicio, fin);
+        System.out.printf("Period: %d years, %d months, %d days%n",
+            periodo.getYears(),
+            periodo.getMonths(),
+            periodo.getDays());
+
+        // Duration — between times
+        LocalTime apertura = LocalTime.of(8, 0);
+        LocalTime cierre = LocalTime.of(18, 0);
+        Duration duracion = Duration.between(apertura, cierre);
+        System.out.println("Working hours: " + duracion.toHours());
+        System.out.println("Minutes: " + duracion.toMinutes());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Period: 0 years, 11 months, 30 days
+Working hours: 10
+Minutes: 600
+```
+
+## Instant — an instant in time
+
+```java
+Instant ahora = Instant.now();  // Current moment in UTC
+System.out.println(ahora);      // 2026-07-27T14:30:00Z
+
+// Useful for measuring execution time
+Instant inicio = Instant.now();
+// ... code ...
+Instant fin = Instant.now();
+System.out.println("Duration: " + Duration.between(inicio, fin).toMillis() + " ms");
+```
+
+## Comparing dates
+
+| Method | Description |
+|--------|-------------|
+| `isBefore(other)` | Is it before? |
+| `isAfter(other)` | Is it after? |
+| `isEqual(other)` | Is it equal? |
+| `compareTo(other)` | Comparison (negative, zero, positive) |
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

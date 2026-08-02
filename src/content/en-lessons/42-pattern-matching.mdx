@@ -1,0 +1,322 @@
+---
+title: "Pattern Matching and Switch Expressions"
+slug: "pattern-matching"
+module: "08-java-moderno"
+level: "Advanced"
+objectives:
+  - "Use switch as an expression that returns a value"
+  - "Use pattern matching with instanceof (Java 16+)"
+  - "Apply pattern matching in switch (Java 21+)"
+  - "Use guarded patterns with when"
+  - "Destructure records with pattern matching"
+prerequisites:
+  - "Haber completado Lección 41: Records"
+  - "Entender tipos, instanceof, herencia y jerarquía de clases"
+history:
+  introducedIn: "Switch expressions since Java 14, pattern matching for instanceof since Java 16, pattern matching for switch since Java 21"
+  context: "Java has evolved its control syntax toward a more expressive style. Before Java 14, switch was only a statement. Now switch can be an expression that returns a value, and pattern matching allows asking 'are you of this type?' and 'do you have these fields?' in a single operation."
+  evolution: "Java 1.0: basic switch with break. Java 5: switch with enums. Java 7: switch with String. Java 14: switch expressions (preview). Java 16: pattern matching instanceof. Java 17: sealing. Java 21: pattern matching for switch (stable)."
+realWorldExamples:
+  - domain: "E-commerce — tax calculation per product"
+    description: "An e-commerce system calculates taxes using a switch expression. Different product types have different tax rates."
+    code: |
+      public class CalcularImpuesto {
+          record Alimento(String nombre, double precio) {}
+          record Electrinico(String nombre, double precio) {}
+          record Ropa(String nombre, double precio) {}
+
+          static double calcImpuesto(Object producto) {
+              return switch (producto) {
+                  case Alimento a -> a.precio() * 0.05;
+                  case Electrinico e -> e.precio() * 0.19;
+                  case Ropa r -> r.precio() * 0.12;
+                  case null -> throw new NullPointerException("Producto no puede ser null");
+                  default -> throw new IllegalArgumentException("Tipo desconocido");
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println("Impuesto Alimento: $" +
+                  calcImpuesto(new Alimento("Pan", 2.0)));
+              System.out.println("Impuesto Electrónico: $" +
+                  calcImpuesto(new Electrinico("Laptop", 2500)));
+          }
+      }
+    result: |
+      Food tax: $0.1
+      Electronics tax: $475.0
+
+  - domain: "Health — classifying patients by type"
+    description: "A hospital classifies patients by their condition using pattern matching to decide treatment."
+    code: |
+      import java.time.*;
+
+      record Paciente(String nombre, int edad) {}
+      record Emergencia(Paciente p, String sintoma, int gravedad) {}
+      record Consulta(Paciente p, String especialidad) {}
+      record Hospitalizacion(Paciente p, String habitacion) {}
+
+      public class ClasificarPaciente {
+          static String procesar(Object caso) {
+              return switch (caso) {
+                  case Emergencia(Paciente(var n, _), var s, var g)
+                      when g >= 8 -> "URGENTE: " + n + " - " + s;
+                  case Emergencia(var p, var s, _) ->
+                      "Normal: " + p.nombre() + " - " + s;
+                  case Consulta(var p, var esp) ->
+                      "Consulta: " + p.nombre() + " → " + esp;
+                  case Hospitalizacion(var p, var hab) ->
+                      "Hospitalizado: " + p.nombre() + " en " + hab;
+                  case null -> "Error: caso nulo";
+                  default -> "Tipo de atención no reconocido";
+              };
+          }
+
+          public static void main(String[] args) {
+              System.out.println(procesar(new Emergencia(
+                  new Paciente("Ana", 45), "Dolor de pecho", 9)));
+              System.out.println(procesar(new Consulta(
+                  new Paciente("Luis", 30), "Cardiología")));
+          }
+      }
+    result: |
+      URGENT: Ana - Chest pain
+      Consultation: Luis → Cardiology
+
+hasInteractive: false
+comparisons:
+  - title: "Switch statement (old) vs Switch expression (modern)"
+    items:
+      - name: "Switch statement"
+        features:
+          syntax: "case X: ... break; (fall-through)"
+          value: "Does not return a value — you must assign manually"
+          type: "Only int, char, String, enum"
+          null: "NullPointerException if the variable is null"
+      - name: "Switch expression (Java 14+)"
+        features:
+          syntax: "case X -> ... (no fall-through)"
+          value: "Returns a value directly with ->"
+          type: "Int, String, enum, any type (with pattern matching)"
+          null: "You can have case null ->"
+    recommendation: "Use switch expressions with -> for any new code. They are safer (no accidental fall-through) and more expressive (they return a value). Pattern matching in switch enormously simplifies instanceof+cast code."
+videos:
+  - url: ""
+    title: "Pattern Matching in Java 21"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and best practices"
+faqs:
+  - question: "What is the advantage of switch expression over the old switch?"
+    answer: "There is no fall-through (no break needed), it returns a value directly, it is more compact, and the compiler checks exhaustiveness (all cases covered). It is safer and more expressive."
+  - question: "What is a guarded pattern (when)?"
+    answer: "It is an additional condition after the pattern: case X(var x) when x > 0. The case only matches if the pattern matches AND the condition is true. It allows expressing complex logic clearly."
+  - question: "What advantage does pattern matching have over instanceof + cast?"
+    answer: "In a single expression: you ask if it is of the type AND you get the variable already cast. Java 16+ allows: if (obj instanceof String s) { ... use s ... } — without needing (String) obj."
+sources:
+  - title: "JEP 441 — Pattern Matching for switch (Java 21)"
+    url: "https://openjdk.org/jeps/441"
+    date: "2026-07-27"
+  - title: "JEP 394 — Pattern Matching for instanceof (Java 16)"
+    url: "https://openjdk.org/jeps/394"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Switch Expression (Java 14+)
+
+The modern form of switch: uses `->` and returns values:
+
+```java
+// ❌ Old (statement):
+String resultado;
+switch (dia) {
+    case "LUNES": resultado = "Workday"; break;
+    case "SABADO": resultado = "Day off"; break;
+    default: resultado = "Unknown";
+}
+
+// ✅ Modern (expression):
+String resultado = switch (dia) {
+    case "LUNES" -> "Workday";
+    case "SABADO" -> "Day off";
+    default -> "Unknown";
+};
+```
+
+<CodeBlock lang="java" title="Switch expression with different types">
+{`public class SwitchExpression {
+    public static void main(String[] args) {
+        // With String (Java 7+)
+        String dia = "SABADO";
+
+        String tipo = switch (dia) {
+            case "LUNES", "MARTES", "MIERCOLES", "JUEVES", "VIERNES"
+                -> "Workday";
+            case "SABADO", "DOMINGO" -> "Day off";
+            case null -> "Null day";
+            default -> "Unknown: " + dia;
+        };
+        System.out.println(dia + " → " + tipo);
+
+        // With int
+        int nota = 85;
+        String letra = switch (nota / 10) {
+            case 10, 9 -> "A";
+            case 8 -> "B";
+            case 7 -> "C";
+            case 6 -> "D";
+            default -> "F";
+        };
+        System.out.println(nota + " → " + letra);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+SABADO → Day off
+85 → B
+```
+
+## Pattern Matching with instanceof (Java 16+)
+
+<CodeBlock lang="java" title="instanceof without manual cast">
+{`public class PatternInstanceof {
+    public static void main(String[] args) {
+        Object obj = "Hola Java 21";
+
+        // ❌ Before Java 16:
+        if (obj instanceof String) {
+            String s = (String) obj;
+            System.out.println("Length: " + s.length());
+        }
+
+        // ✅ Pattern matching (Java 16+):
+        if (obj instanceof String s) {
+            System.out.println("Length: " + s.length());
+            System.out.println("Uppercase: " + s.toUpperCase());
+        }
+
+        // With logical operators
+        Object num = 42;
+        if (num instanceof Integer i && i > 10) {
+            System.out.println("Number > 10: " + i);
+        }
+    }
+}`}
+</CodeBlock>
+
+## Pattern Matching in switch (Java 21+)
+
+<CodeBlock lang="java" title="Pattern matching in switch">
+{`public class PatternSwitch {
+    static String describir(Object obj) {
+        return switch (obj) {
+            case Integer i -> "Integer: " + i;
+            case String s -> "String: " + s;
+            case Double d -> "Decimal: " + d;
+            case null -> "It is null";
+            default -> "Unknown type: " + obj.getClass().getSimpleName();
+        };
+    }
+
+    public static void main(String[] args) {
+        System.out.println(describir(42));
+        System.out.println(describir("Hola"));
+        System.out.println(describir(3.14));
+        System.out.println(describir((Object) null));
+        System.out.println(describir(true));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Integer: 42
+String: Hola
+Decimal: 3.14
+It is null
+Unknown type: Boolean
+```
+
+## Guarded Patterns with when
+
+<CodeBlock lang="java" title="Patterns with conditions (when)">
+{`public class GuardedPatterns {
+    record Persona(String nombre, int edad) {}
+
+    static String clasificar(Object obj) {
+        return switch (obj) {
+            case Persona(var n, var e) when e >= 60
+                -> n + " (Senior)";
+            case Persona(var n, var e) when e >= 18
+                -> n + " (Adult)";
+            case Persona(var n, _)
+                -> n + " (Minor)";
+            case null -> "Null object";
+            default -> "Not a person";
+        };
+    }
+
+    public static void main(String[] args) {
+        System.out.println(clasificar(new Persona("Ana", 70)));
+        System.out.println(clasificar(new Persona("Luis", 25)));
+        System.out.println(clasificar(new Persona("Sofía", 12)));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Ana (Senior)
+Luis (Adult)
+Sofía (Minor)
+```
+
+## Record destructuring
+
+```java
+record Punto(int x, int y) {}
+
+// Pattern matching with destructuring
+if (p instanceof Punto(var x, var y)) {
+    System.out.println("x=" + x + ", y=" + y);
+}
+
+// With ignore (_)
+if (p instanceof Punto(var x, _)) {
+    System.out.println("x=" + x);
+}
+```
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

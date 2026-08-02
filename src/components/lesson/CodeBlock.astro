@@ -1,5 +1,5 @@
 ---
-import { createHighlighter } from 'shiki';
+import { getHighlighter } from '@lib/highlighter';
 
 export interface Props {
   code?: string;
@@ -35,11 +35,8 @@ function escHtml(s: string): string {
 
 let highlighted: string;
 try {
-  const highlighter = await createHighlighter({
-    themes: ['github-dark-default'],
-    langs: [lang],
-  });
-  const result = highlighter.codeToTokens(code, { lang, theme: 'github-dark-default' });
+  const highlighter = await getHighlighter();
+  const result = highlighter.codeToTokens(code, { lang: lang as any, theme: 'github-dark-default' });
   const lines = result.tokens;
 
   var pad = String(lines.length).length;
@@ -68,13 +65,13 @@ try {
   <div class="code-block__header">
     <span class="code-block__lang">{lang}</span>
     <div class="code-block__actions">
-      <button class="code-block__btn" data-copy={codeId} aria-label="Copiar código">
+      <button class="code-block__btn" data-copy={codeId} aria-label="Copiar código" data-i18n-aria="code.copy-aria">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
-        Copiar
+        <span data-i18n="exercise.copy">Copiar</span>
       </button>
-      <button class="code-block__btn" data-download={codeId} aria-label="Descargar .java">
+      <button class="code-block__btn" data-download={codeId} aria-label="Descargar .java" data-i18n-aria="exercise.download-aria">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
-        Descargar
+        <span data-i18n="exercise.download">Descargar</span>
       </button>
     </div>
   </div>
@@ -83,6 +80,9 @@ try {
 </div>
 
 <script>
+  const T = (key: string): string =>
+    ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
+
   document.querySelectorAll('[data-copy]').forEach((btn) => {
     const blockId = btn.getAttribute('data-copy')!;
     const codeEl = document.querySelector(`[data-code-source="${blockId}"]`);
@@ -91,9 +91,17 @@ try {
       const codigo = codeEl?.textContent ?? '';
       try {
         await navigator.clipboard.writeText(codigo);
-        const original = btn.innerHTML;
-        btn.innerHTML = '✅ Copiado';
-        setTimeout(() => { btn.innerHTML = original; }, 2000);
+        const label = btn.querySelector('span');
+        const orig = label ? label.textContent : btn.innerHTML;
+        if (label) {
+          label.textContent = T('exercise.copied');
+        } else {
+          btn.innerHTML = T('exercise.copied');
+        }
+        setTimeout(() => {
+          if (label) label.textContent = orig;
+          else btn.innerHTML = orig ?? '';
+        }, 2000);
       } catch {
         // fallback silencioso
       }

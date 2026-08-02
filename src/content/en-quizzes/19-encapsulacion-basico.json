@@ -1,0 +1,58 @@
+{
+  "id": "quiz-19-encapsulacion-basico",
+  "lessonSlug": "encapsulacion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which access modifier makes an attribute only accessible within its own class?",
+      "options": [
+        "public",
+        "protected",
+        "private",
+        "default"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "public allows access from anywhere.",
+        "protected allows access in subclasses and the same package.",
+        "Correct. private restricts access only to the same class.",
+        "default allows access within the same package."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a getter?",
+      "options": [
+        "A method that modifies an attribute",
+        "A method that returns the value of an attribute",
+        "A special constructor",
+        "A private attribute"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "That is a setter.",
+        "Correct. A getter is a public method that returns the value of a private attribute.",
+        "It has nothing to do with constructors.",
+        "A getter is a method, not an attribute."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the main advantage of using setters with validation?",
+      "options": [
+        "The code is shorter",
+        "The attribute can be accessed from outside",
+        "The integrity of the object's data is protected",
+        "The attributes become public"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "The length of the code is not the main advantage.",
+        "That is what getters do, not setters.",
+        "Correct. Setters allow validation before modifying, protecting the state.",
+        "Setters keep the attributes private."
+      ]
+    }
+  ]
+}

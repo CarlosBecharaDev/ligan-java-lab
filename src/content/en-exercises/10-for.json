@@ -1,0 +1,49 @@
+[
+  {
+    "id": "ex-for-facil",
+    "lessonSlug": "for",
+    "title": "Sum of the First N Numbers",
+    "difficulty": "facil",
+    "description": "Calculate the sum of the numbers from 1 to 100 using a for loop.",
+    "template": "public class Suma1a100 {\n    public static void main(String[] args) {\n        int suma = 0;\n\n        // TODO: Use a for loop to sum the numbers from 1 to 100\n        // Initialize i = 1, condition i <= 100, update i++\n        // Accumulate in suma:  suma += i;\n\n    }\n}",
+    "hints": [
+      "Initialize i = 1 (not 0) because you want to sum from 1 to 100",
+      "The condition is i <= 100 to include the 100"
+    ],
+    "solution": "public class Suma1a100 {\n    public static void main(String[] args) {\n        int suma = 0;\n\n        for (int i = 1; i <= 100; i++) {\n            suma += i;\n        }\n\n        System.out.println(\"The sum from 1 to 100 is: \" + suma);\n    }\n}",
+    "solutionExplanation": "The for loop starts at i = 1 and goes up to 100 inclusive (i <= 100). In each iteration we accumulate the value of i in suma. The formula n*(n+1)/2 gives 5050, confirming the result.",
+    "expectedOutput": "The sum from 1 to 100 is: 5050"
+  },
+  {
+    "id": "ex-for-normal",
+    "lessonSlug": "for",
+    "title": "Asterisk Triangle with Nested for Loop",
+    "difficulty": "normal",
+    "description": "Draw a triangle of 5 rows using nested for loops: 1 asterisk in row 1, 2 in row 2, up to 5 in row 5.",
+    "template": "public class TrianguloAsteriscos {\n    public static void main(String[] args) {\n        int filas = 5;\n\n        // TODO: Use two nested for loops\n        // The outer loop controls the row (1 to 5)\n        // The inner loop prints the asterisks of each row\n        //      (as many as the current row number)\n        // New line after each row\n\n    }\n}",
+    "hints": [
+      "The outer loop: for (int f = 1; f <= filas; f++)",
+      "The inner loop prints f asterisks: for (int a = 0; a < f; a++)",
+      "Print System.out.println() at the end of each outer row"
+    ],
+    "solution": "public class TrianguloAsteriscos {\n    public static void main(String[] args) {\n        int filas = 5;\n\n        for (int f = 1; f <= filas; f++) {\n            for (int a = 0; a < f; a++) {\n                System.out.print(\"*\");\n            }\n            System.out.println();\n        }\n    }\n}",
+    "solutionExplanation": "The outer for loop goes through each row from 1 to 5. The inner for loop prints as many asterisks as the row number indicates. Without spaces (print instead of println) and a line break at the end of each row.",
+    "expectedOutput": "*\n**\n***\n****\n*****"
+  },
+  {
+    "id": "ex-for-dificil",
+    "lessonSlug": "for",
+    "title": "Prime Number Detector with Optimized for Loop",
+    "difficulty": "dificil",
+    "description": "Determine whether a number is prime using a for loop that only checks divisors up to the square root of the number. Display all primes from 2 to 50.",
+    "template": "public class NumerosPrimos {\n    public static void main(String[] args) {\n\n        // TODO: Use a for loop iterating over the numbers from 2 to 50\n        // For each number, check whether it is prime:\n        //   for (int d = 2; d <= Math.sqrt(n); d++)\n        //   if n % d == 0 → not prime\n        // Print the primes separated by spaces\n\n    }\n}",
+    "hints": [
+      "A number is prime if it is only divisible by 1 and by itself",
+      "Checking divisors only up to Math.sqrt(n) is sufficient and faster",
+      "Keep a counter of found divisors or use a boolean"
+    ],
+    "solution": "public class NumerosPrimos {\n    public static void main(String[] args) {\n        System.out.println(\"Prime numbers from 2 to 50:\");\n\n        for (int n = 2; n <= 50; n++) {\n            boolean esPrimo = true;\n\n            for (int d = 2; d <= Math.sqrt(n); d++) {\n                if (n % d == 0) {\n                    esPrimo = false;\n                    break;\n                }\n            }\n\n            if (esPrimo) {\n                System.out.print(n + \" \");\n            }\n        }\n        System.out.println();\n    }\n}",
+    "solutionExplanation": "The outer for loop goes through each candidate from 2 to 50. The inner for loop checks divisors from 2 up to the square root of n: if it finds a divisor, the number is not prime and we exit with break. The square root optimization drastically reduces the number of comparisons.",
+    "expectedOutput": "Prime numbers from 2 to 50:\n2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 "
+  }
+]

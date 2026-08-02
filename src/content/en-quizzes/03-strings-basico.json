@@ -1,0 +1,53 @@
+{
+  "id": "quiz-basico-strings",
+  "lessonSlug": "strings",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does `\"Java\".length()` return?",
+      "options": ["3", "4", "5", "Error"],
+      "correctIndex": 1,
+      "explanations": [
+        "3 would only count 'Jav'.",
+        "Correct. 'Java' has 4 characters: J, a, v, a.",
+        "5 would include an invisible character.",
+        "length() is a valid String method."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between `trim()` and `isBlank()`?",
+      "options": [
+        "They are the same",
+        "trim() removes spaces, isBlank() checks whether it is empty or only contains spaces",
+        "isBlank() removes spaces, trim() checks length",
+        "trim() only works at the start, isBlank() on the whole string"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They differ in their purpose.",
+        "Correct. trim() returns a new String without spaces at the start/end. isBlank() returns true if the string is empty or contains only whitespace characters.",
+        "It is the other way around: trim() removes, isBlank() checks.",
+        "trim() removes spaces at both ends."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Why are Strings immutable in Java?",
+      "options": [
+        "To save memory",
+        "Because Java does not allow modifying objects",
+        "For security, Pool reuse, and thread compatibility",
+        "It is a Java bug that was never fixed"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Immutability can save memory (Pool), but it is not the main reason.",
+        "Java does allow modifying mutable objects like StringBuilder.",
+        "Correct. Immutability guarantees thread safety, enables the String Pool, and makes HashMap keys reliable.",
+        "It is not a bug; it is an intentional design decision."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "id": "quiz-21-polimorfismo-avanzado",
+  "lessonSlug": "polimorfismo",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What happens if you downcast to an incorrect type without checking with instanceof?",
+      "options": [
+        "It compiles but returns null",
+        "ClassCastException at runtime",
+        "Compilation error",
+        "The object is converted to the correct type"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It does not return null.",
+        "Correct. Without instanceof, the cast fails at runtime with ClassCastException.",
+        "It does not fail at compile time.",
+        "It is not converted automatically."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "If Animal a = new Dog(), which methods can 'a' call WITHOUT a downcast?",
+      "options": [
+        "Only Dog's methods",
+        "Only Animal's methods",
+        "All methods of Animal and Dog",
+        "None"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It cannot call Dog-exclusive methods without a cast.",
+        "Correct. It can only access methods defined in Animal (the reference type).",
+        "Not without a downcast.",
+        "It can call Animal's methods."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Can an abstract class have constructors?",
+      "options": [
+        "No, never",
+        "Yes, so subclasses can call super()",
+        "Only if it is static",
+        "Only if it has concrete methods"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It can have constructors.",
+        "Correct. Although it is not instantiated directly, its constructors are used via super() in subclasses.",
+        "Constructors cannot be static.",
+        "It can have constructors regardless of whether it has concrete methods."
+      ]
+    }
+  ]
+}

@@ -16,7 +16,7 @@ const { title, items, recommendation } = Astro.props;
   <table class="comparison-table">
     <thead>
       <tr>
-        <th>Característica</th>
+        <th data-i18n="comparison.feature">Característica</th>
         {items.map((item) => <th>{item.name}</th>)}
       </tr>
     </thead>
@@ -30,6 +30,6 @@ const { title, items, recommendation } = Astro.props;
     </tbody>
   </table>
   <div class="comparison-recommendation">
-    <strong>Recomendación:</strong> {recommendation}
+    <strong data-i18n="comparison.recommendation">Recomendación:</strong> {recommendation}
   </div>
 </div>

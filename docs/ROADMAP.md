@@ -107,39 +107,49 @@ Hoja de ruta del proyecto con checklist de cada fase.
 
 ---
 
-## Fase 2: Contenido Completo ⚪
+## Fase 2: Contenido Completo ✅
 
-### Módulo 01: Fundamentos (completar)
-- [ ] Lección 02: Operadores
-- [ ] Lección 03: Strings y Manipulación de Texto
-- [ ] Lección 04: Entrada de Datos con Scanner
-- [ ] Lección 05: Conversión de Tipos (Casting)
-- [ ] Lección 06: Constantes y Enums
+### Contenido publicado (50 lecciones, 10 módulos)
+- [x] Módulo 00: Introducción (1 lección)
+- [x] Módulo 01: Fundamentos (6 lecciones)
+- [x] Módulo 02: Control de Flujo (5 lecciones)
+- [x] Módulo 03: Métodos y Arrays (6 lecciones)
+- [x] Módulo 04: POO (7 lecciones)
+- [x] Módulo 05: Colecciones y Strings (6 lecciones)
+- [x] Módulo 06: Errores y Depuración (5 lecciones)
+- [x] Módulo 07: Archivos y APIs Estándar (4 lecciones)
+- [x] Módulo 08: Java Moderno (6 lecciones)
+- [x] Módulo 09: Proyectos Guiados (4 lecciones — sin quizzes/ejercicios aún)
 
-### Módulos 02-09
-- [ ] Control de Flujo (5 lecciones)
-- [ ] POO (7 lecciones)
-- [ ] Excepciones (4 lecciones)
-- [ ] Colecciones y Generics (6 lecciones)
-- [ ] Entrada/Salida de Datos (5 lecciones)
-- [ ] Lambdas y Streams (5 lecciones)
-- [ ] Concurrencia (4 lecciones)
-- [ ] Proyectos Integradores (5 lecciones)
-
-### Contenido complementario
-- [ ] Vídeos verificados por lección
-- [ ] Ejercicios adicionales por módulo
-- [ ] Proyectos integradores reales
+### Práctica
+- [x] 92 quizzes (2 por lección: básico + avanzado, salvo módulo 09)
+- [x] 46 ejercicios (3 niveles por lección, salvo módulo 09)
+- [x] Vídeos y fuentes verificados por lección
 
 ---
 
-## Fase 3: Mejoras Futuras ⚪
+## Fase 3: Internacionalización y Limpieza ✅
 
-- [ ] Migrar `lucide-astro` → `@lucide/astro`
-- [ ] Code Lab con ejecución real (Java en WASM o backend)
+### Internacionalización (ES/EN)
+- [x] Traducción completa del contenido: `en-lessons` (50), `en-quizzes` (92), `en-exercises` (46), `en-modules` (10)
+- [x] Rutas `/en/`: index, tema/[slug], quiz/[slug], ruta, practica, progreso, historia, glosario, recursos, sobre-el-proyecto
+- [x] `content.config.ts` con 8 colecciones y `z` de `astro/zod`
+- [x] Script de cambio de idioma (clave `ligan-lang`)
+
+### Limpieza y optimización
+- [x] `npm run check`: 0 errores, 0 warnings, 0 hints
+- [x] Shiki singleton (`src/lib/highlighter.ts`)
+- [x] Progreso unificado (`src/lib/progress.ts`)
+- [x] Eliminar código muerto (code-lab, features sin uso, utils, componentes)
+- [x] Deps sobrantes fuera de package.json
+
+---
+
+## Fase 4: Mejoras Futuras ⚪
+
+- [ ] Quizzes y ejercicios del módulo 09 (Proyectos)
+- [ ] Lecciones opcionales: Math class, Wrapper classes, Queue/Deque, Sorting/Comparators, NIO.2, Threads, Annotations, Reflection, try-with-resources
 - [ ] Autenticación y progreso en la nube
-- [ ] Modo oscuro/claro toggle
-- [ ] Internacionalización (es/en)
 - [ ] Tests E2E
 - [ ] PWA (Progressive Web App)
 - [ ] Analytics de progreso

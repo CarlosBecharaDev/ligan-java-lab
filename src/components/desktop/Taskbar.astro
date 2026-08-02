@@ -14,7 +14,7 @@ import ThemeSelector from './ThemeSelector.astro';
       <button class="taskbar__lang-btn" data-lang-btn="en" onclick="window.__i18n && window.__i18n.setLang('en')">EN</button>
       <button class="taskbar__lang-btn" data-lang-btn="es" onclick="window.__i18n && window.__i18n.setLang('es')">ES</button>
     </div>
-    <span class="taskbar__apps" data-i18n="nav.apps">Apps (1)</span>
+    <span class="taskbar__apps"><span data-i18n="nav.apps">Apps</span> (1)</span>
     <span class="taskbar__clock" id="taskbar-clock" aria-label="Reloj" data-i18n-aria="taskbar.clock-aria">
       {new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
     </span>
@@ -96,7 +96,8 @@ import ThemeSelector from './ThemeSelector.astro';
   function actualizarReloj() {
     const reloj = document.getElementById('taskbar-clock');
     if (reloj) {
-      reloj.textContent = new Date().toLocaleTimeString('es-ES', {
+      const locale = (window as any).__i18n?.getLang?.() === 'en' ? 'en-US' : 'es-ES';
+      reloj.textContent = new Date().toLocaleTimeString(locale, {
         hour: '2-digit',
         minute: '2-digit',
       });
@@ -104,14 +105,14 @@ import ThemeSelector from './ThemeSelector.astro';
   }
   setInterval(actualizarReloj, 60000);
   actualizarReloj();
+  window.addEventListener('lang-change', actualizarReloj);
 
   // Auto-hide taskbar on scroll for mobile
-  var taskbarEl = document.querySelector('.taskbar');
+  const taskbarEl = document.querySelector<HTMLElement>('.taskbar');
   if (taskbarEl && window.innerWidth <= 767) {
-    var lastScroll = 0;
-    var hideTimer = null;
-    window.addEventListener('scroll', function() {
-      var currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.pageYOffset || document.documentElement.scrollTop;
       if (currentScroll > lastScroll && currentScroll > 50) {
         taskbarEl.classList.add('taskbar--hidden');
       } else {

@@ -1,0 +1,70 @@
+{
+  "id": "quiz-36-serializacion-basico",
+  "lessonSlug": "serializacion",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is serialization in Java?",
+      "options": [
+        "Converting a String into a number",
+        "Converting an object into bytes to save or transmit it",
+        "Compressing a ZIP file",
+        "Encrypting sensitive data"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Serialization has nothing to do with converting Strings into numbers.",
+        "Correct. Serialization converts the state of an object into a sequence of bytes that can be saved to disk or sent over the network.",
+        "Compressing files is a ZIP task, not object serialization.",
+        "Encryption is a security process, different from serialization."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which interface must an object implement to be serializable?",
+      "options": ["Cloneable", "Serializable", "Comparable", "Externalizable"],
+      "correctIndex": 1,
+      "explanations": [
+        "Cloneable is used to clone objects with clone(), not for serialization.",
+        "Correct. Serializable is a marker interface indicating that an object can be serialized.",
+        "Comparable is used to define the natural ordering of objects.",
+        "Externalizable allows full control over serialization, but it is not the most common."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is serialVersionUID?",
+      "options": [
+        "The creation date of the class",
+        "A version identifier of the serialized class that ensures compatibility",
+        "The number of times the class has been serialized",
+        "A hash of the serialized file's content"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It has nothing to do with the class creation date.",
+        "Correct. serialVersionUID is a unique identifier used to verify compatibility between the version of the serialized class and the one attempting to deserialize.",
+        "It does not count how many times the class is serialized.",
+        "It is not a hash of the file's content."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which class is used to convert an object into bytes during serialization?",
+      "options": [
+        "ObjectReader",
+        "ObjectOutputStream",
+        "ObjectSerializer",
+        "ObjectConverter"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "ObjectReader is not a standard serialization class.",
+        "Correct. ObjectOutputStream writes objects to an output stream, converting them into bytes for serialization.",
+        "ObjectSerializer does not exist in the standard Java API.",
+        "ObjectConverter does not exist in the standard Java API."
+      ]
+    }
+  ]
+}

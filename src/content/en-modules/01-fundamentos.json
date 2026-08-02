@@ -1,0 +1,18 @@
+{
+  "id": "mod-01",
+  "slug": "01-fundamentos",
+  "number": 1,
+  "title": "Java Fundamentals",
+  "description": "The starting point. Understand what Java is, how it works and write your first program.",
+  "icon": "Terminal",
+  "status": "disponible",
+  "lessonCount": 6,
+  "lessons": [
+    "variables-y-tipos",
+    "operadores",
+    "strings",
+    "entrada-datos-scanner",
+    "casting",
+    "constantes-enums"
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-break-facil",
+    "lessonSlug": "break-continue-return",
+    "title": "Find an element in an array with break",
+    "difficulty": "facil",
+    "description": "Given an array of numbers, look for a specific element and stop as soon as you find it. Show the position or a not-found message.",
+    "template": "public class BuscarElemento {\n    public static void main(String[] args) {\n        int[] nums = {45, 12, 78, 34, 6, 89, 23};\n        int buscado = 34;\n\n        // TODO: Use a for loop with break\n        // When you find the number, print:\n        //   \"Found at position: X\" and exit with break\n        // If the loop ends without finding it, print:\n        //   \"Not found\"\n        // (Hint: use a boolean 'encontrado')\n\n    }\n}",
+    "hints": [
+      "Declare boolean encontrado = false before the for",
+      "If nums[i] == buscado, set encontrado = true and print, then break",
+      "After the for loop, if !encontrado print 'Not found'"
+    ],
+    "solution": "public class BuscarElemento {\n    public static void main(String[] args) {\n        int[] nums = {45, 12, 78, 34, 6, 89, 23};\n        int buscado = 34;\n        boolean encontrado = false;\n\n        for (int i = 0; i < nums.length; i++) {\n            if (nums[i] == buscado) {\n                System.out.println(\"Found at position: \" + i);\n                encontrado = true;\n                break;\n            }\n        }\n\n        if (!encontrado) {\n            System.out.println(\"Not found\");\n        }\n    }\n}",
+    "solutionExplanation": "We use a boolean 'encontrado' to know whether the loop ended because of break or because it went through everything. When the number is found we print the position and break exits the loop immediately.",
+    "expectedOutput": "Found at position: 3"
+  },
+  {
+    "id": "ex-break-normal",
+    "lessonSlug": "break-continue-return",
+    "title": "Filter negative numbers with continue",
+    "difficulty": "normal",
+    "description": "Iterate over an array with numbers (positive, negative and zero) and print only the positives using continue to skip the negatives and zeros.",
+    "template": "public class FiltrarPositivos {\n    public static void main(String[] args) {\n        int[] datos = {5, -3, 0, 12, -7, 8, -1, 0, 4};\n\n        System.out.println(\"Positive numbers:\");\n        // TODO: Use a for loop with continue to skip\n        // numbers that are <= 0 (negatives and zeros)\n        // Print only the positives, one per line\n\n    }\n}",
+    "hints": [
+      "continue runs when the number is <= 0, skipping the printing",
+      "If the number is positive (> 0), it is printed",
+      "continue goes to the start of the next iteration without executing the rest of the code"
+    ],
+    "solution": "public class FiltrarPositivos {\n    public static void main(String[] args) {\n        int[] datos = {5, -3, 0, 12, -7, 8, -1, 0, 4};\n\n        System.out.println(\"Positive numbers:\");\n        for (int i = 0; i < datos.length; i++) {\n            if (datos[i] <= 0) {\n                continue;  // skip negatives and zeros\n            }\n            System.out.println(datos[i]);\n        }\n    }\n}",
+    "solutionExplanation": "In each iteration we check whether the number is <= 0; if so, continue skips the rest of the body (the printing) and goes directly to the next iteration. Only the positives reach the println.",
+    "expectedOutput": "Positive numbers:\n5\n12\n8\n4"
+  },
+  {
+    "id": "ex-break-dificil",
+    "lessonSlug": "break-continue-return",
+    "title": "Search and processing with labeled break",
+    "difficulty": "dificil",
+    "description": "Use a labeled loop with a labeled break to look for a pair of numbers in a matrix that add up to a given target (similar to two sum). The labeled break exits both loops when the solution is found.",
+    "template": "public class DosSumMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 5, 3, 7},\n            {9, 2, 8, 4},\n            {6, 11, 23, 1}\n        };\n        int objetivo = 14;  // 3 + 11, 4 + 10, 2 + 12, etc.\n\n        // TODO: Use nested loops with the label \"busqueda\"\n        // For each pair (matriz[i][j], matriz[i][k]) in the same row,\n        // check whether they add up to the target\n        // When you find it, print the solution and use\n        //   break busqueda; to exit BOTH loops\n        // If there is no solution after checking everything, print \"Not found\"\n\n    }\n}",
+    "hints": [
+      "Declare the label before the outer loop: busqueda:",
+      "Use break busqueda; (not break;) to exit both loops",
+      "Check only distinct pairs (j != k) in the same row"
+    ],
+    "solution": "public class DosSumMatriz {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 5, 3, 7},\n            {9, 2, 8, 4},\n            {6, 11, 23, 1}\n        };\n        int objetivo = 14;\n        boolean encontrado = false;\n\n        busqueda:\n        for (int i = 0; i < matriz.length; i++) {\n            for (int j = 0; j < matriz[i].length - 1; j++) {\n                for (int k = j + 1; k < matriz[i].length; k++) {\n                    if (matriz[i][j] + matriz[i][k] == objetivo) {\n                        System.out.printf(\"Found: %d + %d = %d in row %d (positions %d and %d)%n\",\n                                matriz[i][j], matriz[i][k], objetivo, i, j, k);\n                        encontrado = true;\n                        break busqueda;  // exits all 3 loops\n                    }\n                }\n            }\n        }\n\n        if (!encontrado) {\n            System.out.println(\"Not found\");\n        }\n    }\n}",
+    "solutionExplanation": "The label busqueda is placed before the first for loop. When the solution is found, break busqueda exits the 3 loops at once. Without the label, break would only exit the innermost loop. This is more efficient than a return because it allows later logic with the same structure.",
+    "expectedOutput": "Found: 3 + 11 = 14 in row 2 (positions 0 and 1)"
+  }
+]

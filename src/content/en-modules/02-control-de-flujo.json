@@ -1,0 +1,11 @@
+{
+  "id": "mod-02",
+  "slug": "02-control-de-flujo",
+  "number": 2,
+  "title": "Control Flow",
+  "description": "Teach your program to make decisions and repeat actions with conditionals and loops.",
+  "icon": "GitBranch",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["if-else", "switch", "while-do-while", "for", "break-continue-return"]
+}

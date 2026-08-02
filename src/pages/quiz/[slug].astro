@@ -36,7 +36,7 @@ const { slug, lessonTitle, quizzes } = Astro.props;
     <div style="display:flex;align-items:center;gap:var(--space-md);margin-bottom:var(--space-sm)">
       <span style="font-size:1.5rem">🧠</span>
       <div>
-        <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin:0">Quiz: {lessonTitle}</h1>
+        <h1 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin:0" data-i18n-title><span data-i18n="quiz.title-prefix">Quiz:</span> {lessonTitle}</h1>
         <p style="color:var(--win-muted);margin:var(--space-xs) 0 0 0;font-size:var(--text-sm)" data-i18n="quiz.intro">
           Responde todas las preguntas para evaluar tu comprensión del tema.
         </p>
@@ -71,24 +71,14 @@ const { slug, lessonTitle, quizzes } = Astro.props;
 </ContentLayout>
 
 <script>
+  import { loadProgress, saveProgress, type ProgressData } from '@lib/progress';
+
   (function() {
-    const KEY = 'ligan-java-lab-progress';
-    const slug = '{slug}';
-    const btn = document.getElementById('mark-quiz-complete-btn');
-    const status = document.getElementById('quiz-complete-status');
+    const btn = document.getElementById('mark-quiz-complete-btn')!;
+    const status = document.getElementById('quiz-complete-status')!;
+    const slug = btn.dataset.slug ?? '';
 
-    function loadProgress() {
-      try {
-        const raw = localStorage.getItem(KEY);
-        return raw ? JSON.parse(raw) : { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
-      } catch { return { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null }; }
-    }
-
-    function saveProgress(data) {
-      localStorage.setItem(KEY, JSON.stringify(data));
-    }
-
-    function updateUI(data) {
+    function updateUI(data: ProgressData) {
       if (data.quizzes.includes(slug)) {
         btn.style.display = 'none';
         status.style.display = 'inline';
@@ -97,7 +87,7 @@ const { slug, lessonTitle, quizzes } = Astro.props;
 
     updateUI(loadProgress());
 
-    btn?.addEventListener('click', () => {
+    btn.addEventListener('click', () => {
       const data = loadProgress();
       if (!data.quizzes.includes(slug)) {
         data.quizzes.push(slug);

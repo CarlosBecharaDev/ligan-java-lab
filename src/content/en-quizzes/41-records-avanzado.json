@@ -1,0 +1,92 @@
+{
+  "id": "quiz-41-records-avanzado",
+  "lessonSlug": "records",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a compact constructor in a record?",
+      "options": [
+        "A constructor without a parameter list that validates values before assigning them",
+        "A constructor that accepts fewer parameters",
+        "A private constructor that only initializes final fields",
+        "A static method that creates the record"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The compact constructor takes no parameters (they are defined in the record header) and is used to validate or transform values before assignment.",
+        "It does not refer to fewer parameters.",
+        "It is not a private constructor.",
+        "It is not a static method."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Can instance fields be added to a record?",
+      "options": [
+        "No, you can only have the fields defined in the record header",
+        "Yes, as many as needed",
+        "Only if they are static",
+        "Only if they are private"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A record can only have the components (fields) declared in its header. It does not allow additional instance fields.",
+        "Instance fields cannot be added.",
+        "Static fields can be added, but they are not instance fields.",
+        "It is not a matter of visibility."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which interface do records implement?",
+      "options": [
+        "They implement Serializable",
+        "They implement Comparable",
+        "They implement Iterable",
+        "They do not implement any interface"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Records implement the Serializable interface, which allows them to be serialized.",
+        "They do not implement Comparable by default.",
+        "They do not implement Iterable by default.",
+        "They do implement at least Serializable."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is a record component?",
+      "options": [
+        "Each parameter of the record, which becomes an immutable field",
+        "A private method of the record",
+        "A static constant of the record",
+        "An interface that the record implements"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Each component (parameter in the header) becomes a final field with its accessor method (getter).",
+        "It is not a private method.",
+        "It is not a static constant.",
+        "It is not an interface."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Can records extend other classes?",
+      "options": [
+        "No, they inherit from java.lang.Record and cannot extend other classes",
+        "Yes, they can extend any class",
+        "They can only extend Object",
+        "They can only extend abstract classes"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Records implicitly extend java.lang.Record and cannot extend other classes (Record in turn extends Object).",
+        "They cannot extend any class.",
+        "Object is Record's superclass, but it cannot be extended directly.",
+        "They are not limited to abstract classes."
+      ]
+    }
+  ]
+}

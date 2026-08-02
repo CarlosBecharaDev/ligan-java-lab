@@ -1,0 +1,11 @@
+{
+  "id": "mod-00",
+  "slug": "00-introduccion",
+  "number": 0,
+  "title": "Introduction to Java",
+  "description": "Learn what Java is, how the JDK/JRE/JVM ecosystem works and write your first program.",
+  "icon": "BookOpen",
+  "status": "disponible",
+  "lessonCount": 1,
+  "lessons": ["introduccion-java"]
+}

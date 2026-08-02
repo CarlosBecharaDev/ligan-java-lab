@@ -168,7 +168,6 @@ import { THEMES } from '@lib/theme';
 </style>
 <script>
   (function() {
-    const root = document.documentElement;
     const themeApi = (window as any).__liganTheme as { get: () => string; set: (t: string) => void } | undefined;
 
     function initSelector(selector: HTMLElement) {
@@ -251,7 +250,7 @@ import { THEMES } from '@lib/theme';
       sync();
     }
 
-    const selectors = Array.from(document.querySelectorAll('[data-theme-selector]'));
+    const selectors = Array.from(document.querySelectorAll<HTMLElement>('[data-theme-selector]'));
     selectors.forEach(initSelector);
 
     document.addEventListener('theme-change', () => {

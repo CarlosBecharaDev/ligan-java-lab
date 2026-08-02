@@ -1,0 +1,92 @@
+{
+  "id": "quiz-31-throw-throws-avanzado",
+  "lessonSlug": "throw-throws",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the fundamental difference between `throw` and `throws`?",
+      "options": [
+        "throw is used in classes, throws is used in interfaces",
+        "throw throws a concrete exception, throws declares that a method can throw an exception",
+        "throw is for checked exceptions, throws is for unchecked ones",
+        "There is no difference, they are interchangeable"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throw and throws have no class vs interface restrictions.",
+        "Correct. throw is a statement that throws a concrete exception (throw new Ex()), while throws is a clause in the method signature that declares it can throw exceptions of a certain type.",
+        "Both can be used with checked and unchecked exceptions.",
+        "They are different keywords with completely different functions."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Can you use `throw` with an exception that has not been instantiated?",
+      "options": [
+        "Yes, Java creates the instance automatically",
+        "No, you must create the instance first: throw new Exception(...)",
+        "Only if the exception has an empty constructor",
+        "Only if the exception is declared with throws in the method"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Java does not create exception instances automatically.",
+        "Correct. throw requires an already instantiated exception object. The correct way is: throw new MyException(\"message\").",
+        "throw does not work without an instance, regardless of the constructor.",
+        "throws has nothing to do with the ability to use throw."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "If method A calls method B which declares `throws IOException`, what options does A have?",
+      "options": [
+        "Ignore the exception and assume it will never happen",
+        "Catch it with try-catch or propagate it with throws in its own signature",
+        "It can only catch it, never propagate it",
+        "It can only propagate it, never catch it"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Ignoring a checked exception causes a compilation error.",
+        "Correct. When a method calls another that declares a checked exception, the calling method must handle it (try-catch) or propagate it (declare throws in its own signature).",
+        "Both options are valid: catch or propagate.",
+        "Both options are valid: catch or propagate."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Can a method throw an unchecked exception (such as NullPointerException) without declaring it with `throws`?",
+      "options": [
+        "No, it must always be declared with throws",
+        "Yes, because unchecked exceptions do not need to be declared",
+        "Only if try-catch is used in the method",
+        "Only if the exception is an Error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Unchecked exceptions do not need to be declared with throws.",
+        "Correct. Unchecked exceptions (RuntimeException and its subclasses) do not need to be declared in the method signature, although doing so is optional for documentation purposes.",
+        "try-catch is not required for unchecked exceptions.",
+        "Unchecked exceptions are not Errors; they are different categories."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is exception chaining in Java?",
+      "options": [
+        "Throwing multiple exceptions one after another in the same catch",
+        "Creating an exception that wraps another as the cause, using the constructor: new Exception(\"message\", cause)",
+        "Chaining multiple catch blocks one after another",
+        "A technique to avoid using try-catch in the code"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Exception chaining does not refer to throwing consecutive exceptions.",
+        "Correct. Exception chaining consists of creating a new exception that wraps the original exception as the cause, preserving the original stack trace. It is used like: new MyException(\"message\", originalException).",
+        "Chaining catch blocks is a language feature, not exception chaining.",
+        "Exception chaining does not avoid the use of try-catch; it complements error handling."
+      ]
+    }
+  ]
+}

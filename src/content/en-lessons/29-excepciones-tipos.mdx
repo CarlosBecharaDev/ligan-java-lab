@@ -1,0 +1,293 @@
+---
+title: "Exceptions: Checked and Unchecked"
+slug: "excepciones-tipos"
+module: "06-errores"
+level: "Beginner"
+objectives:
+  - "Understand Java's exception hierarchy (Throwable, Exception, Error)"
+  - "Differentiate between checked and unchecked exceptions"
+  - "Know the most common exceptions: NullPointerException, ArrayIndexOutOfBoundsException, IllegalArgumentException"
+  - "Identify when to use each type of exception"
+  - "Read and interpret a stack trace correctly"
+prerequisites:
+  - "Haber completado Módulo 03: Métodos y Arreglos"
+  - "Entender tipos de datos y clases básicas"
+history:
+  introducedIn: "Exceptions since Java 1.0, checked since Java 1.1"
+  context: "Java was one of the first languages to integrate error handling as part of the language with try/catch. Checked exceptions were controversial: James Gosling included them to force programmers to handle potential errors. Other languages such as C# did not adopt them."
+  evolution: "Java 1.0 introduced the basic exception model with Throwable. Java 1.1 added IOException and other checked exceptions. Java 7 introduced try-with-resources and multi-catch. Unchecked exceptions (RuntimeException) became the standard for programming errors."
+realWorldExamples:
+  - domain: "E-commerce — payment processing"
+    description: "A payment system handles different types of errors: insufficient balance (unchecked), blocked card (custom unchecked), and connection error with the bank (checked IOException)."
+    code: |
+      public class ProcesarPago {
+          static double saldo = 500.0;
+
+          static void procesar(double monto) {
+              if (monto <= 0) {
+                  throw new IllegalArgumentException(
+                      "El monto debe ser positivo: " + monto);
+              }
+              if (monto > saldo) {
+                  throw new RuntimeException(
+                      "Saldo insuficiente. Disponible: $" + saldo);
+              }
+              saldo -= monto;
+              System.out.printf("Pago de $%.2f procesado. Saldo: $%.2f%n",
+                  monto, saldo);
+          }
+
+          public static void main(String[] args) {
+              try {
+                  procesar(200);
+                  procesar(150);
+                  procesar(200);  // error: saldo insuficiente
+              } catch (RuntimeException e) {
+                  System.out.println("Error de pago: " + e.getMessage());
+              }
+          }
+      }
+    result: |
+      Payment of $200.00 processed. Balance: $300.00
+      Payment of $150.00 processed. Balance: $150.00
+      Payment error: Insufficient balance. Available: $150.0
+
+  - domain: "Health — reading patient file"
+    description: "A hospital reads a CSV file with patient data. The file may not exist (FileNotFoundException, checked), have an incorrect format (NumberFormatException, unchecked), or missing data (NullPointerException, unchecked)."
+    code: |
+      import java.io.File;
+      import java.io.FileNotFoundException;
+      import java.util.Scanner;
+
+      public class LeerPacientes {
+          static void leerArchivo(String ruta) {
+              try {
+                  Scanner sc = new Scanner(new File(ruta));
+                  while (sc.hasNextLine()) {
+                      String[] partes = sc.nextLine().split(",");
+                      String nombre = partes[0];
+                      int edad = Integer.parseInt(partes[1].trim());
+                      System.out.printf("Paciente: %s, %d años%n",
+                          nombre, edad);
+                  }
+                  sc.close();
+              } catch (FileNotFoundException e) {
+                  System.out.println("Archivo no encontrado: " + ruta);
+              } catch (NumberFormatException e) {
+                  System.out.println("Error en formato numérico: " + e.getMessage());
+              } catch (ArrayIndexOutOfBoundsException e) {
+                  System.out.println("Faltan columnas en el CSV");
+              }
+          }
+
+          public static void main(String[] args) {
+              leerArchivo("pacientes.csv");
+          }
+      }
+    result: |
+      File not found: pacientes.csv
+
+hasInteractive: false
+comparisons:
+  - title: "Checked vs Unchecked Exceptions"
+    items:
+      - name: "Checked Exceptions"
+        features:
+          inheritance: "Extend Exception (not RuntimeException)"
+          compilation: "The compiler forces you to handle them with try-catch or throws"
+          use: "Recoverable errors outside the programmer's control"
+          examples: "IOException, SQLException, FileNotFoundException"
+      - name: "Unchecked Exceptions"
+        features:
+          inheritance: "Extend RuntimeException"
+          compilation: "Handling them is not mandatory"
+          use: "Programming errors (bugs)"
+          examples: "NullPointerException, IllegalArgumentException, ArrayIndexOutOfBoundsException"
+    recommendation: "Use checked exceptions for errors the caller can recover from (files, network, database). Use unchecked for programming errors that indicate bugs. In modern practice, unchecked exceptions with descriptive messages tend to be used more."
+videos:
+  - url: ""
+    title: "Exceptions in Java for beginners"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What is the difference between Error and Exception?"
+    answer: "Error represents serious JVM problems (OutOfMemoryError, StackOverflowError) that you should not try to handle. Exception represents errors that your code can try to recover from. Both extend Throwable."
+  - question: "Why does Java force you to handle checked exceptions?"
+    answer: "To force the programmer to consider possible errors and write more robust code. If a FileNotFoundException can occur, the compiler requires you to handle it. It was very controversial; many languages did not adopt this approach."
+  - question: "What is a stack trace and how do I read it?"
+    answer: "The stack trace is the sequence of method calls that led to the error. It is read from top to bottom: the exception occurs on the line closest to the error message. The rest of the trace shows who called whom."
+sources:
+  - title: "Java 21 API — Throwable"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/Throwable.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Exceptions"
+    url: "https://docs.oracle.com/javase/tutorial/essential/exceptions/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## The exception hierarchy
+
+```
+Throwable (the root of everything)
+├── Error (serious JVM problems — don't handle)
+│   ├── OutOfMemoryError
+│   ├── StackOverflowError
+│   └── ...
+└── Exception (errors your code can handle)
+    ├── RuntimeException (UNCHECKED)
+    │   ├── NullPointerException
+    │   ├── IllegalArgumentException
+    │   ├── ArrayIndexOutOfBoundsException
+    │   └── ...
+    └── Checked Exceptions (verified by the compiler)
+        ├── IOException
+        ├── FileNotFoundException
+        ├── SQLException
+        └── ...
+```
+
+## Unchecked Exceptions (RuntimeException)
+
+They are **programming** errors (bugs). The compiler does not force you to handle them.
+
+<CodeBlock lang="java" title="Most common RuntimeException">
+{`public class TiposRuntimeException {
+    public static void main(String[] args) {
+        // 1. NullPointerException
+        try {
+            String texto = null;
+            texto.length();
+        } catch (NullPointerException e) {
+            System.out.println("NullPointerException: " + e.getMessage());
+        }
+
+        // 2. ArrayIndexOutOfBoundsException
+        try {
+            int[] nums = {1, 2, 3};
+            int valor = nums[10];
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("ArrayIndexOutOfBounds: " + e.getMessage());
+        }
+
+        // 3. NumberFormatException
+        try {
+            int num = Integer.parseInt("abc");
+        } catch (NumberFormatException e) {
+            System.out.println("NumberFormatException: " + e.getMessage());
+        }
+
+        // 4. IllegalArgumentException
+        try {
+            setEdad(-5);
+        } catch (IllegalArgumentException e) {
+            System.out.println("IllegalArgumentException: " + e.getMessage());
+        }
+    }
+
+    static void setEdad(int edad) {
+        if (edad < 0 || edad > 150) {
+            throw new IllegalArgumentException("Invalid age: " + edad);
+        }
+        System.out.println("Age set: " + edad);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+NullPointerException: null
+ArrayIndexOutOfBounds: Index 10 out of bounds for length 3
+NumberFormatException: For input string: "abc"
+IllegalArgumentException: Invalid age: -5
+```
+
+## Checked Exceptions
+
+The compiler **forces** you to handle them with `try-catch` or declare them with `throws`.
+
+<CodeBlock lang="java" title="Checked exception — FileNotFoundException">
+{`import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class CheckedDemo {
+    static void leerArchivo(String ruta) throws FileNotFoundException {
+        // FileNotFoundException is checked — we must declare throws
+        Scanner sc = new Scanner(new File(ruta));
+        while (sc.hasNextLine()) {
+            System.out.println(sc.nextLine());
+        }
+        sc.close();
+    }
+
+    public static void main(String[] args) {
+        try {
+            leerArchivo("datos.txt");
+        } catch (FileNotFoundException e) {
+            System.out.println("Could not read: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Could not read: datos.txt (The system cannot find the file specified)
+```
+
+## Reading a stack trace
+
+When an exception occurs, the stack trace tells you **where** and **how** it happened:
+
+```
+java.lang.ArithmeticException: / by zero
+    at Calculator.dividir(Calculator.java:15)      ← where it happened
+    at Calculator.main(Calculator.java:8)            ← who called it
+```
+
+**Read from bottom to top:** `main` calls `dividir`, and that's where the division by zero occurs.
+
+## The most important exceptions
+
+| Exception | Type | Common cause |
+|-----------|------|--------------|
+| `NullPointerException` | Unchecked | Using a null object as if it had a value |
+| `ArrayIndexOutOfBoundsException` | Unchecked | Accessing an index out of range |
+| `NumberFormatException` | Unchecked | Converting invalid text to a number |
+| `IllegalArgumentException` | Unchecked | Parameter with an unacceptable value |
+| `FileNotFoundException` | Checked | File not found on disk |
+| `IOException` | Checked | General input/output error |
+| `ClassNotFoundException` | Checked | Class not found in the classpath |
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

@@ -1,0 +1,11 @@
+{
+  "id": "mod-09",
+  "slug": "09-proyectos",
+  "number": 9,
+  "title": "Guided Projects",
+  "description": "Apply everything you've learned by building real projects step by step.",
+  "icon": "Code2",
+  "status": "disponible",
+  "lessonCount": 4,
+  "lessons": ["calculadora-cli", "gestor-tareas", "sistema-biblioteca", "juego-texto"]
+}

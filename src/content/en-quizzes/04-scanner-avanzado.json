@@ -1,0 +1,58 @@
+{
+  "id": "quiz-avanzado-scanner",
+  "lessonSlug": "entrada-datos-scanner",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How would you read a decimal number safely without the program crashing if the user types text?",
+      "options": [
+        "Use nextDouble() directly",
+        "Use hasNextDouble() before nextDouble()",
+        "Use try-catch with NumberFormatException",
+        "Use Integer.parseInt()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "nextDouble() throws InputMismatchException if the input is not a number.",
+        "Correct. hasNextDouble() checks before reading, avoiding exceptions.",
+        "try-catch works but hasNextXxx() is the idiomatic way with Scanner.",
+        "Integer.parseInt() is for strings, not for console input."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between `next()` and `nextLine()`?",
+      "options": [
+        "They are exactly the same",
+        "next() reads one word, nextLine() reads the whole line",
+        "next() reads a line, nextLine() reads a word",
+        "next() is for integers, nextLine() for text"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They have different behaviors.",
+        "Correct. next() reads up to the first whitespace. nextLine() reads up to the end of the line.",
+        "It is the other way around.",
+        "Both read text; nextInt() is for integers."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Why is it recommended to close Scanner with `sc.close()`?",
+      "options": [
+        "So the program does not crash",
+        "To release the System.in resource",
+        "It is mandatory in Java",
+        "To erase the data read"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The program does not crash without close(), but it is bad practice.",
+        "Correct. close() releases the underlying System.in resource and prevents memory leaks.",
+        "It is not strictly mandatory, but it is good practice.",
+        "It does not erase data; it releases system resources."
+      ]
+    }
+  ]
+}

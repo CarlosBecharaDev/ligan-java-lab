@@ -1,0 +1,52 @@
+[
+  {
+    "id": "ex-strings-facil",
+    "lessonSlug": "strings",
+    "title": "Book information",
+    "difficulty": "facil",
+    "description": "Given a book title, print: the length, the first character, the last character, and whether it contains the word 'Java'.",
+    "template": "public class InfoLibro {\n    public static void main(String[] args) {\n        String titulo = \"Aprendiendo Java desde Cero\";\n\n        // TODO: Print the length of the title\n        // Print the first character\n        // Print the last character\n        // Print whether it contains the word \"Java\"\n\n    }\n}",
+    "hints": [
+      "Use .length() for the length",
+      "Use .charAt(0) for the first character and .charAt(length-1) for the last one",
+      "Use .contains() to check if it contains a word"
+    ],
+    "solution": "public class InfoLibro {\n    public static void main(String[] args) {\n        String titulo = \"Aprendiendo Java desde Cero\";\n\n        System.out.println(\"Title: \" + titulo);\n        System.out.println(\"Length: \" + titulo.length());\n        System.out.println(\"First character: \" + titulo.charAt(0));\n        System.out.println(\"Last character: \" + titulo.charAt(titulo.length() - 1));\n        System.out.println(\"Contains 'Java': \" + titulo.contains(\"Java\"));\n    }\n}",
+    "solutionExplanation": "We use length() for the length, charAt(0) and charAt(length-1) for the extremes, and contains() to check for the presence of a substring.",
+    "expectedOutput": "Title: Aprendiendo Java desde Cero\nLength: 27\nFirst character: A\nLast character: o\nContains 'Java': true"
+  },
+  {
+    "id": "ex-strings-normal",
+    "lessonSlug": "strings",
+    "title": "Text normalizer",
+    "difficulty": "normal",
+    "description": "Create a function that receives a name with extra spaces and normalizes it: no spaces at the start/end, the first letter of each word in uppercase and the rest in lowercase.",
+    "template": "public class NormalizadorTexto {\n    public static void main(String[] args) {\n        String nombre = \"  CARLOS  bechara  \";\n\n        // TODO: Remove extra spaces at the start and end\n        // Convert everything to lowercase\n        // Capitalize the first letter of each word\n        // Use split to divide and StringBuilder to rebuild\n        // Print the result\n\n    }\n}",
+    "hints": [
+      "Use trim() to remove spaces",
+      "Use toLowerCase() to normalize",
+      "Use split(\" \") to split into words",
+      "Use substring(0,1).toUpperCase() + substring(1) to capitalize"
+    ],
+    "solution": "public class NormalizadorTexto {\n    public static void main(String[] args) {\n        String nombre = \"  CARLOS  bechara  \";\n\n        String limpio = nombre.trim().toLowerCase();\n        String[] palabras = limpio.split(\"\\\\s+\");\n\n        StringBuilder resultado = new StringBuilder();\n        for (int i = 0; i < palabras.length; i++) {\n            if (i > 0) resultado.append(\" \");\n            String palabra = palabras[i];\n            resultado.append(palabra.substring(0, 1).toUpperCase())\n                     .append(palabra.substring(1));\n        }\n\n        System.out.println(\"Original: '\" + nombre + \"'\");\n        System.out.println(\"Normalized: '\" + resultado + \"'\");\n    }\n}",
+    "solutionExplanation": "We remove spaces with trim(), normalize to lowercase, split by multiple spaces with a split regex, and capitalize each word using substring(0,1).toUpperCase() concatenated with substring(1).",
+    "expectedOutput": "Original: '  CARLOS  bechara  '\nNormalized: 'Carlos Bechara'"
+  },
+  {
+    "id": "ex-strings-dificil",
+    "lessonSlug": "strings",
+    "title": "URL validator",
+    "difficulty": "dificil",
+    "description": "Create a validator that checks whether a URL has the correct format: it must start with https://, end with .com or .org, and contain at least a domain with a dot. Build a detailed report with StringBuilder.",
+    "template": "public class ValidadorURL {\n    public static void main(String[] args) {\n        String url = \"https://www.ejemplo.com/java/tutoriales\";\n\n        // TODO: Check that it starts with https://\n        // Check that it ends with .com or .org\n        // Extract and show the domain\n        // Count the path segments\n        // Build a report with StringBuilder\n        // Determine if the URL is valid\n\n    }\n}",
+    "hints": [
+      "Use startsWith() and endsWith() for the checks",
+      "Use indexOf() to find the position of the domain",
+      "Use substring() to extract specific parts",
+      "Use split(\"/\") to count path segments"
+    ],
+    "solution": "public class ValidadorURL {\n    public static void main(String[] args) {\n        String url = \"https://www.ejemplo.com/java/tutoriales\";\n\n        StringBuilder informe = new StringBuilder();\n        informe.append(\"=== URL Report ===\\n\");\n        informe.append(\"URL: \").append(url).append(\"\\n\");\n\n        boolean usaHTTPS = url.startsWith(\"https://\");\n        informe.append(\"HTTPS protocol: \").append(usaHTTPS ? \"✅ Yes\" : \"❌ No\").append(\"\\n\");\n\n        boolean extensionValida = url.endsWith(\".com\") || url.endsWith(\".org\");\n        informe.append(\"Valid extension: \").append(extensionValida ? \"✅ Yes\" : \"❌ No\").append(\"\\n\");\n\n        int inicioDominio = url.indexOf(\"//\") + 2;\n        int finDominio = url.indexOf(\"/\", inicioDominio);\n        String dominio = url.substring(inicioDominio, finDominio);\n        informe.append(\"Domain: \").append(dominio).append(\"\\n\");\n\n        boolean tienePunto = dominio.contains(\".\");\n        informe.append(\"Domain format: \").append(tienePunto ? \"✅ Valid\" : \"❌ Invalid\").append(\"\\n\");\n\n        String[] partes = url.substring(inicioDominio).split(\"/\");\n        informe.append(\"Path segments: \").append(partes.length - 1).append(\"\\n\");\n\n        boolean urlValida = usaHTTPS && extensionValida && tienePunto;\n        informe.append(\"\\nResult: \").append(urlValida ? \"✅ VALID URL\" : \"❌ INVALID URL\");\n\n        System.out.println(informe);\n    }\n}",
+    "solutionExplanation": "We use startsWith/endsWith for format validation, indexOf for positions, substring for extraction, split to segment the path, and StringBuilder to build the report efficiently.",
+    "expectedOutput": "=== URL Report ===\nURL: https://www.ejemplo.com/java/tutoriales\nHTTPS protocol: ✅ Yes\nValid extension: ✅ Yes\nDomain: www.ejemplo.com\nDomain format: ✅ Valid\nPath segments: 2\n\nResult: ✅ VALID URL"
+  }
+]

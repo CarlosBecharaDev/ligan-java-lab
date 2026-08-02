@@ -1,0 +1,318 @@
+---
+title: "Introduction to Java: JDK, JRE and JVM"
+slug: "introduccion-java"
+module: "00-introduccion"
+level: "Beginner"
+objectives:
+  - "Understand what Java is and its 'Write Once, Run Anywhere' philosophy"
+  - "Differentiate between JDK, JRE and JVM and explain their functions"
+  - "Understand the process of compiling and executing bytecode"
+  - "Write, compile and run your first Hello World program in Java"
+  - "Learn the naming conventions and structure of a Java project"
+prerequisites: []
+history:
+  introducedIn: "Java 1.0 (1996)"
+  context: "Java was created by James Gosling at Sun Microsystems and released in 1996. Its original promise —'Write Once, Run Anywhere'— revolutionized the industry by allowing the same program to run on Windows, Linux or Mac without modifications. This portability was achieved through the JVM (Java Virtual Machine), a virtual machine that interprets bytecode."
+  evolution: "Java has evolved from JDK 1.0 (1996) with 212 classes to JDK 21 LTS (2023) with more than 6000 classes. In 2010 Oracle acquired Sun Microsystems. LTS (Long Term Support) versions such as Java 8, 11, 17 and 21 are the recommended ones for production."
+realWorldExamples:
+  - domain: "Enterprise — Banking system"
+    description: "An international bank uses Java for its banking core. The same compiled code (bytecode) runs on Linux servers in production and on developers' Windows machines, thanks to the JVM."
+    code: |
+      public class HolaBanco {
+          public static void main(String[] args) {
+              System.out.println("=== Java Banking System ===");
+              System.out.println("Transaction processed successfully");
+              System.out.println("Platform: " + System.getProperty("os.name"));
+          }
+      }
+    result: |
+      === Java Banking System ===
+      Transaction processed successfully
+      Platform: Linux
+  - domain: "Education — University campus"
+    description: "A university teaches Java in its labs. Students write code on Windows, compile it with javac and generate bytecode that works the same on the campus Linux servers."
+    code: |
+      public class CalculoNota {
+          public static void main(String[] args) {
+              double nota = 4.5;
+              System.out.printf("Your final grade is: %.2f%n", nota);
+              System.out.println("Did you pass?: " + (nota >= 3.0 ? "Yes" : "No"));
+          }
+      }
+    result: |
+      Your final grade is: 4.50
+      Did you pass?: Yes
+hasInteractive: false
+comparisons:
+  - title: "JDK vs JRE vs JVM"
+    items:
+      - name: "JDK"
+        features:
+          contains: "JRE + javac + debugger + tools"
+          usedFor: "To DEVELOP"
+          example: "javac HolaMundo.java"
+          size: "Large (300-500 MB)"
+      - name: "JRE"
+        features:
+          contains: "JVM + standard libraries"
+          usedFor: "To RUN compiled programs"
+          example: "java HolaMundo"
+          size: "Medium (150-200 MB)"
+      - name: "JVM"
+        features:
+          contains: "Only the bytecode interpreter"
+          usedFor: "To RUN bytecode on a specific OS"
+          example: "Interprets HolaMundo.class"
+          size: "Small (30-50 MB)"
+    recommendation: "Developers install the JDK. End users only need the JRE. Modern production servers use the full JDK for its monitoring tools."
+videos:
+  - url: ""
+    title: "What is Java? - Introduction for beginners"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch: explains JDK, JRE, JVM and how to install the development environment"
+faqs:
+  - question: "What is the difference between JDK, JRE and JVM?"
+    answer: "The JDK (Java Development Kit) is everything you need to develop: it includes the compiler (javac), the debugger and the JRE. The JRE (Java Runtime Environment) only runs already-compiled programs. The JVM (Java Virtual Machine) is the heart that interprets bytecode and runs it on the operating system. The JDK contains the JRE, and the JRE contains the JVM."
+  - question: "Why is Java considered cross-platform?"
+    answer: "Because it compiles to bytecode, not to native machine code. That bytecode runs on any JVM, regardless of the operating system. Each platform (Windows, Linux, macOS) has its own JVM, but all of them run the same bytecode."
+  - question: "What does LTS mean and why is it important?"
+    answer: "LTS (Long Term Support) versions have extended support with security updates and patches for years. Java 21 LTS is the recommended version for professional projects. Non-LTS versions have only 6 months of support."
+  - question: "Can I have multiple versions of Java installed?"
+    answer: "Yes. You can have multiple JDKs on the same machine. Tools like SDKMAN (on Linux/Mac) or the Adoptium installers allow you to manage and switch between versions easily."
+  - question: "What IDE do you recommend to get started?"
+    answer: "IntelliJ IDEA Community Edition is the most popular choice. VS Code with the Java extensions is also excellent. Both are free. NetBeans is another alternative included with the JDK."
+sources:
+  - title: "Java 21 Language Specification — Chapter 1: Introduction"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-1.html"
+    date: "2026-07-29"
+  - title: "OpenJDK — JDK 21 Releases"
+    url: "https://openjdk.org/projects/jdk/21/"
+    date: "2026-07-29"
+  - title: "Oracle — Java Concepts: Write Once, Run Anywhere"
+    url: "https://www.oracle.com/java/write-once-run-anywhere/"
+    date: "2026-07-29"
+  - title: "Adoptium — Download JDK 21 LTS"
+    url: "https://adoptium.net/temurin/releases/?version=21"
+    date: "2026-07-29"
+status: "publicado"
+lastReviewed: "2026-07-29"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is Java?
+
+Java is an **object-oriented programming language** that compiles to an intermediate code called *bytecode*. It was created by James Gosling at Sun Microsystems and released in 1996. Its motto "**Write Once, Run Anywhere**" (WORA) means that the same program runs on Windows, Linux or macOS without modifications.
+
+Java is one of the most widely used languages in the business world: banking systems, Android apps, big data, microservices with Spring Boot, and more.
+
+## The Java ecosystem: JDK, JRE and JVM
+
+To program in Java you need three nested components:
+
+```
+┌────────────────────────────────────────────┐
+│                   JDK                        │
+│  (You need it to DEVELOP)                    │
+│  ┌────────────────────────────────────────┐ │
+│  │               JRE                        │ │
+│  │  (You need it to RUN)                    │ │
+│  │  ┌──────────────────────────────────┐   │ │
+│  │  │              JVM                   │   │ │
+│  │  │  (Interprets and runs bytecode)    │   │ │
+│  │  └──────────────────────────────────┘   │ │
+│  │  + Java standard libraries               │ │
+│  └────────────────────────────────────────┘ │
+│  + javac, debugger, dev tools                │
+└────────────────────────────────────────────┘
+```
+
+### JDK — Java Development Kit
+
+It is the complete kit to DEVELOP in Java. It includes:
+
+- **`javac`**: the compiler that converts `.java` to `.class` (bytecode)
+- **JRE**: the runtime environment
+- **Debugger**: to debug code step by step
+- **Tools**: `javadoc`, `jar`, `jlink`, etc.
+
+It is installed by a developer on their machine.
+
+### JRE — Java Runtime Environment
+
+It is the environment to RUN already-compiled Java programs. It includes:
+
+- **JVM**: the virtual machine
+- **Standard libraries**: `java.lang`, `java.util`, `java.io`, etc.
+
+It is installed by an end user who only wants to run Java applications.
+
+### JVM — Java Virtual Machine
+
+It is the heart of Java: it interprets and executes bytecode. It is specific to each operating system. The JVM is what makes WORA possible: the same `.class` works on any OS that has its own JVM.
+
+## The compilation and execution process
+
+```
+┌─────────────────────┐      javac       ┌──────────────────┐      JVM       ┌──────────────────┐
+│  HolaMundo.java      │ ───────────────► │  HolaMundo.class  │ ─────────────► │  Console output  │
+│ (source code)        │   (compiler)     │   (bytecode)       │  (interpreter) │                    │
+└─────────────────────┘                  └──────────────────┘                └──────────────────┘
+```
+
+1. **You write** the code in a `.java` file
+2. **`javac`** compiles to bytecode in a `.class` file
+3. **The JVM** interprets that bytecode and executes it
+
+Bytecode is NOT native machine code. It is an intermediate format that the JVM interprets. That is why the same `.class` works on any operating system that has a JVM.
+
+## Your first program: Hello World
+
+<CodeBlock lang="java" title="HolaMundo.java">
+{`public class HolaMundo {
+    public static void main(String[] args) {
+        System.out.println("Hello World with Java!");
+    }
+}`}
+</CodeBlock>
+
+### Breaking it down line by line
+
+| Line | Explanation |
+|-------|------------|
+| `public class HolaMundo` | Declares a public class. The name must match EXACTLY the file name: `HolaMundo.java` |
+| `public static void main(String[] args)` | Entry point method. The JVM looks for this exact signature to start executing |
+| `System.out.println(...)` | Prints text to the console followed by a line break |
+| `;` | Every statement ends with a semicolon (mandatory) |
+
+### Breakdown of `public static void main(String[] args)`
+
+| Word | Meaning |
+|---------|------------|
+| `public` | Accessible from outside the class (the JVM needs to call it) |
+| `static` | Does not require creating an object to run |
+| `void` | Returns no value |
+| `main` | Method name — must be exactly `main` in lowercase |
+| `String[] args` | Parameter that receives command-line arguments |
+
+### Compile and run step by step
+
+```bash
+# 1. Compile: generates HolaMundo.class
+javac HolaMundo.java
+
+# 2. Run: the JVM interprets the bytecode
+java HolaMundo
+```
+
+**Expected output:**
+```
+Hello World with Java!
+```
+
+## Naming conventions
+
+| Element | Convention | Example |
+|----------|-----------|---------|
+| Class | **PascalCase** | `MiPrimerPrograma` |
+| Method | **camelCase** | `calcularPromedio()` |
+| Variable | **camelCase** | `nombreUsuario` |
+| Constant | **UPPERCASE** | `MAX_INTENTOS` |
+| Package | **lowercase** | `com.miempresa.app` |
+| `.java` file | = public class | `MiClase.java` |
+
+## Structure of a real project
+
+```
+my-project/
+├── src/
+│   └── main/
+│       └── java/
+│           └── com/empresa/app/
+│               ├── Main.java
+│               ├── models/
+│               └── services/
+├── pom.xml (or build.gradle)
+└── README.md
+```
+
+In professional projects, code is organized into **packages** (folders that reflect the business domain) and managed with build tools such as Maven or Gradle.
+
+## Common errors
+
+### Error 1: File name does not match the class
+```java
+// File: holamundo.java
+public class HolaMundo {  // ❌ Compilation error
+}
+// ✅ File must be named HolaMundo.java (exactly the same)
+```
+
+### Error 2: `main` misspelled
+```java
+public static void Main(String[] args) {  // ❌ Error: must be main (lowercase)
+public static void main(String[] args) {   // ✅ Correct
+}
+```
+
+### Error 3: Forgetting the semicolon
+```java
+System.out.println("Hola")  // ❌ Compilation error: missing ;
+System.out.println("Hola"); // ✅ Correct
+```
+
+### Error 4: Confusing JDK with JRE
+```bash
+# Trying to compile with only JRE
+java HolaMundo.java    # ❌ java runs .class, it doesn't compile
+javac HolaMundo.java   # ✅ javac compiles (JDK only)
+```
+
+## How to install the JDK
+
+1. Go to [adoptium.net](https://adoptium.net) and download **JDK 21 LTS** for your operating system
+2. Run the installer (next, next, finish)
+3. Verify the installation:
+   ```bash
+   java -version
+   javac -version
+   ```
+4. Optional: install **IntelliJ IDEA Community** or **VS Code** with the Java extensions
+
+## Best practices
+
+1. **PascalCase for classes**: `MiClase`, not `miclase` or `mi_clase`
+2. **One `.java` file per public class** with the same name
+3. **Use LTS versions of the JDK** (21 is the most recent)
+4. **Learn to use an IDE** from the start: autocomplete, refactoring and debugging speed up learning
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

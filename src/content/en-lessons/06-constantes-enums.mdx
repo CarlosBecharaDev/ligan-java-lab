@@ -1,0 +1,493 @@
+---
+title: "Constants and Enums"
+slug: "constantes-enums"
+module: "01-fundamentos"
+level: "Intermediate"
+objectives:
+  - "Declare constants with final and apply the naming convention"
+  - "Distinguish between class constants (static final) and instance constants (final)"
+  - "Define enums with properties, constructors, and methods"
+  - "Use enums in switch and switch expressions"
+  - "Apply constants and enums in real-world situations"
+prerequisites:
+  - "Haber completado Lección 02: Operadores"
+  - "Conocer la sintaxis de clases y métodos en Java"
+  - "Haber completado Lección 05: Casting"
+history:
+  introducedIn: "final since Java 1.0; enum since Java 5"
+  context: "The final keyword has existed since the beginning of Java to create constants. However, enums were introduced in JDK 5 (2004) to replace the unsafe 'int enum' pattern (typeless integer constants). A Java enum is much more powerful than in other languages: it can have fields, methods, and constructors."
+  evolution: "Java 8 allowed default methods in interfaces. Java 12 introduced switch expressions with enums. Java 14 added arrow (->) switch syntax to work with enums more concisely. Java 17 sealed classes that complement enum design."
+realWorldExamples:
+  - domain: "Application configuration"
+    description: "An application uses constants for fixed values such as timeouts, paths, and thresholds that must not change during execution."
+    code: |
+      public class ConfigApp {
+          public static final int MAX_INTENTOS = 3;
+          public static final int TIMEOUT_SEGUNDOS = 30;
+          public static final String URL_API =
+              "https://api.ejemplo.com/v1";
+          public static final double IVU = 0.16;
+          public static final String[] DIAS_LABORALES =
+              {"Lun", "Mar", "Mié", "Jue", "Vie"};
+
+          public static void main(String[] args) {
+              System.out.println("Configuración de la aplicación:");
+              System.out.println("- Intentos máximos: " + MAX_INTENTOS);
+              System.out.println("- Timeout: " + TIMEOUT_SEGUNDOS + "s");
+              System.out.println("- API: " + URL_API);
+              System.out.println("- IVU: " + (IVU * 100) + "%");
+
+              double precio = 100.0;
+              double total = precio + (precio * IVU);
+              System.out.printf("Precio + IVU: $%.2f%n", total);
+          }
+      }
+    result: |
+      Application configuration:
+      - Maximum attempts: 3
+      - Timeout: 30s
+      - API: https://api.ejemplo.com/v1
+      - TAX: 16.0%
+      Price + TAX: $116.00
+  - domain: "Order status with Enum"
+    description: "An e-commerce system uses an enum to represent the statuses of an order, with properties such as description and estimated time."
+    code: |
+      public enum EstadoPedido {
+          PENDIENTE("Recibido", "1 hora"),
+          CONFIRMADO("En preparación", "2 horas"),
+          ENVIADO("En camino", "3-5 días"),
+          ENTREGADO("Completado", "-"),
+          CANCELADO("Cancelado", "-");
+
+          private final String descripcion;
+          private final String tiempoEstimado;
+
+          EstadoPedido(String descripcion, String tiempoEstimado) {
+              this.descripcion = descripcion;
+              this.tiempoEstimado = tiempoEstimado;
+          }
+
+          public String getDescripcion() { return descripcion; }
+          public String getTiempoEstimado() { return tiempoEstimado; }
+
+          public boolean esTerminal() {
+              return this == ENTREGADO || this == CANCELADO;
+          }
+      }
+
+      public class PedidoEjemplo {
+          public static void main(String[] args) {
+              EstadoPedido estado = EstadoPedido.CONFIRMADO;
+              System.out.println("Estado: " + estado);
+              System.out.println("Descripción: " + estado.getDescripcion());
+              System.out.println("Tiempo estimado: " + estado.getTiempoEstimado());
+              System.out.println("¿Es terminal?: " + estado.esTerminal());
+          }
+      }
+    result: |
+      Status: CONFIRMADO
+      Description: In preparation
+      Estimated time: 2 hours
+      Is terminal?: false
+hasInteractive: false
+comparisons:
+  - title: "final (constant) vs enum"
+    items:
+      - name: "final (constant)"
+        features:
+          purpose: "Fixed immutable value"
+          type: "Any type (int, String, double...)"
+          grouping: "Does not group — each constant is independent"
+          methods: "Has no methods of its own"
+          switch: "Supports switch (Java 7+)"
+      - name: "enum"
+        features:
+          purpose: "Fixed set of related values"
+          type: "Own type with compile-time safety"
+          grouping: "Groups related values"
+          methods: "Can have constructors, methods, and fields"
+          switch: "Supports switch and switch expressions"
+    recommendation: "Use final for individual values (PI, TAX, TIMEOUT). Use enum for groups of related constants (days of the week, order statuses, user roles). An enum is more expressive and safer than grouping final constants in a class."
+videos:
+  - url: ""
+    title: "Constants and Enums in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "What is the difference between `final` and `static final`?"
+    answer: "final makes a variable unable to be reassigned. static final (class constant) belongs to the class, not to the instances. static final is shared among all instances and is accessed via ClassName.CONSTANT. It is the correct way to create global constants."
+  - question: "Are enums in Java just constants?"
+    answer: "No. Unlike other languages, enums in Java are full classes. They can have fields (final or not), constructors, methods, implement interfaces, and each enum constant can have its own behavior if declared as an anonymous class."
+  - question: "Can enums be compared with `==`?"
+    answer: "Yes. Unlike normal objects, enums have a single instance per constant guaranteed by the JVM, so `==` is safe and more efficient than `.equals()`. In fact, `==` is the idiomatic way to compare enums in Java."
+sources:
+  - title: "Java 21 API — Enum"
+    url: "https://docs.oracle.com/javase/8/docs/api/java/lang/Enum.html"
+    date: "2026-07-26"
+  - title: "Java Tutorials — Enum Types"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/enum.html"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Constants with `final`
+
+A **constant** is a variable whose value cannot change after initialization. In Java, they are declared with `final`. By convention, constant names are written in `UPPERCASE_WITH_UNDERSCORES`.
+
+### Local constants
+
+Inside a method, you can declare local constants:
+
+```java
+public void metodo() {
+    final double IVU = 0.16;
+    final int MAX_USUARIOS = 100;
+
+    // IVU = 0.18;    // ❌ Error: cannot be reassigned
+}
+```
+
+### Class constants (static final)
+
+For constants accessible from the entire application, use `public static final`:
+
+```java
+public class Constantes {
+    public static final double PI = 3.14159265359;
+    public static final int DIAS_SEMANA = 7;
+    public static final String NOMBRE_APP = "Ligan Java Lab";
+}
+```
+
+Then they are accessed with `Constantes.PI`, `Constantes.DIAS_SEMANA`, etc.
+
+### Instance constants (final without static)
+
+If each instance of a class has a fixed value that does not change:
+
+```java
+public class TarjetaCredito {
+    private final String numeroTarjeta;   // fixed per instance
+    private final String titular;
+
+    public TarjetaCredito(String numero, String titular) {
+        this.numeroTarjeta = numero;      // assigned once
+        this.titular = titular;
+    }
+}
+```
+
+<CodeBlock lang="java" title="Constants in Java">
+{`public class EjemploConstantes {
+    // Class constants
+    public static final String APP = "MiApp";
+    public static final int MAX_CONEXIONES = 10;
+    public static final double INTERES_ANUAL = 0.045;
+
+    // Instance constant
+    private final String nombreUsuario;
+
+    public EjemploConstantes(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
+    }
+
+    public void mostrarInfo() {
+        final double DESCUENTO = 0.15;  // local constant
+
+        System.out.println("App: " + APP);
+        System.out.println("User: " + nombreUsuario);
+        System.out.println("Annual interest: " + (INTERES_ANUAL * 100) + "%");
+        System.out.println("Today's discount: " + (DESCUENTO * 100) + "%");
+    }
+
+    public static void main(String[] args) {
+        EjemploConstantes ej = new EjemploConstantes("Carlos");
+        ej.mostrarInfo();
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+App: MiApp
+User: Carlos
+Annual interest: 4.5%
+Today's discount: 15.0%
+```
+
+## Introduction to Enums
+
+An **enum** (enumeration) is a data type that defines a fixed set of related constants. It is the correct way to represent closed groups such as days of the week, order statuses, or user roles.
+
+```java
+public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+```
+
+### Using a basic enum
+
+<CodeBlock lang="java" title="Basic enum">
+{`public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+
+public class UsarEnum {
+    public static void main(String[] args) {
+        DiaSemana hoy = DiaSemana.MIERCOLES;
+
+        System.out.println("Today is: " + hoy);
+        System.out.println("Ordinal: " + hoy.ordinal());
+        System.out.println("Name: " + hoy.name());
+
+        // Iterate over all values
+        System.out.println("\\nAll days:");
+        for (DiaSemana dia : DiaSemana.values()) {
+            System.out.println("  " + dia.ordinal() + " = " + dia);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Today is: MIERCOLES
+Ordinal: 2
+Name: MIERCOLES
+
+All days:
+  0 = LUNES
+  1 = MARTES
+  2 = MIERCOLES
+  3 = JUEVES
+  4 = VIERNES
+  5 = SABADO
+  6 = DOMINGO
+```
+
+### Enums with switch
+
+<CodeBlock lang="java" title="Enum with switch">
+{`public enum DiaSemana {
+    LUNES, MARTES, MIERCOLES, JUEVES, VIERNES, SABADO, DOMINGO
+}
+
+public class EnumSwitch {
+    public static void main(String[] args) {
+        DiaSemana dia = DiaSemana.VIERNES;
+
+        // Traditional switch
+        switch (dia) {
+            case LUNES:
+                System.out.println("Start of the week");
+                break;
+            case SABADO:
+            case DOMINGO:
+                System.out.println("Weekend!");
+                break;
+            default:
+                System.out.println("Workday");
+        }
+
+        // Switch expression (Java 14+) — no break, more concise
+        String tipoDia = switch (dia) {
+            case LUNES -> "Start of the week";
+            case MARTES, MIERCOLES, JUEVES -> "Workday";
+            case VIERNES -> "Pre-weekend day";
+            case SABADO, DOMINGO -> "Weekend!";
+        };
+        System.out.println("Day type: " + tipoDia);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Pre-weekend day
+Day type: Pre-weekend day
+```
+
+## Enums with properties and methods
+
+Enums in Java are full classes. They can have:
+
+- **Fields** (usually final so they are immutable)
+- **Private constructor** (cannot be instantiated from outside)
+- **Methods** to obtain additional information
+
+<CodeBlock lang="java" title="Enums with properties and methods">
+{`public enum NivelAcceso {
+    INVITADO(0, "No access"),
+    LECTOR(1, "Read only"),
+    EDITOR(2, "Read and write"),
+    ADMIN(3, "Full access");
+
+    private final int prioridad;
+    private final String descripcion;
+
+    // Constructor — always private in an enum
+    NivelAcceso(int prioridad, String descripcion) {
+        this.prioridad = prioridad;
+        this.descripcion = descripcion;
+    }
+
+    public int getPrioridad() { return prioridad; }
+    public String getDescripcion() { return descripcion; }
+
+    public boolean puedeEditar() {
+        return this == EDITOR || this == ADMIN;
+    }
+
+    public boolean puedeAdministrar() {
+        return this == ADMIN;
+    }
+
+    // Static method to look up by priority
+    public static NivelAcceso desdePrioridad(int prioridad) {
+        for (NivelAcceso nivel : values()) {
+            if (nivel.prioridad == prioridad) {
+                return nivel;
+            }
+        }
+        return INVITADO;
+    }
+}
+
+public class DemoNivel {
+    public static void main(String[] args) {
+        NivelAcceso nivel = NivelAcceso.EDITOR;
+
+        System.out.println("Level: " + nivel);
+        System.out.println("Priority: " + nivel.getPrioridad());
+        System.out.println("Description: " + nivel.getDescripcion());
+        System.out.println("Can edit: " + nivel.puedeEditar());
+        System.out.println("Can administer: " + nivel.puedeAdministrar());
+
+        // Look up by priority
+        NivelAcceso buscado = NivelAcceso.desdePrioridad(3);
+        System.out.println("Priority 3: " + buscado);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Level: EDITOR
+Priority: 2
+Description: Read and write
+Can edit: true
+Can administer: false
+Priority 3: ADMIN
+```
+
+## Useful Enum methods
+
+Every enum automatically inherits from `java.lang.Enum`, which provides:
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `name()` | The exact name of the constant | `Nivel.ADMIN.name()` → `"ADMIN"` |
+| `ordinal()` | Position (0-based) | `Nivel.ADMIN.ordinal()` → `3` |
+| `values()` | All constants as an array | `Nivel.values()` → `[INVITADO, LECTOR, EDITOR, ADMIN]` |
+| `valueOf(str)` | Constant from a String | `Nivel.valueOf("ADMIN")` → `Nivel.ADMIN` |
+
+<CodeBlock lang="java" title="Methods inherited from Enum">
+{`public class MetodosEnum {
+    public static void main(String[] args) {
+        // valueOf: convert String to enum
+        NivelAcceso nivel = NivelAcceso.valueOf("LECTOR");
+        System.out.println("valueOf('LECTOR'): " + nivel);
+
+        // name(): get the exact name
+        String nombre = NivelAcceso.ADMIN.name();
+        System.out.println("ADMIN.name(): '" + nombre + "'");
+
+        // ordinal(): 0-based position
+        System.out.println("INVITADO.ordinal(): " + NivelAcceso.INVITADO.ordinal());
+        System.out.println("ADMIN.ordinal(): " + NivelAcceso.ADMIN.ordinal());
+
+        // values(): iterate over all constants
+        System.out.println("\\nAll levels:");
+        for (NivelAcceso n : NivelAcceso.values()) {
+            System.out.printf("  %d. %s%n", n.ordinal(), n.name());
+        }
+    }
+}`}
+</CodeBlock>
+
+## Common mistakes
+
+### Mistake 1: Declaring constants without final
+```java
+// ❌ This is not a constant — it can be modified
+double IVU = 0.16;
+
+// ✅ Real constant
+public static final double IVU = 0.16;
+```
+
+### Mistake 2: Not following the naming convention
+```java
+// ❌ Constants must be in UPPERCASE
+public static final double maximo = 100;
+
+// ✅ Standard convention
+public static final double MAXIMO = 100;
+```
+
+### Mistake 3: Using `ordinal()` in business logic
+```java
+// ❌ If the enum order changes, the code breaks
+if (nivel.ordinal() >= 2) { puedeEditar = true; }
+
+// ✅ Use an explicit priority field
+if (nivel.getPrioridad() >= 2) { puedeEditar = true; }
+```
+
+### Mistake 4: Enums outside their own file
+```java
+// ❌ A public enum needs its own file
+public class Ejemplo {
+    public enum Color { ROJO, VERDE, AZUL }  // No!
+}
+
+// ✅ Each public enum in its own .java file
+// Color.java
+public enum Color { ROJO, VERDE, AZUL }
+```
+
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

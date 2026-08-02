@@ -1,0 +1,311 @@
+---
+title: "Arrays"
+slug: "arrays"
+module: "03-metodos-y-arrays"
+level: "Beginner"
+objectives:
+  - "Declare and initialize arrays of different types"
+  - "Access elements by index and modify values"
+  - "Iterate over arrays with for and for-each loops"
+  - "Use .length to get the array size"
+  - "Understand that indexes start at 0"
+prerequisites:
+  - "Have completed Lesson 14: Method Overloading"
+  - "Know primitive data types"
+  - "Understand for and for-each loops"
+history:
+  introducedIn: "Arrays since Java 1.0"
+  context: "Arrays are the most basic data structure in Java, available since Java 1.0. They are collections of elements of the same type with a fixed size, stored in contiguous memory. Unlike other languages, arrays in Java are objects, which means they have properties like .length and methods inherited from Object."
+  evolution: "Java 1.0 introduced one-dimensional and multidimensional arrays. Java 5 added for-each, which simplifies traversal. Java 10 allows type inference with var for arrays. Although collections (ArrayList, etc.) offer more flexibility, arrays remain fundamental for their performance and use in low-level APIs."
+realWorldExamples:
+  - domain: "Healthcare — vital signs record"
+    description: "A hospital system stores a patient's body temperatures over 24 hours in an array, and computes the average, maximum, and minimum."
+    code: |
+      public class SignosVitales {
+          public static void main(String[] args) {
+              double[] temperaturas = {
+                  36.5, 36.8, 37.1, 36.9, 37.2, 37.5,
+                  37.8, 38.1, 38.4, 38.0, 37.6, 37.2,
+                  36.9, 36.7, 36.5, 36.8, 37.0, 37.3,
+                  37.6, 37.9, 38.2, 37.8, 37.4, 37.0
+              };
+
+              double suma = 0;
+              double maxima = temperaturas[0];
+              double minima = temperaturas[0];
+
+              for (double t : temperaturas) {
+                  suma += t;
+                  if (t > maxima) maxima = t;
+                  if (t < minima) minima = t;
+              }
+
+              System.out.printf("Registros: %d horas%n",
+                  temperaturas.length);
+              System.out.printf("Promedio: %.1f°C%n",
+                  suma / temperaturas.length);
+              System.out.printf("Máxima: %.1f°C%n", maxima);
+              System.out.printf("Mínima: %.1f°C%n", minima);
+          }
+      }
+    result: |
+      Records: 24 hours
+      Average: 37.3°C
+      Maximum: 38.4°C
+      Minimum: 36.5°C
+
+  - domain: "E-commerce — product inventory"
+    description: "An online store manages its inventory with parallel arrays: one with names and another with quantities. A method searches for a product and shows its stock."
+    code: |
+      public class Inventario {
+          static int buscar(String[] nombres, String busqueda) {
+              for (int i = 0; i < nombres.length; i++) {
+                  if (nombres[i].equalsIgnoreCase(busqueda)) {
+                      return i;
+                  }
+              }
+              return -1;
+          }
+
+          public static void main(String[] args) {
+              String[] productos = {"Laptop", "Mouse", "Teclado", "Monitor"};
+              int[] cantidades = {15, 42, 28, 8};
+
+              String busqueda = "Teclado";
+              int indice = buscar(productos, busqueda);
+
+              if (indice >= 0) {
+                  System.out.printf("%s: %d unidades%n",
+                      productos[indice], cantidades[indice]);
+              } else {
+                  System.out.println("Producto no encontrado");
+              }
+          }
+      }
+    result: |
+      Keyboard: 28 units
+hasInteractive: false
+comparisons:
+  - title: "Array vs ArrayList"
+    items:
+      - name: "Array (int[])"
+        features:
+          size: "Fixed when created"
+          types: "Primitives and objects"
+          performance: "Faster, less memory"
+          search: "Only linear search (no .contains)"
+      - name: "ArrayList<Integer>"
+        features:
+          size: "Dynamic (grows automatically)"
+          types: "Only objects (autoboxing with primitives)"
+          performance: "Slightly slower due to object overhead"
+          search: ".contains(), .indexOf(), .remove()"
+    recommendation: "Use an array when you know the exact size and need maximum performance. Use ArrayList when you need to add or remove elements dynamically. For pure primitive data (millions of int/double), the array is more efficient."
+videos:
+  - url: ""
+    title: "Arrays in Java"
+    channel: "HolaMundo"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Why do indexes start at 0?"
+    answer: "The index represents the offset from the beginning of the array. The first element is at position 0 because it is 0 positions from the start. This convention comes from C and is used in most modern languages for efficiency in calculating memory addresses."
+  - question: "What happens if I access an index out of range?"
+    answer: "Java throws ArrayIndexOutOfBoundsException at run time. For example, if the array has 5 elements (indexes 0-4) and you access index 5, you get this exception. There is no automatic check; you must make sure the index is within bounds."
+  - question: "Can I change the size of an array after creating it?"
+    answer: "No. Arrays in Java have a fixed size. If you need to change the size, you must create a new array and copy the elements. For dynamic sizes, use ArrayList which handles this automatically."
+sources:
+  - title: "Java 21 Language Specification — Array Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-10.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Arrays"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/arrays.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is an array?
+
+An array is a **collection of elements of the same type** with a fixed size. Each element is accessed through an **index** that starts at 0.
+
+```
+int[] numeros = {10, 20, 30, 40, 50};
+
+Index:    [0]  [1]  [2]  [3]  [4]
+Value:    10   20   30   40   50
+```
+
+## Declaring and initializing arrays
+
+There are several ways to create arrays in Java:
+
+<CodeBlock lang="java" title="Ways to declare arrays">
+{`public class DeclararArrays {
+    public static void main(String[] args) {
+        // Way 1: with initial values
+        int[] edades = {25, 30, 22, 35, 28};
+
+        // Way 2: fixed size, default values (0)
+        double[] notas = new double[5];
+
+        // Way 3: size and manual filling
+        String[] frutas = new String[3];
+        frutas[0] = "Apple";
+        frutas[1] = "Pear";
+        frutas[2] = "Grape";
+
+        // Way 4: variable size
+        int tamanio = 10;
+        int[] datos = new int[tamanio];
+
+        System.out.println("Ages: " + edades.length);
+        System.out.println("Fruits: " + frutas[0]);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Ages: 5
+Fruits: Apple
+```
+
+## Accessing elements
+
+Use the **index** in square brackets `[]` to read or modify elements:
+
+<CodeBlock lang="java" title="Accessing and modifying elements">
+{`public class AccederArrays {
+    public static void main(String[] args) {
+        int[] nums = {10, 20, 30, 40, 50};
+
+        System.out.println("First: " + nums[0]);   // 10
+        System.out.println("Third: " + nums[2]);   // 30
+        System.out.println("Last: " + nums[nums.length - 1]); // 50
+
+        // Modify an element
+        nums[1] = 25;
+        System.out.println("Modified: " + nums[1]); // 25
+
+        // The size is fixed
+        System.out.println("Size: " + nums.length); // 5
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+First: 10
+Third: 30
+Last: 50
+Modified: 25
+Size: 5
+```
+
+**Important:** `.length` does NOT have parentheses — it's a property, not a method.
+
+## Iterating with for
+
+<CodeBlock lang="java" title="Classic for — iterate by index">
+{`public class ForClasico {
+    public static void main(String[] args) {
+        String[] colores = {"Red", "Green", "Blue", "Yellow"};
+
+        for (int i = 0; i < colores.length; i++) {
+            System.out.println("[" + i + "] " + colores[i]);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+[0] Red
+[1] Green
+[2] Blue
+[3] Yellow
+```
+
+## Iterating with for-each
+
+<CodeBlock lang="java" title="For-each — iterate over values directly">
+{`public class ForEachArray {
+    public static void main(String[] args) {
+        int[] calificaciones = {85, 92, 78, 95, 88};
+        int suma = 0;
+
+        for (int nota : calificaciones) {
+            suma += nota;
+        }
+
+        double promedio = (double) suma / calificaciones.length;
+        System.out.println("Average: " + promedio);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Average: 87.6
+```
+
+For-each is more readable when **you don't need the index**. If you need to modify the array or know the position, use the classic for loop.
+
+## Default values
+
+When you create an array with `new`, its elements are initialized automatically:
+
+| Type | Default value |
+|------|---------------|
+| `int`, `long`, `short`, `byte` | `0` |
+| `float`, `double` | `0.0` |
+| `boolean` | `false` |
+| `char` | `' '` |
+| `String` (or objects) | `null` |
+
+## Arrays and methods
+
+Arrays can be passed as parameters to methods:
+
+<CodeBlock lang="java" title="Method that processes an array">
+{`public class MetodoArray {
+    static void imprimirArray(int[] arr) {
+        System.out.print("[");
+        for (int i = 0; i < arr.length; i++) {
+            System.out.print(arr[i]);
+            if (i < arr.length - 1) System.out.print(", ");
+        }
+        System.out.println("]");
+    }
+
+    static int sumar(int[] arr) {
+        int total = 0;
+        for (int n : arr) total += n;
+        return total;
+    }
+
+    public static void main(String[] args) {
+        int[] numeros = {5, 10, 15, 20};
+        imprimirArray(numeros);
+        System.out.println("Sum: " + sumar(numeros));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+[5, 10, 15, 20]
+Sum: 50
+```

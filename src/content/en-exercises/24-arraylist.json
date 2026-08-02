@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-arraylist-facil",
+    "title": "Shopping list",
+    "difficulty": "facil",
+    "description": "Create an ArrayList of String with 5 products from a shopping list. Remove 2 products and show the resulting list.",
+    "template": "import java.util.ArrayList;\n\npublic class ListaCompras {\n    public static void main(String[] args) {\n        ArrayList<String> compras = new ArrayList<>();\n        // TODO: Add 5 products with add()\n        // TODO: Remove 2 products with remove()\n        System.out.println(compras);\n    }\n}",
+    "hints": [
+      "Use compras.add(\"Leche\") to add each product",
+      "Use compras.remove(\"nombre\") or compras.remove(index) to remove",
+      "Printing an ArrayList shows its contents between brackets"
+    ],
+    "solution": "import java.util.ArrayList;\n\npublic class ListaCompras {\n    public static void main(String[] args) {\n        ArrayList<String> compras = new ArrayList<>();\n        compras.add(\"Leche\");\n        compras.add(\"Pan\");\n        compras.add(\"Huevos\");\n        compras.add(\"Manzanas\");\n        compras.add(\"Queso\");\n        compras.remove(\"Huevos\");\n        compras.remove(\"Manzanas\");\n        System.out.println(compras);\n    }\n}",
+    "solutionExplanation": "An empty ArrayList is created and 5 elements are added with add(). Then 2 are removed with remove() using the product name. The ArrayList adjusts automatically after each removal.",
+    "expectedOutput": "[Leche, Pan, Queso]",
+    "lessonSlug": "arraylist"
+  },
+  {
+    "id": "ex-arraylist-normal",
+    "title": "Grades list",
+    "difficulty": "normal",
+    "description": "Given an ArrayList<Double> with student grades, calculate the average and count how many passed (grade >= 6.0).",
+    "template": "import java.util.ArrayList;\n\npublic class ListaNotas {\n    public static void main(String[] args) {\n        ArrayList<Double> notas = new ArrayList<>();\n        notas.add(8.5);\n        notas.add(5.0);\n        notas.add(9.0);\n        notas.add(6.5);\n        notas.add(4.0);\n        notas.add(7.0);\n        notas.add(5.5);\n\n        double suma = 0;\n        int aprobados = 0;\n        // TODO: Iterate with a for-each, add up and count those who passed\n        double promedio = suma / notas.size();\n        System.out.println(\"Average: \" + promedio);\n        System.out.println(\"Passed: \" + aprobados);\n    }\n}",
+    "hints": [
+      "Use for (double nota : notas) to iterate",
+      "Accumulate suma += nota on each iteration",
+      "Use if (nota >= 6.0) to count those who passed"
+    ],
+    "solution": "import java.util.ArrayList;\n\npublic class ListaNotas {\n    public static void main(String[] args) {\n        ArrayList<Double> notas = new ArrayList<>();\n        notas.add(8.5);\n        notas.add(5.0);\n        notas.add(9.0);\n        notas.add(6.5);\n        notas.add(4.0);\n        notas.add(7.0);\n        notas.add(5.5);\n\n        double suma = 0;\n        int aprobados = 0;\n        for (double nota : notas) {\n            suma += nota;\n            if (nota >= 6.0) {\n                aprobados++;\n            }\n        }\n        double promedio = suma / notas.size();\n        System.out.println(\"Average: \" + promedio);\n        System.out.println(\"Passed: \" + aprobados);\n    }\n}",
+    "solutionExplanation": "The ArrayList is iterated with a for-each, accumulating the sum of all grades. On each iteration it checks whether the grade is >= 6.0 to increment the pass counter. The average is the sum divided by the number of elements.",
+    "expectedOutput": "Average: 6.5\nPassed: 4",
+    "lessonSlug": "arraylist"
+  },
+  {
+    "id": "ex-arraylist-dificil",
+    "title": "Duplicate filter",
+    "difficulty": "dificil",
+    "description": "Given an ArrayList<Integer> with duplicate values, remove the duplicates keeping the original order of appearance.",
+    "template": "import java.util.ArrayList;\n\npublic class FiltroDuplicados {\n    public static void main(String[] args) {\n        ArrayList<Integer> lista = new ArrayList<>();\n        lista.add(3);\n        lista.add(1);\n        lista.add(4);\n        lista.add(1);\n        lista.add(5);\n        lista.add(3);\n        lista.add(9);\n        lista.add(4);\n        lista.add(2);\n        lista.add(5);\n\n        // TODO: Remove duplicates while keeping the order\n        System.out.println(lista);\n    }\n}",
+    "hints": [
+      "Create a second ArrayList for the results",
+      "Use contains() to check whether an element was already seen",
+      "Iterate with a for-each or an index"
+    ],
+    "solution": "import java.util.ArrayList;\n\npublic class FiltroDuplicados {\n    public static void main(String[] args) {\n        ArrayList<Integer> lista = new ArrayList<>();\n        lista.add(3);\n        lista.add(1);\n        lista.add(4);\n        lista.add(1);\n        lista.add(5);\n        lista.add(3);\n        lista.add(9);\n        lista.add(4);\n        lista.add(2);\n        lista.add(5);\n\n        ArrayList<Integer> sinDuplicados = new ArrayList<>();\n        for (Integer num : lista) {\n            if (!sinDuplicados.contains(num)) {\n                sinDuplicados.add(num);\n            }\n        }\n        lista = sinDuplicados;\n        System.out.println(lista);\n    }\n}",
+    "solutionExplanation": "A second ArrayList is used to build the list without duplicates. For each element of the original, it checks whether it already exists in the second ArrayList with contains(). If it does not exist, it is added. This preserves the order of first appearance.",
+    "expectedOutput": "[3, 1, 4, 5, 9, 2]",
+    "lessonSlug": "arraylist"
+  }
+]

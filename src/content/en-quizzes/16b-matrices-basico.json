@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-matrices",
+  "lessonSlug": "matrices",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the correct syntax to declare an integer matrix with 3 rows and 4 columns?",
+      "options": ["int matriz = new int[3][4]", "int[][] matriz = new int[3][4]", "int[] matriz = new int[3][4]", "int matriz[3][4]"],
+      "correctIndex": 1,
+      "explanations": [
+        "A pair of brackets is missing in the type.",
+        "Correct. int[][] declares a two-dimensional array, new int[3][4] initializes it.",
+        "int[] is a one-dimensional array, not two-dimensional.",
+        "That syntax is from C, not Java."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does matriz.length return for a matrix with 4 rows and 3 columns?",
+      "options": ["3", "7", "4", "12"],
+      "correctIndex": 2,
+      "explanations": [
+        "matriz.length gives the rows, not the columns.",
+        "It does not add rows and columns.",
+        "Correct. matriz.length returns the number of rows.",
+        "12 is rows * columns, not length."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you access the element at row 2, column 1?",
+      "options": ["matriz[2][1]", "matriz[1][2]", "matriz(2,1)", "matriz[2,1]"],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The first index is the row, the second is the column.",
+        "That would be row 1, column 2.",
+        "Java uses brackets, not parentheses.",
+        "Java does not use a comma inside a single pair of brackets."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What exception occurs when accessing an out-of-range index in a matrix?",
+      "options": ["NullPointerException", "ArrayIndexOutOfBoundsException", "MatrixException", "IndexOutOfBoundsException"],
+      "correctIndex": 1,
+      "explanations": [
+        "NullPointerException occurs when accessing a null object.",
+        "Correct. ArrayIndexOutOfBoundsException occurs when the index is outside the valid range.",
+        "MatrixException does not exist in the standard Java API.",
+        "IndexOutOfBoundsException is the parent class, but the one thrown is ArrayIndexOutOfBoundsException."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Which method prints an entire matrix in a single line?",
+      "options": ["println(matriz)", "Arrays.deepToString(matriz)", "matriz.toString()", "print(matriz[][])"],
+      "correctIndex": 1,
+      "explanations": [
+        "println(matriz) prints the memory address.",
+        "Correct. Arrays.deepToString() returns a string representation of the matrix.",
+        "The toString() of an array does not show the complete elements.",
+        "That syntax is not valid in Java."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,300 @@
+---
+title: "try-catch-finally and try-with-resources"
+slug: "try-catch-finally"
+module: "06-errores"
+level: "Beginner"
+objectives:
+  - "Use try-catch to catch and handle exceptions"
+  - "Use multi-catch to handle multiple exception types"
+  - "Understand the finally block and when it runs"
+  - "Use try-with-resources to automatically manage resources"
+  - "Create exception handling hierarchies with specific catches"
+prerequisites:
+  - "Haber completado Lección 29: Excepciones Checked y Unchecked"
+  - "Entender la jerarquía de excepciones"
+history:
+  introducedIn: "try-catch since Java 1.0, try-with-resources since Java 7"
+  context: "The try-catch mechanism has existed since Java 1.0. Java 7 introduced try-with-resources (also known as ARM — Automatic Resource Management) which automatically closes resources that implement AutoCloseable."
+  evolution: "Java 1.0: basic try-catch-finally. Java 5: exception typing improvements. Java 7: multi-catch (catch(A | B e)) and try-with-resources. Java 7+: suppressed exceptions with Throwable.addSuppressed()."
+realWorldExamples:
+  - domain: "E-commerce — reading store configuration"
+    description: "A system reads a configuration file with complete error handling: file not found, invalid format, and safe resource closing."
+    code: |
+      import java.io.*;
+      import java.util.*;
+
+      public class ConfigTienda {
+          static Properties cargarConfig(String ruta) {
+              Properties config = new Properties();
+              try (FileInputStream fis = new FileInputStream(ruta)) {
+                  config.load(fis);
+                  System.out.println("Configuración cargada: " + config.size() + " propiedades");
+              } catch (FileNotFoundException e) {
+                  System.out.println("Archivo no encontrado, usando valores por defecto");
+                  config.setProperty("tienda", "Mi Tienda");
+                  config.setProperty("moneda", "COP");
+              } catch (IOException e) {
+                  System.out.println("Error leyendo archivo: " + e.getMessage());
+              }
+              return config;
+          }
+
+          public static void main(String[] args) {
+              Properties config = cargarConfig("tienda.properties");
+              System.out.println("Tienda: " + config.getProperty("tienda"));
+              System.out.println("Moneda: " + config.getProperty("moneda"));
+          }
+      }
+    result: |
+      File not found, using default values
+      Store: Mi Tienda
+      Currency: COP
+
+  - domain: "Health — exporting patient report"
+    description: "A hospital exports a CSV report. The code handles write errors, resource closing, and shows a partial report if there are errors."
+    code: |
+      import java.io.*;
+
+      public class ExportarReporte {
+          static void exportarCSV(String ruta) {
+              try (PrintWriter pw = new PrintWriter(new FileWriter(ruta))) {
+                  pw.println("Nombre,Edad,Diagnóstico");
+                  pw.println("Ana García,45,Gripe");
+                  pw.println("Carlos López,62,Hipertensión");
+                  pw.println("María Santos,38,Neumonía");
+                  System.out.println("Reporte exportado a " + ruta);
+              } catch (IOException e) {
+                  System.out.println("Error al exportar: " + e.getMessage());
+              }
+          }
+
+          public static void main(String[] args) {
+              exportarCSV("reporte_pacientes.csv");
+          }
+      }
+    result: |
+      Report exported to reporte_pacientes.csv
+
+hasInteractive: false
+comparisons:
+  - title: "try-catch-finally vs try-with-resources"
+    items:
+      - name: "try-catch-finally"
+        features:
+          manual_close: "You must close the resource in finally with .close()"
+          verbosity: "More code — check for null before close()"
+          risk: "If close() throws, it can hide the original exception"
+          use: "Resources that don't implement AutoCloseable"
+      - name: "try-with-resources"
+        features:
+          manual_close: "The resource is closed automatically"
+          verbosity: "Less code — cleaner and safer"
+          risk: "Suppressed exceptions are added with addSuppressed()"
+          use: "Resources that implement AutoCloseable (streams, connections)"
+    recommendation: "Always use try-with-resources for files, connections and any resource that implements AutoCloseable. Only use try-catch-finally when the resource cannot be declared in try (for example, a resource you open in an intermediate step)."
+videos:
+  - url: ""
+    title: "try-catch and try-with-resources in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "When does finally run?"
+    answer: "finally always runs, whether the exception is caught or not. It runs after the catch but before the method returns. It only does NOT run if you call System.exit() or if the thread dies."
+  - question: "Can I have try without catch?"
+    answer: "Yes, if you use try-with-resources or if the method declares throws. In try-with-resources, the resource is closed automatically and if there's an exception, it propagates after the close."
+  - question: "What happens if finally and catch both throw exceptions?"
+    answer: "If both throw, the one in finally 'wins' and the catch one is lost. Java 7+ adds the catch exception as 'suppressed' on the finally one with addSuppressed(). This is rare but possible."
+sources:
+  - title: "Java 21 Language Specification — try"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.20"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Try-with-Resources"
+    url: "https://docs.oracle.com/javase/tutorial/essential/exceptions/tryResourceClose.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Basic try-catch
+
+The `try` block contains code that can throw exceptions. The `catch` block handles the error:
+
+<CodeBlock lang="java" title="Basic try-catch">
+{`public class TryCatchBasico {
+    public static void main(String[] args) {
+        try {
+            int resultado = 10 / 0;
+            System.out.println("This is not printed");
+        } catch (ArithmeticException e) {
+            System.out.println("Arithmetic error: " + e.getMessage());
+        }
+
+        System.out.println("The program continues");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Arithmetic error: / by zero
+The program continues
+```
+
+## Multi-catch (Java 7+)
+
+Handle multiple exceptions in a single block:
+
+<CodeBlock lang="java" title="Multi-catch — handling several errors together">
+{`public class MultiCatch {
+    public static void main(String[] args) {
+        String[] datos = {"10", "abc", null};
+
+        for (String dato : datos) {
+            try {
+                int valor = Integer.parseInt(dato);
+                int divisor = 100 / valor;
+                System.out.println("100/" + valor + " = " + divisor);
+            } catch (NumberFormatException | ArithmeticException e) {
+                System.out.println("Error with '" + dato + "': "
+                    + e.getClass().getSimpleName());
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+100/10 = 10
+Error with 'abc': NumberFormatException
+Error with 'null': NumberFormatException
+```
+
+## finally — guaranteed execution
+
+The `finally` block **always** runs, whether there is an exception or not:
+
+<CodeBlock lang="java" title="finally always runs">
+{`public class FinallyDemo {
+    public static void main(String[] args) {
+        System.out.println("Start");
+
+        try {
+            System.out.println("In try — before the error");
+            int x = 1 / 0;
+            System.out.println("This doesn't run");
+        } catch (ArithmeticException e) {
+            System.out.println("In catch — error caught");
+        } finally {
+            System.out.println("In finally — always runs");
+        }
+
+        System.out.println("End of program");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Start
+In try — before the error
+In catch — error caught
+In finally — always runs
+End of program
+```
+
+## try-with-resources (Java 7+)
+
+**Automatically** closes resources that implement `AutoCloseable`:
+
+<CodeBlock lang="java" title="try-with-resources — automatic closing">
+{`import java.io.*;
+
+public class TryWithResources {
+    public static void main(String[] args) {
+        // The resource is declared in try and closed automatically
+        try (BufferedReader br = new BufferedReader(
+                new FileReader("datos.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                System.out.println(linea);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found");
+        } catch (IOException e) {
+            System.out.println("Read error: " + e.getMessage());
+        }
+        // You don't need to call br.close() — it's done automatically
+    }
+}`}
+</CodeBlock>
+
+## Multiple resources in try-with-resources
+
+<CodeBlock lang="java" title="Closing multiple resources">
+{`import java.io.*;
+
+public class MultiRecurso {
+    public static void main(String[] args) {
+        try (
+            FileReader fr = new FileReader("entrada.txt");
+            BufferedReader br = new BufferedReader(fr);
+            PrintWriter pw = new PrintWriter(new FileWriter("salida.txt"))
+        ) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                pw.println(linea.toUpperCase());
+            }
+            System.out.println("File processed");
+        } catch (IOException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+}`}
+</CodeBlock>
+
+**Important:** Resources are closed in **reverse order** from the order they were declared.
+
+## Exceptions in finally
+
+```java
+try {
+    // code that throws exception A
+} catch (A e) {
+    // handles A
+} finally {
+    // if you throw B here, A is lost
+    // Java 7+ saves A as "suppressed" in B
+}
+```
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

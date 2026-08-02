@@ -1,0 +1,367 @@
+---
+title: "Streams API — Data Processing"
+slug: "streams"
+module: "08-java-moderno"
+level: "Advanced"
+objectives:
+  - "Create streams from collections and arrays"
+  - "Apply intermediate operations: filter, map, sorted, distinct"
+  - "Use terminal operations: collect, toList, forEach, count"
+  - "Chain operations into functional pipelines"
+  - "Use Collectors.groupingBy and partitioningBy to group data"
+prerequisites:
+  - "Haber completado Lección 38: Lambdas"
+  - "Entender lambdas e interfaces funcionales"
+history:
+  introducedIn: "Streams API since Java 8 (2014)"
+  context: "The Streams API allows you to process collections of data declaratively, similar to how SQL processes data in databases. Instead of writing imperative loops (how to do it), you describe what you want to obtain."
+  evolution: "Java 8 introduced the Stream API with filter, map, reduce. Java 9 added takeWhile, dropWhile, ofNullable. Java 11 added toList() as a collector. Java 16 added toList() as a direct method on Stream. Java 17+ continued improving performance with optimizations."
+realWorldExamples:
+  - domain: "E-commerce — analyzing sales with streams"
+    description: "A system analyzes sales with streams: it filters expensive products, sorts them, and calculates totals."
+    code: |
+      import java.util.*;
+      import java.util.stream.*;
+
+      class Venta {
+          String producto; double precio; String categoria;
+
+          Venta(String p, double pr, String c) {
+              producto = p; precio = pr; categoria = c;
+          }
+
+          public String toString() {
+              return String.format("%s ($%.2f, %s)", producto, precio, categoria);
+          }
+      }
+
+      public class AnalizarVentas {
+          public static void main(String[] args) {
+              List<Venta> ventas = Arrays.asList(
+                  new Venta("Laptop", 2500, "Electrónica"),
+                  new Venta("Mouse", 45, "Electrónica"),
+                  new Venta("Pan", 3, "Alimentos"),
+                  new Venta("Teclado", 120, "Electrónica"),
+                  new Venta("Leche", 4, "Alimentos")
+              );
+
+              System.out.println("Productos caros (> $100):");
+              ventas.stream()
+                    .filter(v -> v.precio > 100)
+                    .sorted((a, b) -> Double.compare(a.precio, b.precio))
+                    .forEach(System.out::println);
+
+              double total = ventas.stream()
+                  .mapToDouble(v -> v.precio)
+                  .sum();
+              System.out.printf("Total ventas: $%.2f%n", total);
+
+              long electronicos = ventas.stream()
+                  .filter(v -> v.categoria.equals("Electrónica"))
+                  .count();
+              System.out.println("Electrónicos: " + electronicos);
+          }
+      }
+    result: |
+      Expensive products (> $100):
+        Keyboard ($120.00, Electronics)
+        Laptop ($2500.00, Electronics)
+      Total sales: $2672.00
+      Electronics: 3
+
+  - domain: "Health — analyzing patients with streams"
+    description: "A hospital analyzes patients using streams to group by diagnosis and compute temperature statistics."
+    code: |
+      import java.util.*;
+      import java.util.stream.*;
+
+      class Paciente {
+          String nombre; String diagnostico; double temperatura;
+
+          Paciente(String n, String d, double t) {
+              nombre = n; diagnostico = d; temperatura = t;
+          }
+      }
+
+      public class AnalisisStreams {
+          public static void main(String[] args) {
+              List<Paciente> pacientes = Arrays.asList(
+                  new Paciente("Ana", "Gripe", 38.5),
+                  new Paciente("Luis", "Fractura", 36.5),
+                  new Paciente("María", "Gripe", 39.2),
+                  new Paciente("Carlos", "Covid", 38.0),
+                  new Paciente("Sofía", "Covid", 37.5)
+              );
+
+              // Agrupar por diagnóstico
+              Map<String, List<Paciente>> porDiagnostico =
+                  pacientes.stream()
+                      .collect(Collectors.groupingBy(p -> p.diagnostico));
+
+              System.out.println("Pacientes por diagnóstico:");
+              porDiagnostico.forEach((diag, lista) -> {
+                  System.out.println("  " + diag + ": "
+                      + lista.size() + " pacientes");
+              });
+
+              // Pacientes con fiebre
+              pacientes.stream()
+                  .filter(p -> p.temperatura >= 37.5)
+                  .map(p -> p.nombre)
+                  .forEach(System.out::println);
+          }
+      }
+    result: |
+      Patients by diagnosis:
+        Fracture: 1 patients
+        Flu: 2 patients
+        Covid: 2 patients
+      Ana
+      María
+      Carlos
+      Sofía
+
+hasInteractive: false
+comparisons:
+  - title: "Imperative loops vs functional Streams"
+    items:
+      - name: "Imperative for (traditional)"
+        features:
+          approach: "HOW to do it — manual index and condition control"
+          mutability: "Mutable counter and accumulator variables"
+          parallelism: "Complex — requires manual ThreadPool"
+          readability: "Less expressive, mixes intent with details"
+      - name: "Functional Stream (Java 8+)"
+        features:
+          approach: "WHAT you want to obtain — declarative"
+          mutability: "No visible mutable variables (immutable)"
+          parallelism: ".parallelStream() — one method"
+          readability: "Expresses intent directly"
+    recommendation: "Use streams for data processing with filter, map, reduce. They are more expressive and easier to parallelize. Use for loops when performance is critical (primitives) or when you need to break out of the loop early (break), which is more complicated in streams."
+videos:
+  - url: ""
+    title: "Streams API in Java"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and best practices"
+faqs:
+  - question: "Do streams modify the original collection?"
+    answer: "No. Streams are immutable: they do not modify the data source. They always produce a new result. Operations like filter() do not remove elements from the original list."
+  - question: "What is the difference between map and flatMap?"
+    answer: "map transforms each element into another element (1 to 1). flatMap transforms each element into a Stream and then flattens the results (1 to many). flatMap is useful for lists of lists or lines of a file."
+  - question: "When to use streams vs traditional loops?"
+    answer: "Use streams for simple transformations: filter, map, collect. Use loops when you need break/continue, handle checked exceptions inside lambdas, or when performance with primitives is critical."
+sources:
+  - title: "Java 21 API — java.util.stream"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/package-summary.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Streams"
+    url: "https://docs.oracle.com/javase/tutorial/collections/streams/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a Stream?
+
+A **Stream** is a sequence of elements that supports chained functional operations (pipeline). It is not a data structure: it is a **view** that allows you to process data declaratively.
+
+```java
+// Instead of:
+for (Producto p : productos) {
+    if (p.precio > 100) {
+        System.out.println(p);
+    }
+}
+
+// Stream (more expressive):
+productos.stream()
+    .filter(p -> p.precio > 100)
+    .forEach(System.out::println);
+```
+
+## Stream Pipeline
+
+A pipeline has three parts:
+
+1. **Source**: `collection.stream()` or `Stream.of(...)`
+2. **Intermediate operations**: `filter`, `map`, `sorted` (they return a Stream)
+3. **Terminal operation**: `forEach`, `collect`, `count` (they produce a result)
+
+<CodeBlock lang="java" title="Complete Stream Pipeline">
+{`import java.util.*;
+import java.util.stream.*;
+
+public class PipelineStream {
+    public static void main(String[] args) {
+        List<Integer> nums = Arrays.asList(5, 2, 8, 1, 9, 3, 7);
+
+        List<String> resultado = nums.stream()           // source
+            .filter(n -> n > 3)                          // intermediate
+            .map(n -> "Number: " + n)                    // intermediate
+            .sorted()                                    // intermediate
+            .collect(Collectors.toList());               // terminal
+
+        System.out.println(resultado);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+[Number: 5, Number: 7, Number: 8, Number: 9]
+```
+
+## Intermediate operations
+
+<CodeBlock lang="java" title="The most common intermediate operations">
+{`import java.util.*;
+import java.util.stream.*;
+
+public class OpIntermedias {
+    public static void main(String[] args) {
+        List<String> nombres = Arrays.asList(
+            "Ana", "Luis", "María", "Carlos", "Ana", "Pedro", "Luisa");
+
+        // filter — filter elements
+        System.out.println("More than 4 letters:");
+        nombres.stream()
+            .filter(n -> n.length() > 4)
+            .forEach(System.out::println);
+
+        // map — transform elements
+        System.out.println("In uppercase:");
+        nombres.stream()
+            .map(String::toUpperCase)
+            .forEach(System.out::println);
+
+        // distinct — remove duplicates
+        System.out.println("Without duplicates:");
+        nombres.stream()
+            .distinct()
+            .forEach(System.out::println);
+
+        // sorted — sort
+        System.out.println("Sorted:");
+        nombres.stream()
+            .sorted()
+            .forEach(System.out::println);
+    }
+}`}
+</CodeBlock>
+
+## Terminal operations
+
+<CodeBlock lang="java" title="Terminal operations — produce the final result">
+{`import java.util.*;
+import java.util.stream.*;
+
+public class OpTerminales {
+    public static void main(String[] args) {
+        List<Integer> numeros = Arrays.asList(10, 20, 30, 40, 50);
+
+        // forEach — apply an action to each element
+        numeros.stream().forEach(n -> System.out.print(n + " "));
+        System.out.println();
+
+        // count — count elements
+        long cantidad = numeros.stream()
+            .filter(n -> n > 25)
+            .count();
+        System.out.println("> 25: " + cantidad);
+
+        // collect — collect into a list
+        List<Integer> mayores = numeros.stream()
+            .filter(n -> n > 25)
+            .collect(Collectors.toList());
+        System.out.println("Greater: " + mayores);
+
+        // toList — Java 16+
+        List<Integer> menores = numeros.stream()
+            .filter(n -> n < 30)
+            .toList();
+        System.out.println("Lesser: " + menores);
+
+        // findFirst — first element (Optional)
+        Optional<Integer> primero = numeros.stream()
+            .filter(n -> n > 100)
+            .findFirst();
+        System.out.println("First > 100: " + primero.orElse(0));
+    }
+}`}
+</CodeBlock>
+
+## Collectors — grouping and partitioning
+
+<CodeBlock lang="java" title="Grouping and partitioning with Collectors">
+{`import java.util.*;
+import java.util.stream.*;
+
+public class CollectorsDemo {
+    public static void main(String[] args) {
+        List<String> palabras = Arrays.asList(
+            "Java", "Python", "JavaScript", "C", "C++", "Go", "Rust");
+
+        // groupingBy — group by criterion
+        Map<Integer, List<String>> porLongitud = palabras.stream()
+            .collect(Collectors.groupingBy(String::length));
+
+        System.out.println("By length:");
+        porLongitud.forEach((len, lista) ->
+            System.out.printf("  %d: %s%n", len, lista));
+
+        // partitioningBy — partition into true/false
+        Map<Boolean, List<String>> particion = palabras.stream()
+            .collect(Collectors.partitioningBy(p -> p.length() > 4));
+
+        System.out.println("Long (>4): " + particion.get(true));
+        System.out.println("Short (<=4): " + particion.get(false));
+
+        // joining — join strings
+        String unidas = palabras.stream()
+            .collect(Collectors.joining(", "));
+        System.out.println("Joined: " + unidas);
+    }
+}`}
+</CodeBlock>
+
+## Parallel streams
+
+```java
+// Parallelize with .parallelStream()
+long total = lista.parallelStream()
+    .filter(p -> p.precio > 100)
+    .count();
+```
+
+**Important:** Use parallel streams only with large collections (>10,000 elements) and side-effect-free operations. The parallelization overhead reduces the benefit on small collections.
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

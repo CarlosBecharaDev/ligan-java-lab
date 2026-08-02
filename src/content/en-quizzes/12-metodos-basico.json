@@ -1,0 +1,58 @@
+{
+  "id": "quiz-12-metodos-basico",
+  "lessonSlug": "metodos",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\nstatic int duplicar(int n) { return n * 2; }\npublic static void main(String[] args) {\n    int x = 5;\n    int y = duplicar(x);\n    System.out.println(y);\n}",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "Compilation error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "duplicar returns n*2, which is 10, not 5.",
+        "Correct. duplicar(5) returns 5*2 = 10, which is stored in y.",
+        "There is no addition; it is multiplication by 2.",
+        "The code compiles correctly."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between a parameter and an argument?",
+      "options": [
+        "There is no difference",
+        "The parameter is the value, the argument is the variable",
+        "The parameter goes in the definition, the argument goes in the call",
+        "The argument is for void methods, the parameter for return"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "They are distinct concepts that are easily confused.",
+        "It is the other way around: the argument is the value.",
+        "Correct. Parameters are declared in the method signature; arguments are the actual values you pass when calling it.",
+        "Both types of methods use parameters and arguments."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does a method declared as void return?",
+      "options": [
+        "null",
+        "0",
+        "It does not return any value",
+        "An empty default value"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "void does not return null; it simply returns nothing.",
+        "void does not return a number.",
+        "Correct. void means the method has no return value. It can use return without a value to exit early.",
+        "There is no 'empty value' in Java."
+      ]
+    }
+  ]
+}

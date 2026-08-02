@@ -1,0 +1,53 @@
+{
+  "id": "quiz-avanzado-ifelse",
+  "lessonSlug": "if-else",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does this code print?\n```java\nint x = 5;\nif (x = 5) {\n    System.out.println(\"Equal\");\n} else {\n    System.out.println(\"Different\");\n}\n```",
+      "options": ["Equal", "Different", "Compilation error", "Nothing"],
+      "correctIndex": 2,
+      "explanations": [
+        "It does not print Equal because there is a compilation error.",
+        "It never reaches the else because there is an error.",
+        "Correct. x = 5 is an assignment, not a boolean expression. Java does not convert int to boolean.",
+        "It does not compile, so it executes nothing."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the 'dangling else'?",
+      "options": [
+        "An error where the else is associated with the wrong if",
+        "An infinite loop",
+        "An if statement without a condition",
+        "A debugging method"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Java associates the else with the nearest if without an else. Braces solve it.",
+        "It has nothing to do with loops.",
+        "An if always needs a condition.",
+        "It is not a debugging method."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "When is it appropriate to use the ternary operator instead of if-else?",
+      "options": [
+        "Always, it is shorter",
+        "For simple two-option assignments",
+        "Never, if-else is always better",
+        "Only for conditions with more than 3 branches"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Not always. For complex logic, if-else is more readable.",
+        "Correct. The ternary operator is ideal for simple inline assignments with only two options.",
+        "It does have valid use cases.",
+        "The ternary operator only has two branches."
+      ]
+    }
+  ]
+}

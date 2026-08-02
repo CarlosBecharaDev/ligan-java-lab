@@ -1,0 +1,58 @@
+{
+  "id": "quiz-16-arrays-avanzados-basico",
+  "lessonSlug": "arrays-avanzados",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "How do you access the element at row 2, column 1 of a matrix?",
+      "options": [
+        "matriz[2][1]",
+        "matriz[1][2]",
+        "matriz(2,1)",
+        "matriz[1,2]"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. matriz[row][column], starting from 0.",
+        "That is column 2, row 1.",
+        "Java uses brackets, not parentheses.",
+        "Java uses separate brackets."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How many comparisons does Bubble Sort make on an array of 5 elements?",
+      "options": [
+        "5",
+        "10",
+        "15",
+        "25"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "5 is the number of elements.",
+        "Correct. In each pass: (n-1)+(n-2)+...+1 = 10 comparisons total.",
+        "15 is not the correct amount.",
+        "25 is n², but bubble sort reduces comparisons each pass."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does linear search return if it does not find the element?",
+      "options": [
+        "0",
+        "null",
+        "-1",
+        "An exception"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "0 is a valid index.",
+        "null is for objects.",
+        "Correct. -1 is the universal convention for 'not found'.",
+        "It does not throw an exception."
+      ]
+    }
+  ]
+}

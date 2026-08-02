@@ -1,6 +1,6 @@
 # STATE.md — Ligan Java Lab
 
-Documentación viva del estado actual del proyecto. Generado el 2026-07-29.
+Documentación viva del estado actual del proyecto. Generado el 2026-07-29, actualizado el 2026-08-01.
 
 ---
 
@@ -10,13 +10,13 @@ Documentación viva del estado actual del proyecto. Generado el 2026-07-29.
 |---------|---------|
 | **Nombre** | Ligan Java Lab |
 | **URL** | https://ligan-java-lab.vercel.app |
-| **Estado actual** | 10 módulos, 50 lecciones, 100 quizzes, 50 ejercicios |
+| **Estado actual** | 10 módulos, 50 lecciones, 92 quizzes, 46 ejercicios (por idioma ES y EN) |
 | **Framework** | Astro 7.1.3 (static site generation) |
 | **TypeScript** | 6.0.3 |
 | **Node** | >= 22.12.0 |
 | **Gestor** | npm |
 | **Tema** | Retro pixel-art (Windows 95 style) con oscuro |
-| **Idioma** | Español latino (con soporte de internacionalización ES/EN) |
+| **Idioma** | Español latino + inglés (rutas `/en/`) |
 | **Autor** | Carlos Bechara (@CarlosBecharaDev) |
 | **Despliegue** | Vercel (estático, build en cada push a main) |
 
@@ -26,9 +26,8 @@ Documentación viva del estado actual del proyecto. Generado el 2026-07-29.
 |---|---|
 | Astro 7.1.3 (+ MDX, sitemap) | SSG, enrutamiento, layouts |
 | TypeScript 6.0.3 strict | Tipado en todo el proyecto |
-| Content Layer API (glob + Zod) | Colecciones de contenido |
-| CodeMirror 6 (@codemirror/lang-java) | Editor de código en Code Lab |
-| Shiki (github-dark-default) | Resaltado de sintaxis en lecciones |
+| Content Layer API (glob + Zod desde `astro/zod`) | Colecciones de contenido (8: 4 ES + 4 EN) |
+| Shiki (singleton en `src/lib/highlighter.ts`) | Resaltado de sintaxis en lecciones |
 | Lucide (lucide-astro 0.556.0) | Iconos |
 | CSS Custom Properties | Sistema de tokens de diseño |
 
@@ -48,37 +47,45 @@ ligan-java-lab/
 ├── src/
 │   ├── assets/icons/
 │   ├── components/
-│   │   ├── code-lab/        (3) CodeEditor, CodeLab, ConsoleOutput
-│   │   ├── desktop/         (5) Desktop, DesktopIcon, RetroChars, Taskbar, Window
-│   │   ├── exercises/       (2) ExerciseCard, SolutionReveal
-│   │   ├── lesson/          (9) CodeBlock, ComparisonTable, InteractiveExample,
-│   │   │                       LessonContent, LessonHeader, LessonHistory,
-│   │   │                       LessonNav, RealWorldExamples, VideoPlayer
-│   │   ├── quiz/            (2) QuizCard, QuizResult
-│   │   └── ui/              (5) Badge, Button, Card, Modal, ProgressBar
+│   │   ├── desktop/        (7) Desktop, DesktopIcon, MainWindow, RetroChars,
+│   │   │                       RetroPlayer, Taskbar, ThemeSelector
+│   │   ├── exercises/      (2) ExerciseCard, SolutionReveal
+│   │   ├── lesson/         (8) CodeBlock, ComparisonTable, InteractiveExample,
+│   │   │                       LessonExplorer, LessonHeader, LessonHistory,
+│   │   │                       LessonNav, RealWorldExamples
+│   │   ├── quiz/           (1) QuizCard
+│   │   └── ui/             (2) Card, LiganLogo
 │   ├── content/
-│   │   ├── lessons/         (46 archivos .mdx)
-│   │   ├── quizzes/         (84 archivos .json)
-│   │   ├── exercises/       (42 archivos .json)
-│   │   └── modules/         (9 archivos .json)
-│   ├── content.config.ts    (schema Zod para las 4 colecciones)
+│   │   ├── lessons/         (50 archivos .mdx, ES)
+│   │   ├── quizzes/         (92 archivos .json, ES)
+│   │   ├── exercises/       (46 archivos .json, ES)
+│   │   ├── modules/         (10 archivos .json, ES)
+│   │   ├── en-lessons/      (50 archivos .mdx, EN)
+│   │   ├── en-quizzes/      (92 archivos .json, EN)
+│   │   ├── en-exercises/    (46 archivos .json, EN)
+│   │   └── en-modules/      (10 archivos .json, EN)
+│   ├── content.config.ts    (schema Zod para las 8 colecciones; `z` de `astro/zod`)
 │   ├── features/
-│   │   ├── desktop/         desktopState.ts, windowManager.ts
-│   │   ├── downloads/       fileDownload.ts
-│   │   ├── progress/        progressStore.ts
-│   │   └── quiz/            quizEngine.ts
+│   │   └── desktop/         desktopState.ts
 │   ├── layouts/
 │   │   ├── AppLayout.astro
 │   │   ├── BaseLayout.astro
 │   │   ├── ContentLayout.astro
 │   │   └── LessonLayout.astro
 │   ├── lib/
+│   │   ├── course.ts        (helpers de colecciones por idioma)
 │   │   ├── desktop.ts
 │   │   ├── exercise.ts
-│   │   ├── i18n.ts
+│   │   ├── glossary.ts
+│   │   ├── highlighter.ts   (singleton Shiki)
+│   │   ├── i18n.ts          (translations ES/EN, clave `ligan-lang`)
 │   │   ├── lesson.ts
+│   │   ├── lyrics.ts
 │   │   ├── module.ts
-│   │   └── quiz.ts
+│   │   ├── progress.ts      (lógica de progreso unificada y tipada)
+│   │   ├── quiz.ts
+│   │   ├── spotify.ts
+│   │   └── theme.ts
 │   ├── pages/
 │   │   ├── 404.astro
 │   │   ├── glosario.astro
@@ -90,7 +97,9 @@ ligan-java-lab/
 │   │   ├── recursos.astro
 │   │   ├── ruta.astro
 │   │   ├── sobre-el-proyecto.astro
-│   │   └── tema/[slug].astro
+│   │   ├── spotify-callback.astro
+│   │   ├── tema/[slug].astro
+│   │   └── en/              (espejo EN de todas las páginas + quiz/[slug] + tema/[slug])
 │   ├── styles/
 │   │   ├── animations.css
 │   │   ├── code.css
@@ -98,16 +107,12 @@ ligan-java-lab/
 │   │   ├── global.css
 │   │   ├── lesson.css
 │   │   └── tokens.css
-│   └── utils/
-│       ├── a11y.ts
-│       ├── download.ts
-│       ├── format.ts
-│       └── storage.ts
 ├── docs/
 │   ├── CHANGELOG.md
 │   ├── CONTENT_REGISTRY.md
 │   ├── DECISIONS.md
 │   ├── ROADMAP.md
+│   ├── SPOTIFY.md
 │   └── STATE.md              ← este archivo
 ├── astro.config.mjs
 ├── package.json
@@ -230,13 +235,15 @@ ligan-java-lab/
 
 ## 5. Esquemas de Contenido
 
+> Fuente: `src/content.config.ts`. El mismo schema se usa para las versiones ES y EN (`level` admite ambos idiomas).
+
 ### Lesson (MDX frontmatter)
 ```typescript
 {
   title: string,
   slug: string,
   module: string,              // ej. "01-fundamentos"
-  level: 'Inicial' | 'Intermedio' | 'Avanzado',
+  level: 'Inicial' | 'Intermedio' | 'Avanzado' | 'Beginner' | 'Intermediate' | 'Advanced',
   objectives: string[],
   prerequisites: string[],     // slugs de lecciones previas
   history?: {
@@ -245,8 +252,8 @@ ligan-java-lab/
     evolution?: string
   },
   realWorldExamples: [{ domain, description, code, result }],
-  hasInteractive: boolean,
-  comparisons?: [{ title, items: [{ name, features }], recommendation }],
+  hasInteractive: boolean,     // default false
+  comparisons?: [{ title, items: [{ name, features: Record<string,string> }], recommendation }],
   videos: [{ url, title, channel, duration?, summary }],
   faqs: [{ question, answer }],
   sources: [{ title, url, date }],
@@ -335,7 +342,7 @@ Archivo: `src/styles/tokens.css`
 
 ---
 
-## 7. Enrutamiento (11 páginas)
+## 7. Enrutamiento (12 páginas ES + 8 páginas EN)
 
 | Ruta | Archivo | Descripción |
 |------|---------|-------------|
@@ -343,45 +350,48 @@ Archivo: `src/styles/tokens.css`
 | `/tema/[slug]` | `tema/[slug].astro` | Lección individual (MDX renderizada) |
 | `/quiz/[slug]` | `quiz/[slug].astro` | Quiz interactivo por lección |
 | `/ruta` | `ruta.astro` | Mapa de aprendizaje con módulos y progreso |
-| `/practica` | `practica.astro` | Code Lab con editor y ejercicios |
+| `/practica` | `practica.astro` | Ejercicios filtrados por nivel y módulo |
 | `/progreso` | `progreso.astro` | Estadísticas y racha de estudio |
 | `/historia` | `historia.astro` | Timeline de la evolución de Java |
 | `/glosario` | `glosario.astro` | Glosario A-Z de términos Java |
 | `/recursos` | `recursos.astro` | Enlaces a documentación y herramientas |
 | `/sobre-el-proyecto` | `sobre-el-proyecto.astro` | Información del proyecto y autor |
+| `/spotify-callback` | `spotify-callback.astro` | Callback OAuth PKCE de Spotify |
 | `/404` | `404.astro` | Página de error con ASCII art |
+
+**Espejo en inglés:** `/en/` (`index`, `tema/[slug]`, `quiz/[slug]`, `ruta`, `practica`, `progreso`, `historia`, `glosario`, `recursos`, `sobre-el-proyecto`).
 
 ---
 
-## 8. Componentes (31 total)
+## 8. Componentes (20 total)
 
-### desktop/ (5)
+### desktop/ (7)
 | Componente | Descripción |
 |---|---|
 | Desktop.astro | Contenedor del escritorio con fondo y grid de iconos |
 | DesktopIcon.astro | Icono individual en el escritorio |
+| MainWindow.astro | Ventana principal de bienvenida / shell de la app |
 | RetroChars.astro | Efecto de caracteres retro animados |
+| RetroPlayer.astro | Reproductor de Spotify integrado (estilo retro) |
 | Taskbar.astro | Barra de tareas inferior con reloj y accesos |
-| Window.astro | Ventana flotante arrastrable con título, controles y slot |
+| ThemeSelector.astro | Selector de tema (oscuro/claro) |
 
-### lesson/ (9)
+### lesson/ (8)
 | Componente | Descripción |
 |---|---|
 | LessonHeader.astro | Cabecera con título, nivel, badge, objetivos |
-| LessonContent.astro | Renderiza el contenido MDX de la lección |
+| LessonExplorer.astro | Explorador de archivos lateral (lecciones del módulo + anclas) |
 | CodeBlock.astro | Bloque de código con resaltado Shiki y botón copiar |
-| VideoPlayer.astro | Embed de video con metadatos (canal, duración) |
 | LessonNav.astro | Navegación entre lecciones (anterior/siguiente) |
 | LessonHistory.astro | Sección de historia del concepto |
 | RealWorldExamples.astro | Ejemplos del mundo real con código y resultado |
 | InteractiveExample.astro | Ejemplo interactivo con JavaScript |
 | ComparisonTable.astro | Tabla comparativa con selector de características y recomendación |
 
-### quiz/ (2)
+### quiz/ (1)
 | Componente | Descripción |
 |---|---|
 | QuizCard.astro | Tarjeta de pregunta con opciones y feedback inmediato |
-| QuizResult.astro | Resultado del quiz con porcentaje, nivel y detalle |
 
 ### exercises/ (2)
 | Componente | Descripción |
@@ -389,40 +399,37 @@ Archivo: `src/styles/tokens.css`
 | ExerciseCard.astro | Tarjeta de ejercicio con descripción, pistas, template y solución |
 | SolutionReveal.astro | Botón para revelar/ocultar solución con animación |
 
-### code-lab/ (3)
+### ui/ (2)
 | Componente | Descripción |
 |---|---|
-| CodeEditor.astro | Editor CodeMirror 6 con sintaxis Java |
-| CodeLab.astro | Toolbar + editor + consola simulada + descarga |
-| ConsoleOutput.astro | Salida de consola simulada con warning |
-
-### ui/ (5)
-| Componente | Descripción |
-|---|---|
-| Badge.astro | Badge con variantes: info, success, warning, danger |
-| Button.astro | Botón con variantes: primary, secondary, ghost, danger |
 | Card.astro | Tarjeta genérica con slot |
-| Modal.astro | Modal con backdrop blur, foco atrapado, cierre con Escape |
-| ProgressBar.astro | Barra de progreso con porcentaje |
+| LiganLogo.astro | Logo `</>` de la marca |
+
+### Eliminados en el pase de limpieza (2026-08-01)
+
+Código muerto que no se usaba (ver CHANGELOG): `code-lab/` completo (CodeEditor, CodeLab, ConsoleOutput), `ui/Modal`, `ui/Badge`, `ui/Button`, `ui/ProgressBar`, `lesson/VideoPlayer`, `lesson/LessonContent`, `quiz/QuizResult`, `desktop/Window`, `features/downloads/`, `features/progress/`, `features/quiz/`, `features/desktop/windowManager.ts`, `utils/` completo.
 
 ---
 
-## 9. Features (lógica de negocio)
+## 9. Lógica de negocio
 
 | Archivo | Descripción |
 |---|---|
-| `features/desktop/desktopState.ts` | Estado inicial del escritorio (14 iconos principales) |
-| `features/desktop/windowManager.ts` | Crear, cerrar, minimizar, maximizar, mover ventanas, traer al frente |
-| `features/progress/progressStore.ts` | CRUD de progreso en localStorage (prefijo `ljl_`): lecciones, quizzes, borradores |
-| `features/quiz/quizEngine.ts` | Evaluar respuestas, calcular porcentaje, obtener nivel (excelente/bueno/necesita-repasar) |
-| `features/downloads/fileDownload.ts` | Descargar código como `.java`, copiar al portapapeles |
+| `features/desktop/desktopState.ts` | Estado inicial del escritorio (iconos de módulos) |
+| `lib/progress.ts` | Lógica de progreso unificada y tipada: `loadProgress`, `saveProgress`, `emptyProgress`, `ProgressData` |
+| `lib/highlighter.ts` | Singleton de Shiki (tema `github-dark-default`, langs `java`, `bash`) |
+| `lib/i18n.ts` | Traducciones ES/EN y `I18N_CLIENT_SCRIPT` (clave `ligan-lang`) |
+| `lib/course.ts` | Helpers de colecciones por idioma (`lessonCollection`, `quizCollection`, etc.) |
+| `lib/glossary.ts` | Catálogo de términos del glosario |
+| `lib/theme.ts` | Gestión de tema oscuro/claro |
+| `lib/spotify.ts`, `lib/lyrics.ts` | Integración Spotify (PKCE) y letras |
 
-### Progress Store — claves localStorage
+### Progreso — claves localStorage
 | Clave | Formato |
 |---|---|
-| Progreso general | `ljl_progreso` → `{ "slug": true }` |
-| Quiz | `ljl_quiz_{id}` → número (puntaje) |
-| Borrador | `ljl_draft_{slug}` → string (código) |
+| Progreso | `ligan-java-lab-progress` → `ProgressData` (`{ completedLessons, quizResults, exerciseResults, ... }`) |
+| Idioma | `ligan-lang` → `'es'` / `'en'` |
+| Tema | `ligan-theme` → tema oscuro/claro |
 
 ---
 
@@ -430,10 +437,10 @@ Archivo: `src/styles/tokens.css`
 
 | Layout | Rol |
 |---|---|
-| BaseLayout.astro | HTML base, Google Fonts, meta tags, imports CSS |
+| BaseLayout.astro | HTML base, Google Fonts, meta tags, imports CSS; fuerza idioma `en` con `data-i18n-force` en rutas `/en/` |
 | AppLayout.astro | Desktop + Taskbar + slot de contenido (usado en index) |
 | ContentLayout.astro | Contenedor centrado con padding (usado en ruta, glosario, etc.) |
-| LessonLayout.astro | Sidebar 280px (oculto por defecto) + contenido principal centrado (usado en tema/[slug]) |
+| LessonLayout.astro | Fila ventana = explorador lateral + contenido principal (usado en tema/[slug]) |
 
 ---
 
@@ -443,9 +450,9 @@ El archivo `Universidad_Java_Apuntes.md` (3135 líneas) contiene estos bloques t
 
 | Tema en Apuntes | Cubierto en lecciones? | Lecciones existentes |
 |---|---|---|
-| Intro/Instalación/JDK-JRE-JVM | ❌ No hay lección dedicada | — |
+| Intro/Instalación/JDK-JRE-JVM | ✅ | 00-introduccion-java |
 | Variables y tipos | ✅ | 01-variables-y-tipos |
-| Strings | ✅ | 03-strings, 27-string-avanzado |
+| Strings | ✅ | 03-strings, 28-string-avanzado |
 | Scanner | ✅ | 04-scanner |
 | Operadores | ✅ | 02-operadores |
 | Condicionales (if-else) | ✅ | 07-if-else |
@@ -457,8 +464,8 @@ El archivo `Universidad_Java_Apuntes.md` (3135 líneas) contiene estos bloques t
 | POO (clases, objetos, constructores, encapsulación, herencia, polimorfismo, abstractas, interfaces) | ✅ | 17-23 |
 | Agregación/Composición | ✅ | 23-agregacion-composicion |
 | ArrayList, HashMap, LinkedList | ✅ | 24-arraylist, 25-hashmap, 26-linkedlist |
-| String métodos avanzados | ✅ | 27-string-avanzado |
-| Expresiones regulares | ✅ | 28-expresiones-regulares |
+| String métodos avanzados | ✅ | 28-string-avanzado |
+| Expresiones regulares | ✅ | 29-expresiones-regulares |
 | Excepciones | ✅ | 29-32 |
 | Depuración/Testing | ✅ | 33-depuracion-testing |
 | File I/O | ✅ | 34-file-io, 35-file-writer |
@@ -469,7 +476,7 @@ El archivo `Universidad_Java_Apuntes.md` (3135 líneas) contiene estos bloques t
 | Optional | ✅ | 40-optional |
 | Records | ✅ | 41-records |
 | Pattern Matching | ✅ | 42-pattern-matching |
-| Proyectos | ✅ | 43-46 |
+| Proyectos | ✅ | 44-47 |
 | Math class | ❌ | (mencionado en apuntes, sin lección) |
 | Wrapper classes | ❌ | (mencionado en apuntes, sin lección) |
 | HashSet/TreeSet | ✅ | 27-set-map-avanzados |
@@ -507,28 +514,33 @@ Ver `docs/DECISIONS.md` para los 13 ADRs registrados:
 ## 13. Build
 
 - `npm run dev` — servidor de desarrollo (http://localhost:4321)
-- `npm run build` — build estático en `dist/`
+- `npm run build` — build estático en `dist/` (~210 páginas en ~8s)
 - `npm run preview` — previsualizar build
-- `npm run astro check` — verificación de tipos
+- `npm run check` — verificación de tipos (`astro check`; 0 errores, 0 warnings, 0 hints)
 
 ---
 
 ## 14. Próximos Pasos (desde ROADMAP.md)
 
-### Fase 2 (en progreso): Contenido Completo
+### Fase 2 (completada): Contenido Completo ✅
+- [x] 50 lecciones en 10 módulos (00-09)
+- [x] 92 quizzes (2 por lección, salvo módulo 09)
+- [x] 46 ejercicios (3 niveles por lección, salvo módulo 09)
 - [x] JDK/JRE/JVM/Introducción (Módulo 00)
-- [x] Matrices (arreglos bidimensionales)
-- [x] HashSet, TreeSet, LinkedHashMap, TreeMap
-- [x] Genéricos
-- [ ] Lecciones faltantes: Math class, Wrapper classes, Queue/Deque, Sorting/Comparators, NIO.2, Threads, Annotations, Reflection, try-with-resources
-- [ ] Videos verificados por lección
-- [ ] Ejercicios adicionales por módulo
+- [x] Matrices, HashSet/TreeSet/LinkedHashMap/TreeMap, Genéricos
+- [x] Video, FAQ y fuentes verificados por lección
 
-### Fase 3 (pendiente): Mejoras
-- [ ] Code Lab con ejecución real (Java en WASM o backend)
+### Fase 3 (completada): Internacionalización y limpieza ✅
+- [x] Traducción completa EN (colecciones `en-*`, rutas `/en/`)
+- [x] Progreso unificado y tipado en `src/lib/progress.ts`
+- [x] Singleton de Shiki en `src/lib/highlighter.ts`
+- [x] Eliminación de código muerto (code-lab, features, utils, componentes sin uso)
+- [x] `npm run check`: 0 errores, 0 warnings, 0 hints
+
+### Fase 4 (pendiente): Mejoras
+- [ ] Quizzes y ejercicios del módulo 09 (Proyectos)
+- [ ] Lecciones faltantes: Math class, Wrapper classes, Queue/Deque, Sorting/Comparators, NIO.2, Threads, Annotations, Reflection, try-with-resources
 - [ ] Autenticación y progreso en la nube
-- [ ] Modo oscuro/claro toggle
-- [ ] Internacionalización (es/en)
 - [ ] Tests E2E
 - [ ] PWA
 - [ ] Analytics de progreso

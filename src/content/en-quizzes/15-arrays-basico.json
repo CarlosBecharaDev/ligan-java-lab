@@ -1,0 +1,58 @@
+{
+  "id": "quiz-15-arrays-basico",
+  "lessonSlug": "arrays",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does it print?\nint[] a = {10, 20, 30};\nSystem.out.println(a[1]);",
+      "options": [
+        "10",
+        "20",
+        "30",
+        "ArrayIndexOutOfBoundsException"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "a[0] is 10.",
+        "Correct. a[1] is the second element: 20.",
+        "a[2] is 30.",
+        "Index 1 is valid."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How many elements does int[] arr = new int[10] have?",
+      "options": [
+        "9",
+        "10",
+        "11",
+        "It depends on the type"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The indices go from 0 to 9, but there are 10 elements.",
+        "Correct. new int[10] creates 10 elements.",
+        "The maximum index is 9, but there are 10.",
+        "The size is always the one specified."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What value does .length of an array have?",
+      "options": [
+        "The last index",
+        "The number of elements",
+        "The maximum value",
+        "The index of the last one"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The last index is length - 1.",
+        "Correct. .length returns the total number of elements.",
+        ".length is not related to the stored values.",
+        "The last index is length - 1."
+      ]
+    }
+  ]
+}

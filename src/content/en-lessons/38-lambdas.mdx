@@ -1,0 +1,339 @@
+---
+title: "Lambdas and Functional Programming"
+slug: "lambdas"
+module: "08-java-moderno"
+level: "Advanced"
+objectives:
+  - "Write lambda expressions with the (param) -> expression syntax"
+  - "Use the basic functional interfaces: Predicate, Function, Consumer, Supplier"
+  - "Pass lambdas as parameters to methods"
+  - "Use method references (ClassName::method) as a shortcut"
+  - "Distinguish lambdas from traditional anonymous classes"
+prerequisites:
+  - "Haber completado Módulo 05: Colecciones y Strings"
+  - "Entender interfaces y clases anónimas"
+history:
+  introducedIn: "Lambdas since Java 8 (2014)"
+  context: "Lambda expressions were the most important addition of Java 8, marking a fundamental shift toward functional programming in Java. Inspired by functional languages such as Haskell and Scala, they allow treating functions as first-class values."
+  evolution: "Before Java 8: verbose anonymous classes. Java 8: lambdas and @FunctionalInterface. Java 8+: method references and the stream API. Java 17: sealed interfaces for safer functional interfaces. Java 21: pattern matching makes lambdas more expressive."
+realWorldExamples:
+  - domain: "E-commerce — product filtering"
+    description: "An e-commerce system filters products using Predicate with lambdas, making it easy to change the filtering criteria."
+    code: |
+      import java.util.*;
+      import java.util.function.Predicate;
+
+      class Producto {
+          String nombre;
+          double precio;
+          String categoria;
+
+          Producto(String n, double p, String c) {
+              nombre = n; precio = p; categoria = c;
+          }
+
+          public String toString() {
+              return String.format("%s ($%.2f)", nombre, precio);
+          }
+      }
+
+      public class FiltrarProductos {
+          static void filtrar(ArrayList<Producto> productos,
+                            Predicate<Producto> criterio) {
+              for (Producto p : productos) {
+                  if (criterio.test(p)) {
+                      System.out.println("  " + p);
+                  }
+              }
+          }
+
+          public static void main(String[] args) {
+              ArrayList<Producto> prods = new ArrayList<>();
+              prods.add(new Producto("Laptop", 2500, "Electrónica"));
+              prods.add(new Producto("Pan", 2, "Alimentos"));
+              prods.add(new Producto("Mouse", 45, "Electrónica"));
+
+              System.out.println("Electrónicos:");
+              filtrar(prods, p -> p.categoria.equals("Electrónica"));
+
+              System.out.println("Baratos (< $50):");
+              filtrar(prods, p -> p.precio < 50);
+          }
+      }
+    result: |
+      Electronics:
+        Laptop ($2500.00)
+        Mouse ($45.00)
+      Cheap (< $50):
+        Pan ($2.00)
+        Mouse ($45.00)
+
+  - domain: "Health — processing patients with predicates"
+    description: "A hospital processes patients with different criteria using lambdas and the standard functional interfaces."
+    code: |
+      import java.util.*;
+      import java.util.function.*;
+
+      class Paciente {
+          String nombre;
+          double temperatura;
+          boolean urgencia;
+
+          Paciente(String n, double t, boolean u) {
+              nombre = n; temperatura = t; urgencia = u;
+          }
+      }
+
+      public class ProcesarPacientes {
+          public static void main(String[] args) {
+              ArrayList<Paciente> pacientes = new ArrayList<>();
+              pacientes.add(new Paciente("Ana", 38.5, true));
+              pacientes.add(new Paciente("Luis", 36.5, false));
+              pacientes.add(new Paciente("María", 39.2, true));
+
+              // Predicate — test a condition
+              Predicate<Paciente> tieneFiebre = p -> p.temperatura >= 37.5;
+
+              // Consumer — print the result
+              Consumer<Paciente> reportar = p -> {
+                  String estado = tieneFiebre.test(p) ? "FIEBRE" : "Normal";
+                  System.out.printf("%s: %.1f°C (%s)%n",
+                      p.nombre, p.temperatura, estado);
+              };
+
+              pacientes.forEach(reportar);
+
+              // Supplier — generate an alert
+              Supplier<String> alerta = () -> {
+                  long graves = pacientes.stream()
+                      .filter(p -> p.urgencia && tieneFiebre.test(p))
+                      .count();
+                  return "Alerta: " + graves + " pacientes urgentes con fiebre";
+              };
+              System.out.println(alerta.get());
+          }
+      }
+    result: |
+      Ana: 38.5°C (FEVER)
+      Luis: 36.5°C (Normal)
+      María: 39.2°C (FEVER)
+      Alert: 2 urgent patients with fever
+
+hasInteractive: false
+comparisons:
+  - title: "Anonymous class vs Lambda vs Method Reference"
+    items:
+      - name: "Anonymous class (before Java 8)"
+        features:
+          syntax: "Verbose: new X() { @Override ... }"
+          readability: "Lots of boilerplate code ('ceremony')"
+          example: "new Comparator<X>() { public int compare(a,b) { ... } }"
+          this: "Points to the anonymous class"
+      - name: "Lambda (Java 8+)"
+        features:
+          syntax: "Concise: (a, b) -> ... "
+          readability: "Only the relevant logic"
+          example: "(a, b) -> a.precio - b.precio"
+          this: "Points to the enclosing class"
+      - name: "Method Reference (Java 8+)"
+        features:
+          syntax: "Very concise: Class::method"
+          readability: "Reuses existing methods"
+          example: "Integer::sum, System.out::println"
+          this: "Reference to an existing method"
+    recommendation: "Use method references when you have an existing method (System.out::println, String::length). Use lambdas for simple, short logic. Only use anonymous classes when you need multiple methods (non-functional)."
+videos:
+  - url: ""
+    title: "Lambdas in Java 8"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and good practices"
+faqs:
+  - question: "What is a functional interface?"
+    answer: "It is an interface with a single abstract method (SAM — Single Abstract Method). Examples: Runnable, Comparator, Predicate. The @FunctionalInterface annotation verifies that it has only one abstract method."
+  - question: "Can lambdas capture external variables?"
+    answer: "Yes, but they must be effectively final: they cannot change value after being assigned. Java 8 introduced this concept, more flexible than an explicit 'final'."
+  - question: "Where can I use lambdas?"
+    answer: "Anywhere a functional interface is expected: method parameters, variable assignments, return values. Lambdas are syntactic sugar for anonymous classes that implement functional interfaces."
+sources:
+  - title: "Java Tutorials — Lambda Expressions"
+    url: "https://docs.oracle.com/javase/tutorial/java/javaOO/lambdaexpressions.html"
+    date: "2026-07-27"
+  - title: "Java 21 API — java.util.function"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/package-summary.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a lambda expression?
+
+A **lambda** is an anonymous function that you can treat as a value. It is a concise way to implement functional interfaces (interfaces with a single method).
+
+```java
+// Basic syntax
+(parametros) -> { cuerpo }
+
+// Example: comparator
+Comparator<String> c = (a, b) -> a.length() - b.length();
+```
+
+## Lambda syntax
+
+<CodeBlock lang="java" title="Different ways to write a lambda">
+{`import java.util.function.*;
+
+public class SintaxisLambda {
+    public static void main(String[] args) {
+        // Form 1: no parameters
+        Supplier<String> saludar = () -> "Hello World";
+        System.out.println(saludar.get());
+
+        // Form 2: one parameter (no parentheses)
+        Function<String, Integer> longitud = s -> s.length();
+        System.out.println("Length: " + longitud.apply("Java"));
+
+        // Form 3: two parameters (with parentheses)
+        BiFunction<Integer, Integer, Integer> suma = (a, b) -> a + b;
+        System.out.println("Sum: " + suma.apply(5, 3));
+
+        // Form 4: multiple lines (with braces and return)
+        Predicate<Integer> esPar = n -> {
+            System.out.println("Testing: " + n);
+            return n % 2 == 0;
+        };
+        System.out.println("Is it even? " + esPar.test(7));
+    }
+}`}
+</CodeBlock>
+
+## Main functional interfaces
+
+```java
+// Evaluates a condition → returns boolean
+Predicate<T>       → boolean test(T t)
+
+// Transforms a value → returns another
+Function<T, R>     → R apply(T t)
+
+// Takes a value → returns nothing
+Consumer<T>        → void accept(T t)
+
+// Generates a value → takes no parameters
+Supplier<T>        → T get()
+
+// Compares two values → returns int
+Comparator<T>      → int compare(T a, T b)
+```
+
+<CodeBlock lang="java" title="Using the functional interfaces">
+{`import java.util.*;
+import java.util.function.*;
+
+public class InterfacesFuncionales {
+    public static void main(String[] args) {
+        List<String> nombres = Arrays.asList("Ana", "Luis", "María", "Carlos");
+
+        // Consumer — print
+        Consumer<String> imprimir = nombre -> System.out.println("Hello " + nombre);
+        nombres.forEach(imprimir);
+
+        // Predicate — filter
+        Predicate<String> masDe3 = s -> s.length() > 3;
+        System.out.println("Names with > 3 letters:");
+        nombres.stream()
+               .filter(masDe3)
+               .forEach(System.out::println);
+
+        // Function — transform
+        Function<String, String> aMayusculas = s -> s.toUpperCase();
+        List<String> mayusculas = new ArrayList<>();
+        for (String n : nombres) {
+            mayusculas.add(aMayusculas.apply(n));
+        }
+        System.out.println("Uppercase: " + mayusculas);
+    }
+}`}
+</CodeBlock>
+
+## Method References
+
+A shortcut when the lambda only calls an existing method:
+
+```java
+// Lambda
+list.forEach(s -> System.out.println(s));
+
+// Method Reference (equivalent)
+list.forEach(System.out::println);
+
+// Lambda
+list.sort((a, b) -> a.compareToIgnoreCase(b));
+
+// Method Reference
+list.sort(String::compareToIgnoreCase);
+```
+
+<CodeBlock lang="java" title="Method References in action">
+{`import java.util.*;
+
+public class MethodRefs {
+    public static void main(String[] args) {
+        List<String> ciudades = Arrays.asList(
+            "Bogotá", "Medellín", "Cali", "Barranquilla");
+
+        // Lambda
+        ciudades.forEach(c -> System.out.print(c + " "));
+        System.out.println();
+
+        // Method Reference: System.out::println
+        ciudades.forEach(System.out::println);
+
+        // Static method reference
+        ciudades.sort(String::compareToIgnoreCase);
+        System.out.println("Sorted: " + ciudades);
+
+        // Instance method reference
+        ciudades.forEach(System.out::print);
+    }
+}`}
+</CodeBlock>
+
+## Lambdas vs anonymous classes
+
+| Aspect | Anonymous class | Lambda |
+|--------|-----------------|--------|
+| Code | `new X() { method() { ... } }` | `() -> ...` |
+| `this` | Points to the anonymous class | Points to the enclosing class |
+| Variables | Can modify fields | Must be effectively final |
+| Ideal for | Multiple methods | A single method (functional) |
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

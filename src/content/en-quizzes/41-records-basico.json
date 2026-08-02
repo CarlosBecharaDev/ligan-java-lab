@@ -1,0 +1,75 @@
+{
+  "id": "quiz-41-records-basico",
+  "lessonSlug": "records",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a record in Java?",
+      "options": [
+        "An immutable class designed to hold data (Java 16+)",
+        "A type of primitive variable",
+        "A special static method",
+        "An interface with multiple methods"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A record is a special, immutable class introduced in Java 16 to represent data concisely.",
+        "It is not a primitive variable.",
+        "It is not a static method.",
+        "It is not an interface."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which methods does a record generate automatically?",
+      "options": [
+        "Constructor, getters (accessor methods), equals, hashCode, and toString",
+        "Only constructor and getters",
+        "Only equals and hashCode",
+        "Only toString"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A record automatically generates the constructor, accessor methods (one per component), equals(), hashCode(), and toString().",
+        "Not only constructor and getters; it generates more methods.",
+        "Not only equals and hashCode.",
+        "Not only toString."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How is a record declared?",
+      "options": [
+        "record Persona(String name, int age) {}",
+        "class Persona { String name; int age; }",
+        "interface Persona(String name, int age)",
+        "enum Persona(String name, int age)"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The syntax is record RecordName(type1 field1, type2 field2) {}.",
+        "That is a normal class.",
+        "Interfaces are not declared that way and do not have fields.",
+        "Enums have a different syntax."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Can additional methods be added to a record?",
+      "options": [
+        "Yes, additional methods can be added",
+        "No, a record only has the automatically generated methods",
+        "Only static methods",
+        "Only private methods"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A record can have additional methods, static fields, and constants.",
+        "Yes, methods can be added.",
+        "It is not limited to static methods only.",
+        "It is not limited to private methods only."
+      ]
+    }
+  ]
+}

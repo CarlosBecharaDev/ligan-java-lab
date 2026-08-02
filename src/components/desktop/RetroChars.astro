@@ -111,6 +111,14 @@
 
 <script>
   (function() {
+    interface RetroChar {
+      el: HTMLElement;
+      bubble: HTMLElement;
+      msgIdx: number;
+      name: string;
+      index: number;
+    }
+
     var MSGS = [
       '¡Sigue así! 🚀', 'Tú puedes 💪', 'Java te espera ☕',
       'Nunca pares ✨', 'Cada línea cuenta 📝', 'El éxito es constancia 🎯',
@@ -137,7 +145,7 @@
       '¡Nunca dejes de aprender! 📚', 'Un bug al día mantiene el estrés 💀',
     ];
 
-    var SPRITES = {
+    var SPRITES: Record<string, string[]> = {
       mario: [
         '....RRRR....','...RRRRRR...','...RSSRSS...','..RSSRSSR..',
         '...RRRRRR...','...SSSSSS...','..BBBKBBBB..','.BBBBKBBBBB.',
@@ -176,26 +184,26 @@
       ],
     };
 
-    function hex(c) {
-      var map = { R:'#E52521', B:'#1565C0', Y:'#FFD700', K:'#222', W:'#FFF',
+    function hex(c: string) {
+      var map: Record<string, string> = { R:'#E52521', B:'#1565C0', Y:'#FFD700', K:'#222', W:'#FFF',
                   S:'#FDBF60', G:'#888', O:'#FF8A65', N:'#8D6E63', P:'#7B1FA2',
                   C:'#00BCD4', L:'#64B5F6', D:'#0D47A1' };
       return map[c] || 'transparent';
     }
 
-    var c = document.getElementById('retro-chars');
+    const c = document.getElementById('retro-chars');
     if (!c) return;
 
-    var names = ['mario','scorpion','pacman','sonic','megaman','wizard'];
-    var bodyColors = { mario:'#1565C0', scorpion:'#222', pacman:'#FFD700', sonic:'#0D47A1', megaman:'#1565C0', wizard:'#7B1FA2' };
-    var chars = [];
+    var names: string[] = ['mario','scorpion','pacman','sonic','megaman','wizard'];
+    var bodyColors: Record<string, string> = { mario:'#1565C0', scorpion:'#222', pacman:'#FFD700', sonic:'#0D47A1', megaman:'#1565C0', wizard:'#7B1FA2' };
+    var chars: RetroChar[] = [];
     var INT = 5000;
     var ACT = 3;
     var MIN_DIST = 350;
-    var usedMsgIds = [];
+    var usedMsgIds: number[] = [];
 
     // Pre-assign unique starting messages to each char so no repeats at init
-    var shuffledMsgs = [];
+    var shuffledMsgs: number[] = [];
     for (var mi = 0; mi < MSGS.length; mi++) shuffledMsgs.push(mi);
     for (var si = shuffledMsgs.length - 1; si > 0; si--) {
       var sj = Math.floor(Math.random() * (si + 1));
@@ -204,7 +212,7 @@
 
     // Spread from 10% to 88% of viewport width
     var step = 78 / names.length;
-    var positions = [];
+    var positions: number[] = [];
     for (var pi = 0; pi < names.length; pi++) {
       positions.push(10 + pi * step + (Math.random() * 5 - 2.5));
     }
@@ -269,7 +277,7 @@
       chars.push({ el:el, bubble:bb, msgIdx:msgId, name:name, index:i });
     });
 
-    function shuffle(a) {
+    function shuffle<T>(a: T[]): T[] {
       for (var i = a.length - 1; i > 0; i--) {
         var j = Math.floor(Math.random() * (i + 1));
         var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
@@ -277,14 +285,14 @@
       return a;
     }
 
-    function getOffset(ch) {
+    function getOffset(ch: RetroChar) {
       var rect = ch.el.getBoundingClientRect();
       return rect.left + rect.width / 2;
     }
 
-    function pickNonOverlapping() {
+    function pickNonOverlapping(): RetroChar[] {
       var pool = chars.slice();
-      var best = [];
+      var best: RetroChar[] = [];
       for (var attempt = 0; attempt < 50; attempt++) {
         var pick = shuffle(pool.slice()).slice(0, ACT);
         var ok = true;
@@ -308,7 +316,7 @@
       var active = pickNonOverlapping();
 
       // Build an index pool of unused messages
-      var available = [];
+      var available: number[] = [];
       for (var mi = 0; mi < MSGS.length; mi++) {
         var taken = false;
         for (var tc = 0; tc < chars.length; tc++) {

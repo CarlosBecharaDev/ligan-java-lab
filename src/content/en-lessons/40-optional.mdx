@@ -1,0 +1,341 @@
+---
+title: "Optional — Code without NullPointerException"
+slug: "optional"
+module: "08-java-moderno"
+level: "Intermediate"
+objectives:
+  - "Create Optional with of, ofNullable and empty"
+  - "Extract values with get, orElse, orElseGet, orElseThrow"
+  - "Use Optional with lambdas: ifPresent, map, filter"
+  - "Avoid NullPointerException by using Optional correctly"
+  - "Know when NOT to use Optional"
+prerequisites:
+  - "Haber completado Lección 38: Lambdas"
+  - "Entender lambdas e interfaces funcionales"
+history:
+  introducedIn: "Optional since Java 8 (2014)"
+  context: "Optional was introduced in Java 8 to provide a deliberate alternative to the use of null. Instead of returning null, a method can return Optional.empty() explicitly indicating that there is no value. This forces the caller to consider the 'no value' case."
+  evolution: "Java 8: basic Optional with get(), isPresent(), orElse(). Java 9: Optional.stream(), ifPresentOrElse(). Java 10: orElseThrow(). Java 21: Optional.isEmpty(). The trend is to integrate Optional more deeply into the standard API."
+realWorldExamples:
+  - domain: "E-commerce — searching for a product by ID"
+    description: "An e-commerce system searches for products by ID. The product may or may not exist. Optional forces the caller to handle both cases."
+    code: |
+      import java.util.*;
+
+      class Producto {
+          String id; String nombre; double precio;
+          Producto(String id, String n, double p) {
+              this.id = id; nombre = n; precio = p;
+          }
+          public String toString() { return nombre + " ($" + precio + ")"; }
+      }
+
+      public class BuscarProducto {
+          static HashMap<String, Producto> catalogo = new HashMap<>();
+
+          static {
+              catalogo.put("P001", new Producto("P001", "Laptop", 2500));
+              catalogo.put("P002", new Producto("P002", "Mouse", 45));
+          }
+
+          static Optional<Producto> buscar(String id) {
+              return Optional.ofNullable(catalogo.get(id));
+          }
+
+          public static void main(String[] args) {
+              String[] ids = {"P001", "P999", "P002"};
+
+              for (String id : ids) {
+                  Optional<Producto> prod = buscar(id);
+
+                  // ifPresent
+                  prod.ifPresent(p -> System.out.println("✓ " + p));
+
+                  // orElse — valor por defecto
+                  Producto porDefecto = prod.orElse(
+                      new Producto(id, "Producto no encontrado", 0));
+                  System.out.println("Con orElse: " + porDefecto);
+
+                  // orElseThrow — lanzar excepción si no existe
+                  try {
+                      Producto p = prod.orElseThrow(
+                          () -> new RuntimeException("Producto no existe: " + id));
+                  } catch (RuntimeException e) {
+                      System.out.println("Error: " + e.getMessage());
+                  }
+              }
+          }
+      }
+    result: |
+      ✓ Laptop ($2500.0)
+      With orElse: Laptop ($2500.0)
+      With orElse: Product not found ($0.0)
+      Error: Product does not exist: P999
+      ✓ Mouse ($45.0)
+      With orElse: Mouse ($45.0)
+
+  - domain: "Health — searching for a medical history"
+    description: "A health system searches for patient histories. If the patient has no history, Optional.empty() allows handling it without a NullPointerException."
+    code: |
+      import java.util.*;
+
+      class Historial {
+          String paciente; ArrayList<String> diagnosticos;
+
+          Historial(String p) {
+              paciente = p;
+              diagnosticos = new ArrayList<>();
+          }
+      }
+
+      public class BuscarHistorial {
+          static HashMap<String, Historial> db = new HashMap<>();
+
+          static Optional<Historial> buscarHistorial(String paciente) {
+              return Optional.ofNullable(db.get(paciente));
+          }
+
+          public static void main(String[] args) {
+              db.put("Ana", new Historial("Ana"));
+              db.get("Ana").diagnosticos.add("Gripe");
+
+              // map con Optional
+              buscarHistorial("Ana")
+                  .map(h -> h.diagnosticos)
+                  .ifPresent(d -> System.out.println("Diagnósticos: " + d));
+
+              // filter con Optional
+              buscarHistorial("Ana")
+                  .filter(h -> h.diagnosticos.contains("Gripe"))
+                  .ifPresent(h -> System.out.println("Ana tiene Gripe"));
+
+              // Paciente sin historial
+              String diag = buscarHistorial("Luis")
+                  .map(h -> String.join(", ", h.diagnosticos))
+                  .orElse("Sin historial médico");
+              System.out.println("Luis: " + diag);
+          }
+      }
+    result: |
+      Diagnoses: [Flu]
+      Ana has Flu
+      Luis: No medical history
+
+hasInteractive: false
+comparisons:
+  - title: "if (x != null) vs Optional"
+    items:
+      - name: "Code with null (traditional)"
+        features:
+          risk: "Easy to forget to check null → NullPointerException"
+          expressiveness: "Does not communicate whether null is expected or not"
+          documentation: "You must read the Javadoc to know if it returns null"
+          chaining: "Nesting if (x != null) every time"
+      - name: "Code with Optional"
+        features:
+          risk: "Forces you to handle the 'no value' case"
+          expressiveness: "Optional explicitly communicates that there may be no value"
+          documentation: "The return type says it without reading documentation"
+          chaining: "map(), filter(), ifPresent() without nesting"
+    recommendation: "Use Optional for return values of methods that may have no result. Do NOT use Optional in parameters, class fields, or collections. Excessive use of Optional adds unnecessary complexity."
+videos:
+  - url: ""
+    title: "Optional in Java 8"
+    channel: "MoureDev"
+    summary: "Modern Java explained by Brais Moure — clean code and best practices"
+faqs:
+  - question: "Does Optional replace all null checks?"
+    answer: "No. Optional is designed for return values, not for fields, parameters, or collections. For fields that may be null, consider using annotations like @Nullable. Optional is a tool, not a universal solution."
+  - question: "What is the correct way to create an Optional?"
+    answer: "Optional.of(value) when the value is NOT null (throws NullPointerException if it is null). Optional.ofNullable(value) when it may be null. Optional.empty() for an empty Optional."
+  - question: "Can I use Optional with streams?"
+    answer: "Yes. Optional has methods like stream() (Java 9+) that convert it into a Stream of 0 or 1 elements. You can also use flatMap to combine Optionals and streams."
+sources:
+  - title: "Java 21 API — Optional"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Optional"
+    url: "https://docs.oracle.com/javase/tutorial/java/8-optional.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is Optional?
+
+`Optional<T>` is a container that may hold a value of type T... or not. It is an explicit way to say "this method may have no result".
+
+```java
+// Instead of:
+String resultado = buscar("id");  // can it return null?
+if (resultado != null) { ... }
+
+// With Optional:
+Optional<String> resultado = buscar("id");  // explicit: it may have no value
+resultado.ifPresent(System.out::println);
+```
+
+## Creating Optionals
+
+<CodeBlock lang="java" title="The three ways to create Optional">
+{`import java.util.*;
+
+public class CrearOptional {
+    public static void main(String[] args) {
+        // 1. Optional.of — when you KNOW the value is NOT null
+        Optional<String> presente = Optional.of("Hola");
+        System.out.println("present: " + presente);
+
+        // 2. Optional.ofNullable — when it MAY be null
+        String nulo = null;
+        Optional<String> vacio = Optional.ofNullable(nulo);
+        System.out.println("empty: " + vacio);
+
+        // 3. Optional.empty — explicit empty Optional
+        Optional<String> explicito = Optional.empty();
+        System.out.println("explicit: " + explicito);
+
+        // Check if there is a value
+        System.out.println("present.isPresent(): " + presente.isPresent());
+        System.out.println("empty.isPresent(): " + vacio.isPresent());
+        System.out.println("present.isEmpty(): " + presente.isEmpty());
+
+        // Java 11+:
+        System.out.println("empty.isEmpty(): " + vacio.isEmpty());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+present: Optional[Hola]
+empty: Optional.empty
+explicit: Optional.empty
+present.isPresent(): true
+empty.isPresent(): false
+present.isEmpty(): false
+empty.isEmpty(): true
+```
+
+## Extracting values
+
+<CodeBlock lang="java" title="Safe ways to get values from Optional">
+{`import java.util.*;
+
+public class ExtraerOptional {
+    public static void main(String[] args) {
+        Optional<String> opt = Optional.of("Java");
+        Optional<String> vacio = Optional.empty();
+
+        // get — only if you are sure there is a value
+        System.out.println("get: " + opt.get());
+
+        // orElse — default value
+        System.out.println("orElse: " + vacio.orElse("default"));
+
+        // orElseGet — default value with a lambda (only evaluated if empty)
+        System.out.println("orElseGet: " + vacio.orElseGet(() -> "generated"));
+
+        // orElseThrow — throw an exception if empty
+        try {
+            vacio.orElseThrow(() -> new RuntimeException("No value"));
+        } catch (RuntimeException e) {
+            System.out.println("orElseThrow: " + e.getMessage());
+        }
+
+        // ifPresent — run an action only if there is a value
+        opt.ifPresent(v -> System.out.println("Value: " + v));
+    }
+}`}
+</CodeBlock>
+
+## Operations with lambdas
+
+<CodeBlock lang="java" title="Optional with map, filter, ifPresent">
+{`import java.util.*;
+
+public class OptionalLambdas {
+    public static void main(String[] args) {
+        Optional<String> opt = Optional.of("Java 21");
+        Optional<String> vacio = Optional.empty();
+
+        // map — transform the value if it exists
+        Optional<Integer> longitud = opt.map(String::length);
+        System.out.println("Length: " + longitud.orElse(0));
+
+        vacio.map(String::length)
+             .ifPresent(l -> System.out.println("Never printed"));
+
+        // filter — test a condition
+        opt.filter(s -> s.contains("Java"))
+           .ifPresent(s -> System.out.println("Contains Java: " + s));
+
+        opt.filter(s -> s.startsWith("Python"))
+           .ifPresent(s -> System.out.println("Never printed"));
+
+        // flatMap — for nested Optionals
+        Optional<String> anidado = Optional.of("  texto  ");
+        Optional<Integer> resultado = anidado
+            .map(String::trim)
+            .flatMap(s -> Optional.of(s.length()));
+        System.out.println("Trim length: " + resultado.orElse(0));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Length: 7
+Contains Java: Java 21
+Trim length: 7
+```
+
+## When NOT to use Optional
+
+- ❌ As a class field
+- ❌ As a method parameter
+- ❌ In collections (`List<Optional<String>>`)
+- ❌ As a serializable instance
+
+```java
+// ❌ Bad
+class Persona {
+    private Optional<String> email;  // Don't
+}
+
+// ✅ Good
+class Persona {
+    private String email;  // null means "no email"
+}
+```
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

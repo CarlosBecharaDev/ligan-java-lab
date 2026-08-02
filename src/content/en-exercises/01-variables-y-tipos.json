@@ -1,0 +1,43 @@
+[
+  {
+    "id": "ex-variables-facil",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Personal variables declaration",
+    "difficulty": "facil",
+    "description": "Declare variables to store your name, age, and height (in meters), and print the values to the console.",
+    "template": "public class VariablesPersonales {\n    public static void main(String[] args) {\n        // TODO: Declare the variables with the correct types\n        // and print each one with System.out.println\n\n    }\n}",
+    "hints": [
+      "Remember: String for text, int for integers, double for decimals",
+      "Use System.out.println(\"text: \" + variable) to print"
+    ],
+    "solution": "public class VariablesPersonales {\n    public static void main(String[] args) {\n        String nombre = \"Carlos\";\n        int edad = 25;\n        double altura = 1.75;\n\n        System.out.println(\"Name: \" + nombre);\n        System.out.println(\"Age: \" + edad);\n        System.out.println(\"Height: \" + altura);\n    }\n}",
+    "solutionExplanation": "We declare three variables with different types: String for the name, int for the age, and double for the height. Then we print each value concatenated with descriptive text.",
+    "expectedOutput": "Name: Carlos\nAge: 25\nHeight: 1.75"
+  },
+  {
+    "id": "ex-variables-normal",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Area calculator with constants",
+    "difficulty": "normal",
+    "description": "Declare constants for the length and width of a rectangle, calculate its area and perimeter, and print the formatted results.",
+    "template": "public class AreaRectangulo {\n    public static void main(String[] args) {\n        // TODO: Declare constants for length and width\n        // Calculate area (length * width) and perimeter (2 * (length + width))\n        // Print the results with formatted printf\n\n    }\n}",
+    "hints": [
+      "Use final for the constants and name them in UPPERCASE"
+    ],
+    "solution": "public class AreaRectangulo {\n    public static void main(String[] args) {\n        final double LARGO = 10.5;\n        final double ANCHO = 5.3;\n\n        double area = LARGO * ANCHO;\n        double perimetro = 2 * (LARGO + ANCHO);\n\n        System.out.printf(\"Rectangle: %.1f x %.1f%n\", LARGO, ANCHO);\n        System.out.printf(\"Area: %.2f%n\", area);\n        System.out.printf(\"Perimeter: %.2f%n\", perimetro);\n    }\n}",
+    "solutionExplanation": "We declare LARGO and ANCHO as constants with final. We calculate the area by multiplying length by width, and the perimeter with the formula 2*(length+width). We use printf to format the decimals.",
+    "expectedOutput": "Rectangle: 10.5 x 5.3\nArea: 55.65\nPerimeter: 31.60"
+  },
+  {
+    "id": "ex-variables-dificil",
+    "lessonSlug": "variables-y-tipos",
+    "title": "Temperature conversion with casting",
+    "difficulty": "dificil",
+    "description": "Create a temperature converter that takes Celsius as a constant, converts it to Fahrenheit and Kelvin, and correctly handles the numeric types.",
+    "template": "public class ConversionTemperatura {\n    public static void main(String[] args) {\n        // TODO: Convert 37.5°C to Fahrenheit and Kelvin\n        // Formula: F = C * 9/5 + 32\n        // Formula: K = C + 273.15\n        // Print both results\n\n    }\n}",
+    "hints": [],
+    "solution": "public class ConversionTemperatura {\n    public static void main(String[] args) {\n        final double CELSIUS = 37.5;\n\n        double fahrenheit = CELSIUS * 9.0 / 5.0 + 32;\n        double kelvin = CELSIUS + 273.15;\n\n        System.out.printf(\"%.1f°C = %.1f°F%n\", CELSIUS, fahrenheit);\n        System.out.printf(\"%.1f°C = %.2fK%n\", CELSIUS, kelvin);\n\n        int fahrenheitEntero = (int) fahrenheit;\n        System.out.println(\"Truncated Fahrenheit: \" + fahrenheitEntero);\n    }\n}",
+    "solutionExplanation": "We use 9.0/5.0 (not 9/5) because 9/5 in integers gives 1, not 1.8. Division with decimals preserves precision. The (int) fahrenheit cast truncates the decimal part without rounding.",
+    "expectedOutput": "37.5°C = 99.5°F\n37.5°C = 310.65K\nTruncated Fahrenheit: 99"
+  }
+]

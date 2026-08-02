@@ -2,16 +2,14 @@
 export interface Props {
   type?: 'memory-diagram' | 'loop-animation' | 'inheritance-tree' | 'comparison-table' | 'execution-trace';
 }
-
-const { type = 'memory-diagram' } = Astro.props;
 ---
 
-<div class="interactive-example" role="region" aria-label="Ejemplo interactivo">
-  <h3>Visualización interactiva</h3>
+<div class="interactive-example" role="region" aria-label="Ejemplo interactivo" data-i18n-aria="interactive.aria">
+  <h3 data-i18n="lesson-comp.interactive">Visualización interactiva</h3>
   <div class="interactive-example__container">
     <div class="memory-diagram">
       <div class="memory-diagram__section memory-diagram__section--stack">
-        <h4>Stack (Pila)</h4>
+        <h4 data-i18n="lesson-comp.stack">Stack (Pila)</h4>
         <div class="memory-diagram__row">
           <span class="memory-diagram__label">nombre:</span>
           <span class="memory-diagram__type">String</span>
@@ -32,14 +30,14 @@ const { type = 'memory-diagram' } = Astro.props;
         <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="var(--sky)" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12" /><polyline points="12 5 19 12 12 19" /></svg>
       </div>
       <div class="memory-diagram__section memory-diagram__section--heap">
-        <h4>Heap (Montón)</h4>
+        <h4 data-i18n="lesson-comp.heap">Heap (Montón)</h4>
         <div class="memory-diagram__object">
           <span class="memory-diagram__address">0xFFA2:</span>
           <span class="memory-diagram__string">"Carlos"</span>
         </div>
       </div>
     </div>
-    <p class="interactive-example__caption">Las variables primitivas (edad, activo) guardan su valor directamente en el Stack. Las variables de referencia (nombre) guardan una dirección que apunta al objeto en el Heap.</p>
+    <p class="interactive-example__caption" data-i18n="interactive.caption">Las variables primitivas (edad, activo) guardan su valor directamente en el Stack. Las variables de referencia (nombre) guardan una dirección que apunta al objeto en el Heap.</p>
   </div>
 </div>
 

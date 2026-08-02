@@ -1,0 +1,454 @@
+---
+title: "Break, Continue, and Return"
+slug: "break-continue-return"
+module: "02-control-de-flujo"
+level: "Intermediate"
+objectives:
+  - "Use break to exit a loop or switch before it ends naturally"
+  - "Use continue to jump to the start of the next iteration"
+  - "Use return to exit a method, with or without a return value"
+  - "Understand labeled break and continue for nested loops"
+  - "Choose the appropriate control statement depending on the scenario"
+prerequisites:
+  - "Haber completado Lección 10: El Bucle For y For-Each"
+  - "Entender bucles while, do-while y for"
+  - "Conocer la sentencia switch"
+history:
+  introducedIn: "break, continue, and return since Java 1.0"
+  context: "The break, continue, and return statements, inherited from C, allow altering the normal flow of loops and methods. Since Java 1.0, they are essential for precisely controlling execution: exiting a loop early when the sought value is found, skipping unnecessary iterations, or returning a value from a method."
+  evolution: "In Java 1.0, break and continue only worked with the innermost loop. Later versions added labels to control nested loops. Java 14 introduced switch expressions that use yield instead of break to return values. Although structures such as the Stream API and lambdas offer functional alternatives, break and continue remain essential in traditional loops where fine-grained flow control is needed."
+realWorldExamples:
+  - domain: "Maze escape — search with break"
+    description: "A navigation system searches for a position in a maze represented as a matrix. When it finds the target, it uses break to exit the nested loop immediately, avoiding traversing unnecessary cells."
+    code: |
+      public class Laberinto {
+          public static void main(String[] args) {
+              int[][] laberinto = {
+                  {0, 0, 1, 0},
+                  {1, 0, 1, 0},
+                  {0, 0, 0, 0},
+                  {0, 1, 1, 0}
+              };
+              int objetivo = 9; // valor que buscamos
+              boolean encontrado = false;
+              int filaEncontrada = -1;
+              int colEncontrada = -1;
+
+              for (int i = 0; i < laberinto.length && !encontrado; i++) {
+                  for (int j = 0; j < laberinto[i].length; j++) {
+                      if (laberinto[i][j] == objetivo) {
+                          filaEncontrada = i;
+                          colEncontrada = j;
+                          encontrado = true;
+                          break; // sale del bucle interno
+                      }
+                  }
+              }
+
+              if (encontrado) {
+                  System.out.printf("Encontrado en [%d][%d]%n",
+                      filaEncontrada, colEncontrada);
+              } else {
+                  System.out.println("Objetivo no encontrado en el laberinto");
+              }
+          }
+      }
+    result: |
+      Target not found in the maze
+
+  - domain: "Data filtering with continue — sales processing"
+    description: "A reporting system processes sales from different months, using continue to skip months without data (value 0 or negative), processing only the valid sales and computing the average."
+    code: |
+      public class FiltradoVentas {
+          public static void main(String[] args) {
+              double[] ventasMensuales = {
+                  15000.0, 0.0, 23000.0, -500.0, 18000.0, 27000.0
+              };
+              String[] meses = {"Ene", "Feb", "Mar", "Abr", "May", "Jun"};
+              double suma = 0;
+              int validos = 0;
+
+              for (int i = 0; i < ventasMensuales.length; i++) {
+                  if (ventasMensuales[i] <= 0) {
+                      System.out.printf("  %s: sin datos válidos — saltando%n",
+                          meses[i]);
+                      continue; // salta al siguiente mes
+                  }
+                  suma += ventasMensuales[i];
+                  validos++;
+                  System.out.printf("  %s: $%.2f%n",
+                      meses[i], ventasMensuales[i]);
+              }
+
+              if (validos > 0) {
+                  System.out.printf("Promedio de ventas válidas: $%.2f%n",
+                      suma / validos);
+              }
+          }
+      }
+    result: |
+      Ene: $15000.00
+        Feb: no valid data — skipping
+      Mar: $23000.00
+        Abr: no valid data — skipping
+      May: $18000.00
+      Jun: $27000.00
+      Average of valid sales: $20750.00
+hasInteractive: false
+comparisons:
+  - title: "break vs continue vs return"
+    items:
+      - name: "break"
+        features:
+          action: "Terminate the loop or switch completely"
+          effect: "Execution continues after the loop/switch"
+          use: "When you found what you are looking for or need to exit"
+          example: "Find an element in an array"
+      - name: "continue"
+        features:
+          action: "Jump to the start of the next iteration"
+          effect: "The loop continues with the next turn"
+          use: "When you want to skip a case without stopping the loop"
+          example: "Filter out elements that do not meet a condition"
+      - name: "return"
+        features:
+          action: "Exit the current method completely"
+          effect: "Returns control to the calling method"
+          use: "When the method has finished its job"
+          example: "Return a result or exit early due to validation"
+    recommendation: "Use break when you need to exit a loop upon finding something specific. Use continue when you want to skip an iteration but keep processing. Use return when the method already has the result it must return. Avoid using break inside a switch if you can reorganize the logic with an if-else."
+videos:
+  - url: ""
+    title: "Break, Continue, and Return in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What is the difference between break in a switch and break in a loop?"
+    answer: "In a switch, break avoids fall-through (running the following cases without a condition). In a loop, break terminates the loop completely and execution continues with the first statement after the loop. Both use the same keyword, but the context determines the effect."
+  - question: "Can I use return inside a loop?"
+    answer: "Yes, return terminates the whole method, not just the loop. It is useful when you already have the result you need to return and there is no reason to keep iterating. However, using return inside nested loops can make the code harder to read; break with an exit condition is usually clearer."
+  - question: "When to use labeled break vs simple break?"
+    answer: "A simple break only exits the innermost loop. A labeled break (with a label before the outer for) exits all nested loops up to the label. Use it when you need to exit multiple levels of nesting at once, such as when searching for an element in a two-dimensional matrix. For a single loop level, a simple break is enough and more readable."
+sources:
+  - title: "Java 21 Language Specification — The break Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.15"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The continue Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.16"
+    date: "2026-07-27"
+  - title: "Java 21 Language Specification — The return Statement"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-14.html#jls-14.22"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Branching Statements"
+    url: "https://docs.oracle.com/javase/tutorial/java/nutsandbolts/branching.html"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Flow control statements
+
+So far we have seen loops that run until their condition becomes `false`. But sometimes you need to **exit early**, **skip an iteration**, or **end a method** immediately. The three control statements that allow this are `break`, `continue`, and `return`.
+
+## The break statement
+
+`break` **immediately terminates** the innermost loop or switch in which it appears. Execution continues with the first statement after that loop or switch.
+
+<CodeBlock lang="java" title="break — exiting upon finding a number">
+{`public class BuscarNumero {
+    public static void main(String[] args) {
+        int[] numeros = {5, 12, 8, 23, 1, 17};
+        int objetivo = 23;
+
+        for (int i = 0; i < numeros.length; i++) {
+            if (numeros[i] == objetivo) {
+                System.out.println("Found " + objetivo
+                    + " at index " + i);
+                break; // stop searching
+            }
+        }
+        System.out.println("Search ended");
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Found 23 at index 3
+Search ended
+```
+
+Without `break`, the loop would keep checking elements 1 and 17 unnecessarily. With `break`, the loop ends as soon as it finds the target.
+
+## The continue statement
+
+`continue` **jumps to the start of the next iteration** of the loop, skipping the rest of the body for the current iteration. The loop does not end; it simply ignores what remains in the body and moves to the next turn.
+
+<CodeBlock lang="java" title="continue — printing only odd numbers">
+{`public class SoloImpares {
+    public static void main(String[] args) {
+        int[] numeros = {1, 2, 3, 4, 5, 6, 7, 8};
+
+        for (int n : numeros) {
+            if (n % 2 == 0) {
+                continue; // skip evens
+            }
+            System.out.println("Odd: " + n);
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Odd: 1
+Odd: 3
+Odd: 5
+Odd: 7
+```
+
+When `n` is even (2, 4, 6, 8), `continue` jumps directly to the next iteration without running `System.out.println`.
+
+## Key difference: break vs continue
+
+```
+break:     [1] [2] [3] ← exits here ──→ after the loop
+continue:  [1] [2] [3] ← skips this ──→ [5] [6] (the loop continues)
+```
+
+- `break` **stops** the loop completely.
+- `continue` **skips** only the current iteration and continues.
+
+## The return statement
+
+`return` **exits the current method** immediately, returning control to the method that called it. If the method has a return type, `return` must be followed by the value to return.
+
+<CodeBlock lang="java" title="return — exiting a method early">
+{`public class ValidadorEdad {
+    public static String clasificarEdad(int edad) {
+        if (edad < 0) {
+            return "Invalid age";
+        }
+        if (edad < 13) {
+            return "Child";
+        }
+        if (edad < 18) {
+            return "Teenager";
+        }
+        return "Adult";
+    }
+
+    public static void main(String[] args) {
+        System.out.println(clasificarEdad(5));
+        System.out.println(clasificarEdad(16));
+        System.out.println(clasificarEdad(25));
+        System.out.println(clasificarEdad(-1));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Child
+Teenager
+Adult
+Invalid age
+```
+
+Each `return` ends the method immediately: once `return "Child"` runs, the rest of the method does not execute. This is known as an **early return** and is a very common pattern to avoid nesting conditionals.
+
+## return in void — exiting without a value
+
+When a method returns nothing (`void`), you can use `return` without a value to exit early:
+
+<CodeBlock lang="java" title="return void — exiting without returning anything">
+{`public class BuscarEnMatriz {
+    public static void imprimirPrimeraOcurrencia(
+            int[][] matriz, int objetivo) {
+
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == objetivo) {
+                    System.out.println("Found at ["
+                        + i + "][" + j + "]");
+                    return; // exit the whole method
+                }
+            }
+        }
+        System.out.println("Not found");
+    }
+
+    public static void main(String[] args) {
+        int[][] datos = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        imprimirPrimeraOcurrencia(datos, 5);
+        imprimirPrimeraOcurrencia(datos, 10);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Found at [1][1]
+Not found
+```
+
+## Labeled break and continue
+
+In nested loops, `break` and `continue` by default only affect the **innermost** loop. With a **label**, you can control outer loops.
+
+<CodeBlock lang="java" title="Labeled break — exiting two loops at once">
+{`public class BusquedaMatriz {
+    public static void main(String[] args) {
+        int[][] matriz = {
+            {1, 2, 3},
+            {4, 5, 6},
+            {7, 8, 9}
+        };
+        int objetivo = 5;
+        boolean encontrado = false;
+
+        busqueda:
+        for (int i = 0; i < matriz.length; i++) {
+            for (int j = 0; j < matriz[i].length; j++) {
+                if (matriz[i][j] == objetivo) {
+                    System.out.println("Found at ["
+                        + i + "][" + j + "]");
+                    encontrado = true;
+                    break busqueda; // exits BOTH loops
+                }
+            }
+        }
+
+        if (!encontrado) {
+            System.out.println("Not found");
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Found at [1][1]
+```
+
+Without `break busqueda`, only the inner loop would exit and it would keep traversing the next row. The `busqueda:` label is placed before the outer `for`, and `break busqueda` exits that loop and all inner ones.
+
+## Labeled continue
+
+The same applies to `continue`: with a label you can jump to the next iteration of the **outer** loop instead of the inner one.
+
+<CodeBlock lang="java" title="Labeled continue — skipping a whole row">
+{`public class SaltarFila {
+    public static void main(String[] args) {
+        int[][] datos = {
+            {1, -1, 3},
+            {-1, -1, 6},
+            {7, 8, 9}
+        };
+
+        for (int i = 0; i < datos.length; i++) {
+            System.out.println("Processing row " + i + ":");
+            for (int j = 0; j < datos[i].length; j++) {
+                if (datos[i][j] < 0) {
+                    System.out.println("  Negative value"
+                        + " — skipping the whole row");
+                    continue; // only skips the column
+                }
+                // Without a label, continue only skips the column.
+                // With a label: continue fila; would jump to the
+                // next complete row.
+                System.out.println("  Value: " + datos[i][j]);
+            }
+        }
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Processing row 0:
+  Negative value — skipping the whole row
+  Value: 3
+Processing row 1:
+  Negative value — skipping the whole row
+  Negative value — skipping the whole row
+Processing row 2:
+  Value: 7
+  Value: 8
+  Value: 9
+```
+
+In this case, `continue` without a label only skips the current column. If we wanted to skip the whole row when we find a negative value, we would use a label: `continue fila;` (where `fila:` is the label of the outer loop).
+
+## Common pattern: Early return
+
+The **early return** pattern uses `return` at the start of a method to handle special cases without nesting conditionals:
+
+<CodeBlock lang="java" title="Early return — validate and exit early">
+{`public class ProcesarPedido {
+    public static String procesarPedido(
+            double monto, boolean tieneCupon) {
+
+        // Special cases: exit early
+        if (monto <= 0) {
+            return "Error: invalid amount";
+        }
+        if (monto > 100000) {
+            return "Error: amount exceeds the limit";
+        }
+
+        // Main logic
+        double total = monto;
+        if (tieneCupon) {
+            total *= 0.9; // 10% discount
+        }
+        if (total >= 500) {
+            total *= 0.95; // 5% additional for high purchases
+        }
+
+        return "Total to pay: $" + total;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(procesarPedido(100, true));
+        System.out.println(procesarPedido(600, false));
+        System.out.println(procesarPedido(-50, false));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Total to pay: $90.0
+Total to pay: $570.0
+Error: invalid amount
+```
+
+Without early return, the code would need multiple levels of nested `if`, making it harder to read.
+
+## When to use each statement
+
+| Situation | Statement | Example |
+|-----------|-----------|---------|
+| You found what you were looking for in a loop | `break` | Find a file in a list |
+| You want to skip elements that do not meet a condition | `continue` | Filter null or negative values |
+| The method already has the result it must return | `return` | Calculate and return an average |
+| You need to exit nested loops | `break` with label | Search in a two-dimensional matrix |
+| You need to jump to the next row of a matrix | `continue` with label | Process rows with incomplete data |
+| Validate something at the start of a method | early `return` | Reject invalid input before processing |

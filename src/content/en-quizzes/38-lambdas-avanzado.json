@@ -1,0 +1,92 @@
+{
+  "id": "quiz-38-lambdas-avanzado",
+  "lessonSlug": "lambdas",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is target typing of lambdas?",
+      "options": [
+        "The compiler infers the type of the lambda parameter",
+        "The programmer must always specify the type explicitly",
+        "It is a mandatory compilation error",
+        "It is a technique for creating anonymous classes"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Target typing allows the compiler to infer the type of the lambda parameters based on the context.",
+        "It is not always required to specify it; the compiler can infer it.",
+        "It is not an error.",
+        "It is not related to anonymous classes."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is a Method Reference?",
+      "options": [
+        "Class::method — shorthand for a lambda that calls an existing method",
+        "A reference to a static variable",
+        "A type of inheritance",
+        "A way to declare an abstract method"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A method reference (Class::method) is a shorthand way to write a lambda that simply invokes an existing method.",
+        "It is not only for static variables.",
+        "It has nothing to do with inheritance.",
+        "It is not for declaring abstract methods."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What types of method references exist?",
+      "options": [
+        "Static, bound, unbound, and constructor",
+        "Only static and dynamic",
+        "Only instance and class",
+        "Only constructor and destructor"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. There are four types: static (Class::staticMethod), bound (object::method), unbound (Class::method), and constructor (Class::new).",
+        "The concepts of static/dynamic do not exist as types of method references.",
+        "There are more types than just instance and class.",
+        "The concept of a destructor does not exist in Java."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Can lambdas be nested in Java?",
+      "options": [
+        "Yes, but it reduces code readability",
+        "No, Java does not allow it",
+        "Only if var is used",
+        "Only with recursive functions"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Java allows nesting lambdas, but doing so reduces readability and it is recommended to avoid it.",
+        "Java does allow it.",
+        "It does not depend on var.",
+        "It is not limited to recursive functions."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is an effectively final variable?",
+      "options": [
+        "A local variable that is not modified and can be used inside a lambda",
+        "A variable declared with the final keyword",
+        "A static variable",
+        "An instance variable"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. An effectively final variable is a local variable that is not modified after its initialization, and it can be captured in lambdas without needing to be declared as final.",
+        "It does not need the final keyword, although it shares the restriction of not being modified.",
+        "It is not because it is static.",
+        "Instance variables do not need to be effectively final to be used in lambdas."
+      ]
+    }
+  ]
+}

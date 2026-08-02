@@ -1,0 +1,67 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+---
+
+<ContentLayout title="About the project" description="Learn the purpose and author of Ligan Java Lab" lang="en">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <div style="display:flex;align-items:center;gap:var(--space-lg);margin-bottom:var(--space-xl)">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="var(--win-text)" stroke-width="2" stroke-linecap="square" stroke-linejoin="miter">
+        <polyline points="16 18 22 12 16 6" />
+        <polyline points="8 6 2 12 8 18" />
+      </svg>
+      <div>
+        <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);margin:0;">About the project</h1>
+        <p style="color:var(--win-muted);margin:0;font-size:1.2rem;margin-top:0.5rem;">Ligan Java Lab v0.1.0</p>
+      </div>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">What is Ligan Java Lab?</h2>
+    <p style="font-size:1.2rem;">A web-based educational platform to learn Java 21 LTS from scratch, in Latin American Spanish. It combines written lessons, real-world examples, interactive quizzes and a simulated Code Lab to practice without installing anything.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">Motivation</h2>
+    <p style="font-size:1.2rem;">This project was born from the need for a complete, free, Spanish-language resource that takes the student from fundamentals to real projects, with a clear progression and plenty of practice.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">Author</h2>
+    <div class="retro-panel" style="background:var(--win-bg);border:2px solid var(--win-border);box-shadow:3px 3px 0 rgba(0,0,0,0.3);padding:var(--space-lg);margin:var(--space-lg) 0">
+      <p style="margin:0;font-size:1.2rem;"><strong style="font-family:var(--font-pixel);font-size:0.9rem;">Carlos Bechara</strong> <span style="color:var(--win-muted)">— Developer and educator</span></p>
+      <p style="color:var(--win-muted);margin-top:var(--space-sm);font-size:1.1rem;">Passionate about teaching Java and backend technologies. Believes in practical learning with real examples and a clear progression.</p>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">Tech stack</h2>
+    <div style="display:flex;flex-wrap:wrap;gap:var(--space-sm);margin-bottom:var(--space-lg)">
+      <span class="retro-tag">Astro 7.x</span>
+      <span class="retro-tag">TypeScript</span>
+      <span class="retro-tag">Custom CSS</span>
+      <span class="retro-tag">CodeMirror 6</span>
+      <span class="retro-tag">Shiki</span>
+      <span class="retro-tag">Zod 4</span>
+      <span class="retro-tag">Lucide</span>
+    </div>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">License</h2>
+    <p style="font-size:1.2rem;">Open-source educational project. All rights reserved © {new Date().getFullYear()} Carlos Bechara.</p>
+
+    <h2 style="font-family:var(--font-pixel);font-size:1.2rem;margin-top:2rem;">Attributions</h2>
+    <ul style="list-style:disc;padding-left:var(--space-lg);color:var(--win-muted);font-size:1.2rem;">
+      <li>Icons: <a href="https://lucide.dev/" target="_blank" style="color:var(--win-link);">Lucide</a> (ISC license)</li>
+      <li>Fonts: <a href="https://fonts.google.com/specimen/Inter" target="_blank" style="color:var(--win-link);">Inter</a> and <a href="https://fonts.google.com/specimen/JetBrains+Mono" target="_blank" style="color:var(--win-link);">JetBrains Mono</a> (OFL)</li>
+      <li>Syntax highlighting: <a href="https://shiki.matsu.io/" target="_blank" style="color:var(--win-link);">Shiki</a></li>
+    </ul>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-tag {
+    padding: var(--space-xs) var(--space-sm);
+    background: var(--win-bevel-bg);
+    border: 2px solid var(--win-border);
+    border-right-color: var(--win-bevel-dark);
+    border-bottom-color: var(--win-bevel-dark);
+    font-size: 1.1rem;
+    font-family: var(--font-pixel);
+    color: var(--win-text);
+  }
+</style>

@@ -1,0 +1,75 @@
+{
+  "id": "quiz-42-pattern-matching-basico",
+  "lessonSlug": "pattern-matching",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is pattern matching in Java?",
+      "options": [
+        "Checking an object's type and extracting a value in a single expression",
+        "A design pattern for creating objects",
+        "A way of matching with regular expressions",
+        "A parallel programming technique"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Pattern matching allows checking an object's type and binding it to a variable in a single expression, avoiding explicit casting.",
+        "It is not a creational design pattern.",
+        "It is not for regular expressions (that is Pattern from java.util.regex).",
+        "It is not a parallel programming technique."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does switch do with pattern matching?",
+      "options": [
+        "case String s: checks the type and extracts the value into the variable 's'",
+        "Only compares exact values as before",
+        "Ignores the type and only compares values",
+        "Throws an exception if the type does not match"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. In switch with pattern matching, a case like case String s checks the type and binds the value to the variable 's'.",
+        "With pattern matching it goes beyond comparing exact values.",
+        "It does consider the type.",
+        "It does not throw an exception; it simply does not enter that case."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is instanceof with pattern matching?",
+      "options": [
+        "It allows writing if (obj instanceof String s) to check the type and extract the value",
+        "Only checks the type without being able to extract the value",
+        "It is the same as traditional instanceof",
+        "Only works with abstract classes"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. With pattern matching, instanceof can bind the value to a variable, avoiding a subsequent cast.",
+        "It can extract the value and bind it to a variable.",
+        "It is more powerful than traditional instanceof.",
+        "It works with any type, not just abstract classes."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is a sealed class?",
+      "options": [
+        "A class that can only be extended by a known set of classes",
+        "A class that cannot be modified after being compiled",
+        "A class with all private attributes",
+        "A class that implements the Serializable interface"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A sealed class restricts which classes can extend it using the permits clause.",
+        "It has nothing to do with immutability after compilation.",
+        "It is not just about private attributes.",
+        "It is not related to Serializable."
+      ]
+    }
+  ]
+}

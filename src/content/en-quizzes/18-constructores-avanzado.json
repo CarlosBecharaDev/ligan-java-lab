@@ -1,0 +1,109 @@
+{
+  "id": "quiz-18-constructores-avanzado",
+  "lessonSlug": "constructores",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the problem?\nPersona(String nombre, int edad) {\n    nombre = nombre;\n    edad = edad;\n}",
+      "options": [
+        "this is missing",
+        "return is missing",
+        "There is no problem",
+        "Type error"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Without this, the parameter shadows the attribute.",
+        "Constructors do not need return.",
+        "There is a problem: the attributes are not initialized.",
+        "The types are correct."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "In what position must this() appear in a constructor?",
+      "options": [
+        "Anywhere",
+        "It must be the first line",
+        "At the end of the constructor",
+        "After the local variables"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It cannot be anywhere.",
+        "Correct. this() must be the first statement.",
+        "Not at the end.",
+        "It must be the first line."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What does it print?\nMascota a = new Mascota(\"Max\", \"Perro\", 3, 10.0);\nMascota b = new Mascota(\"Luna\");\nSystem.out.println(b.edad + \" \" + b.peso);",
+      "options": [
+        "3 10.0",
+        "1 0.0",
+        "0 0.0",
+        "null 0.0"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "That is the value of a, not b.",
+        "Correct. Mascota(String) calls Mascota(String, String) with edad=1, peso=0.0.",
+        "It is not the default value.",
+        "int cannot be null."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What happens if you define a constructor with parameters?",
+      "options": [
+        "The default constructor is kept",
+        "Java keeps creating the default one",
+        "There is no longer an automatic default constructor",
+        "All constructors are removed"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "It is not kept automatically.",
+        "Java stops creating it.",
+        "Correct. Only if no constructor is defined at all.",
+        "Only the default one is removed."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the advantage of constructor overloading?",
+      "options": [
+        "Saving lines of code",
+        "Creating objects in different ways with safe initialization",
+        "Inheriting constructors from another class",
+        "Making constructors static"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is not about saving lines.",
+        "Correct. It gives flexibility when creating objects without losing initialization.",
+        "Constructors are not inherited.",
+        "Constructors cannot be static."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "What is the error?\npublic class A {\n    A() { this(); }\n}",
+      "options": [
+        "There is no error",
+        "Circular call: this() calls itself infinitely",
+        "return is missing",
+        "this() only works with parameters"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "There is an error.",
+        "Correct. A() calls this() which is A() → stack overflow.",
+        "It is not a return problem.",
+        "this() works without parameters."
+      ]
+    }
+  ]
+}

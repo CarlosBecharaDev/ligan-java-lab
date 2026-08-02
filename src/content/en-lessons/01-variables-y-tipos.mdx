@@ -1,0 +1,280 @@
+---
+title: "Variables and data types"
+slug: "variables-y-tipos"
+module: "01-fundamentos"
+level: "Beginner"
+objectives:
+  - "Declare and initialize variables of different types in Java"
+  - "Differentiate between primitive types and reference types"
+  - "Explain how Java manages memory with Stack and Heap"
+  - "Use `var` for type inference and `final` for constants"
+prerequisites:
+  - "introduccion-java"
+  - "Haber instalado el JDK 21 y un IDE (IntelliJ IDEA o VS Code)"
+history:
+  introducedIn: "Java 1.0"
+  context: "Since its origins in 1996, Java implemented a strong static typing system to guarantee safety and prevent errors at compile time. Unlike dynamic languages such as Python or JavaScript, Java requires every variable to declare its type explicitly."
+  evolution: "In Java 10 (2018) the `var` keyword was introduced for local type inference, reducing verbosity without sacrificing static typing."
+realWorldExamples:
+  - domain: "E-commerce"
+    description: "In an online store, variables store product data: name, price, availability and category. Each piece of data needs the correct type to avoid rounding or truncation errors."
+    code: |
+      String nombreProducto = "Auriculares Bluetooth";
+      double precio = 79.99;
+      int stock = 150;
+      boolean disponible = stock > 0;
+      System.out.println(nombreProducto + " — $" + precio);
+      System.out.println("Disponible: " + disponible);
+    result: |
+      Auriculares Bluetooth — $79.99
+      Disponible: true
+  - domain: "Banking"
+    description: "In a banking app, variables handle balances, interest rates and customer data. The correct use of types prevents critical financial errors."
+    code: |
+      String titular = "María García";
+      double saldo = 12500.75;
+      final double TASA_INTERES = 0.045;
+      double interesMensual = saldo * TASA_INTERES / 12;
+      System.out.printf("Saldo: $%.2f%n", saldo);
+      System.out.printf("Interés mensual: $%.2f%n", interesMensual);
+    result: |
+      Saldo: $12500.75
+      Interés mensual: $46.88
+hasInteractive: true
+comparisons:
+  - title: "primitive types vs. reference types"
+    items:
+      - name: "Primitives"
+        features:
+          storage: "Directly on the Stack"
+          speed: "Very fast"
+          values: "Pure values (number, character, boolean)"
+          examples: "int, double, boolean, char"
+      - name: "References"
+        features:
+          storage: "Reference on the Stack, object on the Heap"
+          speed: "Depends on the object"
+          values: "Complex objects (String, arrays, instances)"
+          examples: "String, ArrayList, any class"
+    recommendation: "Use primitive types when you need maximum performance and store simple values. Use reference types when you need objects with methods, collections or complex data."
+videos:
+  - url: ""
+    title: "Variables and data types in Java"
+    channel: "Píldoras Informáticas"
+    summary: "Java course from scratch by Juan Carlos — detailed explanation with practical examples"
+faqs:
+  - question: "Is `String` a primitive type in Java?"
+    answer: "No. `String` is a class (reference type) that is part of the Java standard library. Unlike primitives, `String` stores objects on the Heap and has its own methods such as `.length()`, `.charAt()` and `.substring()`."
+  - question: "What happens if I use a variable without initializing it?"
+    answer: "Local variables inside a method have no default value. If you try to use an uninitialized variable, Java generates a compilation error. This is a protection to avoid unexpected values."
+  - question: "When should I use `var` instead of the explicit type?"
+    answer: "Use `var` when the type is immediately obvious to whoever reads the code. For example, `var scanner = new Scanner(System.in)` is clear because the type is deduced from the right-hand side. Don't use it when the type is not obvious, such as `var resultado = calcular(a, b)`."
+  - question: "What is the difference between `final` and a constant in another language?"
+    answer: "In Java, `final` declares a variable whose value cannot be changed after initialization. It is the standard way to create constants. By convention, they are named in `UPPER_CASE_WITH_UNDERSCORES`."
+  - question: "How does `var` affect performance?"
+    answer: "It doesn't affect it at all. `var` is only syntactic sugar: the compiler replaces `var` with the real type before generating bytecode. The resulting code is identical to declaring the type explicitly."
+sources:
+  - title: "Java 21 Language Specification — Primitive Types"
+    url: "https://docs.oracle.com/javase/specs/jls/se21/html/jls-4.html"
+    date: "2026-07-26"
+  - title: "OpenJDK — Local Variable Type Inference (JEP 286)"
+    url: "https://openjdk.org/jeps/286"
+    date: "2026-07-26"
+status: "publicado"
+lastReviewed: "2026-07-26"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import LessonHistory from '@components/lesson/LessonHistory.astro';
+import RealWorldExamples from '@components/lesson/RealWorldExamples.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+import InteractiveExample from '@components/lesson/InteractiveExample.astro';
+import SolutionReveal from '@components/exercises/SolutionReveal.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What is a variable?
+
+A **variable** is a named space in memory that stores a value during the execution of a program. Think of it as a labeled box: the label is the variable name, and what you store inside is the value.
+
+In Java, every variable must be declared with a **specific data type** that cannot change after its declaration. This is called **strong static typing** and is one of the reasons Java is robust and reliable.
+
+## Analogy: the post office
+
+Imagine your computer's RAM as a large post office with lockers of different sizes:
+
+- **Small lockers** (`int`, `boolean`, `char`): They store the value directly inside the locker. These are the **primitive types**.
+- **Giant lockers** (`String`, `ArrayList`): They are too large to store the real value. Instead, they contain a note with the address of where the package is. This note is a **reference**.
+
+The small lockers are in the fast zone (**Stack**), and the large packages are in the warehouse (**Heap**).
+
+## The 8 primitive types of Java
+
+Java has exactly 8 primitive types:
+
+| Type | Size | Range / Description | Example |
+|------|--------|---------------------|---------|
+| `byte` | 8 bits | -128 to 127 | `byte nivel = 5;` |
+| `short` | 16 bits | -32,768 to 32,767 | `short año = 2026;` |
+| `int` | 32 bits | -2,147M to 2,147M | `int edad = 30;` |
+| `long` | 64 bits | Very large | `long poblacion = 8_000_000_000L;` |
+| `float` | 32 bits | Decimal (limited precision) | `float temperatura = 36.5f;` |
+| `double` | 64 bits | Decimal (high precision) | `double salario = 1500.50;` |
+| `char` | 16 bits | A Unicode character | `char genero = 'M';` |
+| `boolean` | 1 bit | `true` or `false` | `boolean activo = true;` |
+
+<CodeBlock lang="java" title="The 8 primitive types">
+{`public class TiposPrimitivos {
+    public static void main(String[] args) {
+        byte nivel = 5;
+        short año = 2026;
+        int edad = 30;
+        long poblacion = 8_000_000_000L;
+        float temperatura = 36.5f;
+        double salario = 1500.50;
+        char genero = 'M';
+        boolean activo = true;
+
+        System.out.println("Level: " + nivel);
+        System.out.println("Year: " + año);
+        System.out.println("Age: " + edad);
+        System.out.println("Population: " + poblacion);
+        System.out.println("Temperature: " + temperatura);
+        System.out.println("Salary: " + salario);
+        System.out.println("Gender: " + genero);
+        System.out.println("Active: " + activo);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Level: 5
+Year: 2026
+Age: 30
+Population: 8000000000
+Temperature: 36.5
+Salary: 1500.5
+Gender: M
+Active: true
+```
+
+## Reference types: String and beyond
+
+**Reference types** are objects that store a memory address (reference) pointing to the real object on the Heap. The most used one is `String`:
+
+<CodeBlock lang="java" title="String and reference types">
+{`public class TiposReferencia {
+    public static void main(String[] args) {
+        String nombre = "Carlos";
+        String apellido = "Bechara";
+        String nombreCompleto = nombre + " " + apellido;
+
+        System.out.println("Full name: " + nombreCompleto);
+        System.out.println("Length: " + nombreCompleto.length());
+        System.out.println("In uppercase: " + nombreCompleto.toUpperCase());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Full name: Carlos Bechara
+Length: 14
+In uppercase: CARLOS BECHARA
+```
+
+Notice how `String` has methods like `.length()` and `.toUpperCase()` — primitive types have no methods because they are not objects.
+
+## Declaration and initialization
+
+The syntax for declaring a variable follows a clear pattern:
+
+```java
+// [Type] [name] = [value];
+int edad = 25;
+String nombre = "Ana";
+
+// Declaration without a value (later initialization)
+double salario;
+salario = 1500.50;
+
+// In Java 10+, var infers the type automatically
+var precio = 99.99;    // infers double
+var mensaje = "Hola";  // infers String
+```
+
+<InteractiveExample type="memory-diagram" />
+
+## Constants with `final`
+
+When a value must not change during execution, it is declared with `final`. By convention, constants are named in `UPPER_CASE_WITH_UNDERSCORES`:
+
+```java
+final double PI = 3.14159;
+final int MAX_INTENTOS = 3;
+final String PAIS = "México";
+
+// PI = 3.14;  // Compilation error: cannot be reassigned
+```
+
+## Common errors
+
+### Error 1: Wrong type in the assignment
+```java
+// ❌ Error: a double cannot be assigned to an int directly
+int precio = 19.99;
+
+// ✅ Fix: use double or explicit casting
+double precio = 19.99;
+int precioEntero = (int) 19.99;  // result: 19 (loses decimals)
+```
+
+### Error 2: Uninitialized local variable
+```java
+// ❌ Compilation error
+int resultado;
+System.out.println(resultado);  // variable might not have been initialized
+
+// ✅ Fix: initialize before using
+int resultado = 0;
+System.out.println(resultado);
+```
+
+### Error 3: Confusing `=` with `==`
+```java
+// = is assignment (stores a value)
+int x = 10;
+
+// == is comparison (compares two values)
+if (x == 10) {
+    System.out.println("x is equal to 10");
+}
+```
+
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

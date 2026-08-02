@@ -1,0 +1,92 @@
+{
+  "id": "quiz-27-string-avanzado-avanzado",
+  "lessonSlug": "string-avanzado",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Why is String immutable in Java?",
+      "options": [
+        "Security, string pool caching, thread-safety",
+        "To save memory",
+        "Because it is fast",
+        "There is no specific reason"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Immutability provides security (for URLs, classes, etc.), enables the string pool, and makes Strings thread-safe.",
+        "No. Immutability can consume more memory due to the creation of temporary objects.",
+        "No. Speed is not the main reason for immutability.",
+        "No. There are important technical reasons for immutability."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is String.intern()?",
+      "options": [
+        "Adds the String to the pool and returns the pool reference",
+        "Removes the String from memory",
+        "Creates a copy of the String",
+        "Converts to uppercase"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. intern() adds the String to the string pool (if it does not exist) and returns the pool reference.",
+        "No. It does not remove the String; it adds it to the pool.",
+        "No. It does not create a copy; it returns the existing reference or the new one in the pool.",
+        "No. It is unrelated to uppercase; it is for pool handling."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you compare the content of two Strings?",
+      "options": [
+        "equals() (not ==)",
+        "== only",
+        "comparar()",
+        "match()"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. equals() compares the content of the Strings. The == operator compares memory references.",
+        "No. == compares whether they are the same object in memory, not the content.",
+        "No. There is no comparar() method in String.",
+        "No. There is no match() method to compare content."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How does substring() work in modern Java?",
+      "options": [
+        "Creates a new String without copying the original array (JDK 7+ optimization)",
+        "Always copies the full array",
+        "Modifies the original String",
+        "Returns a view of the String"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Since JDK 7u6, substring() creates a new String that shares the character array; it is more efficient.",
+        "No. Since JDK 7+ it does not copy the full array.",
+        "No. Strings are immutable; it cannot modify the original.",
+        "No. It does not return a view; it returns a new independent String."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is a TextBlock in Java?",
+      "options": [
+        "Multi-line text with \"\"\" (Java 15+)",
+        "An executable block of code",
+        "A collection of texts",
+        "A type of variable"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. TextBlock is a Java 15+ feature that allows writing multi-line strings using triple double quotes \"\"\".",
+        "No. It is not a block of code; it is a way to declare multi-line strings.",
+        "No. It is not a collection; it is a type of String.",
+        "No. It is not a variable; it is a form of String literal."
+      ]
+    }
+  ]
+}

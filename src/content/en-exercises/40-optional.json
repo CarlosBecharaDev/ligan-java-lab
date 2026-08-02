@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-optional-facil",
+    "title": "Safe value",
+    "difficulty": "facil",
+    "description": "Given a HashMap with names and ages, use Optional to look up the age of a name. If the name does not exist, show a default value of -1. Use Optional.ofNullable and orElse.",
+    "template": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Map<String, Integer> edades = new HashMap<>();\n        edades.put(\"Ana\", 25);\n        edades.put(\"Luis\", 30);\n        edades.put(\"Maria\", 22);\n\n        // TODO: Use Optional.ofNullable to look up the age of \"Luis\"\n        // If it does not exist, use orElse(-1)\n        int edadLuis = -1; // replace\n\n        // TODO: Look up the age of \"Pedro\" which does not exist\n        int edadPedro = -1; // replace\n\n        System.out.println(\"Age of Luis: \" + edadLuis);\n        System.out.println(\"Age of Pedro: \" + edadPedro);\n    }\n}",
+    "hints": [
+      "Optional.ofNullable(edades.get(\"Luis\")) creates an Optional from a value that can be null",
+      ".orElse(-1) returns the value or -1 if the Optional is empty",
+      "HashMap.get() returns null if the key does not exist"
+    ],
+    "solution": "import java.util.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        Map<String, Integer> edades = new HashMap<>();\n        edades.put(\"Ana\", 25);\n        edades.put(\"Luis\", 30);\n        edades.put(\"Maria\", 22);\n\n        int edadLuis = Optional.ofNullable(edades.get(\"Luis\"))\n            .orElse(-1);\n\n        int edadPedro = Optional.ofNullable(edades.get(\"Pedro\"))\n            .orElse(-1);\n\n        System.out.println(\"Age of Luis: \" + edadLuis);\n        System.out.println(\"Age of Pedro: \" + edadPedro);\n    }\n}",
+    "solutionExplanation": "Optional.ofNullable() creates an Optional that can be empty if the value is null. orElse() provides a default value when the Optional is empty. This avoids NullPointerExceptions.",
+    "expectedOutput": "Age of Luis: 30\nAge of Pedro: -1",
+    "lessonSlug": "optional"
+  },
+  {
+    "id": "ex-optional-normal",
+    "title": "Operation chain",
+    "difficulty": "normal",
+    "description": "Given an Optional with a String, apply a chain of operations: if the value is present and not empty, convert to uppercase and append \"!\" at the end. If the String is null or empty, throw an exception with orElseThrow.",
+    "template": "import java.util.Optional;\n\npublic class Main {\n    public static void main(String[] args) {\n        Optional<String> texto1 = Optional.of(\"hola mundo\");\n        Optional<String> texto2 = Optional.of(\"\");\n        Optional<String> texto3 = Optional.empty();\n\n        // TODO: For texto1, use map to convert to uppercase\n        // Then map to append \"!\" at the end\n        // Use orElseThrow for the empty case\n        String resultado1 = \"\";\n\n        // TODO: Process texto2 the same way\n        String resultado2 = \"\";\n\n        // TODO: Process texto3 the same way\n        String resultado3 = \"\";\n\n        System.out.println(\"Text1: \" + resultado1);\n    }\n}",
+    "hints": [
+      ".map(s -> s.toUpperCase()) applies a transformation if the value exists",
+      ".filter(s -> !s.isEmpty()) validates that the string is not empty",
+      ".orElseThrow(() -> new RuntimeException(\"empty text\")) throws an exception if there is no value"
+    ],
+    "solution": "import java.util.Optional;\n\npublic class Main {\n    public static void main(String[] args) {\n        Optional<String> texto1 = Optional.of(\"hola mundo\");\n        Optional<String> texto2 = Optional.of(\"\");\n        Optional<String> texto3 = Optional.empty();\n\n        String resultado1 = texto1\n            .filter(s -> !s.isEmpty())\n            .map(s -> s.toUpperCase())\n            .map(s -> s + \"!\")\n            .orElseThrow(() -> new RuntimeException(\"empty or null text\"));\n\n        try {\n            String resultado2 = texto2\n                .filter(s -> !s.isEmpty())\n                .map(s -> s.toUpperCase())\n                .map(s -> s + \"!\")\n                .orElseThrow(() -> new RuntimeException(\"empty or null text\"));\n            System.out.println(\"Text2: \" + resultado2);\n        } catch (RuntimeException e) {\n            System.out.println(\"Text2 error: \" + e.getMessage());\n        }\n\n        try {\n            String resultado3 = texto3\n                .filter(s -> !s.isEmpty())\n                .map(s -> s.toUpperCase())\n                .map(s -> s + \"!\")\n                .orElseThrow(() -> new RuntimeException(\"empty or null text\"));\n            System.out.println(\"Text3: \" + resultado3);\n        } catch (RuntimeException e) {\n            System.out.println(\"Text3 error: \" + e.getMessage());\n        }\n\n        System.out.println(\"Text1: \" + resultado1);\n    }\n}",
+    "solutionExplanation": "The chain filter -> map -> map -> orElseThrow processes the value step by step. filter validates that it is not empty, map transforms, and orElseThrow throws an exception if at any point it runs out of value.",
+    "expectedOutput": "Text2 error: empty or null text\nText3 error: empty or null text\nText1: HOLA MUNDO!",
+    "lessonSlug": "optional"
+  },
+  {
+    "id": "ex-optional-dificil",
+    "title": "Optional with nullable",
+    "difficulty": "dificil",
+    "description": "Given a list of Optional<String> (some empty, some with value), create a stream that: 1) Filters only those with a value (not empty), 2) Extracts the value with .get(), 3) Filters those that are not empty in content, 4) Converts to uppercase, 5) Prints each one and how many remain.",
+    "template": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Optional<String>> opcionales = Arrays.asList(\n            Optional.of(\"Java\"),\n            Optional.empty(),\n            Optional.of(\"\"),\n            Optional.of(\"Stream\"),\n            Optional.empty(),\n            Optional.of(\"Optional\"),\n            Optional.of(\"null\"),\n            Optional.empty()\n        );\n\n        // TODO: Create a stream from the list\n        // Filter Optionals that are not empty with .filter(Optional::isPresent)\n        // Get the value with .map(Optional::get)\n        // Filter strings that are not empty with .filter(s -> !s.isEmpty())\n        // Filter out those that are \"null\" with .filter(s -> !s.equals(\"null\"))\n        // Convert to uppercase with .map(String::toUpperCase)\n        // Print each one and count\n\n    }\n}",
+    "hints": [
+      "Optional::isPresent is a method reference that checks if the Optional has a value",
+      "Optional::get extracts the value from the Optional",
+      "Full chain: filter -> map -> filter -> filter -> map -> forEach"
+    ],
+    "solution": "import java.util.*;\nimport java.util.stream.*;\n\npublic class Main {\n    public static void main(String[] args) {\n        List<Optional<String>> opcionales = Arrays.asList(\n            Optional.of(\"Java\"),\n            Optional.empty(),\n            Optional.of(\"\"),\n            Optional.of(\"Stream\"),\n            Optional.empty(),\n            Optional.of(\"Optional\"),\n            Optional.of(\"null\"),\n            Optional.empty()\n        );\n\n        long cantidad = opcionales.stream()\n            .filter(Optional::isPresent)\n            .map(Optional::get)\n            .filter(s -> !s.isEmpty())\n            .filter(s -> !s.equals(\"null\"))\n            .map(String::toUpperCase)\n            .peek(System.out::println)\n            .count();\n\n        System.out.println(\"Total: \" + cantidad);\n    }\n}",
+    "solutionExplanation": "The stream processes the list of Optionals step by step: isPresent filters the empty ones, get extracts the value, the following filters remove empty strings and the literal \"null\", and map converts to uppercase. peek prints without consuming the stream.",
+    "expectedOutput": "JAVA\nSTREAM\nOPTIONAL\nTotal: 3",
+    "lessonSlug": "optional"
+  }
+]

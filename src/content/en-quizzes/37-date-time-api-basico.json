@@ -1,0 +1,87 @@
+{
+  "id": "quiz-37-date-time-api-basico",
+  "lessonSlug": "date-time-api",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which Java package contains the modern API for handling dates and times?",
+      "options": ["java.util.date", "java.time", "java.calendar", "java.datetime"],
+      "correctIndex": 1,
+      "explanations": [
+        "java.util.date contains the old Date class, not the modern API.",
+        "Correct. java.time is the package introduced in Java 8 that offers LocalDate, LocalDateTime, LocalTime, and many more immutable classes.",
+        "java.calendar does not exist as a standard package.",
+        "java.datetime does not exist as a standard package."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "How do you get the current system date?",
+      "options": [
+        "new Date()",
+        "LocalDate.now()",
+        "Date.today()",
+        "LocalDate.getCurrent()"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "new Date() uses the old API, not java.time.",
+        "Correct. LocalDate.now() returns the current date based on the system clock, without time or time zone.",
+        "Date.today() does not exist as a method.",
+        "LocalDate.getCurrent() is not a valid method."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How do you add days to a date in java.time?",
+      "options": [
+        "date.addDays(5)",
+        "date.plusDays(5)",
+        "date + 5",
+        "date.increment(5)"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "addDays() does not exist in the java.time classes.",
+        "Correct. plusDays(n) returns a new date with n days added, since the java.time classes are immutable.",
+        "You cannot use the + operator directly with dates in Java.",
+        "increment() is not a java.time method."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How do you compare whether one date is before another in java.time?",
+      "options": [
+        "date1 < date2",
+        "date1.isBefore(date2)",
+        "date1.compareTo(date2) < 0",
+        "Both options B and C are correct"
+      ],
+      "correctIndex": 3,
+      "explanations": [
+        "You cannot compare dates with the < operator in Java.",
+        "isBefore() is the most readable way to compare dates.",
+        "compareTo() also works because LocalDate implements Comparable.",
+        "Correct. Both isBefore() and compareTo() < 0 are valid ways to check whether a date is before another."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "Which class is used to format and parse dates in java.time?",
+      "options": [
+        "DateFormat",
+        "SimpleDateFormat",
+        "DateTimeFormatter",
+        "DateFormatter"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "DateFormat is from java.util, the old API.",
+        "SimpleDateFormat is also from the old API and is not thread-safe.",
+        "Correct. DateTimeFormatter is the modern java.time class for formatting and parsing dates in a thread-safe way.",
+        "DateFormatter does not exist in the standard Java API."
+      ]
+    }
+  ]
+}

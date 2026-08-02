@@ -1,0 +1,11 @@
+{
+  "id": "mod-06",
+  "slug": "06-errores",
+  "number": 6,
+  "title": "Errors and Debugging",
+  "description": "Master error handling with exceptions and learn to debug code.",
+  "icon": "AlertTriangle",
+  "status": "disponible",
+  "lessonCount": 5,
+  "lessons": ["excepciones-tipos", "try-catch-finally", "throw-throws", "excepciones-personalizadas", "depuracion-testing"]
+}

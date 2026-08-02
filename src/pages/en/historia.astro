@@ -1,0 +1,66 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import Card from '@components/ui/Card.astro';
+---
+
+<ContentLayout title="Java History" description="Java timeline from Oak (1991) to Java 21 LTS" lang="en">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);">📜 Java History</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:1.2rem;">
+      The evolution of the language that changed enterprise programming.
+    </p>
+
+    <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Oak and the Origins (1991–1995)</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">James Gosling, Mike Sheridan and Patrick Naughton at Sun Microsystems created "Oak" (Java's original name) as a language for smart electronic devices. In 1995 it was renamed Java and officially launched focused on the emerging web.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Java 1.0 and the JVM (1996)</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">The "Write Once, Run Anywhere" motto became reality with the Java Virtual Machine. This allowed the same code to run on Windows, Mac and Linux without changes.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Java 5 (2004) — Generics & Annotations</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">One of the most significant updates. It introduced generics, enum types, annotations and the for-each loop.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Java 8 (2014) — The Turning Point</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">Lambdas, Stream API, Optional and the new Date API. It transformed Java into a functional-modern language without losing its object-oriented essence.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Java 11 (2018 LTS) & the New Release Cycle</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">Oracle switched to 6-month releases with LTS every 3 years. Java 11 was the first LTS after Java 8. HTTP Client became standard.</p>
+      </Card>
+
+      <Card class="retro-card" padding="lg">
+        <h3 style="font-family:var(--font-pixel);font-size:1rem;color:var(--win-text);margin-bottom:0.5rem;">Java 21 LTS (2023) — Current State</h3>
+        <p style="font-size:1.1rem;color:var(--win-muted);">Records, Pattern Matching, Sealed Classes, Text Blocks, Virtual Threads (Project Loom). The most modern version recommended for new projects.</p>
+      </Card>
+    </div>
+
+    <div class="retro-card" style="margin-top:var(--space-xl);padding:var(--space-lg);">
+      <h3 style="margin-bottom:var(--space-sm);font-family:var(--font-pixel);font-size:1rem;">🔗 Verified Sources</h3>
+      <ul style="list-style:disc;padding-left:var(--space-lg);font-size:1.1rem;color:var(--win-text);">
+        <li><a href="https://www.oracle.com/java/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">Oracle Java Official Site</a></li>
+        <li><a href="https://openjdk.org/projects/jdk/21/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">OpenJDK — JDK 21</a></li>
+        <li><a href="https://docs.oracle.com/en/java/javase/21/" target="_blank" rel="noopener noreferrer" style="color:var(--win-link);">Java 21 Documentation</a></li>
+      </ul>
+    </div>
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-card {
+    background-color: var(--win-bg) !important;
+    border: 2px solid var(--win-border) !important;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+  }
+</style>

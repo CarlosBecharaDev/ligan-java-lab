@@ -1,4 +1,6 @@
 ---
+import { localePrefix } from '@lib/course';
+
 export interface ExplorerLesson {
   slug: string;
   id: string;
@@ -24,9 +26,11 @@ export interface Props {
   currentSlug: string;
   currentId: string;
   headings?: ExplorerHeading[];
+  locale?: 'es' | 'en';
 }
 
-const { modules, currentModuleSlug, currentId, headings = [] } = Astro.props;
+const { modules, currentModuleSlug, currentId, headings = [], locale = 'es' } = Astro.props;
+const P = localePrefix(locale);
 const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 ---
 
@@ -49,7 +53,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
             <span class="lesson-explorer__caret" aria-hidden="true" data-caret>
               {expanded ? '▾' : '▸'}
             </span>
-            <span class="lesson-explorer__module-name" title={mod.slug.replace(/-/g, '_').toUpperCase()}>{mod.slug.replace(/-/g, '_').toUpperCase()}</span>
+            <span class="lesson-explorer__module-name" title={mod.title}>{mod.title}</span>
           </button>
 
           <ul id={listId} class="lesson-explorer__lessons" hidden={!expanded}>
@@ -58,7 +62,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
               return (
                 <li class="lesson-explorer__item">
                   <a
-                    href={`/tema/${lesson.id}`}
+                    href={`${P}/tema/${lesson.id}`}
                     class={`lesson-explorer__link${isActive ? ' lesson-explorer__link--active' : ''}`}
                     aria-current={isActive ? 'page' : undefined}
                     data-slug={lesson.slug}
@@ -103,7 +107,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     border-right: 2px solid var(--win-border);
     color: var(--win-text);
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
     scrollbar-gutter: stable;
   }
 
@@ -130,7 +134,8 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
   .lesson-explorer__tree {
     padding: 4px 0;
-    min-width: 0;
+    min-width: max-content;
+    min-height: 0;
   }
 
   .lesson-explorer__toggle {
@@ -165,8 +170,6 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
 
   .lesson-explorer__module-name {
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
     min-width: 0;
     flex: 1;
   }
@@ -222,8 +225,6 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     flex: 1;
     min-width: 0;
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
   }
 
   .lesson-explorer__check {
@@ -257,8 +258,7 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
   .lesson-explorer__subsection-text {
     flex: 1;
     min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   .lesson-explorer__subsection:hover {
@@ -291,6 +291,18 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
       box-shadow: var(--shadow-lg);
       transform: translateX(-100%);
       transition: transform var(--transition-slow);
+      overflow-x: hidden;
+    }
+
+    .lesson-explorer__tree {
+      min-width: 0;
+    }
+
+    .lesson-explorer__module-name,
+    .lesson-explorer__label,
+    .lesson-explorer__subsection-text {
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     body.explorer-drawer-open .lesson-explorer {
@@ -325,12 +337,14 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     function syncChecks() {
       const data = loadProgress();
       const done = new Set(data.lessons || []);
+      const T = (key: string): string =>
+        ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
       explorer.querySelectorAll('[data-slug]').forEach((link) => {
         const check = link.querySelector('[data-check]');
         const label = link.querySelector('[data-check-label]');
         const completed = done.has(link.getAttribute('data-slug') || '');
         if (check) check.textContent = completed ? '✓' : '';
-        if (label) label.textContent = completed ? 'Completado' : '';
+        if (label) label.textContent = completed ? T('explorer.completed') : '';
       });
     }
 
@@ -348,5 +362,6 @@ const visibleHeadings = headings.filter((h) => h.depth === 2 || h.depth === 3);
     syncChecks();
     document.addEventListener('progress-update', syncChecks);
     window.addEventListener('storage', syncChecks);
+    window.addEventListener('lang-change', syncChecks);
   })();
 </script>

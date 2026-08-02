@@ -1,0 +1,75 @@
+{
+  "id": "quiz-31-throw-throws-basico",
+  "lessonSlug": "throw-throws",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does the `throw` keyword do in Java?",
+      "options": [
+        "Declares that a method can throw an exception",
+        "Throws an exception explicitly in the code",
+        "Catches an exception that has already been thrown",
+        "Ignores an exception and continues execution"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Declaring exceptions is the job of throws, not throw.",
+        "Correct. The throw keyword is used to throw (instantiate and send) an exception explicitly in the code.",
+        "Catching exceptions is the job of the catch block, not throw.",
+        "throw does not ignore exceptions; it actively throws them."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does the `throws` keyword indicate in a method signature?",
+      "options": [
+        "That the method always throws an exception",
+        "That the method can throw that exception and the caller must handle it",
+        "That the method automatically catches all exceptions",
+        "That the method cannot throw exceptions of any kind"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throws does not mean the method always throws exceptions; it indicates it is possible.",
+        "Correct. throws declares in the method signature that the method may throw a specific exception, and the code calling the method must handle it or propagate it.",
+        "throws does not catch exceptions; it declares them.",
+        "throws indicates the possibility of exceptions, not the opposite."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "When is it appropriate to use throw in the code?",
+      "options": [
+        "In every method that uses String variables",
+        "When an invalid condition or an incorrect state is detected in the program",
+        "Only when working with text files",
+        "Always at the start of each method to prevent errors"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throw has no specific relationship with String variables.",
+        "Correct. throw should be used when an invalid condition is detected (null argument, out-of-range value, inconsistent state), indicating that the program cannot continue normally.",
+        "throw is not limited to file operations.",
+        "Using throw at the start of every method without reason is a bad practice."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Is it mandatory to use `throws` in a method signature?",
+      "options": [
+        "No, throws is never necessary",
+        "Yes, whenever the method can throw a checked exception",
+        "Only if the method has more than 3 parameters",
+        "Only when working with abstract classes"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "throws is mandatory in certain cases, not never.",
+        "Correct. For checked exceptions it is mandatory to declare them with throws in the method signature if they are not handled with try-catch inside the method.",
+        "The number of parameters does not determine whether throws is needed.",
+        "throws has nothing to do with abstract classes."
+      ]
+    }
+  ]
+}

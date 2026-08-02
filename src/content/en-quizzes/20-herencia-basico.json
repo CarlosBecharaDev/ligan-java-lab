@@ -1,0 +1,58 @@
+{
+  "id": "quiz-20-herencia-basico",
+  "lessonSlug": "herencia",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which keyword is used to make a class inherit from another?",
+      "options": [
+        "implements",
+        "extends",
+        "inherits",
+        "super"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "implements is used for interfaces, not for class inheritance.",
+        "Correct. extends declares that a class inherits from another.",
+        "inherits does not exist in Java.",
+        "super is used to access the parent, not to declare inheritance."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does super() do in a child class constructor?",
+      "options": [
+        "Creates a new object",
+        "Calls the superclass constructor",
+        "Stops execution",
+        "Returns a value"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It does not create objects.",
+        "Correct. super() calls the parent class constructor and must be the first line.",
+        "It stops nothing.",
+        "Constructors do not return values."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which annotation is used to indicate that a method overrides the parent's method?",
+      "options": [
+        "@Abstract",
+        "@Override",
+        "@Super",
+        "@Extend"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "@Abstract defines abstract methods.",
+        "Correct. @Override indicates that a method of the superclass is being overridden.",
+        "@Super does not exist.",
+        "@Extend does not exist."
+      ]
+    }
+  ]
+}

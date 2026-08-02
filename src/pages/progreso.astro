@@ -15,12 +15,12 @@ const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
 
 <ContentLayout title="Mi progreso" description="Estadísticas de aprendizaje desde tu navegador">
   <div style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui)">
-    <h1 data-i18n="progress.title" style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md)">📈 Mi progreso</h1>
+    <h1 data-i18n="progress.title" data-i18n-title style="font-family:var(--font-pixel);font-size:24px;margin-bottom:var(--space-md)">📈 Mi progreso</h1>
     <p data-i18n="progress.description" style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:18px">
       Tu progreso se guarda automáticamente en este navegador. Si cambias de dispositivo o limpias los datos, se reiniciará.
     </p>
 
-    <div id="progress-stats" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+    <div id="progress-stats" data-total-lessons={totalLessons} data-total-quizzes={totalQuizzes} data-total-exercises={totalExercises} style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
       <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
         <h3 id="lessons-count" style="font-family:var(--font-pixel);font-size:24px;color:var(--win-link);margin-bottom:var(--space-sm)">0</h3>
         <p style="color:var(--win-muted);margin:0"><span data-i18n="progress.lessons-completed">Lecciones completadas de</span> {totalLessons}</p>
@@ -75,34 +75,43 @@ const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
 
 <script>
   (function() {
-    const KEY = 'ligan-java-lab-progress';
-    let data;
+    interface ProgressData {
+      lessons: string[];
+      quizzes: string[];
+      exercises: string[];
+      streak: number;
+      lastDate: string | null;
+    }
+
+    const empty: ProgressData = { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
+    let data: ProgressData;
     try {
-      const raw = localStorage.getItem(KEY);
-      data = raw ? JSON.parse(raw) : { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null };
-    } catch { data = { lessons: [], quizzes: [], exercises: [], streak: 0, lastDate: null }; }
+      const raw = localStorage.getItem('ligan-java-lab-progress');
+      data = raw ? { ...empty, ...(JSON.parse(raw) as Partial<ProgressData>) } : empty;
+    } catch {
+      data = empty;
+    }
 
-    const totalLessons = {totalLessons};
-    const totalQuizzes = {totalQuizzes};
-    const totalExercises = {totalExercises};
+    const stats = document.getElementById('progress-stats')!;
+    const totalLessons = Number(stats.dataset.totalLessons ?? 0);
+    const totalQuizzes = Number(stats.dataset.totalQuizzes ?? 0);
+    const totalExercises = Number(stats.dataset.totalExercises ?? 0);
 
-    document.getElementById('lessons-count').textContent = data.lessons.length;
-    document.getElementById('quizzes-count').textContent = data.quizzes.length;
-    document.getElementById('exercises-count').textContent = data.exercises.length;
+    document.getElementById('lessons-count')!.textContent = data.lessons.length.toString();
+    document.getElementById('quizzes-count')!.textContent = data.quizzes.length.toString();
+    document.getElementById('exercises-count')!.textContent = data.exercises.length.toString();
 
     // Module progress bars
-    document.querySelectorAll('[data-module]').forEach(el => {
+    const moduleEls = Array.from(document.querySelectorAll<HTMLElement>('[data-module]'));
+    moduleEls.forEach((el) => {
       const moduleSlug = el.getAttribute('data-module');
-      const count = data.lessons.filter(s => {
-        // Find lesson slug from module
+      const count = data.lessons.filter((s) => {
         return document.querySelector(`[data-lesson-module="${moduleSlug}"]`) ||
                document.querySelector(`[data-lesson-slug="${s}"]`);
       }).length;
-      // For now, count by module pattern
-      const moduleLessons = {};
 
       if (el.classList.contains('module-progress-count')) {
-        el.textContent = count;
+        el.textContent = count.toString();
       }
       if (el.classList.contains('module-progress-bar')) {
         const max = parseInt(el.closest('div')?.querySelector('.module-progress-count')?.textContent?.split('/')[1] || '1');
@@ -114,12 +123,12 @@ const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
     const total = data.lessons.length + data.quizzes.length + data.exercises.length;
     const maxTotal = totalLessons + totalQuizzes + totalExercises;
     const pct = maxTotal > 0 ? Math.round((total / maxTotal) * 100) : 0;
-    document.getElementById('total-progress-bar').style.width = pct + '%';
-    document.getElementById('total-progress-label').textContent = pct + '%';
+    document.getElementById('total-progress-bar')!.style.width = pct + '%';
+    document.getElementById('total-progress-label')!.textContent = pct + '%';
 
     // Streak
     if (data.streak > 0) {
-      document.getElementById('streak-display').innerHTML = `
+      document.getElementById('streak-display')!.innerHTML = `
         <p style="font-family:var(--font-pixel);font-size:24px;color:var(--warning);margin:0">
           🔥 ${data.streak} <span data-i18n="progress.days">días</span>
         </p>

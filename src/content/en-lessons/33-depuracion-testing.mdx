@@ -1,0 +1,280 @@
+---
+title: "Debugging and Testing Techniques"
+slug: "depuracion-testing"
+module: "06-errores"
+level: "Intermediate"
+objectives:
+  - "Use assertions and System.out.println for basic debugging"
+  - "Read and efficiently analyze error stack traces"
+  - "Write simple unit tests with JUnit"
+  - "Use breakpoints and the step-by-step debugger"
+  - "Apply the divide and conquer technique to find bugs"
+prerequisites:
+  - "Haber completado Lección 29: Excepciones Checked y Unchecked"
+  - "Conocer bucles, arrays y métodos"
+history:
+  introducedIn: "Assertions since Java 1.4, JUnit popular since ~2002"
+  context: "Debugging is a fundamental programmer skill. Before modern debuggers, programmers used prints and the 'code commenting' technique. JUnit revolutionized unit testing with its simple and elegant framework."
+  evolution: "Java 1.0: System.out.println. Java 1.4: assert keyword. 2000s: JUnit 3 and 4. Java 8: JUnit 5 (Jupiter). Today there are advanced tools such as IntelliJ Debugger, VisualVM, and modern testing frameworks like JUnit 5, Mockito, and AssertJ."
+realWorldExamples:
+  - domain: "E-commerce — debugging tax calculation"
+    description: "An e-commerce system calculates the tax on products. Something goes wrong with the percentage. We use assertions and prints to find the error."
+    code: |
+      public class CalcularImpuesto {
+          static double calcImpuesto(double precio, String pais) {
+              double tasa = switch (pais.toLowerCase()) {
+                  case "colombia" -> 0.19;
+                  case "mexico" -> 0.16;
+                  case "argentina" -> 0.21;
+                  default -> 0.0;
+              };
+              double impuesto = precio * tasa;
+              // Assertion para depuración en desarrollo
+              assert impuesto >= 0 : "Impuesto negativo: " + impuesto;
+              return impuesto;
+          }
+
+          public static void main(String[] args) {
+              double[] precios = {100, 200, 150};
+              String pais = "colombia";
+
+              for (double p : precios) {
+                  double imp = calcImpuesto(p, pais);
+                  System.out.printf("Precio $%.0f → Impuesto $%.2f%n", p, imp);
+              }
+          }
+      }
+    result: |
+      Price $100 → Tax $19.00
+      Price $200 → Tax $38.00
+      Price $150 → Tax $28.50
+
+  - domain: "Health — validating average temperature"
+    description: "A system records temperatures and must calculate the average. The result doesn't match the expected one. We write a simple test to verify."
+    code: |
+      public class AnalisisTemperatura {
+          static double promedio(double[] temperaturas) {
+              if (temperaturas == null || temperaturas.length == 0) {
+                  throw new IllegalArgumentException("Array vacío o null");
+              }
+              double suma = 0;
+              for (double t : temperaturas) {
+                  suma += t;
+              }
+              return suma / temperaturas.length;  // potencial bug: división por entero
+          }
+
+          public static void main(String[] args) {
+              double[] temps = {36.5, 37.0, 38.2, 37.5, 36.8};
+              double prom = promedio(temps);
+              System.out.printf("Promedio: %.2f°C%n", prom);
+
+              // Prueba simple inline
+              double esperado = 37.2;
+              if (Math.abs(prom - esperado) > 0.01) {
+                  System.out.println("ERROR: Promedio esperado " + esperado +
+                      ", obtenido " + prom);
+              } else {
+                  System.out.println("OK: Promedio correcto");
+              }
+          }
+      }
+    result: |
+      Average: 37.20°C
+      OK: Average correct
+
+hasInteractive: false
+comparisons:
+  - title: "Debugging with prints vs debugger"
+    items:
+      - name: "Print Debugging (println)"
+        features:
+          simplicity: "Easy — you just add a line of code"
+          access: "Works in any environment"
+          info: "Only shows what you decide to print"
+          speed: "Requires recompiling and redeploying"
+      - name: "Debugger (breakpoints, step-through)"
+        features:
+          simplicity: "Requires a GUI or commands"
+          access: "You need an IDE that supports debugging"
+          info: "Shows ALL the state at every point"
+          speed: "No recompiling, you can change values live"
+    recommendation: "Use println for quick and simple debugging. Use the IDE debugger for complex problems where you need to see the full state at each step. Assertions (assert) are ideal for documenting preconditions in development."
+videos:
+  - url: ""
+    title: "Debugging techniques in Java"
+    channel: "HolaMundo"
+    summary: "Java tutorial in Latin American Spanish by Santiago — clear examples and practice"
+faqs:
+  - question: "What's the difference between assert and an exception?"
+    answer: "assert (Java 1.4) is for verifying conditions during development and testing. They are disabled in production by default. Exceptions are for mandatory error handling both in development and production. Use assert for method preconditions in your internal code."
+  - question: "What are unit tests and why are they important?"
+    answer: "Unit tests test the smallest unit of code (a method) in isolation. They let you detect bugs early, document expected behavior, and refactor with confidence. JUnit is the most popular framework."
+  - question: "How do I debug code without an IDE?"
+    answer: "Use System.out.println at strategic points. You can also use java.util.logging or System.err.println. The 'code commenting' technique (removing parts until you find the bug) also works without an IDE."
+sources:
+  - title: "Java 21 — Programmer's Guide: Debugging"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/specs/man/jdb.html"
+    date: "2026-07-27"
+  - title: "JUnit 5 User Guide"
+    url: "https://junit.org/junit5/docs/current/user-guide/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## Debugging with println
+
+The most basic and universal technique: printing values at strategic points:
+
+<CodeBlock lang="java" title="Debugging with println">
+{`public class DebugPrintln {
+    static int factorial(int n) {
+        System.out.println("factorial(" + n + ")");
+        if (n == 0) return 1;
+        int resultado = n * factorial(n - 1);
+        System.out.println("  → factorial(" + n + ") = " + resultado);
+        return resultado;
+    }
+
+    public static void main(String[] args) {
+        System.out.println("Result: " + factorial(4));
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+factorial(4)
+factorial(3)
+factorial(2)
+factorial(1)
+factorial(0)
+  → factorial(1) = 1
+  → factorial(2) = 2
+  → factorial(3) = 6
+  → factorial(4) = 24
+Result: 24
+```
+
+## Assertions (assert)
+
+`assert` verifies conditions during development. They are enabled with the `-ea` flag:
+
+```bash
+java -ea MiPrograma
+```
+
+<CodeBlock lang="java" title="Assertions for debugging">
+{`public class Aserciones {
+    static double raizCuadrada(double n) {
+        assert n >= 0 : "Cannot take the square root of a negative number: " + n;
+        return Math.sqrt(n);
+    }
+
+    public static void main(String[] args) {
+        System.out.println(raizCuadrada(25));  // 5.0
+        System.out.println(raizCuadrada(-1));  // throws AssertionError with -ea
+    }
+}`}
+</CodeBlock>
+
+## The "divide and conquer" technique
+
+To find a bug, keep removing parts of the code until you isolate the error:
+
+1. **Comment out half the code** and test if the error persists
+2. If it persists → the bug is in the uncommented half
+3. If it disappears → the bug is in the commented half
+4. **Repeat** until you isolate the bug
+
+## Writing unit tests with JUnit 5
+
+```java
+// Calculadora.java
+public class Calculadora {
+    static int sumar(int a, int b) { return a + b; }
+    static int restar(int a, int b) { return a - b; }
+    static int multiplicar(int a, int b) { return a * b; }
+    static int dividir(int a, int b) { return a / b; }
+}
+```
+
+```java
+// CalculadoraTest.java
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+class CalculadoraTest {
+    @Test
+    void testSumar() {
+        assertEquals(5, Calculadora.sumar(2, 3));
+        assertEquals(-1, Calculadora.sumar(-2, 1));
+        assertEquals(0, Calculadora.sumar(0, 0));
+    }
+
+    @Test
+    void testDividir() {
+        assertEquals(2, Calculadora.dividir(10, 5));
+        assertThrows(ArithmeticException.class,
+            () -> Calculadora.dividir(5, 0));
+    }
+}
+```
+
+## Reading a stack trace like an expert
+
+```
+Exception in thread "main" java.lang.NullPointerException
+    └──────────────────────────────────────↕──┘
+     Exception type                         Message
+
+    at com.app.Paciente.nombre.toUpperCase(Paciente.java:42)
+    └───────────────────┘
+     What was attempted (nombre.toUpperCase on a null name)
+
+    at com.app.Main.registrar(Main.java:15)
+    at com.app.Main.main(Main.java:5)
+    └── Stack of who called whom
+```
+
+**Steps:**
+1. Identify the exception **type** (`NullPointerException`)
+2. Read the **message** (null)
+3. Go to the **first 'at' line** that is YOUR code (`Paciente.java:42`)
+4. Open the file at the indicated line and look for what is `null`
+
+## The "rubber duck" technique
+
+Explain your code line by line to an inanimate object (a rubber duck). By verbalizing what each line does, you often find the error yourself without the duck saying anything.
+
+## Frequently asked questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

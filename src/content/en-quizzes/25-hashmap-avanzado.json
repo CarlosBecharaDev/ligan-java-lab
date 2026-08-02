@@ -1,0 +1,92 @@
+{
+  "id": "quiz-25-hashmap-avanzado",
+  "lessonSlug": "hashmap",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the time complexity of get() and put() in HashMap?",
+      "options": [
+        "O(1) average, O(n) worst case",
+        "O(n) always",
+        "O(log n) always",
+        "O(1) always"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. On average the operations are O(1) due to hashing, but in the worst case (many collisions) it can be O(n).",
+        "No. It is not O(n) always; it is O(1) on average.",
+        "No. It is not O(log n); it is O(1) on average.",
+        "No. It is not O(1) always; it can be O(n) in the worst case."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What type of objects can HashMap use as keys?",
+      "options": [
+        "Any object (uses hashCode and equals)",
+        "Only Strings",
+        "Only primitive types",
+        "Only objects of type Number"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. HashMap can use any object as a key, as long as it correctly implements hashCode() and equals().",
+        "No. It can use any object as a key, not only Strings.",
+        "No. It cannot use primitive types directly; autoboxing is used.",
+        "No. It is not limited to Number objects."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What happens if two keys have the same hashCode?",
+      "options": [
+        "Collision, resolved with chaining",
+        "An exception is thrown",
+        "The second key is ignored",
+        "The first one is overwritten"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. When two keys have the same hashCode, a collision occurs, and HashMap resolves it using chaining (linked lists).",
+        "No. It does not throw an exception for collisions; it handles them internally.",
+        "No. It does not ignore the key; it stores it in the same position using chaining.",
+        "No. It does not overwrite; it simply stores both in the same position with chaining."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "How can you iterate over a HashMap?",
+      "options": [
+        "entrySet(), keySet(), values()",
+        "forEach() only",
+        "keys() and values()",
+        "iterator() only"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. entrySet() returns key-value pairs, keySet() returns only keys, and values() returns only values.",
+        "No. Although forEach() is useful, it is not the only way to iterate.",
+        "No. keySet() (not keys()), values() and entrySet() are used.",
+        "No. Although iterator() works, there are more specific ways like entrySet()."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is LinkedHashMap?",
+      "options": [
+        "A HashMap that maintains insertion order",
+        "A HashMap with linked keys",
+        "A HashMap optimized for threads",
+        "A HashMap with unique values"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. LinkedHashMap extends HashMap and maintains the order in which elements were inserted.",
+        "No. It is not related to linked keys, but to insertion order.",
+        "No. It is not for threads; for that there is ConcurrentHashMap.",
+        "No. It is not about unique values, but about maintaining insertion order."
+      ]
+    }
+  ]
+}

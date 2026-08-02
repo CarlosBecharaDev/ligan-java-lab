@@ -1,0 +1,851 @@
+---
+title: "Abstract Classes and Interfaces"
+slug: "clases-abstractas-interfaces"
+description: "Master abstract classes and interfaces in Java. Learn when to use each one, how to implement multiple interfaces, and default methods."
+module: "04-poo"
+level: "Advanced"
+order: 22
+estimatedMinutes: 40
+objectives:
+  - "Create abstract classes with abstract and concrete methods"
+  - "Define and implement interfaces in Java"
+  - "Use implements to adopt multiple interfaces"
+  - "Apply default methods in interfaces"
+  - "Decide when to use an abstract class vs an interface"
+prerequisites:
+  - "herencia"
+  - "polimorfismo"
+realWorldExamples:
+  - domain: "Health"
+    description: "Practical Health example"
+    code: "// Abstract class: defines the base of a treatment\npublic abstract class Tratamiento {\n    String nombre;\n    int duracionDias;\n    String indicaciones;\n\n    Tratamiento(String nombre, int duracionDias, String indicaciones) {\n        this.nombre = nombre;\n        this.duracionDias = duracionDias;\n        this.indicaciones = indicaciones;\n    }\n\n    // Abstract method: each treatment calculates the cost differently\n    abstract double calcularCosto();\n\n    // Concrete method: reusable\n    voi..."
+    result: "Abstract class: defines the base of a treatment"
+  - domain: "E-commerce"
+    description: "Practical E-commerce example"
+    code: "// Interface: defines the payment contract\npublic interface Pago {\n    boolean procesarPago(double monto);\n    String getMetodo();\n    double calcularComision(double monto);\n}\n\n// Abstract class: base for all products\npublic abstract class Producto {\n    String nombre;\n    double precio;\n    int stock;\n\n    Producto(String nombre, double precio, int stock) {\n        this.nombre = nombre;\n        this.precio = Math.max(0, precio);\n        this.stock = Math.max(0, stock);\n    }\n\n    abstract..."
+    result: "Interface: defines the payment contract"
+hasInteractive: false
+comparisons:
+  - title: "Abstract Class vs Interface"
+    items:
+      - name: "Abstract Class"
+        features:
+          instantiation: "Cannot be instantiated"
+          methods: "Can have abstract methods"
+          purpose: "Define a contract"
+      - name: "Interface"
+        features:
+          strength: "Main strength of the approach"
+          weakness: "Limitation to consider"
+          best_for: "Ideal use case - right"
+    recommendation: "Use the option that best fits your specific case"
+videos: []
+faqs:
+  - question: "Can I instantiate an abstract class?"
+    answer: "No. Java prevents it at compile time. You must create subclasses that implement all the abstract methods and create objects from those subclasses."
+  - question: "Can I have an interface without any methods?"
+    answer: "Yes. It is called a \"marker interface\". Classic examples are `Serializable` and `Cloneable`. They serve to indicate that a class fulfills a certain characteristic."
+  - question: "What happens if an interface has default methods with the same name?"
+    answer: "If a class implements two interfaces with the same `default` method, the class MUST override that method to resolve the ambiguity. It can call the version from either interface with `InterfazA.super.metodo()`."
+  - question: "Can I inherit from a class and implement an interface at the same time?"
+    answer: "Yes. In Java a class can only extend one class (extends), but it can implement multiple interfaces. Syntax: `public class MiClase extends Padre implements A, B, C { }`"
+  - question: "When should I not use an abstract class?"
+    answer: "When you only need to define a contract without sharing code between classes. In that case, an interface is more flexible because it allows a class to implement several interfaces."
+sources:
+  - title: "Oracle - Abstract Methods and Classes"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html"
+    date: "2025-07-27"
+  - title: "Oracle - Interfaces"
+    url: "https://docs.oracle.com/javase/tutorial/java/IandI/createinterface.html"
+    date: "2025-07-27"
+  - title: "Baeldung - Abstract Class vs Interface in Java"
+    url: "https://www.baeldung.com/java-interface-vs-abstract-class"
+    date: "2025-07-27"
+  - title: "GeeksforGeeks - Abstract Class in Java"
+    url: "https://www.geeksforgeeks.org/abstract-class-in-java/"
+    date: "2025-07-27"
+status: "publicado"
+lastReviewed: "2025-07-27"
+---
+
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+
+## Learning Objectives
+
+By the end of this lesson, you will be able to:
+- Create abstract classes with abstract and concrete methods
+- Define and implement interfaces in Java
+- Use `implements` to adopt multiple interfaces
+- Apply `default` methods in interfaces
+- Decide when to use an abstract class vs an interface
+
+---
+
+## What is an Abstract Class?
+
+An **abstract class** is a class that cannot be instantiated directly. It serves as a base mold for other classes. It can contain abstract methods (without a body) and concrete methods (with an implementation).
+
+```java
+// You cannot do: new Forma() - Compilation error
+public abstract class Forma {
+    String nombre;
+
+    // Constructor (yes, you can have one)
+    Forma(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Abstract method: no body, subclasses MUST implement it
+    abstract double calcularArea();
+
+    // Concrete method: has an implementation
+    void mostrar() {
+        System.out.println(nombre + " - Área: " + calcularArea());
+    }
+}
+```
+
+<CodeBlock
+  title="Abstract class Forma"
+  lang="java"
+  code={`public abstract class Forma {
+    String nombre;
+
+    Forma(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Abstract method: each subclass defines how to calculate the area
+    abstract double calcularArea();
+
+    // Concrete method: reusable by all subclasses
+    void describir() {
+        System.out.println("Soy una " + nombre + " con área " + calcularArea());
+    }
+}
+
+// Circulo extends Forma and implements calcularArea()
+public class Circulo extends Forma {
+    double radio;
+
+    Circulo(double radio) {
+        super("Círculo");
+        this.radio = radio;
+    }
+
+    @Override
+    double calcularArea() {
+        return Math.PI * radio * radio;
+    }
+}
+
+// Rectangulo also extends Forma
+public class Rectangulo extends Forma {
+    double base, altura;
+
+    Rectangulo(double base, double altura) {
+        super("Rectángulo");
+        this.base = base;
+        this.altura = altura;
+    }
+
+    @Override
+    double calcularArea() {
+        return base * altura;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Circulo c = new Circulo(5);
+        Rectangulo r = new Rectangulo(4, 6);
+
+        c.describir();   // Soy un Círculo con área 78.53981633974483
+        r.describir();   // Soy un Rectángulo con área 24.0
+    }
+}`}
+/>
+
+**Rules of abstract classes:**
+- Declared with the keyword `abstract`
+- Cannot create objects with `new`
+- Can have constructors (which subclasses call with `super`)
+- Can have normal attributes
+- Abstract methods have no body (they end with `;`)
+
+---
+
+## Abstract Methods
+
+An **abstract method** is a method without an implementation. Child classes are required to implement it:
+
+```java
+public abstract class Animal {
+    String nombre;
+
+    Animal(String nombre) {
+        this.nombre = nombre;
+    }
+
+    // Abstract method: no body
+    abstract void hacerSonido();
+
+    // Concrete method: with a body
+    void dormir() {
+        System.out.println(nombre + " está durmiendo");
+    }
+}
+
+// The subclass MUST implement hacerSonido()
+public class Perro extends Animal {
+    Perro(String nombre) {
+        super(nombre);
+    }
+
+    @Override
+    void hacerSonido() {
+        System.out.println("Guau guau");
+    }
+}
+```
+
+<CodeBlock
+  title="Abstract and concrete methods"
+  lang="java"
+  code={`public abstract class Vehiculo {
+    String marca;
+    int velocidad;
+
+    Vehiculo(String marca, int velocidad) {
+        this.marca = marca;
+        this.velocidad = velocidad;
+    }
+
+    // Abstract methods: mandatory in subclasses
+    abstract void arrancar();
+    abstract void frenar();
+
+    // Concrete methods: shared by all subclasses
+    void mostrarInfo() {
+        System.out.println(marca + " - Velocidad máxima: " + velocidad + " km/h");
+    }
+}
+
+public class Auto extends Vehiculo {
+    Auto(String marca, int velocidad) {
+        super(marca, velocidad);
+    }
+
+    @Override
+    void arrancar() {
+        System.out.println(marca + " arranca con llave");
+    }
+
+    @Override
+    void frenar() {
+        System.out.println(marca + " frena con pedal");
+    }
+}
+
+public class Moto extends Vehiculo {
+    Moto(String marca, int velocidad) {
+        super(marca, velocidad);
+    }
+
+    @Override
+    void arrancar() {
+        System.out.println(marca + " arranca con botón");
+    }
+
+    @Override
+    void frenar() {
+        System.out.println(marca + " frena con manubrio");
+    }
+}`}
+/>
+
+---
+
+## What is an Interface?
+
+An **interface** defines a contract: what methods a class must have, regardless of how they are implemented. It is like a checklist that a class commits to fulfill.
+
+```java
+// Interface: only defines what must be done, not how
+public interface Notificable {
+    void enviarNotificacion(String mensaje);
+    boolean estaActiva();
+}
+
+// A class implements the interface and defines the "how"
+public class Paciente implements Notificable {
+    String nombre;
+    boolean activo;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+        this.activo = true;
+    }
+
+    @Override
+    public void enviarNotificacion(String mensaje) {
+        System.out.println("Notificando a " + nombre + ": " + mensaje);
+    }
+
+    @Override
+    public boolean estaActiva() {
+        return activo;
+    }
+}
+```
+
+<CodeBlock
+  title="Complete Notificable interface"
+  lang="java"
+  code={`public interface Notificable {
+    void enviarNotificacion(String mensaje);
+    boolean estaActiva();
+}
+
+public class Paciente implements Notificable {
+    String nombre;
+    boolean activo;
+
+    Paciente(String nombre) {
+        this.nombre = nombre;
+        this.activo = true;
+    }
+
+    @Override
+    public void enviarNotificacion(String mensaje) {
+        if (estaActiva()) {
+            System.out.println("SMS a " + nombre + ": " + mensaje);
+        } else {
+            System.out.println(nombre + " no está activo. No se envía.");
+        }
+    }
+
+    @Override
+    public boolean estaActiva() {
+        return activo;
+    }
+}
+
+// Another class can also implement Notificable
+public class Medico implements Notificable {
+    String nombre;
+    String especialidad;
+
+    Medico(String nombre, String especialidad) {
+        this.nombre = nombre;
+        this.especialidad = especialidad;
+    }
+
+    @Override
+    public void enviarNotificacion(String mensaje) {
+        System.out.println("Email a Dr. " + nombre + " (" + especialidad + "): " + mensaje);
+    }
+
+    @Override
+    public boolean estaActiva() {
+        return true; // Doctors are always active
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Paciente p = new Paciente("Carlos");
+        Medico m = new Medico("Rodríguez", "Cardiología");
+
+        p.enviarNotificacion("Su cita es a las 10am");
+        m.enviarNotificacion("Nuevo paciente asignado");
+    }
+}`}
+/>
+
+**Rules of interfaces:**
+- Declared with `interface` instead of `class`
+- Classes adopt them with `implements`
+- Methods are `public` by default
+- Cannot have constructors
+- Cannot have instance attributes (only `public static final`)
+
+---
+
+## implements: Multiple Interfaces
+
+A class can implement **several interfaces** at the same time. This allows an object to fulfill multiple contracts:
+
+```java
+public interface Pagable {
+    double calcularPago();
+    String metodoPago();
+}
+
+public interface Descontable {
+    double aplicarDescuento(double porcentaje);
+}
+
+// A product can be payable AND discountable
+public class Producto implements Pagable, Descontable {
+    String nombre;
+    double precio;
+
+    Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+
+    @Override
+    public double calcularPago() {
+        return precio;
+    }
+
+    @Override
+    public String metodoPago() {
+        return "Tarjeta de crédito";
+    }
+
+    @Override
+    public double aplicarDescuento(double porcentaje) {
+        return precio * (1 - porcentaje / 100);
+    }
+}
+```
+
+<CodeBlock
+  title="Multiple interfaces in action"
+  lang="java"
+  code={`public interface Pagable {
+    double calcularPago();
+    String metodoPago();
+}
+
+public interface Descontable {
+    double aplicarDescuento(double porcentaje);
+}
+
+public interface Serializable {
+    String serializar();
+}
+
+// Implements 3 interfaces at once
+public class Producto implements Pagable, Descontable, Serializable {
+    String nombre;
+    double precio;
+
+    Producto(String nombre, double precio) {
+        this.nombre = nombre;
+        this.precio = precio;
+    }
+
+    // From Pagable
+    @Override
+    public double calcularPago() {
+        return precio;
+    }
+
+    @Override
+    public String metodoPago() {
+        return "Tarjeta";
+    }
+
+    // From Descontable
+    @Override
+    public double aplicarDescuento(double porcentaje) {
+        return precio * (1 - porcentaje / 100);
+    }
+
+    // From Serializable
+    @Override
+    public String serializar() {
+        return nombre + "," + precio;
+    }
+
+    public static void main(String[] args) {
+        Producto p = new Producto("Laptop", 1500.00);
+
+        // As Pagable
+        System.out.println("Pago: $" + p.calcularPago());
+        System.out.println("Método: " + p.metodoPago());
+
+        // As Descontable
+        System.out.println("Con 10% desc: $" + p.aplicarDescuento(10));
+
+        // As Serializable
+        System.out.println("JSON: " + p.serializar());
+    }
+}`}
+/>
+
+---
+
+## Default Methods in Interfaces
+
+Since Java 8, interfaces can have `default` methods with their own implementation. This allows adding new functionality without breaking existing code:
+
+```java
+public interface Logueable {
+    void log(String mensaje);
+
+    // Default method: comes with an implementation
+    default void logError(String error) {
+        System.out.println("[ERROR] " + error);
+    }
+
+    default void logInfo(String info) {
+        System.out.println("[INFO] " + info);
+    }
+}
+
+public class Servicio implements Logueable {
+    @Override
+    public void log(String mensaje) {
+        System.out.println("[LOG] " + mensaje);
+    }
+
+    // logError() and logInfo() are already implemented by default
+    // It is not mandatory to override them
+}
+```
+
+<CodeBlock
+  title="Interface with default methods"
+  lang="java"
+  code={`public interface Calculadora {
+    double sumar(double a, double b);
+    double restar(double a, double b);
+
+    // Default method: calculates the average using sumar and restar
+    default double promedio(double a, double b) {
+        return sumar(a, b) / 2;
+    }
+
+    // Default method: shows the subtraction with formatting
+    default String restarMostrar(double a, double b) {
+        return a + " - " + b + " = " + restar(a, b);
+    }
+}
+
+public class CalculadoraBasica implements Calculadora {
+    @Override
+    public double sumar(double a, double b) {
+        return a + b;
+    }
+
+    @Override
+    public double restar(double a, double b) {
+        return a - b;
+    }
+
+    // promedio() and restarMostrar() come already implemented
+}
+
+public class Main {
+    public static void main(String[] args) {
+        CalculadoraBasica calc = new CalculadoraBasica();
+
+        System.out.println(calc.sumar(10, 5));       // 15.0
+        System.out.println(calc.restar(10, 5));       // 5.0
+        System.out.println(calc.promedio(10, 5));     // 7.5
+        System.out.println(calc.restarMostrar(10, 5)); // 10.0 - 5.0 = 5.0
+    }
+}`}
+/>
+
+---
+
+## Real Example: Health
+
+<CodeBlock
+  title="Abstract treatment + Notificable interface"
+  lang="java"
+  code={`// Abstract class: defines the base of a treatment
+public abstract class Tratamiento {
+    String nombre;
+    int duracionDias;
+    String indicaciones;
+
+    Tratamiento(String nombre, int duracionDias, String indicaciones) {
+        this.nombre = nombre;
+        this.duracionDias = duracionDias;
+        this.indicaciones = indicaciones;
+    }
+
+    // Abstract method: each treatment calculates the cost differently
+    abstract double calcularCosto();
+
+    // Concrete method: reusable
+    void mostrarResumen() {
+        System.out.println("Tratamiento: " + nombre);
+        System.out.println("Duración: " + duracionDias + " días");
+        System.out.println("Costo: $" + calcularCosto());
+        System.out.println("Indicaciones: " + indicaciones);
+    }
+}
+
+// Interface: notifications for patients
+public interface Notificable {
+    void enviarRecordatorio(String mensaje);
+    boolean puedeNotificar();
+}
+
+// Specific treatment: Antibiotic
+public class Antibiotico extends Tratamiento {
+    String tipoAntibiotico;
+
+    Antibiotico(String nombre, int dias, String tipo, String indicaciones) {
+        super(nombre, dias, indicaciones);
+        this.tipoAntibiotico = tipo;
+    }
+
+    @Override
+    double calcularCosto() {
+        return duracionDias * 15.50;  // $15.50 per day
+    }
+}
+
+// Specific treatment: Surgery
+public class Cirugia extends Tratamiento {
+    boolean requiereAnestesia;
+
+    Cirugia(String nombre, String indicaciones, boolean anestesia) {
+        super(nombre, 1, indicaciones);  // Surgery is 1 day
+        this.requiereAnestesia = anestesia;
+    }
+
+    @Override
+    double calcularCosto() {
+        double costo = 5000.00;
+        if (requiereAnestesia) costo += 1500.00;
+        return costo;
+    }
+}
+
+// Patient implements Notificable
+public class Paciente implements Notificable {
+    String nombre;
+    String cedula;
+    boolean activo;
+
+    Paciente(String nombre, String cedula) {
+        this.nombre = nombre;
+        this.cedula = cedula;
+        this.activo = true;
+    }
+
+    @Override
+    public void enviarRecordatorio(String mensaje) {
+        if (puedeNotificar()) {
+            System.out.println("Paciente " + nombre + ": " + mensaje);
+        }
+    }
+
+    @Override
+    public boolean puedeNotificar() {
+        return activo;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        // Create treatments
+        Tratamiento ab = new Antibiotico("Amoxicilina", 10, "Capsulas", "Tomar cada 8 horas");
+        Tratamiento cir = new Cirugia("Apendicectomía", "Ayuno 12 horas antes", true);
+
+        ab.mostrarResumen();
+        cir.mostrarResumen();
+
+        // Create notifiable patient
+        Paciente p = new Paciente("Carlos Mendoza", "12345678");
+        p.enviarRecordatorio("Recuerde tomar su Amoxicilina");
+        // Paciente Carlos Mendoza: Recuerde tomar su Amoxicilina
+    }
+}`}
+/>
+
+---
+
+## Real Example: E-commerce
+
+<CodeBlock
+  title="Pago interface + abstract Producto class"
+  lang="java"
+  code={`// Interface: defines the payment contract
+public interface Pago {
+    boolean procesarPago(double monto);
+    String getMetodo();
+    double calcularComision(double monto);
+}
+
+// Abstract class: base for all products
+public abstract class Producto {
+    String nombre;
+    double precio;
+    int stock;
+
+    Producto(String nombre, double precio, int stock) {
+        this.nombre = nombre;
+        this.precio = Math.max(0, precio);
+        this.stock = Math.max(0, stock);
+    }
+
+    abstract String getCategoria();
+
+    boolean hayStock() {
+        return stock > 0;
+    }
+
+    void mostrar() {
+        System.out.println(nombre + " | $" + precio + " | Stock: " + stock + " | " + getCategoria());
+    }
+}
+
+// Concrete product
+public class ProductoFisico extends Producto {
+    double pesoKg;
+
+    ProductoFisico(String nombre, double precio, int stock, double pesoKg) {
+        super(nombre, precio, stock);
+        this.pesoKg = pesoKg;
+    }
+
+    @Override
+    String getCategoria() {
+        return "Físico";
+    }
+}
+
+// Payment implementation with card
+public class PagoTarjeta implements Pago {
+    String numeroTarjeta;
+
+    PagoTarjeta(String numeroTarjeta) {
+        this.numeroTarjeta = numeroTarjeta;
+    }
+
+    @Override
+    public boolean procesarPago(double monto) {
+        System.out.println("Procesando $" + monto + " con tarjeta " + numeroTarjeta);
+        return true;  // Simulates approval
+    }
+
+    @Override
+    public String getMetodo() {
+        return "Tarjeta de crédito";
+    }
+
+    @Override
+    public double calcularComision(double monto) {
+        return monto * 0.035;  // 3.5% commission
+    }
+}
+
+// Payment implementation with bank transfer
+public class PagoTransferencia implements Pago {
+    String banco;
+
+    PagoTransferencia(String banco) {
+        this.banco = banco;
+    }
+
+    @Override
+    public boolean procesarPago(double monto) {
+        System.out.println("Transferencia de $" + monto + " via " + banco);
+        return true;
+    }
+
+    @Override
+    public String getMetodo() {
+        return "Transferencia " + banco;
+    }
+
+    @Override
+    public double calcularComision(double monto) {
+        return monto * 0.01;  // 1% commission
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        ProductoFisico laptop = new ProductoFisico("Laptop HP", 1500.00, 10, 2.5);
+        laptop.mostrar();
+
+        PagoTarjeta pago1 = new PagoTarjeta("****-****-****-1234");
+        PagoTransferencia pago2 = new PagoTransferencia("Banco Nación");
+
+        // Process payment with card
+        double monto = laptop.precio;
+        pago1.procesarPago(monto);
+        System.out.println("Comisión tarjeta: $" + pago1.calcularComision(monto));
+
+        // Process payment with bank transfer
+        pago2.procesarPago(monto);
+        System.out.println("Comisión transferencia: $" + pago2.calcularComision(monto));
+    }
+}`}
+/>
+
+---
+
+## When to Use Each One
+
+| Situation | Use Abstract Class | Use Interface |
+|-----------|---------------------|--------------|
+| Share code between subclasses | Yes | No |
+| You need attributes or a constructor | Yes | No |
+| "is-a type of" relationship | Yes | No |
+| Define a contract without implementation | No | Yes |
+| A class needs multiple contracts | No | Yes |
+| Add functionality without breaking code | No | Yes (default) |
+
+---
+
+## Summary
+
+| Concept | Description |
+|----------|-------------|
+| **Abstract class** | Class that is not instantiated; serves as a mold |
+| **Abstract method** | Method without a body that subclasses must implement |
+| **Interface** | Contract that defines what methods a class must have |
+| **implements** | Keyword to adopt an interface |
+| **Multiple interfaces** | A class can implement several interfaces |
+| **Default method** | Method in an interface with its own implementation |
+
+---
+
+## Frequently Asked Questions
+
+<details>
+<summary>Can I instantiate an abstract class?</summary>
+No. Java prevents it at compile time. You must create subclasses that implement all the abstract methods and create objects from those subclasses.
+</details>
+
+<details>
+<summary>Can I have an interface without any methods?</summary>
+Yes. It is called a "marker interface". Classic examples are `Serializable` and `Cloneable`. They serve to indicate that a class fulfills a certain characteristic.
+</details>
+
+<details>
+<summary>What happens if an interface has default methods with the same name?</summary>
+If a class implements two interfaces with the same `default` method, the class MUST override that method to resolve the ambiguity. It can call the version from either interface with `InterfazA.super.metodo()`.
+</details>
+
+<details>
+<summary>Can I inherit from a class and implement an interface at the same time?</summary>
+Yes. In Java a class can only extend one class (extends), but it can implement multiple interfaces. Syntax: `public class MiClase extends Padre implements A, B, C { }`
+</details>
+
+<details>
+<summary>When should I not use an abstract class?</summary>
+When you only need to define a contract without sharing code between classes. In that case, an interface is more flexible because it allows a class to implement several interfaces.
+</details>
+
+---
+
+## Sources and References
+
+- [Oracle - Abstract Methods and Classes](https://docs.oracle.com/javase/tutorial/java/IandI/abstract.html)
+- [Oracle - Interfaces](https://docs.oracle.com/javase/tutorial/java/IandI/createinterface.html)
+- [Baeldung - Abstract Class vs Interface in Java](https://www.baeldung.com/java-interface-vs-abstract-class)
+- [GeeksforGeeks - Abstract Class in Java](https://www.geeksforgeeks.org/abstract-class-in-java/)

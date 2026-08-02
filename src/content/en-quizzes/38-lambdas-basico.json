@@ -1,0 +1,92 @@
+{
+  "id": "quiz-38-lambdas-basico",
+  "lessonSlug": "lambdas",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is a lambda in Java?",
+      "options": [
+        "An anonymous function that can be passed as a value",
+        "A class with a single method",
+        "A static variable",
+        "A type of loop"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A lambda is an anonymous function that can be passed as an argument or assigned to a variable.",
+        "That describes a functional interface, not the lambda itself.",
+        "A lambda is not a static variable.",
+        "A lambda is not a loop."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the correct syntax of a lambda?",
+      "options": [
+        "(parameters) -> { body }",
+        "(parameters) => { body }",
+        "lambda(parameters) { body }",
+        "function(parameters) { body }"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. The lambda syntax uses an arrow (->) between parameters and body.",
+        "=> is JavaScript/TypeScript syntax, not Java.",
+        "lambda is not a keyword in Java.",
+        "function is not the lambda syntax in Java."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is a functional interface?",
+      "options": [
+        "An interface with a single abstract method",
+        "An interface with multiple methods",
+        "An abstract class",
+        "A static method"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. A functional interface has exactly one abstract method, which allows using lambdas with it.",
+        "An interface with multiple methods is not functional.",
+        "It is not an abstract class; it is an interface.",
+        "A static method does not define a functional interface."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What is Predicate<T>?",
+      "options": [
+        "A function that takes T and returns boolean",
+        "A function that takes T and returns R",
+        "A function that takes nothing and returns T",
+        "A function that takes two Ts and returns boolean"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Predicate<T> evaluates a condition: it takes a T and returns a boolean.",
+        "That is Function<T,R>.",
+        "That is Supplier<T>.",
+        "That would be a BiPredicate<T,T>."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is Function<T,R>?",
+      "options": [
+        "A function that takes T and returns R",
+        "A function that takes T and returns boolean",
+        "A function that takes nothing",
+        "A function that takes R and returns T"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. Function<T,R> transforms a value of type T into a value of type R.",
+        "That is Predicate<T>.",
+        "That is Supplier<T>.",
+        "That would be Function<R,T>."
+      ]
+    }
+  ]
+}

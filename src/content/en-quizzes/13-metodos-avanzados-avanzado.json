@@ -1,0 +1,58 @@
+{
+  "id": "quiz-13-metodos-avanzados-avanzado",
+  "lessonSlug": "metodos-avanzados",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What does mystery(5) print?\nstatic int mystery(int n) {\n    if (n <= 1) return n;\n    return mystery(n-1) + mystery(n-2);\n}",
+      "options": [
+        "3",
+        "5",
+        "8",
+        "13"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "The result is not 3.",
+        "Correct. This is Fibonacci: mystery(5) = 5.",
+        "8 is mystery(6).",
+        "13 is mystery(7)."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "When is it better to use recursion over iteration?",
+      "options": [
+        "Recursion is always better",
+        "For iterating over simple arrays",
+        "For hierarchical problems like trees or fractals",
+        "When the data types are unknown"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "Recursion has a memory cost.",
+        "For simple arrays, a for loop is more efficient.",
+        "Correct. Trees and divide-and-conquer problems are expressed naturally with recursion.",
+        "Types do not determine the strategy."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What would happen if you removed the base case from a recursive method?",
+      "options": [
+        "The method returns 0",
+        "The compiler reports an error",
+        "StackOverflowError because it never stops calling itself",
+        "The method returns null"
+      ],
+      "correctIndex": 2,
+      "explanations": [
+        "It does not return 0; it enters infinite recursion.",
+        "The compiler does not always detect this.",
+        "Correct. Without a base case, the method calls itself indefinitely until the stack overflows.",
+        "It does not return null; it never terminates."
+      ]
+    }
+  ]
+}

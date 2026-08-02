@@ -1,0 +1,58 @@
+{
+  "id": "quiz-14-sobrecarga-avanzado",
+  "lessonSlug": "sobrecarga",
+  "level": "avanzado",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is the result?\nstatic void f(Object o) { System.out.print(\"Object\"); }\nstatic void f(String s) { System.out.print(\"String\"); }\nf(null);",
+      "options": [
+        "Object",
+        "String",
+        "NullPointerException",
+        "Ambiguity error"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "null is compatible with both.",
+        "Correct. The compiler chooses String because it is more specific than Object.",
+        "null does not cause a NullPointerException here.",
+        "There is no ambiguity: String is a subtype of Object."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What is the difference between overloading and overriding?",
+      "options": [
+        "There is no difference",
+        "Overloading changes parameters; overriding keeps the same parameters in a child class",
+        "Overriding is about return type; overloading about void",
+        "Overloading is only for constructors"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "They are completely different concepts.",
+        "Correct. Overloading: same name, different parameters (same class). Overriding: same name, same parameters (child class redefines a parent method).",
+        "The return type is not the key difference.",
+        "Both apply to regular methods."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "Which one would the compiler choose for procesar(5, 3.0)?\nstatic void procesar(int a, double b)\nstatic void procesar(double a, int b)",
+      "options": [
+        "procesar(int, double)",
+        "procesar(double, int)",
+        "Ambiguity error",
+        "It runs both"
+      ],
+      "correctIndex": 0,
+      "explanations": [
+        "Correct. 5 is int (exact) and 3.0 is double (exact), which matches procesar(int, double).",
+        "For procesar(double, int), 5 would have to be promoted to double.",
+        "There is no ambiguity: procesar(int, double) is an exact match.",
+        "Only one method is executed."
+      ]
+    }
+  ]
+}

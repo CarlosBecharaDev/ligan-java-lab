@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-pattern-matching-facil",
+    "title": "instanceof pattern",
+    "difficulty": "facil",
+    "description": "Use instanceof with pattern matching to identify the type of an Object. Given an Object that can be a String, Integer or Double, print its type and value without doing manual casting.",
+    "template": "public class Main {\n    static void identificar(Object obj) {\n        // TODO: Use instanceof with pattern matching to:\n        // 1. If it is a String, print \"Text: \" + value\n        // 2. If it is an Integer, print \"Integer: \" + value\n        // 3. If it is a Double, print \"Decimal: \" + value\n        // 4. If it is none of them, print \"Unknown type\"\n        System.out.println(\"Unknown type\");\n    }\n\n    public static void main(String[] args) {\n        identificar(\"Hola mundo\");\n        identificar(42);\n        identificar(3.14);\n        identificar(true);\n    }\n}",
+    "hints": [
+      "instanceof with pattern: if (obj instanceof String s) { ... } - the variable 's' is already the casted String",
+      "You no longer need: (String) obj - pattern matching does it automatically",
+      "You can use chained else-if or switch to test several types"
+    ],
+    "solution": "public class Main {\n    static void identificar(Object obj) {\n        if (obj instanceof String s) {\n            System.out.println(\"Text: \" + s);\n        } else if (obj instanceof Integer i) {\n            System.out.println(\"Integer: \" + i);\n        } else if (obj instanceof Double d) {\n            System.out.println(\"Decimal: \" + d);\n        } else {\n            System.out.println(\"Unknown type\");\n        }\n    }\n\n    public static void main(String[] args) {\n        identificar(\"Hola mundo\");\n        identificar(42);\n        identificar(3.14);\n        identificar(true);\n    }\n}",
+    "solutionExplanation": "instanceof with pattern matching allows verifying the type and assigning the variable in a single step. No manual casting like (String) obj is needed. The pattern variable already has the correct type inside the if block.",
+    "expectedOutput": "Text: Hola mundo\nInteger: 42\nDecimal: 3.14\nUnknown type",
+    "lessonSlug": "pattern-matching"
+  },
+  {
+    "id": "ex-pattern-matching-normal",
+    "title": "switch with patterns",
+    "difficulty": "normal",
+    "description": "Create a method that receives an Object and uses switch with pattern matching to process different types: String (print length), Integer (print if it is even or odd), Double (print with 2 decimal places). For other types, print \"Not supported\".",
+    "template": "public class Main {\n\n    // TODO: Create method procesar(Object obj) that uses switch with pattern matching:\n    // case String s -> print \"Text of \" + s.length() + \" characters\"\n    // case Integer i -> print \"Even integer\" or \"Odd integer\"\n    // case Double d -> print \"Decimal: \" with 2 decimal format\n    // case default -> \"Not supported\"\n    static void procesar(Object obj) {\n\n    }\n\n    public static void main(String[] args) {\n        procesar(\"Java 21\");\n        procesar(10);\n        procesar(7);\n        procesar(2.71828);\n        procesar(true);\n    }\n}",
+    "hints": [
+      "switch (obj) { case String s -> ..., case Integer i -> ..., ... }",
+      "In Java 21+, switch with patterns replaces chained instanceof",
+      "String.format(\"%.2f\", d) formats a double to 2 decimal places"
+    ],
+    "solution": "public class Main {\n\n    static void procesar(Object obj) {\n        String resultado = switch (obj) {\n            case String s -> \"Text of \" + s.length() + \" characters\";\n            case Integer i -> (i % 2 == 0) ? \"Even integer: \" + i : \"Odd integer: \" + i;\n            case Double d -> String.format(\"Decimal: %.2f\", d);\n            default -> \"Not supported\";\n        };\n        System.out.println(resultado);\n    }\n\n    public static void main(String[] args) {\n        procesar(\"Java 21\");\n        procesar(10);\n        procesar(7);\n        procesar(2.71828);\n        procesar(true);\n    }\n}",
+    "solutionExplanation": "The switch with pattern matching in Java 21+ allows matching against types without casting. Each case assigns a variable with the correct type. The switch returns a value that is assigned to resultado.",
+    "expectedOutput": "Text of 7 characters\nEven integer: 10\nOdd integer: 7\nDecimal: 2.72\nNot supported",
+    "lessonSlug": "pattern-matching"
+  },
+  {
+    "id": "ex-pattern-matching-dificil",
+    "title": "Sealed + pattern",
+    "difficulty": "dificil",
+    "description": "Create a sealed hierarchy: seal the Forma interface allowing only Ciculo, Rectangulo and Triangulo to implement it. Each shape has an area() method. Use an exhaustive switch with patterns to calculate the area of each shape without using instanceof.",
+    "template": "// TODO: Create sealed interface Forma with permits Ciculo, Rectangulo, Triangulo\ninterface Forma {\n    double area();\n}\n\n// TODO: Create record Ciculo(double radio) that implements Forma\n// area() = Math.PI * radio * radio\n\n// TODO: Create record Rectangulo(double base, double altura) that implements Forma\n// area() = base * altura\n\n// TODO: Create record Triangulo(double base, double altura) that implements Forma\n// area() = (base * altura) / 2\n\npublic class Main {\n\n    // TODO: Create method calcularArea(Forma forma) using an exhaustive switch\n    // case Ciculo c -> ...\n    // case Rectangulo r -> ...\n    // case Triangulo t -> ...\n    static double calcularArea(Forma forma) {\n        return 0;\n    }\n\n    public static void main(String[] args) {\n        Forma[] formas = {\n            new Ciculo(5),\n            new Rectangulo(4, 6),\n            new Triangulo(3, 8)\n        };\n\n        for (Forma f : formas) {\n            System.out.println(f + \" -> Area: \" + String.format(\"%.2f\", calcularArea(f)));\n        }\n    }\n}",
+    "hints": [
+      "interface Forma permits Ciculo, Rectangulo, Triangulo {} seals the interface",
+      "Each implementation must be final (records are final by default)",
+      "The switch is exhaustive because the interface is sealed: you don't need default"
+    ],
+    "solution": "interface Forma permits Ciculo, Rectangulo, Triangulo {\n    double area();\n}\n\nrecord Ciculo(double radio) implements Forma {\n    @Override\n    public double area() { return Math.PI * radio * radio; }\n}\n\nrecord Rectangulo(double base, double altura) implements Forma {\n    @Override\n    public double area() { return base * altura; }\n}\n\nrecord Triangulo(double base, double altura) implements Forma {\n    @Override\n    public double area() { return (base * altura) / 2; }\n}\n\npublic class Main {\n\n    static double calcularArea(Forma forma) {\n        return switch (forma) {\n            case Ciculo c -> c.area();\n            case Rectangulo r -> r.area();\n            case Triangulo t -> t.area();\n        };\n    }\n\n    public static void main(String[] args) {\n        Forma[] formas = {\n            new Ciculo(5),\n            new Rectangulo(4, 6),\n            new Triangulo(3, 8)\n        };\n\n        for (Forma f : formas) {\n            System.out.println(f + \" -> Area: \" + String.format(\"%.2f\", calcularArea(f)));\n        }\n    }\n}",
+    "solutionExplanation": "The sealed interface with 'permits' restricts the implementations to Ciculo, Rectangulo and Triangulo. This allows the switch to be exhaustive: the compiler knows all possible types and does not require a default case. Each record implements area() and the switch delegates to the corresponding method.",
+    "expectedOutput": "Ciculo[radio=5.0] -> Area: 78.54\nRectangulo[base=4.0, altura=6.0] -> Area: 24.00\nTriangulo[base=3.0, altura=8.0] -> Area: 12.00",
+    "lessonSlug": "pattern-matching"
+  }
+]

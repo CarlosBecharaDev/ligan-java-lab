@@ -1,0 +1,74 @@
+---
+import ContentLayout from '@layouts/ContentLayout.astro';
+import Card from '@components/ui/Card.astro';
+import { glossaryEn as terms } from '@lib/glossary';
+---
+
+<ContentLayout title="Glossary" description="Complete Java glossary A-Z" lang="en">
+  <div class="retro-container" style="max-width:var(--content-width-lg);margin:0 auto;color:var(--win-text);font-family:var(--font-ui);">
+    <h1 style="font-family:var(--font-pixel);font-size:1.5rem;text-shadow:1px 1px 0 var(--win-border);">📖 Glossary</h1>
+    <p style="color:var(--win-muted);margin-bottom:var(--space-xl);font-size:1.2rem;">
+      Over 60 key Java terms explained simply, sorted alphabetically.
+    </p>
+
+    <nav style="display:flex;gap:var(--space-sm);margin-bottom:var(--space-xl);flex-wrap:wrap">
+      {terms.map(({ letter }) => (
+        <a href={`#letra-${letter.toLowerCase()}`} class="retro-btn">
+          {letter}
+        </a>
+      ))}
+    </nav>
+
+    {terms.map(({ letter, items }) => (
+      <div style="margin-bottom:var(--space-xl)" id={`letra-${letter.toLowerCase()}`}>
+        <h2 style="font-size:1.5rem;font-family:var(--font-pixel);color:var(--win-text);border-bottom:2px solid var(--win-border);padding-bottom:var(--space-xs);margin-bottom:var(--space-md)">{letter}</h2>
+        <div style="display:flex;flex-direction:column;gap:var(--space-md)">
+          {items.map(({ term, def }) => (
+            <Card class="retro-card" padding="md">
+              <h3 style="font-size:1.1rem;margin:0;color:var(--win-text);font-family:var(--font-pixel);margin-bottom:0.5rem;">{term}</h3>
+              <p style="color:var(--win-muted);margin:0;font-size:1.2rem;">{def}</p>
+            </Card>
+          ))}
+        </div>
+      </div>
+    ))}
+  </div>
+</ContentLayout>
+
+<style is:global>
+  .retro-container {
+    background-color: var(--win-bg);
+  }
+  .retro-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    background: var(--win-bevel-bg);
+    border: 2px solid var(--win-border);
+    border-top-color: var(--win-bevel-bright);
+    border-left-color: var(--win-bevel-bright);
+    border-right-color: var(--win-bevel-dark);
+    border-bottom-color: var(--win-bevel-dark);
+    text-decoration: none;
+    font-weight: 700;
+    color: var(--win-text);
+    font-family: var(--font-pixel);
+    font-size: 1rem;
+    box-shadow: 1px 1px 0 rgba(0,0,0,0.2);
+  }
+  .retro-btn:active {
+    border-top-color: var(--win-bevel-dark);
+    border-left-color: var(--win-bevel-dark);
+    border-right-color: var(--win-bevel-bright);
+    border-bottom-color: var(--win-bevel-bright);
+    background: var(--win-bevel-bg-active);
+  }
+  .retro-card {
+    background-color: var(--win-bg) !important;
+    border: 2px solid var(--win-border) !important;
+    box-shadow: 3px 3px 0 rgba(0, 0, 0, 0.3) !important;
+    border-radius: 0 !important;
+  }
+</style>

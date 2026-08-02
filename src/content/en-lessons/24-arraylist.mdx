@@ -1,0 +1,399 @@
+---
+title: "ArrayList — Dynamic Collection"
+slug: "arraylist"
+module: "05-colecciones"
+level: "Beginner"
+objectives:
+  - "Create and manipulate ArrayList with add, remove, get and set"
+  - "Use search methods: contains, indexOf, lastIndexOf"
+  - "Iterate over an ArrayList with for, for-each and Iterator"
+  - "Convert between arrays and ArrayList with Arrays.asList and toArray"
+  - "Understand when to use ArrayList instead of a traditional array"
+prerequisites:
+  - "Haber completado Lección 15: Arreglos"
+  - "Conocer tipos de datos primitivos y wrapper classes"
+history:
+  introducedIn: "ArrayList since Java 1.2 (Collections Framework)"
+  context: "ArrayList is part of the Java Collections Framework introduced in Java 1.2. Before Java 1.2, only fixed-size arrays existed. ArrayList provides an array-based list implementation that grows automatically as needed."
+  evolution: "Java 1.2 introduced ArrayList as part of the collections framework. Java 5 added generics for type safety. Java 8 added methods like removeIf and forEach. Java 10 allowed using var for type inference. Although ArrayList is the most common list implementation, Vector (synchronized) and CopyOnWriteArrayList (concurrent) are also available."
+realWorldExamples:
+  - domain: "E-commerce — shopping cart"
+    description: "An e-commerce system handles a shopping cart where products are added and removed dynamically. ArrayList can grow when the user adds products."
+    code: |
+      import java.util.ArrayList;
+
+      public class CarritoCompras {
+          public static void main(String[] args) {
+              ArrayList<String> carrito = new ArrayList<>();
+
+              // Agregar productos
+              carrito.add("Laptop");
+              carrito.add("Mouse");
+              carrito.add("Teclado");
+              System.out.println("Carrito: " + carrito);
+
+              // Agregar en posición específica
+              carrito.add(1, "Monitor");
+              System.out.println("Después de insertar: " + carrito);
+
+              // Eliminar producto
+              carrito.remove("Mouse");
+              System.out.println("Sin Mouse: " + carrito);
+
+              // Verificar si existe
+              if (carrito.contains("Laptop")) {
+                  System.out.println("Sí hay laptop en el carrito");
+              }
+
+              System.out.println("Total productos: " + carrito.size());
+          }
+      }
+    result: |
+      Cart: [Laptop, Mouse, Keyboard]
+      After inserting: [Laptop, Monitor, Mouse, Keyboard]
+      Without Mouse: [Laptop, Monitor, Keyboard]
+      Yes, there is a laptop in the cart
+      Total products: 3
+
+  - domain: "Healthcare — vital signs history"
+    description: "A hospital records patients' vital signs in real time. ArrayList stores the readings as they arrive, allowing search, sorting, and removal of outdated records."
+    code: |
+      import java.util.ArrayList;
+      import java.util.Collections;
+
+      public class HistorialVital {
+          public static void main(String[] args) {
+              ArrayList<Double> temperaturas = new ArrayList<>();
+
+              // Registrar lecturas
+              temperaturas.add(36.5);
+              temperaturas.add(37.2);
+              temperaturas.add(38.1);
+              temperaturas.add(37.8);
+              temperaturas.add(36.9);
+
+              System.out.println("Registros: " + temperaturas);
+              System.out.println("Primera: " + temperaturas.get(0));
+              System.out.println("Última: " + temperaturas.get(temperaturas.size() - 1));
+
+              // Ordenar
+              Collections.sort(temperaturas);
+              System.out.println("Ordenado: " + temperaturas);
+
+              // Calcular promedio
+              double suma = 0;
+              for (double t : temperaturas) suma += t;
+              System.out.printf("Promedio: %.1f°C%n",
+                  suma / temperaturas.size());
+          }
+      }
+    result: |
+      Records: [36.5, 37.2, 38.1, 37.8, 36.9]
+      First: 36.5
+      Last: 36.9
+      Sorted: [36.5, 36.9, 37.2, 37.8, 38.1]
+      Average: 37.3°C
+
+hasInteractive: false
+comparisons:
+  - title: "Array vs ArrayList"
+    items:
+      - name: "Array (int[])"
+        features:
+          size: "Fixed when created — does not change"
+          types: "Primitives and objects"
+          performance: "Faster, less memory overhead"
+          methods: "Only .length — no add, remove, contains"
+      - name: "ArrayList<Integer>"
+        features:
+          size: "Dynamic — grows and shrinks automatically"
+          types: "Only objects (uses wrapper: Integer, Double, etc.)"
+          performance: "Slightly slower due to object overhead"
+          methods: "add, remove, get, set, contains, indexOf, size"
+    recommendation: "Use an array when you know the exact size and need maximum performance. Use ArrayList when you need to add or remove elements frequently. For millions of primitive values, the array is more efficient."
+videos:
+  - url: ""
+    title: "ArrayList in Java"
+    channel: "Código Facilito"
+    summary: "Hands-on Java lesson — step-by-step explanation with exercises"
+faqs:
+  - question: "Can I store primitives in an ArrayList?"
+    answer: "Not directly. ArrayList only stores objects. For int use Integer, for double use Double, etc. Java performs autoboxing automatically: 'list.add(5)' becomes 'list.add(Integer.valueOf(5))'. This has a minimal memory and performance cost."
+  - question: "What happens if I try to access an index that does not exist?"
+    answer: "Java throws IndexOutOfBoundsException. Always verify that the index is between 0 and list.size() - 1 before accessing. Use list.size() to get the current number of elements."
+  - question: "How do I remove all elements from an ArrayList?"
+    answer: "Use list.clear() to remove all elements. This is more efficient than calling remove() in a loop. The ArrayList keeps its internal capacity, but the list becomes empty (size() returns 0)."
+sources:
+  - title: "Java 21 API — ArrayList"
+    url: "https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayList.html"
+    date: "2026-07-27"
+  - title: "Java Tutorials — Collections"
+    url: "https://docs.oracle.com/javase/tutorial/collections/"
+    date: "2026-07-27"
+status: "publicado"
+lastReviewed: "2026-07-27"
+---
+
+import LessonHeader from '@components/lesson/LessonHeader.astro';
+import CodeBlock from '@components/lesson/CodeBlock.astro';
+import ComparisonTable from '@components/lesson/ComparisonTable.astro';
+
+<LessonHeader
+  title={frontmatter.title}
+  module={frontmatter.module}
+  level={frontmatter.level}
+  objectives={frontmatter.objectives}
+  prerequisites={frontmatter.prerequisites}
+/>
+
+## What Is an ArrayList?
+
+An **ArrayList** is a collection that works like an array but with **dynamic size**: it grows and shrinks automatically when you add or remove elements. It is part of the **Java Collections Framework** since Java 1.2.
+
+```java
+import java.util.ArrayList;
+
+ArrayList<String> nombres = new ArrayList<>();
+nombres.add("Ana");
+nombres.add("Luis");
+System.out.println(nombres);  // [Ana, Luis]
+```
+
+**Important:** You must import `java.util.ArrayList` before using it.
+
+## Creating an ArrayList
+
+```java
+import java.util.ArrayList;
+
+// List of Strings
+ArrayList<String> frutas = new ArrayList<>();
+
+// List of integers (uses Integer, not int)
+ArrayList<Integer> numeros = new ArrayList<>();
+
+// List of decimals
+ArrayList<Double> precios = new ArrayList<>();
+
+// Empty list with initial capacity
+ArrayList<String> lista = new ArrayList<>(100);
+```
+
+<CodeBlock lang="java" title="Create and initialize ArrayList">
+{`import java.util.ArrayList;
+
+public class CrearArrayList {
+    public static void main(String[] args) {
+        // Create empty list
+        ArrayList<String> ciudades = new ArrayList<>();
+
+        // Add elements
+        ciudades.add("Bogotá");
+        ciudades.add("Medellín");
+        ciudades.add("Cali");
+        ciudades.add("Barranquilla");
+
+        System.out.println("Cities: " + ciudades);
+        System.out.println("Count: " + ciudades.size());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Cities: [Bogotá, Medellín, Cali, Barranquilla]
+Count: 4
+```
+
+## Adding and Removing Elements
+
+| Method | Description | Example |
+|--------|-------------|---------|
+| `add(element)` | Adds at the end | `list.add("A")` |
+| `add(index, element)` | Adds at a position | `list.add(0, "A")` |
+| `remove(element)` | Removes the first occurrence | `list.remove("A")` |
+| `remove(index)` | Removes by index | `list.remove(0)` |
+| `set(index, element)` | Replaces at a position | `list.set(0, "B")` |
+
+<CodeBlock lang="java" title="Add, remove and modify">
+{`import java.util.ArrayList;
+
+public class ModificarLista {
+    public static void main(String[] args) {
+        ArrayList<String> colores = new ArrayList<>();
+        colores.add("Red");
+        colores.add("Green");
+        colores.add("Blue");
+        System.out.println("Start: " + colores);
+
+        // Add at a specific position
+        colores.add(1, "Yellow");
+        System.out.println("Insert: " + colores);
+
+        // Modify an element
+        colores.set(2, "Orange");
+        System.out.println("Modify: " + colores);
+
+        // Remove by index
+        colores.remove(0);
+        System.out.println("Remove first: " + colores);
+
+        // Remove by value
+        colores.remove("Blue");
+        System.out.println("Remove Blue: " + colores);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+Start: [Red, Green, Blue]
+Insert: [Red, Yellow, Green, Blue]
+Modify: [Red, Yellow, Orange, Blue]
+Remove first: [Yellow, Orange, Blue]
+Remove Blue: [Yellow, Orange]
+```
+
+## Accessing Elements
+
+```java
+String elemento = list.get(0);    // First element
+String ultimo = list.get(list.size() - 1);  // Last
+```
+
+<CodeBlock lang="java" title="Access and search in ArrayList">
+{`import java.util.ArrayList;
+
+public class BuscarArrayList {
+    public static void main(String[] args) {
+        ArrayList<String> lenguajes = new ArrayList<>();
+        lenguajes.add("Java");
+        lenguajes.add("Python");
+        lenguajes.add("JavaScript");
+        lenguajes.add("Java");
+
+        // Access by index
+        System.out.println("First: " + lenguajes.get(0));
+        System.out.println("Third: " + lenguajes.get(2));
+
+        // Search
+        System.out.println("Contains Java?: " + lenguajes.contains("Java"));
+        System.out.println("Index of Python: " + lenguajes.indexOf("Python"));
+        System.out.println("Last Java: " + lenguajes.lastIndexOf("Java"));
+
+        // Size
+        System.out.println("Total: " + lenguajes.size());
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+First: Java
+Third: JavaScript
+Contains Java?: true
+Index of Python: 1
+Last Java: 3
+Total: 4
+```
+
+## Iterating over an ArrayList
+
+<CodeBlock lang="java" title="Three ways to traverse an ArrayList">
+{`import java.util.ArrayList;
+
+public class IterarArrayList {
+    public static void main(String[] args) {
+        ArrayList<String> frutas = new ArrayList<>();
+        frutas.add("Apple");
+        frutas.add("Pear");
+        frutas.add("Grape");
+        frutas.add("Orange");
+
+        // Way 1: classic for (with index)
+        System.out.println("--- classic for ---");
+        for (int i = 0; i < frutas.size(); i++) {
+            System.out.println(i + ": " + frutas.get(i));
+        }
+
+        // Way 2: for-each (without index)
+        System.out.println("--- for-each ---");
+        for (String fruta : frutas) {
+            System.out.println(fruta);
+        }
+
+        // Way 3: forEach with lambda (Java 8+)
+        System.out.println("--- forEach lambda ---");
+        frutas.forEach(f -> System.out.println(f));
+    }
+}`}
+</CodeBlock>
+
+## ArrayList and Primitive Types
+
+ArrayList does not accept primitives directly. Use the **wrapper classes**:
+
+| Primitive | Wrapper | ArrayList |
+|-----------|---------|-----------|
+| `int` | `Integer` | `ArrayList<Integer>` |
+| `double` | `Double` | `ArrayList<Double>` |
+| `boolean` | `Boolean` | `ArrayList<Boolean>` |
+| `char` | `Character` | `ArrayList<Character>` |
+
+```java
+ArrayList<Integer> numeros = new ArrayList<>();
+numeros.add(10);     // Autoboxing: int → Integer
+int valor = numeros.get(0);  // Unboxing: Integer → int
+```
+
+## Converting between Arrays and ArrayList
+
+<CodeBlock lang="java" title="Array ↔ ArrayList">
+{`import java.util.ArrayList;
+import java.util.Arrays;
+
+public class ConvertirArrays {
+    public static void main(String[] args) {
+        // Array → ArrayList
+        String[] arrayFrutas = {"Apple", "Pear", "Grape"};
+        ArrayList<String> listaFrutas = new ArrayList<>(
+            Arrays.asList(arrayFrutas)
+        );
+        System.out.println("List: " + listaFrutas);
+
+        // ArrayList → Array
+        String[] nuevoArray = listaFrutas.toArray(new String[0]);
+        System.out.println("Array: " + Arrays.toString(nuevoArray));
+
+        // Using var (Java 10+)
+        var listaNumeros = new ArrayList<>(Arrays.asList(1, 2, 3));
+        System.out.println("var: " + listaNumeros);
+    }
+}`}
+</CodeBlock>
+
+**Expected output:**
+```
+List: [Apple, Pear, Grape]
+Array: [Apple, Pear, Grape]
+var: [1, 2, 3]
+```
+
+## Frequently Asked Questions
+
+{frontmatter.faqs.map((faq) => (
+  <div class="faq">
+    <p class="faq__question">❓ {faq.question}</p>
+    <p class="faq__answer">{faq.answer}</p>
+  </div>
+))}
+
+## Sources
+
+{frontmatter.sources.map((source) => (
+  <p>
+    <a href={source.url} target="_blank" rel="noopener noreferrer">{source.title}</a>
+    {' — '}
+    {source.date}
+  </p>
+))}

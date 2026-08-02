@@ -1,0 +1,67 @@
+{
+  "id": "quiz-basico-introduccion",
+  "lessonSlug": "introduccion-java",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "Which tool do you need to install to be able to compile Java code?",
+      "options": ["JRE", "JVM", "JDK", "IDE"],
+      "correctIndex": 2,
+      "explanations": [
+        "The JRE only runs compiled programs, it does not have a compiler.",
+        "The JVM is only the bytecode interpreter, it does not include javac.",
+        "Correct. The JDK includes the javac compiler, the JRE, and development tools.",
+        "An IDE is an editor, it does not include the JDK by itself."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "What does Java's bytecode guarantee?",
+      "options": ["Greater speed than C++", "Cross-platform portability", "Absolute security", "That there are no logic errors"],
+      "correctIndex": 1,
+      "explanations": [
+        "Java is not faster than C++ in general.",
+        "Correct. Bytecode runs on any JVM, regardless of the operating system.",
+        "Java is secure, but no language guarantees absolute security.",
+        "Bytecode does not prevent logic errors in the program."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "What is the extension of Java source code?",
+      "options": [".class", ".jar", ".java", ".exe"],
+      "correctIndex": 2,
+      "explanations": [
+        "The .class file contains bytecode, not source code.",
+        ".jar is a compressed file with compiled classes.",
+        "Correct. Java source code is stored in .java files.",
+        ".exe is a Windows executable, not a Java one."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "Which command compiles a Java file?",
+      "options": ["java", "javac", "compile", "build"],
+      "correctIndex": 1,
+      "explanations": [
+        "java runs .class files, it does not compile.",
+        "Correct. javac is the Java compiler.",
+        "compile is not a valid Java command.",
+        "build is generic, it is not the Java command for compiling."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "What is the correct signature of the main method in Java?",
+      "options": ["static void main()", "public void main(String args)", "public static void main(String[] args)", "void main(String[] args)"],
+      "correctIndex": 2,
+      "explanations": [
+        "public and String[] args are missing.",
+        "static is missing and args must be String[].",
+        "Correct. The JVM looks for exactly this signature to start execution.",
+        "public static is missing."
+      ]
+    }
+  ]
+}

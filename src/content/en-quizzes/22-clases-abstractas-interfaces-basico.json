@@ -1,0 +1,109 @@
+{
+  "id": "quiz-22-clases-abstractas-interfaces-basico",
+  "lessonSlug": "clases-abstractas-interfaces",
+  "level": "basico",
+  "questions": [
+    {
+      "id": "q1",
+      "question": "What is an abstract class?",
+      "options": [
+        "A class that cannot be inherited",
+        "A class that cannot be instantiated directly",
+        "A class without methods",
+        "A private class"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Abstract classes can be inherited.",
+        "Correct. Objects can only be created from its subclasses.",
+        "It can have methods.",
+        "It is unrelated to visibility."
+      ]
+    },
+    {
+      "id": "q2",
+      "question": "Which keyword is used to implement an interface?",
+      "options": [
+        "extends",
+        "implements",
+        "interface",
+        "abstract"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "extends is for class inheritance.",
+        "Correct. implements establishes that the class fulfills the contract.",
+        "interface defines the interface.",
+        "abstract defines abstract classes."
+      ]
+    },
+    {
+      "id": "q3",
+      "question": "How many interfaces can a class implement?",
+      "options": [
+        "Only one",
+        "Multiple",
+        "None",
+        "It depends on the version"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Only one class can be extended.",
+        "Correct. Java allows implementing multiple interfaces.",
+        "It can implement none or several.",
+        "It does not depend on the version."
+      ]
+    },
+    {
+      "id": "q4",
+      "question": "What does an abstract method do?",
+      "options": [
+        "Returns null",
+        "It has no body; subclasses must implement it",
+        "It is static",
+        "It is private"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It is unrelated to null.",
+        "Correct. abstract void doSomething(); → no body, mandatory to implement.",
+        "It cannot be static.",
+        "It cannot be private."
+      ]
+    },
+    {
+      "id": "q5",
+      "question": "When do you use interface vs abstract class?",
+      "options": [
+        "Always interface",
+        "Abstract: to share code. Interface: to define a contract",
+        "Always abstract class",
+        "There is no difference"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "Not always.",
+        "Correct. Abstract class for shared code, interface for a pure contract.",
+        "Not always abstract.",
+        "There are differences."
+      ]
+    },
+    {
+      "id": "q6",
+      "question": "Can an interface have attributes?",
+      "options": [
+        "No, never",
+        "Only static final (constants)",
+        "Normal attributes",
+        "Only private ones"
+      ],
+      "correctIndex": 1,
+      "explanations": [
+        "It can have attributes, but they are constants.",
+        "Correct. Attributes in interfaces are implicitly public static final.",
+        "It cannot have normal attributes.",
+        "It cannot have private ones."
+      ]
+    }
+  ]
+}

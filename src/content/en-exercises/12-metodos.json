@@ -1,0 +1,50 @@
+[
+  {
+    "id": "ex-metodos-facil",
+    "title": "Average calculator",
+    "difficulty": "facil",
+    "description": "Create a method named promedio that takes three double numbers and returns their average.",
+    "template": "public class Promedio {\n    // TODO: Create the method promedio with 3 double parameters\n    // that returns the average of the three\n\n    public static void main(String[] args) {\n        double resultado = promedio(10.0, 8.0, 9.0);\n        System.out.printf(\"Average: %.2f%n\", resultado);\n    }\n}",
+    "hints": [
+      "The method must be static to be able to call it from main",
+      "The return type must be double because the average can have decimals",
+      "The average is the sum divided by 3"
+    ],
+    "solution": "public class Promedio {\n    static double promedio(double a, double b, double c) {\n        return (a + b + c) / 3.0;\n    }\n\n    public static void main(String[] args) {\n        double resultado = promedio(10.0, 8.0, 9.0);\n        System.out.printf(\"Average: %.2f%n\", resultado);\n    }\n}",
+    "solutionExplanation": "The method takes three doubles and returns the sum divided by 3.0. Using 3.0 instead of 3 ensures floating point division.",
+    "expectedOutput": "Average: 9.00",
+    "lessonSlug": "metodos"
+  },
+  {
+    "id": "ex-metodos-normal",
+    "title": "Password validator with method",
+    "difficulty": "normal",
+    "description": "Create a method esValida(String password) that returns true if the password has at least 8 characters and contains both letters and numbers.",
+    "template": "public class ValidadorPassword {\n    // TODO: Create the method esValida that returns boolean\n    // Check: length >= 8, at least one letter, at least one digit\n\n    public static void main(String[] args) {\n        String[] passwords = {\"abc12345\", \"short\", \"nosingles123\"};\n        for (String pwd : passwords) {\n            if (esValida(pwd)) {\n                System.out.println(pwd + \" -> Valid\");\n            } else {\n                System.out.println(pwd + \" -> Invalid\");\n            }\n        }\n    }\n}",
+    "hints": [
+      "Iterate over each character with a for loop",
+      "Use Character.isLetter(c) and Character.isDigit(c)",
+      "Use booleans to track whether you already found a letter and a digit"
+    ],
+    "solution": "public class ValidadorPassword {\n    static boolean esValida(String password) {\n        if (password.length() < 8) return false;\n        boolean tieneLetra = false;\n        boolean tieneDigito = false;\n        for (int i = 0; i < password.length(); i++) {\n            char c = password.charAt(i);\n            if (Character.isLetter(c)) tieneLetra = true;\n            if (Character.isDigit(c)) tieneDigito = true;\n        }\n        return tieneLetra && tieneDigito;\n    }\n\n    public static void main(String[] args) {\n        String[] passwords = {\"abc12345\", \"short\", \"nosingles123\"};\n        for (String pwd : passwords) {\n            if (esValida(pwd)) {\n                System.out.println(pwd + \" -> Valid\");\n            } else {\n                System.out.println(pwd + \" -> Invalid\");\n            }\n        }\n    }\n}",
+    "solutionExplanation": "The method checks the length first (early return). Then it iterates over the characters checking whether there is at least one letter and one digit. It only returns true if both conditions are met.",
+    "expectedOutput": "abc12345 -> Valid\nshort -> Invalid\nnosingles123 -> Invalid",
+    "lessonSlug": "metodos"
+  },
+  {
+    "id": "ex-metodos-dificil",
+    "title": "Unit converter with multiple methods",
+    "difficulty": "dificil",
+    "description": "Create 4 static methods: kmAMillas, kgALibras, celsiusAFahrenheit, litrosAGalones. Each one takes a double and returns the converted result.",
+    "template": "public class ConversorUnidades {\n    // TODO: Create 4 conversion methods:\n    // kmAMillas(km) -> km * 0.621371\n    // kgALibras(kg) -> kg * 2.20462\n    // celsiusAFahrenheit(c) -> (c * 9/5) + 32\n    // litrosAGalones(l) -> l * 0.264172\n\n    public static void main(String[] args) {\n        System.out.printf(\"100 km   = %.2f miles%n\", kmAMillas(100.0));\n        System.out.printf(\"75 kg    = %.2f pounds%n\", kgALibras(75.0));\n        System.out.printf(\"37C      = %.2f F%n\", celsiusAFahrenheit(37.0));\n        System.out.printf(\"20 liters= %.2f gallons%n\", litrosAGalones(20.0));\n    }\n}",
+    "hints": [
+      "Each method is static and has a single double parameter",
+      "The return type of each method is double",
+      "The formulas are in the exercise description"
+    ],
+    "solution": "public class ConversorUnidades {\n    static double kmAMillas(double km) { return km * 0.621371; }\n    static double kgALibras(double kg) { return kg * 2.20462; }\n    static double celsiusAFahrenheit(double c) { return (c * 9.0 / 5.0) + 32; }\n    static double litrosAGalones(double l) { return l * 0.264172; }\n\n    public static void main(String[] args) {\n        System.out.printf(\"100 km   = %.2f miles%n\", kmAMillas(100.0));\n        System.out.printf(\"75 kg    = %.2f pounds%n\", kgALibras(75.0));\n        System.out.printf(\"37C      = %.2f F%n\", celsiusAFahrenheit(37.0));\n        System.out.printf(\"20 liters= %.2f gallons%n\", litrosAGalones(20.0));\n    }\n}",
+    "solutionExplanation": "Each method encapsulates a conversion formula. They are static so they can be called from main without creating objects.",
+    "expectedOutput": "100 km   = 62.14 miles\n75 kg    = 165.35 pounds\n37C      = 98.60 F\n20 liters= 5.28 gallons",
+    "lessonSlug": "metodos"
+  }
+]
