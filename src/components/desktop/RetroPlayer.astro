@@ -435,7 +435,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   /* --- Panel de letras: pantalla holográfica --- */
   .wmp-lyrics {
     position: relative;
-    min-height: 100px;
+    height: 100px;
     padding: 8px 10px;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--wmp-violet) 55%, transparent);
@@ -453,7 +453,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     text-align: center;
   }
   .wmp-lyrics--closed {
-    min-height: 56px;
+    height: 56px;
   }
   .wmp-lyrics--closed .wmp-lyrics-status,
   .wmp-lyrics--closed .wmp-lyrics-current,
@@ -527,7 +527,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 60px;
+    height: 60px;
   }
 
   .wmp-lyrics-status {
@@ -797,13 +797,13 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
       bottom: calc(58px + env(safe-area-inset-bottom, 0px));
     }
     .wmp-lyrics {
-      min-height: 96px;
+      height: 96px;
     }
     .wmp-lyrics--closed {
-      min-height: 54px;
+      height: 54px;
     }
     .wmp-lyrics-holo {
-      min-height: 58px;
+      height: 58px;
     }
     .wmp-volume input {
       width: 100%;
