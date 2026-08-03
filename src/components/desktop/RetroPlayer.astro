@@ -928,6 +928,9 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
 
   function startParticles() {
     if (!lyricsCanvas || particleRaf !== null) return;
+    // Si el panel está oculto aún no tiene dimensiones reales: no dibujamos
+    // hasta que sea visible para no estirar un canvas de 1x1.
+    if (lyricsPanel.offsetWidth === 0 || lyricsPanel.offsetHeight === 0) return;
     sizeCanvas();
     particleRaf = requestAnimationFrame(drawParticles);
   }
@@ -1560,12 +1563,31 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   closeBtn.addEventListener("click", () => setPlayerVisible(false));
   lyricsToggle.addEventListener("click", toggleLyrics);
 
-  // Redimensionar el canvas cuando cambie el tamaño del panel
-  window.addEventListener("resize", () => {
-    if (!lyricsPanel.classList.contains("wmp-lyrics--closed") && particleRaf !== null) {
-      sizeCanvas();
+  // Dimensiona el canvas según el panel visible y arranca partículas si es
+  // momento. Se dispara al cambiar de tamaño o al hacerse visible el panel.
+  const ensureParticlesSized = () => {
+    if (lyricsPanel.classList.contains("wmp-lyrics--closed")) {
+      stopParticles();
+      return;
     }
-  });
+    if (lyricsPanel.offsetWidth === 0 || lyricsPanel.offsetHeight === 0) {
+      stopParticles();
+      return;
+    }
+    sizeCanvas();
+    startParticles();
+  };
+
+  // Observa el panel de letras: redime el canvas cuando cambia su tamaño o
+  // cuando pasa a visible (p. ej. al navegar entre módulos).
+  if (typeof ResizeObserver !== "undefined") {
+    const obs = new ResizeObserver(() => ensureParticlesSized());
+    obs.observe(lyricsPanel);
+    if (window.matchMedia("(max-width: 640px)").matches) {
+      obs.observe(player);
+    }
+  }
+  window.addEventListener("resize", ensureParticlesSized);
 
   // Resalta la frase de letra activa según el progreso estimado
   window.setInterval(updateLyricHighlight, 500);
@@ -1589,7 +1611,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
       lyricsPanel.classList.remove("wmp-lyrics--closed");
       lyricsToggle.setAttribute("aria-pressed", "true");
       updateLyricsToggleLabel(true);
-      startParticles();
+      ensureParticlesSized();
       renderLyric(true);
     }
     if (savedUI.muted) {
