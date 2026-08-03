@@ -955,6 +955,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
 
   // --- Mostrar / ocultar reproductor con el botón flotante ---
   const PLAYER_POS_KEY = "wmp-player-pos";
+  const PLAYER_UI_KEY = "wmp-player-ui";
 
   function savePlayerPos() {
     const left = /^(\d+)px$/.exec(player.style.left || "");
@@ -968,6 +969,48 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     } catch {
       // almacenamiento no disponible: ignorar
     }
+  }
+
+  function savePlayerUI() {
+    try {
+      localStorage.setItem(
+        PLAYER_UI_KEY,
+        JSON.stringify({
+          visible: !player.classList.contains("wmp-player--hide"),
+          minimized: player.classList.contains("wmp-player--min"),
+          volume: Number(volumeSlider.value) || 0,
+          muted: volumeToggle.getAttribute("aria-pressed") === "true",
+          lyricsOpen: !lyricsPanel.classList.contains("wmp-lyrics--closed"),
+        })
+      );
+    } catch {
+      // almacenamiento no disponible: ignorar
+    }
+  }
+
+  function loadPlayerUI(): {
+    visible: boolean;
+    minimized: boolean;
+    volume: number;
+    muted: boolean;
+    lyricsOpen: boolean;
+  } | null {
+    try {
+      const raw = localStorage.getItem(PLAYER_UI_KEY);
+      if (!raw) return null;
+      const parsed = JSON.parse(raw);
+      if (!parsed || typeof parsed !== "object") return null;
+      return {
+        visible: parsed.visible !== false,
+        minimized: Boolean(parsed.minimized),
+        volume: typeof parsed.volume === "number" ? parsed.volume : 70,
+        muted: Boolean(parsed.muted),
+        lyricsOpen: Boolean(parsed.lyricsOpen),
+      };
+    } catch {
+      // almacenamiento corrupto o no disponible
+    }
+    return null;
   }
 
   function loadPlayerPos(): { left: number; top: number } | null {
@@ -1036,6 +1079,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
       "aria-label",
       visible ? T("player.minimize") : T("player.show")
     );
+    savePlayerUI();
   }
 
   let suppressFabClick = false;
@@ -1235,6 +1279,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     } else {
       stopParticles();
     }
+    savePlayerUI();
   }
 
   // Desplaza el cuerpo del reproductor para que la frase actual quede a la vista
@@ -1451,6 +1496,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
         volumeToggle.setAttribute("aria-pressed", next === 0 ? "true" : "false");
         volumeToggle.setAttribute("aria-label", next === 0 ? T("player.unmute") : T("player.mute"));
         await setVolume(next);
+        savePlayerUI();
       } catch (err) {
         showStatus(messageForError(err), "error");
       }
@@ -1493,6 +1539,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
         volumeToggle.setAttribute("aria-label", T("player.unmute"));
         await setVolume(0);
       }
+      savePlayerUI();
     } catch (err) {
       showStatus(messageForError(err), "error");
     }
@@ -1501,11 +1548,13 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   // [-] minimiza el cuerpo; [X] oculta el reproductor
   collapseBtn.addEventListener("click", () => {
     player.classList.toggle("wmp-player--min");
+    savePlayerUI();
   });
   // Al minimizar, clic en el recuadro holo restaura el reproductor completo
   lyricsPanel.addEventListener("click", () => {
     if (player.classList.contains("wmp-player--min")) {
       player.classList.remove("wmp-player--min");
+      savePlayerUI();
     }
   });
   closeBtn.addEventListener("click", () => setPlayerVisible(false));
@@ -1521,12 +1570,40 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   // Resalta la frase de letra activa según el progreso estimado
   window.setInterval(updateLyricHighlight, 500);
 
-  // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB).
-  // En escritorio se muestra y, si el usuario ya lo movió, restaura su posición.
-  if (window.matchMedia("(max-width: 640px)").matches) {
-    setPlayerVisible(false);
+  // Estado inicial: en móvil el reproductor arranca oculto (solo el FAB),
+  // salvo que el usuario lo haya dejado visible. En escritorio se muestra y,
+  // si el usuario ya lo movió, restaura su posición. Todo el estado de la UI
+  // (visible, minimizado, volumen, letras) se restaura desde localStorage.
+  const savedUI = loadPlayerUI();
+  const isMobileInit = window.matchMedia("(max-width: 640px)").matches;
+  if (isMobileInit) {
+    setPlayerVisible(savedUI ? savedUI.visible : false);
   } else {
     setPlayerVisible(true);
+  }
+  if (savedUI) {
+    if (savedUI.minimized) {
+      player.classList.add("wmp-player--min");
+    }
+    if (savedUI.lyricsOpen) {
+      lyricsPanel.classList.remove("wmp-lyrics--closed");
+      lyricsToggle.setAttribute("aria-pressed", "true");
+      updateLyricsToggleLabel(true);
+      startParticles();
+      renderLyric(true);
+    }
+    if (savedUI.muted) {
+      volumeSlider.value = "0";
+    } else {
+      volumeSlider.value = String(savedUI.volume);
+    }
+    volumeToggle.setAttribute("aria-pressed", savedUI.muted ? "true" : "false");
+    volumeToggle.setAttribute(
+      "aria-label",
+      savedUI.muted ? T("player.unmute") : T("player.mute")
+    );
+    if (savedUI.volume > 0) lastVolumeBeforeMute = savedUI.volume;
+    savePlayerUI();
   }
 
   if (isConnected()) {
@@ -1535,7 +1612,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     showDisconnectedUI();
   }
 
-  updateLyricsToggleLabel(false);
+  updateLyricsToggleLabel(savedUI ? savedUI.lyricsOpen : false);
 
   // Al cambiar de idioma, re-traduce los estados dinámicos del reproductor
   window.addEventListener("lang-change", () => {
