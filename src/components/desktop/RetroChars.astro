@@ -45,35 +45,34 @@
 
   .rc-bubble {
     position: absolute;
-    bottom: 90px;
+    bottom: 92px;
     left: 50%;
     transform: translateX(-50%);
     background: var(--bubble-bg);
     color: var(--bubble-text);
-    padding: 8px 16px;
-    border-radius: 16px;
+    padding: 10px 16px;
+    border-radius: 14px;
     font-family: var(--font-ui);
     font-size: 0.9rem;
+    font-weight: 500;
     white-space: nowrap;
-    box-shadow: 4px 4px 0 rgba(0,0,0,0.4);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35), 3px 3px 0 rgba(0,0,0,0.35);
     border: 2px solid var(--bubble-border);
-    border-top-color: var(--win-bevel);
-    border-left-color: var(--win-bevel);
     opacity: 0;
-    transition: opacity 0.4s;
+    transform: translateX(-50%) translateY(6px) scale(0.95);
+    transition: opacity 0.3s ease, transform 0.3s ease;
     pointer-events: none;
     z-index: 10;
-    white-space: nowrap;
     text-align: center;
     line-height: 1.4;
     text-shadow: none;
-    image-rendering: pixelated;
+    filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));
   }
 
   .rc-bubble::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
@@ -84,7 +83,10 @@
     filter: drop-shadow(0 3px 0 var(--bubble-border));
   }
 
-  .rc-bubble--visible { opacity: 1; }
+  .rc-bubble--visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
 
   @media (max-width: 767px) {
     .rc-stage { display: none; }
@@ -119,31 +121,33 @@
       index: number;
     }
 
-    var MSGS = [
-      '¡Sigue así! 🚀', 'Tú puedes 💪', 'Java te espera ☕',
-      'Nunca pares ✨', 'Cada línea cuenta 📝', 'El éxito es constancia 🎯',
-      'Código tras código 💻', 'Eres un crack 🔥', 'Masteriza Java 🏆',
-      'Sigue programando ⚡', 'Más fuerte que nunca 💥', 'Tú eres el mejor 🌟',
-      'No te rindas 🙌', 'A darle con todo 🤘', 'Programa sueños 🚀',
-      'Java: write once, run anywhere ☕', 'JDK 21 LTS es la versión más reciente',
-      'Java tiene 9 tipos primitivos', 'int es el entero de 32 bits',
-      'double es el decimal de 64 bits', 'boolean solo es true o false',
-      'String es inmutable en Java', 'Java usa JIT compilation',
-      'JVM: Java Virtual Machine', 'Garbage collector limpia memoria 🗑️',
-      'ArrayList<T> es genérico desde Java 5', 'HashMap<K,V> almacena pares clave-valor',
-      'Java 8 trajo lambdas y streams', 'El método main es la entrada',
-      'public static void main(String[] args)', 'System.out.println para imprimir',
-      'Scanner lee entrada del usuario', 'extends es para herencia',
-      'implements es para interfaces', 'Polimorfismo: un objeto muchas formas',
-      'Encapsulación con private y getters', 'Overloading: mismo nombre dif. parámetros',
-      'Enum son constantes con tipo seguro', 'switch acepta String desde Java 7',
-      'break corta un bucle o switch', 'continue salta a la siguiente iteración',
-      'Arrays tienen tamaño fijo en Java', 'for-each itera colecciones fácilmente',
-      'while se ejecuta mientras condición true', 'do-while ejecuta al menos una vez',
-      'Métodos static pertenecen a la clase', 'this referencia al objeto actual',
-      'super llama al constructor padre', 'final evita herencia o reasignación',
-      '¡Nunca dejes de aprender! 📚', 'Un bug al día mantiene el estrés 💀',
-    ];
+var MSGS: string[] = [];
+
+    try {
+      // Elige el idioma de la página (es por defecto, en para /en/).
+      var curLang = 'es';
+      if (document.documentElement && document.documentElement.getAttribute('data-lang') === 'en') {
+        curLang = 'en';
+      } else if ((window as any).__i18n && (window as any).__i18n.getLang) {
+        curLang = (window as any).__i18n.getLang();
+      }
+      var tFn = (window as any).__i18n && (window as any).__i18n.t
+        ? (window as any).__i18n.t
+        : function (_k: string) { return ''; };
+      for (var mi = 1; mi <= 51; mi++) {
+        var txt = tFn('char.msg' + mi);
+        if (txt && txt.indexOf('char.msg') !== 0) MSGS.push(txt);
+      }
+      if (curLang === 'en' && MSGS.length === 0) {
+        // fallback mínimo si el script i18n aún no se expone
+        MSGS = ['Keep going!','You can do it','Java is waiting for you'];
+      }
+      if (MSGS.length === 0) {
+        MSGS = ['¡Sigue así!','Tú puedes','Java te espera'];
+      }
+    } catch (e) {
+      MSGS = ['¡Sigue así!','Tú puedes','Java te espera'];
+    }
 
     var SPRITES: Record<string, string[]> = {
       mario: [
