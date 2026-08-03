@@ -525,9 +525,23 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     z-index: 2;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
-    height: 60px;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .wmp-lyrics-holo .wmp-lyrics-head {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+  .wmp-lyrics-holo .wmp-lyrics-status,
+  .wmp-lyrics-holo .wmp-lyrics-next {
+    flex: 0 0 auto;
+  }
+  .wmp-lyrics-holo .wmp-lyrics-current {
+    flex: 1 1 0;
+    min-height: 0;
   }
 
   .wmp-lyrics-status {
