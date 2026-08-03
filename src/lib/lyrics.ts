@@ -86,9 +86,13 @@ export async function getSyncedLyrics(
 ): Promise<LyricData | null> {
   const params = new URLSearchParams({ track_name: trackName, artist_name: artistName });
   try {
-    const res = await fetch(`${LRCLIB_API}/search?${params.toString()}`, {
-      headers: { "User-Agent": USER_AGENT },
-    });
+    // User-Agent es un header prohibido en el navegador: asignarlo provoca que
+    // la petición lance en iOS Safari. Solo se envía en runtime server-side.
+    const init: RequestInit =
+      typeof process !== "undefined" && process.release?.name === "node"
+        ? { headers: { "User-Agent": USER_AGENT, Accept: "application/json" } }
+        : { headers: { Accept: "application/json" } };
+    const res = await fetch(`${LRCLIB_API}/search?${params.toString()}`, init);
     if (!res.ok) return null;
     const results = (await res.json()) as LrclibResult[];
     const best = pickBest(results, durationMs);
