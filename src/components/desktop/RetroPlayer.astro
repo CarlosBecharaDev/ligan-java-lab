@@ -140,8 +140,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     position: fixed;
     top: 12px;
     right: 12px;
-    width: 250px;
-    max-width: 270px;
+    width: 216px;
+    max-width: 236px;
     z-index: 500;
     font-family: "Perfect DOS VGA 437", "VT323", "MS Sans Serif", monospace;
     border: 2px solid var(--wmp-line);
@@ -249,7 +249,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   }
 
   .wmp-body {
-    padding: 8px;
+    padding: 6px;
     max-height: calc(100vh - 90px);
     overflow-y: auto;
   }
@@ -257,7 +257,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   .wmp-panel {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 6px;
   }
 
   .wmp-msg {
@@ -325,8 +325,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
 
   /* --- Portada + nombre dentro del recuadro holográfico --- */
   .wmp-lyrics-art {
-    width: 56px;
-    height: 56px;
+    width: 48px;
+    height: 48px;
     flex-shrink: 0;
     background: radial-gradient(circle at 30% 30%, var(--wmp-btn-top), var(--wmp-deep) 72%);
     border: 2px solid color-mix(in srgb, var(--wmp-violet) 60%, transparent);
@@ -348,7 +348,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   .wmp-lyrics-head {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     width: 100%;
     justify-content: center;
     margin-bottom: 2px;
@@ -370,7 +370,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     text-overflow: ellipsis;
   }
   .wmp-lyrics-track .wmp-track-name {
-    font-size: 10px;
+    font-size: 9.5px;
     color: var(--wmp-text);
     font-weight: bold;
     text-shadow: 0 0 8px color-mix(in srgb, var(--wmp-glow) 50%, transparent);
@@ -390,9 +390,9 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 28px;
-    height: 24px;
-    font-size: 13px;
+    width: 26px;
+    height: 22px;
+    font-size: 12px;
     line-height: 1;
     animation: wmp-toggle-holo 2.6s ease-in-out infinite;
   }
@@ -435,8 +435,8 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
   /* --- Panel de letras: pantalla holográfica --- */
   .wmp-lyrics {
     position: relative;
-    min-height: 122px;
-    padding: 12px 12px;
+    min-height: 100px;
+    padding: 8px 10px;
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--wmp-violet) 55%, transparent);
     border-radius: 3px;
@@ -453,7 +453,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     text-align: center;
   }
   .wmp-lyrics--closed {
-    min-height: 66px;
+    min-height: 56px;
   }
   .wmp-lyrics--closed .wmp-lyrics-status,
   .wmp-lyrics--closed .wmp-lyrics-current,
@@ -527,7 +527,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 80px;
+    min-height: 60px;
   }
 
   .wmp-lyrics-status {
@@ -619,15 +619,15 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     align-items: center;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 6px;
+    gap: 5px;
   }
   .wmp-controls button {
     background: linear-gradient(180deg, var(--wmp-btn-top) 0%, var(--wmp-btn-bottom) 100%);
     color: var(--wmp-text);
     border: 2px solid var(--wmp-line);
     box-shadow: 1px 1px 0 #000;
-    width: 28px;
-    height: 24px;
+    width: 26px;
+    height: 22px;
     cursor: pointer;
     font-size: 11px;
     display: grid;
@@ -663,14 +663,14 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     align-items: center;
     justify-content: center;
     gap: 6px;
-    margin-top: 6px;
+    margin-top: 4px;
     width: 100%;
   }
   .wmp-volume-icon {
     display: grid;
     place-items: center;
-    width: 24px;
-    height: 22px;
+    width: 22px;
+    height: 20px;
     background: linear-gradient(180deg, var(--wmp-btn-top) 0%, var(--wmp-btn-bottom) 100%);
     border: 2px solid var(--wmp-line);
     box-shadow: 1px 1px 0 #000;
@@ -708,7 +708,7 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
     opacity: 1;
   }
   .wmp-volume input {
-    width: 90px;
+    width: 80px;
     accent-color: var(--wmp-violet);
   }
 
@@ -797,13 +797,13 @@ import { SkipBack, Play, Pause, SkipForward, Volume2 } from 'lucide-astro';
       bottom: calc(58px + env(safe-area-inset-bottom, 0px));
     }
     .wmp-lyrics {
-      min-height: 110px;
+      min-height: 96px;
     }
     .wmp-lyrics--closed {
-      min-height: 62px;
+      min-height: 54px;
     }
     .wmp-lyrics-holo {
-      min-height: 72px;
+      min-height: 58px;
     }
     .wmp-volume input {
       width: 100%;
