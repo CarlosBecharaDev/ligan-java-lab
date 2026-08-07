@@ -202,8 +202,11 @@ var MSGS: string[] = [];
     var bodyColors: Record<string, string> = { mario:'#1565C0', scorpion:'#222', pacman:'#FFD700', sonic:'#0D47A1', megaman:'#1565C0', wizard:'#7B1FA2' };
     var chars: RetroChar[] = [];
     var INT = 5000;
-    var ACT = 3;
-    var MIN_DIST = 350;
+    // Menos personajes activos a la vez que antes (3 -> 2): con el espacio
+    // horizontal ya recortado para no pisar los iconos, mostrar 3 globos a
+    // la vez no dejaba aire suficiente y terminaban tapándose entre ellos.
+    var ACT = 2;
+    var BUBBLE_GAP = 24; // separación mínima en px entre globos activos
     var usedMsgIds: number[] = [];
 
     // Pre-assign unique starting messages to each char so no repeats at init
@@ -306,35 +309,23 @@ var MSGS: string[] = [];
       return a;
     }
 
-    function getOffset(ch: RetroChar) {
-      var rect = ch.el.getBoundingClientRect();
-      return rect.left + rect.width / 2;
+    // Los globos se miden por su ancho real ya renderizado (no por la
+    // distancia entre personajes), porque el ancho depende del largo del
+    // mensaje y el rango horizontal disponible varía según la pantalla.
+    // El globo sigue en el DOM con opacity:0 mientras no está activo, así
+    // que su tamaño real ya se puede medir antes de mostrarlo.
+    function bubbleRect(ch: RetroChar): DOMRect {
+      return ch.bubble.getBoundingClientRect();
     }
 
-    function pickNonOverlapping(): RetroChar[] {
-      var pool = chars.slice();
-      var best: RetroChar[] = [];
-      for (var attempt = 0; attempt < 50; attempt++) {
-        var pick = shuffle(pool.slice()).slice(0, ACT);
-        var ok = true;
-        for (var a = 0; a < pick.length && ok; a++) {
-          for (var b = a + 1; b < pick.length && ok; b++) {
-            var dist = Math.abs(getOffset(pick[a]) - getOffset(pick[b]));
-            if (dist < MIN_DIST) ok = false;
-          }
-        }
-        if (ok) { best = pick; break; }
-        if (attempt === 0) best = pick;
-      }
-      if (best.length === 0) best = pool.slice(0, ACT);
-      return best;
+    function bubblesOverlap(a: RetroChar, b: RetroChar): boolean {
+      var ra = bubbleRect(a);
+      var rb = bubbleRect(b);
+      return ra.right + BUBBLE_GAP >= rb.left && rb.right + BUBBLE_GAP >= ra.left;
     }
 
     function update() {
-      chars.forEach(function(ch) { ch.bubble.className = 'rc-bubble'; });
-
-      // Pick 3 non-overlapping chars
-      var active = pickNonOverlapping();
+      chars.forEach(function(ch) { ch.bubble.classList.remove('rc-bubble--visible'); });
 
       // Build an index pool of unused messages
       var available: number[] = [];
@@ -346,16 +337,46 @@ var MSGS: string[] = [];
         if (!taken) available.push(mi);
       }
 
-      // Assign a unique message to each active char
-      active.forEach(function(ch) {
-        if (available.length > 0) {
-          var ri = Math.floor(Math.random() * available.length);
-          ch.msgIdx = available[ri];
-          available.splice(ri, 1);
-        } else {
-          // Fallback: cycle if all messages are somehow taken
-          ch.msgIdx = (ch.msgIdx + 1) % MSGS.length;
+      // Prueba varias combinaciones de personajes + mensajes y se queda con
+      // la primera cuyos globos, ya con su ancho real, no se solapen entre
+      // sí. Si ninguna combinación calza tras varios intentos, se usa la
+      // última probada (degrada con gracia en vez de trabarse).
+      var pool = chars.slice();
+      var chosen: RetroChar[] = [];
+      var chosenMsgIdx: number[] = [];
+
+      for (var attempt = 0; attempt < 30; attempt++) {
+        var pick = shuffle(pool.slice()).slice(0, ACT);
+        var trialAvailable = available.slice();
+        var trialMsgIdx: number[] = [];
+
+        pick.forEach(function(ch) {
+          var msgIdx: number;
+          if (trialAvailable.length > 0) {
+            var ri = Math.floor(Math.random() * trialAvailable.length);
+            msgIdx = trialAvailable[ri];
+            trialAvailable.splice(ri, 1);
+          } else {
+            msgIdx = (ch.msgIdx + 1) % MSGS.length;
+          }
+          trialMsgIdx.push(msgIdx);
+          ch.bubble.textContent = MSGS[msgIdx];
+        });
+
+        var ok = true;
+        for (var a = 0; a < pick.length && ok; a++) {
+          for (var b = a + 1; b < pick.length && ok; b++) {
+            if (bubblesOverlap(pick[a], pick[b])) ok = false;
+          }
         }
+
+        chosen = pick;
+        chosenMsgIdx = trialMsgIdx;
+        if (ok) break;
+      }
+
+      chosen.forEach(function(ch, idx) {
+        ch.msgIdx = chosenMsgIdx[idx];
         ch.bubble.textContent = MSGS[ch.msgIdx];
         ch.bubble.classList.add('rc-bubble--visible');
       });

@@ -102,7 +102,6 @@ const firstLesson = lessonPlan[0];
           <span class="challenge__icon">✦</span>
           <span class="challenge__text">
             <span data-i18n="home.challenge-label">Reto del día ·</span>
-            <span id="home-challenge-lesson">{firstLesson?.title ?? ''}</span> ·
             <strong data-i18n="home.xp-badge">+50 XP</strong>
           </span>
           <a href={`${P}/tema/${firstLesson?.slug ?? ''}#ejercicios`} class="challenge__link" id="home-challenge-link" data-i18n="home.start">Iniciar →</a>
@@ -806,7 +805,6 @@ const firstLesson = lessonPlan[0];
       var ctaEl = document.getElementById('home-cta');
       var fillEl = document.getElementById('home-progress-fill');
       var pctEl = document.getElementById('home-progress-pct');
-      var challengeLessonEl = document.getElementById('home-challenge-lesson');
       var challengeLinkEl = document.getElementById('home-challenge-link');
 
       if (moduleEl) moduleEl.textContent = next.moduleHeading;
@@ -816,7 +814,6 @@ const firstLesson = lessonPlan[0];
       if (ctaEl) ctaEl.setAttribute('href', P + '/tema/' + next.slug);
       if (fillEl) fillEl.style.width = pct + '%';
       if (pctEl) pctEl.textContent = String(pct);
-      if (challengeLessonEl) challengeLessonEl.textContent = next.title;
       if (challengeLinkEl) challengeLinkEl.setAttribute('href', P + '/tema/' + next.slug + '#ejercicios');
     }
 
