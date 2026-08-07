@@ -6,7 +6,7 @@
     {
       "id": "q1",
       "question": "Which JDK component is responsible for converting bytecode into native operating system instructions?",
-      "options": ["javac", "The JVM (Just-In-Time compiler)", "The classloader", "The garbage collector"],
+      "options": ["javac", "The JVM (via its JIT compiler)", "The classloader", "The garbage collector"],
       "correctIndex": 1,
       "explanations": [
         "javac compiles source code (.java) into bytecode (.class), not into native instructions.",

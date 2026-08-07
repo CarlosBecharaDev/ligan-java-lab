@@ -11,6 +11,12 @@ const totalLessons = lessons.length;
 const totalQuizzes = quizzes.length;
 const totalExercises = exercisesColl.reduce((sum, ex) => sum + ex.data.length, 0);
 const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
+
+// Slugs de lección que pertenecen a cada módulo, para poder calcular en el
+// cliente cuántas lecciones completadas (localStorage) caen en cada módulo.
+const moduleLessonSlugs: Record<string, string[]> = Object.fromEntries(
+  modulesOrdered.map((m) => [m.data.slug, m.data.lessons])
+);
 ---
 
 <ContentLayout title="Mi progreso" description="Estadísticas de aprendizaje desde tu navegador">
@@ -20,7 +26,7 @@ const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
       Tu progreso se guarda automáticamente en este navegador. Si cambias de dispositivo o limpias los datos, se reiniciará.
     </p>
 
-    <div id="progress-stats" data-total-lessons={totalLessons} data-total-quizzes={totalQuizzes} data-total-exercises={totalExercises} style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
+    <div id="progress-stats" data-total-lessons={totalLessons} data-total-quizzes={totalQuizzes} data-total-exercises={totalExercises} data-module-lessons={JSON.stringify(moduleLessonSlugs)} style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:var(--space-md);margin-bottom:var(--space-xl)">
       <div style="background:var(--win-bg);border:2px solid var(--win-border);padding:var(--space-lg);box-shadow:2px 2px 0 rgba(0,0,0,0.5)">
         <h3 id="lessons-count" style="font-family:var(--font-pixel);font-size:24px;color:var(--win-link);margin-bottom:var(--space-sm)">0</h3>
         <p style="color:var(--win-muted);margin:0"><span data-i18n="progress.lessons-completed">Lecciones completadas de</span> {totalLessons}</p>
@@ -97,18 +103,26 @@ const modulesOrdered = modules.sort((a, b) => a.data.number - b.data.number);
     const totalQuizzes = Number(stats.dataset.totalQuizzes ?? 0);
     const totalExercises = Number(stats.dataset.totalExercises ?? 0);
 
+    let moduleLessonSlugs: Record<string, string[]> = {};
+    try {
+      moduleLessonSlugs = JSON.parse(stats.dataset.moduleLessons ?? '{}');
+    } catch {
+      moduleLessonSlugs = {};
+    }
+
     document.getElementById('lessons-count')!.textContent = data.lessons.length.toString();
     document.getElementById('quizzes-count')!.textContent = data.quizzes.length.toString();
     document.getElementById('exercises-count')!.textContent = data.exercises.length.toString();
 
-    // Module progress bars
+    // Module progress bars: cuenta cuántas lecciones completadas (localStorage)
+    // pertenecen a cada módulo, usando el mapeo módulo → slugs de lección
+    // enviado desde el servidor (antes esto comparaba contra selectores DOM
+    // que no existen en esta página y siempre daba 0).
     const moduleEls = Array.from(document.querySelectorAll<HTMLElement>('[data-module]'));
     moduleEls.forEach((el) => {
-      const moduleSlug = el.getAttribute('data-module');
-      const count = data.lessons.filter((s) => {
-        return document.querySelector(`[data-lesson-module="${moduleSlug}"]`) ||
-               document.querySelector(`[data-lesson-slug="${s}"]`);
-      }).length;
+      const moduleSlug = el.getAttribute('data-module') ?? '';
+      const lessonSlugs = moduleLessonSlugs[moduleSlug] ?? [];
+      const count = data.lessons.filter((s) => lessonSlugs.includes(s)).length;
 
       if (el.classList.contains('module-progress-count')) {
         el.textContent = count.toString();

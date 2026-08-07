@@ -1,19 +1,55 @@
 ---
 import LiganLogo from '@components/ui/LiganLogo.astro';
 import ThemeSelector from './ThemeSelector.astro';
-import { localePrefix } from '@lib/course';
+import { localePrefix, lessonCollection, moduleCollection } from '@lib/course';
+import { getCollection } from 'astro:content';
+import { t } from '@lib/i18n';
 
 const { lang = 'es' } = Astro.props;
 const P = localePrefix(lang);
+const moduleLabel = t('home.module-label', lang);
+
+// Construye el plan de lecciones en el mismo orden que /tema/[slug]
+// (número de módulo, luego posición dentro del módulo) para poder calcular,
+// en el cliente, cuál es la próxima lección pendiente según el progreso
+// guardado en localStorage.
+const lessons = await getCollection(lessonCollection(lang));
+const modules = await getCollection(moduleCollection(lang));
+const modMap = new Map(modules.map((m) => [m.data.slug, m.data]));
+
+const orderedLessons = lessons
+  .map((l) => ({ ...l, moduleData: modMap.get(l.data.module) }))
+  .sort((a, b) => {
+    const ma = a.moduleData?.number ?? 99;
+    const mb = b.moduleData?.number ?? 99;
+    if (ma !== mb) return ma - mb;
+    const ia = a.moduleData?.lessons.indexOf(a.data.slug) ?? 99;
+    const ib = b.moduleData?.lessons.indexOf(b.data.slug) ?? 99;
+    return ia - ib;
+  });
+
+const lessonPlan = orderedLessons.map((l) => ({
+  slug: l.data.slug,
+  title: l.data.title,
+  objective: l.data.objectives?.[0] ?? '',
+  objectivesCount: l.data.objectives?.length ?? 0,
+  moduleHeading: `${moduleLabel} ${String(l.moduleData?.number ?? 0).padStart(2, '0')} · ${l.moduleData?.title ?? ''}`,
+}));
+
+// Estado por defecto (renderizado en servidor): la primera lección del curso,
+// que es lo correcto para cualquier visitante nuevo sin progreso guardado.
+// El script de cliente lo sustituye por la próxima lección pendiente real
+// en cuanto lee el progreso de localStorage.
+const firstLesson = lessonPlan[0];
 ---
 
 <div class="win" role="dialog" aria-label="JAVA_WORKSPACE" aria-modal="true" data-i18n-aria="home.title">
   <div class="win__titlebar">
     <span class="win__title">JAVA_WORKSPACE</span>
     <div class="win__controls">
-      <button class="win__btn" aria-label="Minimizar" data-i18n-aria="win.minimize"></button>
-      <button class="win__btn" aria-label="Maximizar" data-i18n-aria="win.maximize"></button>
-      <button class="win__btn win__btn--close" aria-label="Cerrar" data-i18n-aria="win.close"></button>
+      <span class="win__btn" aria-hidden="true"></span>
+      <span class="win__btn" aria-hidden="true"></span>
+      <span class="win__btn win__btn--close" aria-hidden="true"></span>
     </div>
   </div>
 
@@ -38,7 +74,7 @@ const P = localePrefix(lang);
 
     <main class="main">
       <div class="main__top">
-        <span class="streak">🔥 3 <span data-i18n="home.days">DÍAS</span></span>
+        <span class="streak">🔥 <span id="home-streak-count">0</span> <span data-i18n="home.days">DÍAS</span></span>
       </div>
 
       <div class="main__content">
@@ -46,26 +82,38 @@ const P = localePrefix(lang);
           <h1 class="main__heading" data-i18n="home.keep-learning">Sigue aprendiendo.</h1>
         </div>
 
-        <div class="lesson-card">
-          <span class="lesson-card__module" data-i18n="home.card-module">Módulo 02 · Fundamentos</span>
-          <h2 class="lesson-card__title" data-i18n="home.card-title">Variables y tipos</h2>
-          <p class="lesson-card__desc" data-i18n="home.card-desc">Declaración, inicialización y tipos primitivos en Java.</p>
+        <div class="lesson-card" id="home-lesson-card">
+          <span class="lesson-card__module" id="home-module">{firstLesson?.moduleHeading ?? ''}</span>
+          <h2 class="lesson-card__title" id="home-lesson-title">{firstLesson?.title ?? ''}</h2>
+          <p class="lesson-card__desc" id="home-lesson-desc">{firstLesson?.objective ?? ''}</p>
           <div class="lesson-card__progress">
             <div class="progress-bar">
-              <div class="progress-bar__fill"></div>
+              <div class="progress-bar__fill" id="home-progress-fill" style="width:0%"></div>
             </div>
-            <span class="progress-bar__label">43% <span data-i18n="home.percent-complete">completado</span></span>
+            <span class="progress-bar__label"><span id="home-progress-pct">0</span>% <span data-i18n="home.percent-complete">completado</span></span>
           </div>
           <div class="lesson-card__meta">
-            <span class="lesson-card__duration" data-i18n="home.card-duration">⏱ 15 min</span>
-            <a href={`${P}/tema/variables-y-tipos`} class="cta-btn" data-i18n="home.continue">CONTINUAR →</a>
+            <span class="lesson-card__duration">🎯 <span id="home-lesson-meta-count">{firstLesson?.objectivesCount ?? 0}</span> <span data-i18n="lesson.objectives">objetivos</span></span>
+            <a href={`${P}/tema/${firstLesson?.slug ?? ''}`} class="cta-btn" id="home-cta" data-i18n="home.continue">CONTINUAR →</a>
           </div>
         </div>
 
-        <div class="challenge">
+        <div class="challenge" id="home-challenge">
           <span class="challenge__icon">✦</span>
-          <span class="challenge__text" data-i18n="home.challenge">Reto del día · Declara una variable · <strong>+50 XP</strong></span>
-          <a href={`${P}/tema/variables-y-tipos#ejercicios`} class="challenge__link" data-i18n="home.start">Iniciar →</a>
+          <span class="challenge__text">
+            <span data-i18n="home.challenge-label">Reto del día ·</span>
+            <span id="home-challenge-lesson">{firstLesson?.title ?? ''}</span> ·
+            <strong data-i18n="home.xp-badge">+50 XP</strong>
+          </span>
+          <a href={`${P}/tema/${firstLesson?.slug ?? ''}#ejercicios`} class="challenge__link" id="home-challenge-link" data-i18n="home.start">Iniciar →</a>
+        </div>
+
+        <div class="challenge challenge--done" id="home-all-done" hidden>
+          <span class="challenge__icon">🎉</span>
+          <span class="challenge__text">
+            <strong data-i18n="home.all-done-title">¡Completaste todas las lecciones! 🎉</strong>
+            <span data-i18n="home.all-done-desc">Repasa el glosario o pon a prueba lo aprendido en el Code Lab.</span>
+          </span>
         </div>
       </div>
     </main>
@@ -96,6 +144,12 @@ const P = localePrefix(lang);
   /* ========================================================================
      MainWindow — retro pixel-art ventana principal
      ======================================================================== */
+
+  /* .lesson-card y .challenge fijan su propio "display", que de otro modo
+     gana por especificidad al [hidden] del navegador y lo deja visible. */
+  [hidden] {
+    display: none !important;
+  }
 
   .win {
     position: fixed;
@@ -160,14 +214,12 @@ const P = localePrefix(lang);
     justify-content: center;
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.2);
-    transition: opacity var(--transition);
     padding: 0;
   }
 
   .win__btn:first-child { background: var(--win-minimize); }
   .win__btn:nth-child(2) { background: var(--win-maximize); }
   .win__btn--close { background: var(--win-close); }
-  .win__btn:hover { opacity: 0.8; }
 
   /* --- Cuerpo: sidebar + main --- */
   .win__body {
@@ -381,18 +433,13 @@ const P = localePrefix(lang);
 
   .progress-bar__fill {
     height: 100%;
-    width: 43%;
+    width: 0%;
     background: repeating-linear-gradient(
       135deg,
       var(--brand-accent) 0 6px,
       var(--brand-accent-2) 6px 12px
     );
-    animation: progressFill 7s steps(14) infinite alternate;
-  }
-
-  @keyframes progressFill {
-    from { width: 43%; }
-    to { width: 67%; }
+    transition: width 0.5s ease;
   }
 
   .progress-bar__label {
@@ -486,10 +533,25 @@ const P = localePrefix(lang);
     text-decoration: underline;
   }
 
+  .challenge--done {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .challenge--done .challenge__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .challenge--done strong {
+    color: var(--win-text);
+  }
+
   /* --- Reduced motion --- */
   @media (prefers-reduced-motion: reduce) {
     .win { animation: none; }
-    .progress-bar__fill { animation: none; width: 43%; }
     .cta-btn { animation: none; }
   }
 
@@ -685,4 +747,81 @@ const P = localePrefix(lang);
   setInterval(actualizarRelojNav, 60000);
   actualizarRelojNav();
   window.addEventListener('lang-change', actualizarRelojNav);
+</script>
+
+<script define:vars={{ lessonPlan, P }} is:inline>
+  // Sustituye el estado por defecto (renderizado en servidor: primera
+  // lección del curso) por la próxima lección pendiente real, calculada a
+  // partir del progreso guardado en localStorage. Antes de este script, la
+  // tarjeta "Sigue aprendiendo" mostraba siempre los mismos datos fijos
+  // (módulo, lección y porcentaje) sin importar el avance real del usuario.
+  (function () {
+    var KEY = 'ligan-java-lab-progress';
+
+    function loadProgress() {
+      try {
+        var raw = localStorage.getItem(KEY);
+        var parsed = raw ? JSON.parse(raw) : {};
+        return {
+          lessons: Array.isArray(parsed.lessons) ? parsed.lessons : [],
+          streak: typeof parsed.streak === 'number' ? parsed.streak : 0,
+        };
+      } catch (e) {
+        return { lessons: [], streak: 0 };
+      }
+    }
+
+    function render() {
+      var progress = loadProgress();
+      var done = new Set(progress.lessons);
+
+      var streakEl = document.getElementById('home-streak-count');
+      if (streakEl) streakEl.textContent = String(progress.streak);
+
+      var total = lessonPlan.length;
+      var completed = lessonPlan.filter(function (l) { return done.has(l.slug); }).length;
+      var pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+      var next = lessonPlan.find(function (l) { return !done.has(l.slug); });
+
+      var card = document.getElementById('home-lesson-card');
+      var challenge = document.getElementById('home-challenge');
+      var allDone = document.getElementById('home-all-done');
+
+      if (!next) {
+        // Ya completó todas las lecciones del curso.
+        if (card) card.hidden = true;
+        if (challenge) challenge.hidden = true;
+        if (allDone) allDone.hidden = false;
+        return;
+      }
+
+      if (card) card.hidden = false;
+      if (challenge) challenge.hidden = false;
+      if (allDone) allDone.hidden = true;
+
+      var moduleEl = document.getElementById('home-module');
+      var titleEl = document.getElementById('home-lesson-title');
+      var descEl = document.getElementById('home-lesson-desc');
+      var metaCountEl = document.getElementById('home-lesson-meta-count');
+      var ctaEl = document.getElementById('home-cta');
+      var fillEl = document.getElementById('home-progress-fill');
+      var pctEl = document.getElementById('home-progress-pct');
+      var challengeLessonEl = document.getElementById('home-challenge-lesson');
+      var challengeLinkEl = document.getElementById('home-challenge-link');
+
+      if (moduleEl) moduleEl.textContent = next.moduleHeading;
+      if (titleEl) titleEl.textContent = next.title;
+      if (descEl) descEl.textContent = next.objective;
+      if (metaCountEl) metaCountEl.textContent = String(next.objectivesCount);
+      if (ctaEl) ctaEl.setAttribute('href', P + '/tema/' + next.slug);
+      if (fillEl) fillEl.style.width = pct + '%';
+      if (pctEl) pctEl.textContent = String(pct);
+      if (challengeLessonEl) challengeLessonEl.textContent = next.title;
+      if (challengeLinkEl) challengeLinkEl.setAttribute('href', P + '/tema/' + next.slug + '#ejercicios');
+    }
+
+    render();
+    window.addEventListener('storage', render);
+    document.addEventListener('progress-update', render);
+  })();
 </script>
