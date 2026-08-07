@@ -44,7 +44,7 @@
     ],
     "solution": "public class Temperatura {\n    static String convertir(double g, String o) {\n        double c = o.equalsIgnoreCase(\"C\") ? g : o.equalsIgnoreCase(\"F\") ? (g-32)*5.0/9.0 : g-273.15;\n        return String.format(\"%.1f C = %.1f F = %.1f K\", c, (c*9.0/5.0)+32, c+273.15);\n    }\n    static double convertir(double g, String o, String d) {\n        double c = o.equalsIgnoreCase(\"C\") ? g : o.equalsIgnoreCase(\"F\") ? (g-32)*5.0/9.0 : g-273.15;\n        return d.equalsIgnoreCase(\"C\") ? c : d.equalsIgnoreCase(\"F\") ? (c*9.0/5.0)+32 : c+273.15;\n    }\n    public static void main(String[] args) {\n        System.out.println(convertir(100, \"C\"));\n        System.out.printf(\"%.2f%n\", convertir(100, \"C\", \"F\"));\n        System.out.printf(\"%.2f%n\", convertir(0, \"C\", \"K\"));\n    }\n}",
     "solutionExplanation": "Ambos métodos usan Celsius como punto intermedio para simplificar las combinaciones.",
-    "expectedOutput": "100.0 C = 212.0 F = 373.1 K\n212.00\n273.15",
+    "expectedOutput": "100.0 C = 212.0 F = 373.2 K\n212.00\n273.15",
     "lessonSlug": "sobrecarga"
   }
 ]

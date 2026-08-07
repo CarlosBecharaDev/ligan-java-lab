@@ -44,6 +44,6 @@
     ],
     "solution": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;\n        double estimacion = numero / 2.0;\n        double epsilon = 0.0001;\n        int iteraciones = 0;\n\n        while (true) {\n            double nueva = (estimacion + numero / estimacion) / 2.0;\n            iteraciones++;\n            if (Math.abs(nueva - estimacion) < epsilon) {\n                estimacion = nueva;\n                break;\n            }\n            estimacion = nueva;\n        }\n\n        System.out.printf(\"Square root of %.1f = %.4f (in %d iterations)%n\",\n                numero, estimacion, iteraciones);\n    }\n}",
     "solutionExplanation": "The Babylonian method refines the estimate in each iteration with the formula (e + n/e)/2. We use while(true) with an exit condition based on convergence (change < epsilon), a classic case of an indeterminate loop where the number of iterations is not known in advance.",
-    "expectedOutput": "Square root of 144.0 = 12.0000 (in 9 iterations)"
+    "expectedOutput": "Square root of 144.0 = 12.0000 (in 7 iterations)"
   }
 ]

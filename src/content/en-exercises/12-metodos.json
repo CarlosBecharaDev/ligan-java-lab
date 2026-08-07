@@ -28,7 +28,7 @@
     ],
     "solution": "public class ValidadorPassword {\n    static boolean esValida(String password) {\n        if (password.length() < 8) return false;\n        boolean tieneLetra = false;\n        boolean tieneDigito = false;\n        for (int i = 0; i < password.length(); i++) {\n            char c = password.charAt(i);\n            if (Character.isLetter(c)) tieneLetra = true;\n            if (Character.isDigit(c)) tieneDigito = true;\n        }\n        return tieneLetra && tieneDigito;\n    }\n\n    public static void main(String[] args) {\n        String[] passwords = {\"abc12345\", \"short\", \"nosingles123\"};\n        for (String pwd : passwords) {\n            if (esValida(pwd)) {\n                System.out.println(pwd + \" -> Valid\");\n            } else {\n                System.out.println(pwd + \" -> Invalid\");\n            }\n        }\n    }\n}",
     "solutionExplanation": "The method checks the length first (early return). Then it iterates over the characters checking whether there is at least one letter and one digit. It only returns true if both conditions are met.",
-    "expectedOutput": "abc12345 -> Valid\nshort -> Invalid\nnosingles123 -> Invalid",
+    "expectedOutput": "abc12345 -> Valid\nshort -> Invalid\nnosingles123 -> Valid",
     "lessonSlug": "metodos"
   },
   {

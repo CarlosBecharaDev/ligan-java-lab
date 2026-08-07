@@ -22,12 +22,12 @@
     "description": "Calcula los días que faltan hasta una fecha futura usando ChronoUnit.",
     "template": "import java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate hoy = LocalDate.now();\n        LocalDate navidad = LocalDate.of(2025, 12, 25);\n        // Calcula y muestra los días restantes hasta Navidad\n    }\n}",
     "hints": [
-      "Usa ChronoUnit.DIAS.between(hoy, navidad)",
+      "Usa ChronoUnit.DAYS.between(hoy, navidad)",
       "Si la fecha ya pasó, el resultado será negativo",
       "Imprime un mensaje adecuado según los días restantes"
     ],
-    "solution": "import java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate hoy = LocalDate.now();\n        LocalDate navidad = LocalDate.of(2025, 12, 25);\n        long diasRestantes = ChronoUnit.DIAS.between(hoy, navidad);\n        System.out.println(\"Hoy: \" + hoy);\n        System.out.println(\"Navidad: \" + navidad);\n        if (diasRestantes > 0) {\n            System.out.println(\"Faltan \" + diasRestantes + \" días para Navidad\");\n        } else if (diasRestantes == 0) {\n            System.out.println(\"¡Hoy es Navidad!\");\n        } else {\n            System.out.println(\"Navidad ya pasó hace \" + Math.abs(diasRestantes) + \" días\");\n        }\n    }\n}",
-    "solutionExplanation": "ChronoUnit.DIAS.between() calcula la cantidad exacta de días entre dos fechas. Devuelve un valor positivo si la fecha final es posterior, negativo si es anterior.",
+    "solution": "import java.time.LocalDate;\nimport java.time.temporal.ChronoUnit;\n\npublic class Main {\n    public static void main(String[] args) {\n        LocalDate hoy = LocalDate.now();\n        LocalDate navidad = LocalDate.of(2025, 12, 25);\n        long diasRestantes = ChronoUnit.DAYS.between(hoy, navidad);\n        System.out.println(\"Hoy: \" + hoy);\n        System.out.println(\"Navidad: \" + navidad);\n        if (diasRestantes > 0) {\n            System.out.println(\"Faltan \" + diasRestantes + \" días para Navidad\");\n        } else if (diasRestantes == 0) {\n            System.out.println(\"¡Hoy es Navidad!\");\n        } else {\n            System.out.println(\"Navidad ya pasó hace \" + Math.abs(diasRestantes) + \" días\");\n        }\n    }\n}",
+    "solutionExplanation": "ChronoUnit.DAYS.between() calcula la cantidad exacta de días entre dos fechas. Devuelve un valor positivo si la fecha final es posterior, negativo si es anterior.",
     "expectedOutput": "Hoy: 2025-07-27\nNavidad: 2025-12-25\nFaltan 151 días para Navidad",
     "lessonSlug": "date-time-api"
   },

@@ -12,7 +12,7 @@
     ],
     "solution": "public class ContarPalabras {\n    public static void main(String[] args) {\n        String texto = \"Java es un lenguaje de programacion muy poderoso\";\n        String[] palabras = texto.split(\" \");\n        int cantidad = palabras.length;\n        System.out.println(\"Número de palabras: \" + cantidad);\n    }\n}",
     "solutionExplanation": "El método split(\" \") divide el String en un array usando el espacio como separador. La cantidad de elementos del array corresponde al número de palabras.",
-    "expectedOutput": "Número de palabras: 7",
+    "expectedOutput": "Número de palabras: 8",
     "lessonSlug": "string-avanzado"
   },
   {

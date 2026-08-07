@@ -44,6 +44,6 @@
     ],
     "solution": "public class RaizBabilonica {\n    public static void main(String[] args) {\n        double numero = 144.0;\n        double estimacion = numero / 2.0;\n        double epsilon = 0.0001;\n        int iteraciones = 0;\n\n        while (true) {\n            double nueva = (estimacion + numero / estimacion) / 2.0;\n            iteraciones++;\n            if (Math.abs(nueva - estimacion) < epsilon) {\n                estimacion = nueva;\n                break;\n            }\n            estimacion = nueva;\n        }\n\n        System.out.printf(\"Raíz de %.1f = %.4f (en %d iteraciones)%n\",\n                numero, estimacion, iteraciones);\n    }\n}",
     "solutionExplanation": "El método babilónico refina la estimación en cada iteración con la fórmula (e + n/e)/2. Usamos while(true) con una condición de salida basada en la convergencia (cambio < epsilon), un caso clásico de bucle indeterminado donde no se conoce el número de iteraciones de antemano.",
-    "expectedOutput": "Raíz de 144.0 = 12.0000 (en 9 iteraciones)"
+    "expectedOutput": "Raíz de 144.0 = 12.0000 (en 7 iteraciones)"
   }
 ]

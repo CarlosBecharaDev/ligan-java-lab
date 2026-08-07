@@ -44,7 +44,7 @@
     ],
     "solution": "import java.util.LinkedList;\nimport java.util.ListIterator;\n\npublic class HistorialNavegador {\n    public static void main(String[] args) {\n        LinkedList<String> historial = new LinkedList<>();\n        historial.add(\"google.com\");\n        historial.add(\"github.com\");\n        historial.add(\"stackoverflow.com\");\n\n        ListIterator<String> iterador = historial.listIterator();\n        while (iterador.hasNext()) iterador.next();\n\n        // Retrocede 1\n        String actual = iterador.previous();\n        System.out.println(\"Atrás a: \" + actual);\n\n        // Retrocede 1 más\n        actual = iterador.previous();\n        System.out.println(\"Atrás a: \" + actual);\n\n        // Avanza 1\n        actual = iterador.next();\n        System.out.println(\"Adelante a: \" + actual);\n\n        // Avanza 1 más\n        actual = iterador.next();\n        System.out.println(\"Adelante a: \" + actual);\n    }\n}",
     "solutionExplanation": "ListIterator permite navegar en ambas direcciones. Se posiciona al final con next() en un bucle. Luego previous() retrocede y next() avanza. Cada llamada retorna la página a la que se mueve el cursor, simulando los botones atrás/adelante del navegador.",
-    "expectedOutput": "Atrás a: stackoverflow.com\nAtrás a: github.com\nAdelante a: stackoverflow.com\nAdelante a: github.com",
+    "expectedOutput": "Atrás a: stackoverflow.com\nAtrás a: github.com\nAdelante a: github.com\nAdelante a: stackoverflow.com",
     "lessonSlug": "linkedlist"
   }
 ]
