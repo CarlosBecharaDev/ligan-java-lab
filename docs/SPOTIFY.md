@@ -40,7 +40,41 @@ Variables** y agrega:
 > ⚠️ Nunca definas ni publiques `SPOTIFY_CLIENT_SECRET`. Este flujo con PKCE
 > no lo necesita en ningún punto.
 
-## 4. Funciones que requieren Spotify Premium
+## 4. Que cualquier visitante pueda conectar su cuenta (Extended Quota Mode)
+
+Toda app nueva de Spotify arranca en **Development Mode**. En ese modo, Spotify
+**solo deja autorizar a los usuarios que agregues a mano** en el dashboard
+(máx. 25 cuentas, por email) — cualquier otra persona llega a la pantalla de
+login de Spotify sin problema, pero al intentar autorizar la app recibe un
+error de Spotify ("esta app está en modo de desarrollo...") **antes** de que
+nuestro código pueda hacer nada; el bloqueo ocurre del lado de Spotify, no en
+`spotify-callback.astro`.
+
+Para que **cualquier visitante** pueda conectar su cuenta sin que lo agregues
+manualmente, hay que pedirle a Spotify pasar la app a **Extended Quota Mode**:
+
+1. Entra a https://developer.spotify.com/dashboard → tu app → **Settings**.
+2. Busca la sección de cuota/usuarios (**"User Management"** o el aviso de
+   *Development Mode* en la parte superior) y sigue el enlace para solicitar
+   extensión de cuota ("Request Extension" / "Extend Quota").
+3. Completa el formulario: qué hace la app, por qué necesita cada scope que
+   pide (`user-read-private`, `user-read-email`, `user-read-playback-state`,
+   `user-modify-playback-state`, `user-read-currently-playing`, `streaming`).
+   Para este proyecto: es un reproductor decorativo dentro de una plataforma
+   educativa de Java, cada visitante conecta **su propia** cuenta de Spotify
+   para ver/controlar lo que ya suena en sus propios dispositivos — la app no
+   usa los datos del usuario para nada más ni los almacena en un servidor
+   (los tokens quedan solo en `localStorage` del navegador del visitante).
+4. Spotify revisa la solicitud manualmente; puede tardar días y no está
+   garantizada, sobre todo para scopes de control de reproducción
+   (`streaming`, `user-modify-playback-state`). Mientras se revisa, se puede
+   seguir agregando testers manualmente (paso siguiente) para no bloquear el
+   desarrollo.
+5. Mientras tanto (o si la extensión no se aprueba), la única forma de que
+   alguien más pruebe el reproductor es agregar su email en **Settings →
+   User Management** del dashboard — el tope duro es 25 cuentas.
+
+## 5. Funciones que requieren Spotify Premium
 
 La Web API de Spotify restringe el control de reproducción (play, pause,
 siguiente, anterior, seek, volumen) a cuentas **Premium**. Con una cuenta
@@ -53,8 +87,12 @@ Free, el reproductor solo puede:
 Si el usuario Free intenta controlar la reproducción, la app muestra un aviso
 claro en vez de fallar silenciosamente.
 
-## 5. Solución de problemas
+## 6. Solución de problemas
 
+- **Un visitante no puede conectar su cuenta / Spotify le muestra un error
+  al autorizar** (y no llega a `spotify-callback`): la app sigue en
+  Development Mode y ese usuario no está en la lista de testers — ver
+  sección 4.
 - **"El parámetro state no coincide"**: el usuario tardó demasiado en el
   login o abrió el enlace de callback en otra pestaña/dispositivo. Debe
   iniciar sesión de nuevo.
