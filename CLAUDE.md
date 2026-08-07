@@ -4,11 +4,12 @@ Plataforma educativa web para aprender Java 21 LTS desde cero, en español latin
 
 ## Stack
 
-- **Framework**: Astro 7.1.3 (static site generation)
+- **Framework**: Astro 7.1.3 (static site generation, `output: 'static'` con adaptador `@astrojs/vercel` — ver "Code Lab" abajo)
 - **Content**: Content Layer API (`defineCollection`, `glob` loader, `z` from `astro/zod`)
 - **Content collections** (ES + EN espejo): lessons (MDX), quizzes (JSON), exercises (JSON arrays), modules (JSON)
 - **Client-side**: Astro `<script>` tags (module-scoped), localStorage for progress tracking
 - **Syntax highlighting**: Shiki (singleton en `src/lib/highlighter.ts`, tema `github-dark-default`, langs `java`, `bash`)
+- **Code editor**: CodeMirror 6 (`src/lib/codeEditor.ts`) en los ejercicios del Code Lab
 - **Icons**: Lucide
 - **Styling**: CSS custom properties with design tokens
 
@@ -66,6 +67,7 @@ src/
 - `/progreso` — Progress tracking (localStorage-based)
 - `/recursos` — External resources page
 - `/historia`, `/sobre-el-proyecto`, `/404`, `/spotify-callback`
+- `/api/execute` — único endpoint dinámico (`export const prerender = false`), corre como función serverless en Vercel gracias al adaptador `@astrojs/vercel`
 - Todas las páginas tienen su espejo bajo `/en/`
 
 ## Progress Tracking
@@ -75,6 +77,12 @@ src/
 - Tracks: completed lessons, quizzes, and exercises
 - Displays per-module progress bars and overall percentage
 - Streak calculation included
+
+## Code Lab (editor + ejecución real)
+
+- Cada `ExerciseCard` (`src/components/exercises/ExerciseCard.astro`) monta un editor CodeMirror 6 (`src/lib/codeEditor.ts`) con el `template` del ejercicio, editable en el navegador.
+- El botón "Ejecutar" manda el código al endpoint `/api/execute` (`src/lib/codeRunner.ts` en el cliente), que compila y corre el código Java real contra la instancia pública de Judge0 CE (`ce.judge0.com`, sin API key) y compara la salida con `expectedOutput`.
+- Ver `docs/CODE_LAB.md` para el detalle de por qué se eligió Judge0 (Piston quedó en whitelist desde feb/2026), la técnica de envoltura de clases y sus límites conocidos.
 
 ## Commands
 
@@ -99,6 +107,6 @@ npm run check
 - Current exercise count: 46 (ES) + 46 (EN)
 - Current module count: 10 (ES) + 10 (EN)
 - Módulo 09-proyectos aún sin quizzes/ejercicios
-- Build target: fully static site (no SSR)
+- Build target: sitio estático (`output: 'static'`) + 1 función serverless en Vercel para `/api/execute` (Code Lab)
 - `npm run check`: 0 errores, 0 warnings, 0 hints
 - `npm run build`: ~210 páginas en ~8s

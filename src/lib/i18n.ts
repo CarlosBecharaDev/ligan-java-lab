@@ -110,7 +110,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // --- Práctica ---
     'practice.title': 'Code Lab',
-    'practice.description': 'Editor de Java interactivo con simulación de consola',
+    'practice.description': 'Editor de Java interactivo con ejecución real de código',
     'practice.heading': 'Code Lab',
     'practice.intro': 'Practica con ejercicios de todas las lecciones. Escribe código Java, descárgalo y verifica tu comprensión.',
     'practice.exercises-of': 'Ejercicios de',
@@ -306,6 +306,19 @@ export const translations: Record<Lang, Record<string, string>> = {
     'exercise.solution-code': 'Código de solución',
     'exercise.explanation': 'Explicación',
     'exercise.expected-output': 'Salida esperada',
+    'exercise.run': '▶ Ejecutar',
+    'exercise.run-aria': 'Ejecutar el código',
+    'exercise.running': 'Ejecutando…',
+    'exercise.reset': '↺ Reiniciar',
+    'exercise.reset-aria': 'Reiniciar al código original',
+    'exercise.reset-confirm': '¿Descartar tus cambios y volver a la plantilla original?',
+    'exercise.output': 'Salida',
+    'exercise.match': '✅ Coincide con la salida esperada',
+    'exercise.no-match': '⚠️ No coincide con la salida esperada',
+    'exercise.compile-error': '🛑 Error de compilación',
+    'exercise.run-error': '🛑 El programa terminó con un error',
+    'exercise.stdin-toggle': '⌨️ Entrada estándar (Scanner)',
+    'exercise.stdin-placeholder': 'Si tu programa usa Scanner, escribe aquí cada valor de entrada en una línea…',
 
     // --- Quiz Result ---
     'quiz-result.of': 'de',
@@ -555,7 +568,7 @@ export const translations: Record<Lang, Record<string, string>> = {
 
     // --- Practice ---
     'practice.title': 'Code Lab',
-    'practice.description': 'Interactive Java editor with console simulation',
+    'practice.description': 'Interactive Java editor with real code execution',
     'practice.heading': 'Code Lab',
     'practice.intro': 'Practice with exercises from all lessons. Write Java code, download it and verify your understanding.',
     'practice.exercises-of': 'Exercises from',
@@ -751,6 +764,19 @@ export const translations: Record<Lang, Record<string, string>> = {
     'exercise.solution-code': 'Solution code',
     'exercise.explanation': 'Explanation',
     'exercise.expected-output': 'Expected output',
+    'exercise.run': '▶ Run',
+    'exercise.run-aria': 'Run the code',
+    'exercise.running': 'Running…',
+    'exercise.reset': '↺ Reset',
+    'exercise.reset-aria': 'Reset to the original template',
+    'exercise.reset-confirm': 'Discard your changes and go back to the original template?',
+    'exercise.output': 'Output',
+    'exercise.match': '✅ Matches the expected output',
+    'exercise.no-match': '⚠️ Does not match the expected output',
+    'exercise.compile-error': '🛑 Compile error',
+    'exercise.run-error': '🛑 The program finished with an error',
+    'exercise.stdin-toggle': '⌨️ Standard input (Scanner)',
+    'exercise.stdin-placeholder': 'If your program uses Scanner, type each input value on its own line…',
 
     // --- Quiz Result ---
     'quiz-result.of': 'of',

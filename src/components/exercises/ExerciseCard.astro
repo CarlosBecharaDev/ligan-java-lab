@@ -36,7 +36,11 @@ const hintCount = exercise.hints.length;
     <div class="exercise-card__editor-header">
       <span class="exercise-card__editor-lang">Java</span>
       <div class="exercise-card__editor-actions">
-        <button class="code-block__btn" data-copy-template={exId} aria-label="Copiar plantilla" data-i18n-aria="exercise.copy-aria">
+        <button class="code-block__btn" data-reset-template={exId} aria-label="Reiniciar al código original" data-i18n-aria="exercise.reset-aria">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10" /><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" /></svg>
+          <span data-i18n="exercise.reset">↺ Reiniciar</span>
+        </button>
+        <button class="code-block__btn" data-copy-template={exId} aria-label="Copiar código" data-i18n-aria="exercise.copy-aria">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2" /><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" /></svg>
           <span data-i18n="exercise.copy">Copiar</span>
         </button>
@@ -46,8 +50,38 @@ const hintCount = exercise.hints.length;
         </button>
       </div>
     </div>
-    <pre class="exercise-card__code"><code data-template-source={exId}>{exercise.template}</code></pre>
+    <div class="exercise-card__editor-mount" data-editor-mount={exId}></div>
   </div>
+
+  <div class="exercise-card__stdin">
+    <button class="exercise-card__stdin-toggle" type="button" data-stdin-toggle={exId} aria-expanded="false">
+      <span data-i18n="exercise.stdin-toggle">⌨️ Entrada estándar (Scanner)</span>
+    </button>
+    <textarea
+      class="exercise-card__stdin-input"
+      data-stdin-input={exId}
+      hidden
+      rows="3"
+      data-i18n="exercise.stdin-placeholder"
+      placeholder="Si tu programa usa Scanner, escribe aquí cada valor de entrada en una línea…"
+    ></textarea>
+  </div>
+
+  <div class="exercise-card__run-bar">
+    <button class="exercise-card__run-btn" type="button" data-run-btn={exId} aria-label="Ejecutar el código" data-i18n-aria="exercise.run-aria">
+      <span data-run-btn-label={exId} data-i18n="exercise.run">▶ Ejecutar</span>
+    </button>
+  </div>
+
+  <div class="exercise-card__output" data-run-output={exId} hidden>
+    <div class="exercise-card__output-header">
+      <span data-i18n="exercise.output">Salida</span>
+      <span class="exercise-card__output-verdict" data-run-verdict={exId}></span>
+    </div>
+    <pre class="exercise-card__output-body"><code data-run-output-code={exId}></code></pre>
+  </div>
+
+  <script type="application/json" is:inline set:html={JSON.stringify({ template: exercise.template, expectedOutput: exercise.expectedOutput }).replace(/</g, '\\u003c')} data-exercise-payload={exId}></script>
 
   {hintCount > 0 && (
     <button class="exercise-card__hint-btn" data-hint-toggle={exId} aria-label="Mostrar pista" data-i18n-aria="exercise.show-hint">
@@ -138,12 +172,117 @@ const hintCount = exercise.hints.length;
     gap: var(--space-xs);
   }
 
-  .exercise-card__code {
+  .exercise-card__editor-mount {
+    background: var(--bg);
+  }
+
+  .exercise-card__editor-mount :global(.cm-editor) {
+    height: 100%;
+  }
+
+  .exercise-card__stdin {
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__stdin-toggle {
+    width: 100%;
+    text-align: left;
+    padding: var(--space-xs) var(--space-sm);
+    background: none;
+    border: none;
+    font-size: var(--text-xs);
+    color: var(--muted);
+    cursor: pointer;
+    transition: color var(--transition);
+  }
+
+  .exercise-card__stdin-toggle:hover {
+    color: var(--sky);
+  }
+
+  .exercise-card__stdin-input {
+    width: 100%;
+    margin-top: var(--space-xs);
+    padding: var(--space-sm);
+    background: var(--bg);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: var(--text-xs);
+    resize: vertical;
+  }
+
+  .exercise-card__run-bar {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: var(--space-md);
+  }
+
+  .exercise-card__run-btn {
+    padding: var(--space-sm) var(--space-lg);
+    background: var(--accent);
+    color: var(--bg);
+    font-weight: 600;
+    border: none;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    transition: filter var(--transition), opacity var(--transition);
+  }
+
+  .exercise-card__run-btn:hover {
+    filter: brightness(1.1);
+  }
+
+  .exercise-card__run-btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+
+  .exercise-card__output {
+    margin-bottom: var(--space-md);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+  }
+
+  .exercise-card__output-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-xs) var(--space-md);
+    background: var(--surface-raised);
+    font-size: var(--text-xs);
+    color: var(--muted);
+  }
+
+  .exercise-card__output-verdict {
+    font-weight: 600;
+  }
+
+  .exercise-card__output-verdict[data-verdict='match'] {
+    color: var(--success);
+  }
+
+  .exercise-card__output-verdict[data-verdict='no-match'] {
+    color: var(--danger);
+  }
+
+  .exercise-card__output-verdict[data-verdict='error'] {
+    color: var(--danger);
+  }
+
+  .exercise-card__output-body {
     margin: 0;
     border: none;
     border-radius: 0;
     background: var(--bg);
     color: var(--text);
+    padding: var(--space-md);
+    white-space: pre-wrap;
+    word-break: break-word;
+    max-height: 300px;
+    overflow-y: auto;
   }
 
   .exercise-card__hint-btn {
@@ -184,19 +323,46 @@ const hintCount = exercise.hints.length;
 </style>
 
 <script>
+  import { createJavaEditor, getEditorContent, setEditorContent } from '@lib/codeEditor';
+  import { runJavaCode, outputMatches } from '@lib/codeRunner';
+
+  interface ExercisePayload {
+    template: string;
+    expectedOutput: string;
+  }
+
+  const T = (key: string): string =>
+    ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
+
   // Los scripts de Astro son module-scoped; buscamos por data attributes
-  document.querySelectorAll('.exercise-card').forEach((exContainer) => {
-    const copyBtn = exContainer.querySelector(`[data-copy-template]`);
-    const downloadBtn = exContainer.querySelector(`[data-download-template]`);
-    const hintBtn = exContainer.querySelector(`[data-hint-toggle]`);
-    const hintsEl = exContainer.querySelector(`[data-hints]`);
-    const codeEl = exContainer.querySelector(`[data-template-source]`);
-    const T = (key: string): string =>
-      ((window as any).__i18n && (window as any).__i18n.t(key)) || key;
+  document.querySelectorAll<HTMLElement>('.exercise-card').forEach((exContainer) => {
+    const payloadEl = exContainer.querySelector('[data-exercise-payload]');
+    let payload: ExercisePayload;
+    try {
+      payload = JSON.parse(payloadEl?.textContent ?? '{}');
+    } catch {
+      payload = { template: '', expectedOutput: '' };
+    }
+
+    const editorMount = exContainer.querySelector<HTMLElement>('[data-editor-mount]');
+    if (!editorMount) return;
+    const view = createJavaEditor(editorMount, payload.template);
+
+    const copyBtn = exContainer.querySelector('[data-copy-template]');
+    const downloadBtn = exContainer.querySelector('[data-download-template]');
+    const resetBtn = exContainer.querySelector('[data-reset-template]');
+    const hintBtn = exContainer.querySelector('[data-hint-toggle]');
+    const hintsEl = exContainer.querySelector('[data-hints]');
+    const stdinToggle = exContainer.querySelector('[data-stdin-toggle]');
+    const stdinInput = exContainer.querySelector<HTMLTextAreaElement>('[data-stdin-input]');
+    const runBtn = exContainer.querySelector<HTMLButtonElement>('[data-run-btn]');
+    const runBtnLabel = exContainer.querySelector('[data-run-btn-label]');
+    const outputEl = exContainer.querySelector('[data-run-output]');
+    const outputVerdict = exContainer.querySelector('[data-run-verdict]');
+    const outputCode = exContainer.querySelector('[data-run-output-code]');
 
     copyBtn?.addEventListener('click', async () => {
-      const template = codeEl?.textContent ?? '';
-      const ok = await copiarTexto(template);
+      const ok = await copiarTexto(getEditorContent(view));
       if (ok) {
         const label = copyBtn.querySelector('span');
         const orig = label ? label.textContent : copyBtn.innerHTML;
@@ -213,10 +379,23 @@ const hintCount = exercise.hints.length;
     });
 
     downloadBtn?.addEventListener('click', () => {
-      const template = codeEl?.textContent ?? '';
       const title = exContainer.querySelector('.exercise-card__title')?.textContent ?? 'Ejercicio';
       const nombreClase = title.replace(/[^a-zA-Z]/g, '');
-      descargarJava(template, nombreClase);
+      descargarJava(getEditorContent(view), nombreClase);
+    });
+
+    resetBtn?.addEventListener('click', () => {
+      if (window.confirm(T('exercise.reset-confirm'))) {
+        setEditorContent(view, payload.template);
+      }
+    });
+
+    stdinToggle?.addEventListener('click', () => {
+      if (!stdinInput) return;
+      const hidden = stdinInput.hasAttribute('hidden');
+      stdinInput.toggleAttribute('hidden');
+      stdinToggle.setAttribute('aria-expanded', String(hidden));
+      if (hidden) stdinInput.focus();
     });
 
     hintBtn?.addEventListener('click', () => {
@@ -230,6 +409,46 @@ const hintCount = exercise.hints.length;
           hintBtn.textContent = hidden ? T('exercise.hide-hints') : T('exercise.show-hints');
         }
       }
+    });
+
+    runBtn?.addEventListener('click', async () => {
+      if (!outputEl || !outputVerdict || !outputCode) return;
+      runBtn.disabled = true;
+      if (runBtnLabel) runBtnLabel.textContent = T('exercise.running');
+      outputEl.removeAttribute('hidden');
+      outputVerdict.removeAttribute('data-verdict');
+      outputVerdict.textContent = '';
+      outputCode.textContent = T('exercise.running');
+
+      const result = await runJavaCode(getEditorContent(view), stdinInput?.value ?? '');
+
+      if (!result.ok) {
+        outputVerdict.setAttribute('data-verdict', 'error');
+        outputVerdict.textContent = '🛑';
+        outputCode.textContent = result.error ?? T('exercise.run-error');
+      } else if (result.stage === 'compile') {
+        outputVerdict.setAttribute('data-verdict', 'error');
+        outputVerdict.textContent = T('exercise.compile-error');
+        outputCode.textContent = result.output ?? '';
+      } else {
+        const stdout = result.stdout ?? '';
+        const stderr = result.stderr ?? '';
+        outputCode.textContent = stderr ? `${stdout}\n${stderr}`.trim() : stdout;
+
+        if (result.success === false) {
+          outputVerdict.setAttribute('data-verdict', 'error');
+          outputVerdict.textContent = T('exercise.run-error');
+        } else if (outputMatches(stdout, payload.expectedOutput)) {
+          outputVerdict.setAttribute('data-verdict', 'match');
+          outputVerdict.textContent = T('exercise.match');
+        } else {
+          outputVerdict.setAttribute('data-verdict', 'no-match');
+          outputVerdict.textContent = T('exercise.no-match');
+        }
+      }
+
+      runBtn.disabled = false;
+      if (runBtnLabel) runBtnLabel.textContent = T('exercise.run');
     });
   });
 

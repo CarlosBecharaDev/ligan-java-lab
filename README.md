@@ -22,7 +22,7 @@ El estudiante aprende **leyendo, practicando y verificando su progreso** — tod
 - 🖥️ **Escritorio interactivo** tipo Windows 95 con ventanas, taskbar e iconos
 - 📚 **50 lecciones** en MDX con sintaxis resaltada (Shiki)
 - 🧠 **92 quizzes** interactivos para evaluar conocimientos
-- 💻 **46 ejercicios prácticos** con 3 niveles de dificultad
+- 💻 **46 ejercicios prácticos** con 3 niveles de dificultad, editor en vivo (CodeMirror) y ejecución real de Java desde el navegador
 - 🎥 **Videos recomendados** de canales educativos en español
 - 🌐 **Bilingüe ES/EN**: toda la plataforma y el contenido también en inglés bajo `/en/`
 - 📊 **Progreso persistente** en localStorage con racha de estudio
@@ -41,8 +41,9 @@ El estudiante aprende **leyendo, practicando y verificando su progreso** — tod
 | **MDX** | Lecciones con componentes embebidos |
 | **CSS Custom Properties** | Sistema de tokens de diseño retro |
 | **Shiki** | Resaltado de sintaxis en lecciones |
+| **CodeMirror 6** | Editor de código en vivo en los ejercicios (Code Lab) |
 | **Lucide** | Iconografía |
-| **Vercel** | Hosting y despliegue continuo |
+| **Vercel** | Hosting, despliegue continuo y la función serverless de `/api/execute` |
 
 ---
 
