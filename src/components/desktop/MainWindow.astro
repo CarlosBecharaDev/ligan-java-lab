@@ -166,7 +166,12 @@ const firstLesson = lessonPlan[0];
     left: 50%;
     transform: translate(-50%, -50%);
     width: min(90vw, 590px);
-    max-height: 85vh;
+    /* Tope de seguridad: aunque el título/objetivo de la lección actual sea
+       largo, el título y la descripción están limitados a pocas líneas (ver
+       .lesson-card__title/__desc) para que el contenido real casi nunca
+       llegue a este límite; sirve de respaldo para no invadir la franja
+       donde caminan los personajes animados (48px taskbar + 150px stage). */
+    max-height: min(85vh, max(320px, calc(100vh - 210px)));
   }
 
   @keyframes winOpen {
@@ -370,12 +375,12 @@ const firstLesson = lessonPlan[0];
     display: flex;
     flex-direction: column;
     justify-content: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
   }
 
   .main__heading {
     font-family: var(--font-pixel);
-    font-size: var(--text-xl);
+    font-size: var(--text-lg);
     color: var(--win-text);
     margin: var(--space-xs) 0 0;
     line-height: 1.2;
@@ -385,8 +390,8 @@ const firstLesson = lessonPlan[0];
   .lesson-card {
     display: flex;
     flex-direction: column;
-    gap: var(--space-sm);
-    padding: var(--space-md);
+    gap: 6px;
+    padding: var(--space-sm) var(--space-md);
     border: 2px solid var(--win-border);
     background: var(--win-bg);
     box-shadow: 2px 2px 0 rgba(0, 0, 0, 0.15);
@@ -399,19 +404,31 @@ const firstLesson = lessonPlan[0];
     letter-spacing: 0.05em;
   }
 
+  /* Título limitado a 2 líneas: algunas lecciones tienen títulos largos
+     (ej. "Introducción a Java: JDK, JRE y JVM") y sin este tope la tarjeta
+     crece verticalmente y empuja la ventana hacia la franja de los
+     personajes animados. */
   .lesson-card__title {
     font-family: var(--font-pixel);
-    font-size: var(--text-base);
+    font-size: 0.95rem;
     color: var(--win-text);
     margin: 0;
     line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
+  /* Descripción a una sola línea con elipsis, por la misma razón. */
   .lesson-card__desc {
     font-family: var(--font-ui);
     font-size: var(--text-xs);
     color: var(--win-muted);
     margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .lesson-card__progress {
