@@ -214,11 +214,28 @@ var MSGS: string[] = [];
       var st = shuffledMsgs[si]; shuffledMsgs[si] = shuffledMsgs[sj]; shuffledMsgs[sj] = st;
     }
 
-    // Spread from 10% to 88% of viewport width
-    var step = 78 / names.length;
+    // Evita que los personajes (y sus globos de diálogo) empiecen o patrullen
+    // encima de la cuadrícula de iconos del escritorio. La cuadrícula puede
+    // partirse en varias columnas según el alto de la ventana, así que su
+    // ancho real se mide en tiempo de ejecución en vez de asumir un valor fijo.
+    var MAX_PATROL_BUFFER_PX = 160; // cubre patrolDist máximo (140px) + margen
+    function safeLeftPercent(): number {
+      var grid = document.querySelector('.desktop__grid');
+      if (!grid) return 10;
+      var gridRect = grid.getBoundingClientRect();
+      var stageTop = window.innerHeight - 198; // 48px taskbar + 150px alto del stage
+      if (gridRect.bottom <= stageTop) return 10; // la cuadrícula no llega al área de personajes
+      var safePx = gridRect.right + MAX_PATROL_BUFFER_PX;
+      var safePct = (safePx / window.innerWidth) * 100;
+      return Math.min(Math.max(safePct, 10), 60);
+    }
+
+    // Spread from a safe left boundary to 88% of viewport width
+    var minLeft = safeLeftPercent();
+    var step = (88 - minLeft) / names.length;
     var positions: number[] = [];
     for (var pi = 0; pi < names.length; pi++) {
-      positions.push(10 + pi * step + (Math.random() * 5 - 2.5));
+      positions.push(minLeft + pi * step + (Math.random() * 5 - 2.5));
     }
 
     names.forEach(function(name, i) {
