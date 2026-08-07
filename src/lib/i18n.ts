@@ -319,6 +319,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     'exercise.run-error': '🛑 El programa terminó con un error',
     'exercise.stdin-toggle': '⌨️ Entrada estándar (Scanner)',
     'exercise.stdin-placeholder': 'Si tu programa usa Scanner, escribe aquí cada valor de entrada en una línea…',
+    'exercise.example-output': 'Ejemplo de salida',
+    'exercise.open-ended-note': '💡 Este ejercicio pide tus propios datos: no hay una única salida correcta. El ejemplo de abajo es solo una referencia de formato.',
+    'exercise.ran-ok': '▶️ Tu programa corrió sin errores. Revisa que la salida tenga el formato pedido — este ejercicio usa tus propios datos, así que no se compara contra una salida fija.',
 
     // --- Quiz Result ---
     'quiz-result.of': 'de',
@@ -777,6 +780,9 @@ export const translations: Record<Lang, Record<string, string>> = {
     'exercise.run-error': '🛑 The program finished with an error',
     'exercise.stdin-toggle': '⌨️ Standard input (Scanner)',
     'exercise.stdin-placeholder': 'If your program uses Scanner, type each input value on its own line…',
+    'exercise.example-output': 'Example output',
+    'exercise.open-ended-note': "💡 This exercise asks for your own data: there's no single correct output. The example below is just a format reference.",
+    'exercise.ran-ok': "▶️ Your program ran without errors. Check that the output has the requested format — this exercise uses your own data, so it isn't compared against a fixed output.",
 
     // --- Quiz Result ---
     'quiz-result.of': 'of',

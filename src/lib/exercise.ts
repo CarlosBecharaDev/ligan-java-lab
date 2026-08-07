@@ -11,4 +11,11 @@ export type Exercise = {
   solution: string;
   solutionExplanation: string;
   expectedOutput: string;
+  /**
+   * true cuando el enunciado pide datos propios del estudiante (su nombre,
+   * su edad, valores "a tu elección"...), así que no existe una única
+   * salida correcta. Para estos, expectedOutput es solo un ejemplo
+   * ilustrativo: el Code Lab no debe comparar la salida real contra él.
+   */
+  openEnded?: boolean;
 };

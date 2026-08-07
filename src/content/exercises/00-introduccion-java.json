@@ -28,7 +28,8 @@
     ],
     "solution": "public class Presentacion {\n    public static void main(String[] args) {\n        System.out.println(\"Me llamo Carlos\");\n        System.out.println(\"Estudio Ingeniería de Sistemas\");\n        System.out.println(\"Me gusta programar porque puedo crear soluciones\");\n    }\n}",
     "solutionExplanation": "Cada System.out.println() imprime una línea diferente. El método println agrega automáticamente un salto de línea al final, por lo que cada mensaje aparece en su propia línea.",
-    "expectedOutput": "Me llamo Carlos\nEstudio Ingeniería de Sistemas\nMe gusta programar porque puedo crear soluciones"
+    "expectedOutput": "Me llamo Carlos\nEstudio Ingeniería de Sistemas\nMe gusta programar porque puedo crear soluciones",
+    "openEnded": true
   },
   {
     "id": "ex-introduccion-dificil",

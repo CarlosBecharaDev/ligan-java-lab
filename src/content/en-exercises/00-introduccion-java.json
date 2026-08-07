@@ -28,7 +28,8 @@
     ],
     "solution": "public class Presentacion {\n    public static void main(String[] args) {\n        System.out.println(\"My name is Carlos\");\n        System.out.println(\"I study Systems Engineering\");\n        System.out.println(\"I like programming because I can create solutions\");\n    }\n}",
     "solutionExplanation": "Each System.out.println() prints a different line. The println method automatically adds a line break at the end, so each message appears on its own line.",
-    "expectedOutput": "My name is Carlos\nI study Systems Engineering\nI like programming because I can create solutions"
+    "expectedOutput": "My name is Carlos\nI study Systems Engineering\nI like programming because I can create solutions",
+    "openEnded": true
   },
   {
     "id": "ex-introduccion-dificil",

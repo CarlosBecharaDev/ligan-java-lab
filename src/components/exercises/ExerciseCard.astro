@@ -12,6 +12,7 @@ export interface Props {
     solution: string;
     solutionExplanation: string;
     expectedOutput: string;
+    openEnded?: boolean;
   };
 }
 
@@ -31,6 +32,12 @@ const hintCount = exercise.hints.length;
   </div>
 
   <p class="exercise-card__description">{exercise.description}</p>
+
+  {exercise.openEnded && (
+    <p class="exercise-card__open-ended-note" data-i18n="exercise.open-ended-note">
+      💡 Este ejercicio pide tus propios datos: no hay una única salida correcta. El ejemplo de abajo es solo una referencia de formato.
+    </p>
+  )}
 
   <div class="exercise-card__editor">
     <div class="exercise-card__editor-header">
@@ -81,7 +88,7 @@ const hintCount = exercise.hints.length;
     <pre class="exercise-card__output-body"><code data-run-output-code={exId}></code></pre>
   </div>
 
-  <script type="application/json" is:inline set:html={JSON.stringify({ template: exercise.template, expectedOutput: exercise.expectedOutput }).replace(/</g, '\\u003c')} data-exercise-payload={exId}></script>
+  <script type="application/json" is:inline set:html={JSON.stringify({ template: exercise.template, expectedOutput: exercise.expectedOutput, openEnded: Boolean(exercise.openEnded) }).replace(/</g, '\\u003c')} data-exercise-payload={exId}></script>
 
   {hintCount > 0 && (
     <button class="exercise-card__hint-btn" data-hint-toggle={exId} aria-label="Mostrar pista" data-i18n-aria="exercise.show-hint">
@@ -105,6 +112,7 @@ const hintCount = exercise.hints.length;
     solution={exercise.solution}
     explanation={exercise.solutionExplanation}
     expectedOutput={exercise.expectedOutput}
+    openEnded={exercise.openEnded}
   />
 </div>
 
@@ -272,6 +280,22 @@ const hintCount = exercise.hints.length;
     color: var(--danger);
   }
 
+  .exercise-card__output-verdict[data-verdict='info'] {
+    color: var(--sky);
+    font-weight: 400;
+  }
+
+  .exercise-card__open-ended-note {
+    margin: 0 0 var(--space-md);
+    padding: var(--space-sm) var(--space-md);
+    background: var(--surface-raised);
+    border: 1px solid var(--sky);
+    border-radius: var(--radius-sm);
+    color: var(--muted);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
+
   .exercise-card__output-body {
     margin: 0;
     border: none;
@@ -329,6 +353,7 @@ const hintCount = exercise.hints.length;
   interface ExercisePayload {
     template: string;
     expectedOutput: string;
+    openEnded: boolean;
   }
 
   const T = (key: string): string =>
@@ -341,7 +366,7 @@ const hintCount = exercise.hints.length;
     try {
       payload = JSON.parse(payloadEl?.textContent ?? '{}');
     } catch {
-      payload = { template: '', expectedOutput: '' };
+      payload = { template: '', expectedOutput: '', openEnded: false };
     }
 
     const editorMount = exContainer.querySelector<HTMLElement>('[data-editor-mount]');
@@ -438,6 +463,11 @@ const hintCount = exercise.hints.length;
         if (result.success === false) {
           outputVerdict.setAttribute('data-verdict', 'error');
           outputVerdict.textContent = T('exercise.run-error');
+        } else if (payload.openEnded) {
+          // Ejercicio con datos propios del estudiante: no hay una única
+          // salida correcta, así que no se compara contra expectedOutput.
+          outputVerdict.setAttribute('data-verdict', 'info');
+          outputVerdict.textContent = T('exercise.ran-ok');
         } else if (outputMatches(stdout, payload.expectedOutput)) {
           outputVerdict.setAttribute('data-verdict', 'match');
           outputVerdict.textContent = T('exercise.match');

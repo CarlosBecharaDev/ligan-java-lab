@@ -12,7 +12,8 @@
     ],
     "solution": "public class VariablesPersonales {\n    public static void main(String[] args) {\n        String nombre = \"Carlos\";\n        int edad = 25;\n        double altura = 1.75;\n\n        System.out.println(\"Name: \" + nombre);\n        System.out.println(\"Age: \" + edad);\n        System.out.println(\"Height: \" + altura);\n    }\n}",
     "solutionExplanation": "We declare three variables with different types: String for the name, int for the age, and double for the height. Then we print each value concatenated with descriptive text.",
-    "expectedOutput": "Name: Carlos\nAge: 25\nHeight: 1.75"
+    "expectedOutput": "Name: Carlos\nAge: 25\nHeight: 1.75",
+    "openEnded": true
   },
   {
     "id": "ex-variables-normal",

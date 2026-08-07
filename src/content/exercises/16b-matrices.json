@@ -13,7 +13,8 @@
     ],
     "solution": "public class MatrizBasica {\n    public static void main(String[] args) {\n        int[][] matriz = {\n            {1, 2, 3},\n            {4, 5, 6},\n            {7, 8, 9}\n        };\n        System.out.println(\"Elemento en [1][2]: \" + matriz[1][2]);\n    }\n}",
     "solutionExplanation": "Declaramos una matriz 3x3 con sintaxis simplificada. El índice [1][2] corresponde a la fila 1 (segunda fila) y columna 2 (tercera columna), que contiene el valor 6.",
-    "expectedOutput": "Elemento en [1][2]: 6"
+    "expectedOutput": "Elemento en [1][2]: 6",
+    "openEnded": true
   },
   {
     "id": "ex-matrices-normal",

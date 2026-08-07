@@ -76,6 +76,7 @@ const exerciseSchema = z.object({
   solution: z.string(),
   solutionExplanation: z.string(),
   expectedOutput: z.string(),
+  openEnded: z.boolean().optional(),
 });
 
 // --- Esquema para módulos JSON ---
